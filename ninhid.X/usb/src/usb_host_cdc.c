@@ -83,9 +83,9 @@ ADG          15-Sep-2008 First release
 #include <stdlib.h>
 #include <string.h>
 #include "usb_config.h"
-#include <usb/usb.h>
-#include <usb/usb_host_cdc.h>
-#include <usb/usb_host.h>
+#include "usb.h"
+#include "usb_host_cdc.h"
+#include "usb_host.h"
 
 //#define DEBUG_MODE
 #ifdef DEBUG_MODE

@@ -56,10 +56,10 @@ Change History:
 #include <stdlib.h>
 #include <string.h>
 #include "system_config.h"
-#include "fileio/fileio.h"
-#include "usb/usb.h"
-#include "usb/usb_host_msd.h"
-#include "usb/usb_host_msd_scsi.h"
+#include "fileio.h"
+#include "usb.h"
+#include "usb_host_msd.h"
+#include "usb_host_msd_scsi.h"
 
 //#define DEBUG_MODE
 #if defined(DEBUG_MODE)
@@ -101,6 +101,7 @@ Change History:
     bool    _USBHostMSDSCSI_TestUnitReady( uint8_t * address );
 #endif
 
+static bool USBHostMSDSCSIRequestSense(uint8_t * address);
 
 //******************************************************************************
 //******************************************************************************
@@ -206,7 +207,7 @@ bool USBHostMSDSCSIEventHandler( uint8_t address, USB_EVENT event, void *data, u
 
                 for (i = 0; i < mediaInformation.maxLUN + 1; i++)
                 {
-                    USB_ApplicationEventHandler (address, EVENT_MSD_ATTACH, &i, 1);
+                    USB_HOST_APP_EVENT_HANDLER (address, EVENT_MSD_ATTACH, &i, 1);
                 }
             }
             return true;
@@ -579,6 +580,33 @@ FILEIO_MEDIA_INFORMATION * USBHostMSDSCSIMediaInitialize( uint8_t * address )
 
 }
 
+/****************************************************************************
+  Function:
+    bool USBHostMSDSCSIMediaDeinitialize( void * mediaConfig )
+
+  Summary:
+    This function deinitializes the media.
+
+  Description:
+    This function deinitializes the media.
+
+  Precondition:
+    None
+
+  Parameters:
+    mediaConfig - the media configuration information
+
+  Return Values:
+    true - successful
+    false - otherwise
+
+  Remarks:
+    None
+  ***************************************************************************/
+bool USBHostMSDSCSIMediaDeinitialize(void *mediaConfig)
+{
+    return true;
+}
 
 /****************************************************************************
   Function:
@@ -680,17 +708,61 @@ uint8_t USBHostMSDSCSISectorRead(uint8_t * address, uint32_t sectorAddress, uint
     uint32_t   byteCount;
     uint8_t    commandBlock[10];
     uint8_t    errorCode;
+    uint8_t attempts = 5;
 
-    #ifdef DEBUG_MODE
-        UART2PrintString( "SCSI: Reading sector " );
-        UART2PutHex(sectorAddress >> 24);
-        UART2PutHex(sectorAddress >> 16);
-        UART2PutHex(sectorAddress >> 8);
-        UART2PutHex(sectorAddress);
-        UART2PrintString( " Device " );
-        UART2PutHex(*address);
-        UART2PrintString( "\r\n" );
-    #endif
+    if (*address == 0)
+    {
+        return false;       // USB_MSD_DEVICE_NOT_FOUND;
+    }
+
+    while(attempts--)
+    {
+        // Fill in the command block with the READ10 parameters.
+        commandBlock[0] = 0x28;     // Operation code
+        commandBlock[1] = RDPROTECT_NORMAL | FUA_ALLOW_CACHE;
+        commandBlock[2] = (uint8_t) (sectorAddress >> 24);     // Big endian!
+        commandBlock[3] = (uint8_t) (sectorAddress >> 16);
+        commandBlock[4] = (uint8_t) (sectorAddress >> 8);
+        commandBlock[5] = (uint8_t) (sectorAddress);
+        commandBlock[6] = 0x00;     // Group Number
+        commandBlock[7] = 0x00;     // Number of blocks - Big endian!
+        commandBlock[8] = 0x01;
+        commandBlock[9] = 0x00;     // Control
+
+        // Currently using LUN=0.  When the File System supports multiple LUN's, this will change.
+        errorCode = USBHostMSDRead( *address, 0, commandBlock, 10, dataBuffer, mediaInformation.sectorSize );
+
+        if (!errorCode)
+        {
+            while (!USBHostMSDTransferIsComplete( *address, &errorCode, &byteCount ))
+            {
+                USBTasks();
+            }
+        }
+
+        switch(errorCode)
+        {
+            case USB_MSD_COMMAND_FAILED:
+                USBHostMSDSCSIRequestSense(address);
+                break;
+
+            case USB_SUCCESS:
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    return false;
+}
+
+static bool USBHostMSDSCSIRequestSense(uint8_t * address)
+{
+    uint32_t   byteCount;
+    uint8_t    commandBlock[10];
+    uint8_t    errorCode;
+    uint8_t buffer[18];
 
     if (*address == 0)
     {
@@ -698,24 +770,19 @@ uint8_t USBHostMSDSCSISectorRead(uint8_t * address, uint32_t sectorAddress, uint
     }
 
     // Fill in the command block with the READ10 parameters.
-    commandBlock[0] = 0x28;     // Operation code
+    commandBlock[0] = 0x03;     // Request Sense
     commandBlock[1] = RDPROTECT_NORMAL | FUA_ALLOW_CACHE;
-    commandBlock[2] = (uint8_t) (sectorAddress >> 24);     // Big endian!
-    commandBlock[3] = (uint8_t) (sectorAddress >> 16);
-    commandBlock[4] = (uint8_t) (sectorAddress >> 8);
-    commandBlock[5] = (uint8_t) (sectorAddress);
+    commandBlock[2] = 0;     
+    commandBlock[3] = 0;
+    commandBlock[4] = 0x12;
+    commandBlock[5] = 0;
     commandBlock[6] = 0x00;     // Group Number
     commandBlock[7] = 0x00;     // Number of blocks - Big endian!
-    commandBlock[8] = 0x01;
+    commandBlock[8] = 0x00;
     commandBlock[9] = 0x00;     // Control
 
     // Currently using LUN=0.  When the File System supports multiple LUN's, this will change.
-    errorCode = USBHostMSDRead( *address, 0, commandBlock, 10, dataBuffer, mediaInformation.sectorSize );
-    #ifdef DEBUG_MODE
-        UART2PrintString( "SCSI: Read sector init error " );
-        UART2PutHex( errorCode );
-        UART2PrintString( "\r\n" );
-    #endif
+    errorCode = USBHostMSDRead( *address, 0, commandBlock, 10, buffer, 18 );
 
     if (!errorCode)
     {
@@ -725,19 +792,12 @@ uint8_t USBHostMSDSCSISectorRead(uint8_t * address, uint32_t sectorAddress, uint
         }
     }
 
-    #ifdef DEBUG_MODE
-        UART2PrintString( "SCSI: Read sector error " );
-        UART2PutHex( errorCode );
-        UART2PrintString( "\r\n" );
-    #endif
-
     if (!errorCode)
     {
         return true;
     }
     else
     {
-//        USBHostMSDSCSIMediaReset();
         return false;
     }
 }
@@ -791,17 +851,7 @@ uint8_t USBHostMSDSCSISectorWrite(uint8_t * address, uint32_t sectorAddress, uin
     uint32_t   byteCount;
     uint8_t    commandBlock[10];
     uint8_t    errorCode;
-
-    #ifdef DEBUG_MODE
-        UART2PrintString( "SCSI: Writing sector " );
-        UART2PutHex(sectorAddress >> 24);
-        UART2PutHex(sectorAddress >> 16);
-        UART2PutHex(sectorAddress >> 8);
-        UART2PutHex(sectorAddress);
-        UART2PrintString( " Device " );
-        UART2PutHex(*address);
-        UART2PrintString( "\r\n" );
-    #endif
+    uint8_t attempts = 5;
 
     if (*address == 0)
     {
@@ -813,49 +863,46 @@ uint8_t USBHostMSDSCSISectorWrite(uint8_t * address, uint32_t sectorAddress, uin
         return false;
     }
 
-    // Fill in the command block with the WRITE 10 parameters.
-    commandBlock[0] = 0x2A;     // Operation code
-    commandBlock[1] = WRPROTECT_NORMAL | FUA_ALLOW_CACHE;
-    commandBlock[2] = (uint8_t) (sectorAddress >> 24);     // Big endian!
-    commandBlock[3] = (uint8_t) (sectorAddress >> 16);
-    commandBlock[4] = (uint8_t) (sectorAddress >> 8);
-    commandBlock[5] = (uint8_t) (sectorAddress);
-    commandBlock[6] = 0x00;     // Group Number
-    commandBlock[7] = 0x00;     // Number of blocks - Big endian!
-    commandBlock[8] = 0x01;
-    commandBlock[9] = 0x00;     // Control
-
-    // Currently using LUN=0.  When the File System supports multiple LUN's, this will change.
-    errorCode = USBHostMSDWrite( *address, 0, commandBlock, 10, dataBuffer, mediaInformation.sectorSize );
-    #ifdef DEBUG_MODE
-        UART2PrintString( "SCSI: Write sector init error " );
-        UART2PutHex( errorCode );
-        UART2PrintString( "\r\n" );
-    #endif
-
-    if (!errorCode)
+    while(attempts--)
     {
-        while (!USBHostMSDTransferIsComplete( *address, &errorCode, &byteCount ))
+        // Fill in the command block with the WRITE 10 parameters.
+        commandBlock[0] = 0x2A;     // Operation code
+        commandBlock[1] = WRPROTECT_NORMAL | FUA_ALLOW_CACHE;
+        commandBlock[2] = (uint8_t) (sectorAddress >> 24);     // Big endian!
+        commandBlock[3] = (uint8_t) (sectorAddress >> 16);
+        commandBlock[4] = (uint8_t) (sectorAddress >> 8);
+        commandBlock[5] = (uint8_t) (sectorAddress);
+        commandBlock[6] = 0x00;     // Group Number
+        commandBlock[7] = 0x00;     // Number of blocks - Big endian!
+        commandBlock[8] = 0x01;
+        commandBlock[9] = 0x00;     // Control
+
+        // Currently using LUN=0.  When the File System supports multiple LUN's, this will change.
+        errorCode = USBHostMSDWrite( *address, 0, commandBlock, 10, dataBuffer, mediaInformation.sectorSize );
+
+        if (!errorCode)
         {
-            USBTasks();
+            while (!USBHostMSDTransferIsComplete( *address, &errorCode, &byteCount ))
+            {
+                USBTasks();
+            }
+        }
+
+        switch(errorCode)
+        {
+            case USB_MSD_COMMAND_FAILED:
+                USBHostMSDSCSIRequestSense(address);
+                break;
+
+            case USB_SUCCESS:
+                return true;
+
+            default:
+                return false;
         }
     }
 
-    #ifdef DEBUG_MODE
-        UART2PrintString( "SCSI: Write sector error " );
-        UART2PutHex( errorCode );
-        UART2PrintString( "\r\n" );
-    #endif
-
-    if (!errorCode)
-    {
-        return true;
-    }
-    else
-    {
-//        USBHostMSDSCSIMediaReset();
-        return false;
-    }
+    return false;
 }
 
 

@@ -53,8 +53,8 @@ KO          08-Apr-2009 First release
 
 #include <stdlib.h>
 #include <string.h>
-#include <usb/usb.h>
-#include <usb/usb_host_audio_v1.h>
+#include "usb.h"
+#include "usb_host_audio_v1.h"
 
 
 // *****************************************************************************

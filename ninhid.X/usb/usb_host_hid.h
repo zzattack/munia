@@ -28,7 +28,7 @@ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 #define _USB_HOST_HID_H_
 //DOM-IGNORE-END
 
-#include <usb/usb_hid.h>
+#include "usb_hid.h"
 #include "usb_host_hid_parser.h"
 
 // *****************************************************************************
@@ -88,7 +88,7 @@ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
     // No event occured (NULL event)
 #define EVENT_HID_NONE                      EVENT_HID_BASE + EVENT_HID_OFFSET + 0   
     // A Report Descriptor has been parsed.  The returned data pointer is NULL.
-    // The application must collect details, or simply return TRUE if the 
+    // The application must collect details, or simply return true if the 
     // application is already aware of the data format.
 #define EVENT_HID_RPT_DESC_PARSED           EVENT_HID_BASE + EVENT_HID_OFFSET + 1   
 //#define EVENT_HID_TRANSFER        EVENT_HID_BASE + EVENT_HID_OFFSET + 3   // Unused - value retained for legacy.
@@ -207,8 +207,8 @@ typedef struct _HID_TRANSFER_DATA
     uint8_t deviceAddress  - Address of the attached device.
 
   Return Values:
-    TRUE   -  HID present and ready
-    FALSE  -  HID not present or not ready
+    true   -  HID present and ready
+    false  -  HID not present or not ready
 
   Remarks:
     This function replaces the USBHostHID_ApiDeviceDetect() function.
@@ -437,7 +437,7 @@ uint8_t USBHostHIDTransfer( uint8_t deviceAddress, uint8_t direction, uint8_t in
 
   Description:
     This function indicates whether or not the last transfer is complete.
-    If the functions returns TRUE, the returned byte count and error
+    If the functions returns true, the returned byte count and error
     code are valid. Since only one transfer can be performed at once
     and only one endpoint can be used, we only need to know the
     device address.
@@ -451,8 +451,8 @@ uint8_t USBHostHIDTransfer( uint8_t deviceAddress, uint8_t direction, uint8_t in
     uint32_t *byteCount    - Number of bytes transferred
 
   Return Values:
-    TRUE    - Transfer is complete, errorCode is valid
-    FALSE   - Transfer is not complete, errorCode is not valid
+    true    - Transfer is complete, errorCode is valid
+    false   - Transfer is not complete, errorCode is not valid
 *******************************************************************************/
 bool    USBHostHIDTransferIsComplete( uint8_t deviceAddress, uint8_t *errorCode, uint8_t *byteCount );
 
@@ -516,8 +516,8 @@ bool    USBHostHIDTransferIsComplete( uint8_t deviceAddress, uint8_t *errorCode,
                              particular report
 
   Return Values:
-    TRUE    - If the required usage is located in the report descriptor
-    FALSE   - If the application required usage is not supported by the 
+    true    - If the required usage is located in the report descriptor
+    false   - If the application required usage is not supported by the 
               device(i.e report descriptor).
 
   Remarks:
@@ -556,8 +556,8 @@ bool USBHostHID_ApiFindBit(uint16_t usagePage,uint16_t usage,HIDReportTypeEnum t
     uint8_t* Bit_Length       - returns size of requested usage type data in bits
 
   Return Values:
-    TRUE    - If the required usage is located in the report descriptor
-    FALSE   - If the application required usage is not supported by the 
+    true    - If the required usage is located in the report descriptor
+    false   - If the application required usage is not supported by the 
               device(i.e report descriptor).
 
   Remarks:
@@ -585,8 +585,8 @@ bool USBHostHID_ApiFindValue(uint16_t usagePage,uint16_t usage,HIDReportTypeEnum
     None
 
   Return Values:
-    TRUE    - Transfer is complete, errorCode is valid
-    FALSE   - Transfer is not complete, errorCode is not valid
+    true    - Transfer is complete, errorCode is valid
+    false   - Transfer is not complete, errorCode is not valid
 
   Remarks:
     None
@@ -659,8 +659,8 @@ uint8_t USBHostHID_ApiGetCurrentInterfaceNum(void);
     HID_DATA_DETAILS *pDataDetails  - data details extracted from report
                                       descriptor
   Return Values:
-    TRUE    - If the required data is retrieved from the report
-    FALSE   - If required data is not found.
+    true    - If the required data is retrieved from the report
+    false   - If required data is not found.
 
   Remarks:
     None
@@ -696,15 +696,43 @@ bool USBHostHID_ApiImportData(uint8_t *report,uint16_t reportLength,HID_USER_DAT
     uint32_t size       - Size of the data
 
   Return Values:
-    TRUE   - Event was handled
-    FALSE  - Event was not handled
+    true   - Event was handled
+    false  - Event was not handled
 
   Remarks:
     None
 *******************************************************************************/
 bool USBHostHIDEventHandler( uint8_t address, USB_EVENT event, void *data, uint32_t size );
 
+/*******************************************************************************
+  Function:
+    bool USBHostHIDAppDataEventHandler( uint8_t address, USB_EVENT event,
+                        void *data, uint32_t size )
 
+  Precondition:
+    The device has been initialized.
+
+  Summary:
+    This function is the data event handler for this client driver.
+
+  Description:
+    This function is the data event handler for this client driver.  It is called
+    by the host layer when various events occur.
+
+  Parameters:
+    uint8_t address    - Address of the device
+    USB_EVENT event - Event that has occurred
+    void *data      - Pointer to data pertinent to the event
+    uint32_t size       - Size of the data
+
+  Return Values:
+    true   - Event was handled
+    false  - Event was not handled
+
+  Remarks:
+    None
+*******************************************************************************/
+bool USBHostHIDAppDataEventHandler( uint8_t address, USB_EVENT event, void *data, uint32_t size );
 
 
 /*******************************************************************************
@@ -729,8 +757,8 @@ bool USBHostHIDEventHandler( uint8_t address, USB_EVENT event, void *data, uint3
     uint8_t clientDriverID - Client driver identification for device requests
 
   Return Values:
-    TRUE   - We can support the device.
-    FALSE  - We cannot support the device.
+    true   - We can support the device.
+    false  - We cannot support the device.
 
   Remarks:
     None

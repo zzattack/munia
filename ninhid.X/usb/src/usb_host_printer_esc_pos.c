@@ -93,9 +93,9 @@ Change History:
 #include <stdlib.h>
 #include <string.h>
 #include "GenericTypeDefs.h"
-#include "USB/usb.h"
-#include "USB/usb_host_printer.h"
-#include "USB/usb_host_printer_esc_pos.h"
+#include "usb.h"
+#include "usb_host_printer.h"
+#include "usb_host_printer_esc_pos.h"
 
 
 //#define DEBUG_MODE

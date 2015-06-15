@@ -91,8 +91,8 @@
 ******************************************************************************/
 
 /** I N C L U D E S **********************************************************/
-#include "usb/usb.h"
-#include "./usb/usb_device_generic.h"
+#include "usb.h"
+#include "usb_device_generic.h"
 
 #if defined(USB_USE_GEN)
 

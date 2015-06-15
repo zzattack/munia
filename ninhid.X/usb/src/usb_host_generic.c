@@ -62,9 +62,11 @@ BC/KO       25-Dec-2007 First release
 
 #include <stdlib.h>
 #include <string.h>
-#include "GenericTypeDefs.h"
-#include "USB/usb.h"
-#include "USB/usb_host_generic.h"
+#include <stdbool.h>
+#include <stdint.h>
+
+#include "usb.h"
+#include "usb_host_generic.h"
 
 //#define DEBUG_MODE
 #ifdef DEBUG_MODE
@@ -106,7 +108,7 @@ GENERIC_DEVICE  gc_DevData;
         #define USB_GENERIC_MAX_SERIAL_NUMBER   64
     #endif
 
-    WORD    serialNumbers[USB_MAX_GENERIC_DEVICES][USB_GENERIC_MAX_SERIAL_NUMBER];
+    uint16_t    serialNumbers[USB_MAX_GENERIC_DEVICES][USB_GENERIC_MAX_SERIAL_NUMBER];
 #endif
 
 
@@ -118,7 +120,7 @@ GENERIC_DEVICE  gc_DevData;
 
 /****************************************************************************
   Function:
-    BOOL USBHostGenericInit ( BYTE address, DWORD flags, BYTE clientDriverID )
+    bool USBHostGenericInit ( uint8_t address, uint32_t flags, uint8_t clientDriverID )
 
   Summary:
     This function is called by the USB Embedded Host layer when a "generic"
@@ -134,15 +136,15 @@ GENERIC_DEVICE  gc_DevData;
     The device has been configured.
 
   Parameters:
-    BYTE address    - Device's address on the bus
-    DWORD flags     - Initialization flags
-    BYTE clientDriverID - ID to send when issuing a Device Request via
+    uint8_t address    - Device's address on the bus
+    uint32_t flags     - Initialization flags
+    uint8_t clientDriverID - ID to send when issuing a Device Request via
                             USBHostIssueDeviceRequest(), USBHostSetDeviceConfiguration(),
                             or USBHostSetDeviceInterface().  
 
   Return Values:
-    TRUE    - Initialization was successful
-    FALSE   - Initialization failed
+    true    - Initialization was successful
+    false   - Initialization failed
 
   Remarks:
     Multiple client drivers may be used in a single application.  The USB
@@ -150,9 +152,9 @@ GENERIC_DEVICE  gc_DevData;
     attached device.
   ***************************************************************************/
 
-BOOL USBHostGenericInit ( BYTE address, DWORD flags, BYTE clientDriverID )
+bool USBHostGenericInit ( uint8_t address, uint32_t flags, uint8_t clientDriverID )
 {
-    BYTE *pDesc;
+    uint8_t *pDesc;
 
     // Initialize state
     gc_DevData.rxLength     = 0;
@@ -162,10 +164,10 @@ BOOL USBHostGenericInit ( BYTE address, DWORD flags, BYTE clientDriverID )
     gc_DevData.ID.deviceAddress = address;
     pDesc  = USBHostGetDeviceDescriptor(address);
     pDesc += 8;
-    gc_DevData.ID.vid  =  (WORD)*pDesc;       pDesc++;
-    gc_DevData.ID.vid |= ((WORD)*pDesc) << 8; pDesc++;
-    gc_DevData.ID.pid  =  (WORD)*pDesc;       pDesc++;
-    gc_DevData.ID.pid |= ((WORD)*pDesc) << 8; pDesc++;
+    gc_DevData.ID.vid  =  (uint16_t)*pDesc;       pDesc++;
+    gc_DevData.ID.vid |= ((uint16_t)*pDesc) << 8; pDesc++;
+    gc_DevData.ID.pid  =  (uint16_t)*pDesc;       pDesc++;
+    gc_DevData.ID.pid |= ((uint16_t)*pDesc) << 8; pDesc++;
 
     // Save the Client Driver ID
     gc_DevData.clientDriverID = clientDriverID;
@@ -186,8 +188,8 @@ BOOL USBHostGenericInit ( BYTE address, DWORD flags, BYTE clientDriverID )
 
     #ifdef USB_GENERIC_SUPPORT_SERIAL_NUMBERS
     {
-        BYTE    *deviceDescriptor;
-        BYTE    serialNumberIndex;
+        uint8_t    *deviceDescriptor;
+        uint8_t    serialNumberIndex;
 
         // MCHP - when multiple devices are implemented, this init will change
         // to find a free slot
@@ -213,7 +215,7 @@ BOOL USBHostGenericInit ( BYTE address, DWORD flags, BYTE clientDriverID )
             #endif
         }
 
-        if (USBHostGetStringDescriptor( address, serialNumberIndex, (BYTE *)gc_DevData.ID.serialNumber, USB_GENERIC_MAX_SERIAL_NUMBER*2 ))
+        if (USBHostGetStringDescriptor( address, serialNumberIndex, (uint8_t *)gc_DevData.ID.serialNumber, USB_GENERIC_MAX_SERIAL_NUMBER*2 ))
         {
             // We can't get the serial number.  Just set the pointer to null
             // and call it good.  We have to call the SN valid so we don't get trapped
@@ -240,15 +242,15 @@ BOOL USBHostGenericInit ( BYTE address, DWORD flags, BYTE clientDriverID )
 
     // TBD
 
-    return TRUE;
+    return true;
 
 } // USBHostGenericInit
 
 
 /****************************************************************************
   Function:
-    BOOL USBHostGenericEventHandler ( BYTE address, USB_EVENT event,
-                            void *data, DWORD size )
+    bool USBHostGenericEventHandler ( uint8_t address, USB_EVENT event,
+                            void *data, uint32_t size )
 
   Summary:
     This routine is called by the Host layer to notify the general client of
@@ -257,32 +259,32 @@ BOOL USBHostGenericInit ( BYTE address, DWORD flags, BYTE clientDriverID )
   Description:
     This routine is called by the Host layer to notify the general client of
     events that occur.  If the event is recognized, it is handled and the
-    routine returns TRUE.  Otherwise, it is ignored and the routine returns
-    FALSE.
+    routine returns true.  Otherwise, it is ignored and the routine returns
+    false.
 
   Preconditions:
     None
 
   Parameters:
-    BYTE address    - Address of device with the event
+    uint8_t address    - Address of device with the event
     USB_EVENT event - The bus event that occured
     void *data      - Pointer to event-specific data
-    DWORD size      - Size of the event-specific data
+    uint32_t size      - Size of the event-specific data
 
   Return Values:
-    TRUE    - The event was handled
-    FALSE   - The event was not handled
+    true    - The event was handled
+    false   - The event was not handled
 
   Remarks:
     None
   ***************************************************************************/
 
-BOOL USBHostGenericEventHandler ( BYTE address, USB_EVENT event, void *data, DWORD size )
+bool USBHostGenericEventHandler ( uint8_t address, USB_EVENT event, void *data, uint32_t size )
 {
     // Make sure it was for our device
     if ( address != gc_DevData.ID.deviceAddress)
     {
-        return FALSE;
+        return false;
     }
 
     // Handle specific events.
@@ -290,7 +292,7 @@ BOOL USBHostGenericEventHandler ( BYTE address, USB_EVENT event, void *data, DWO
     {
     case EVENT_DETACH:
         // Notify that application that the device has been detached.
-        USB_HOST_APP_EVENT_HANDLER(gc_DevData.ID.deviceAddress, EVENT_GENERIC_DETACH, &gc_DevData.ID.deviceAddress, sizeof(BYTE) );
+        USB_HOST_APP_EVENT_HANDLER(gc_DevData.ID.deviceAddress, EVENT_GENERIC_DETACH, &gc_DevData.ID.deviceAddress, sizeof(uint8_t) );
         gc_DevData.flags.val        = 0;
         gc_DevData.ID.deviceAddress = 0;
         #ifdef DEBUG_MODE
@@ -298,24 +300,24 @@ BOOL USBHostGenericEventHandler ( BYTE address, USB_EVENT event, void *data, DWO
             UART2PutDec( address );
             UART2PrintString( "\r\n" );
         #endif
-        return TRUE;
+        return true;
 
     #ifdef USB_ENABLE_TRANSFER_EVENT
     case EVENT_TRANSFER:
         if ( (data != NULL) && (size == sizeof(HOST_TRANSFER_DATA)) )
         {
-            DWORD dataCount = ((HOST_TRANSFER_DATA *)data)->dataCount;
+            uint32_t dataCount = ((HOST_TRANSFER_DATA *)data)->dataCount;
 
             if ( ((HOST_TRANSFER_DATA *)data)->bEndpointAddress == (USB_IN_EP|USB_GENERIC_EP) )
             {
                 gc_DevData.flags.rxBusy = 0;
                 gc_DevData.rxLength = dataCount;
-                USB_HOST_APP_EVENT_HANDLER(gc_DevData.ID.deviceAddress, EVENT_GENERIC_RX_DONE, &dataCount, sizeof(DWORD) );
+                USB_HOST_APP_EVENT_HANDLER(gc_DevData.ID.deviceAddress, EVENT_GENERIC_RX_DONE, &dataCount, sizeof(uint32_t) );
             }
             else if ( ((HOST_TRANSFER_DATA *)data)->bEndpointAddress == (USB_OUT_EP|USB_GENERIC_EP) )
             {
                 gc_DevData.flags.txBusy = 0;
-                USB_HOST_APP_EVENT_HANDLER(gc_DevData.ID.deviceAddress, EVENT_GENERIC_TX_DONE, &dataCount, sizeof(DWORD) );
+                USB_HOST_APP_EVENT_HANDLER(gc_DevData.ID.deviceAddress, EVENT_GENERIC_TX_DONE, &dataCount, sizeof(uint32_t) );
             }
             else
             #ifdef USB_GENERIC_SUPPORT_SERIAL_NUMBERS
@@ -335,14 +337,14 @@ BOOL USBHostGenericEventHandler ( BYTE address, USB_EVENT event, void *data, DWO
             else
             #endif
             {
-                return FALSE;
+                return false;
             }
 
-            return TRUE;
+            return true;
 
         }
         else
-            return FALSE;
+            return false;
     #endif
 
     case EVENT_SUSPEND:
@@ -352,7 +354,7 @@ BOOL USBHostGenericEventHandler ( BYTE address, USB_EVENT event, void *data, DWO
         break;
     }
 
-    return FALSE;
+    return false;
 } // USBHostGenericEventHandler
 
 
@@ -364,7 +366,7 @@ BOOL USBHostGenericEventHandler ( BYTE address, USB_EVENT event, void *data, DWO
 
 /****************************************************************************
   Function:
-    BOOL USBHostGenericDeviceDetached( BYTE deviceAddress )
+    bool USBHostGenericDeviceDetached( uint8_t deviceAddress )
 
   Description:
     This interface is used to check if the devich has been detached from the
@@ -374,11 +376,11 @@ BOOL USBHostGenericEventHandler ( BYTE address, USB_EVENT event, void *data, DWO
     None
 
   Parameters:
-    BYTE deviceAddress	- USB Address of the device.
+    uint8_t deviceAddress	- USB Address of the device.
 
   Return Values:
-    TRUE    - The device has been detached, or an invalid deviceAddress is given.
-    FALSE   - The device is attached
+    true    - The device has been detached, or an invalid deviceAddress is given.
+    false   - The device is attached
 
   Example:
     <code>
@@ -397,7 +399,7 @@ BOOL USBHostGenericEventHandler ( BYTE address, USB_EVENT event, void *data, DWO
 
 /****************************************************************************
   Function:
-    BOOL USBHostGenericGetDeviceAddress(GENERIC_DEVICE_ID *pDevID)
+    bool USBHostGenericGetDeviceAddress(GENERIC_DEVICE_ID *pDevID)
 
   Description:
     This interface is used get the address of a specific generic device on
@@ -411,14 +413,14 @@ BOOL USBHostGenericEventHandler ( BYTE address, USB_EVENT event, void *data, DWO
                     		 PID, serial number, and device address).
 
   Return Values:
-    TRUE    - The device is connected
-    FALSE   - The device is not connected.
+    true    - The device is connected
+    false   - The device is not connected.
 
   Example:
     <code>
     GENERIC_DEVICE_ID   deviceID;
-    WORD                serialNumber[] = { '1', '2', '3', '4', '5', '6' };
-    BYTE                deviceAddress;
+    uint16_t                serialNumber[] = { '1', '2', '3', '4', '5', '6' };
+    uint8_t                deviceAddress;
 
     deviceID.vid          = 0x1234;
     deviceID.pid          = 0x5678;
@@ -434,9 +436,9 @@ BOOL USBHostGenericEventHandler ( BYTE address, USB_EVENT event, void *data, DWO
     None
   ***************************************************************************/
 
-BOOL USBHostGenericGetDeviceAddress(GENERIC_DEVICE_ID *pDevID)
+bool USBHostGenericGetDeviceAddress(GENERIC_DEVICE_ID *pDevID)
 {
-    if (!gc_DevData.flags.initialized) return FALSE;
+    if (!gc_DevData.flags.initialized) return false;
 
     if (gc_DevData.ID.deviceAddress != 0 && pDevID != NULL)
     {
@@ -447,19 +449,19 @@ BOOL USBHostGenericGetDeviceAddress(GENERIC_DEVICE_ID *pDevID)
 #endif
             {
                 pDevID->deviceAddress = gc_DevData.ID.deviceAddress;
-                return TRUE;
+                return true;
             }
         }
     }
 
-    return FALSE;
+    return false;
 
 } // USBHostGenericGetDeviceAddress
 
 
 /****************************************************************************
   Function:
-    DWORD USBHostGenericGetRxLength( BYTE deviceAddress )
+    uint32_t USBHostGenericGetRxLength( uint8_t deviceAddress )
 
   Description:
     This function retrieves the number of bytes copied to user's buffer by
@@ -469,7 +471,7 @@ BOOL USBHostGenericGetDeviceAddress(GENERIC_DEVICE_ID *pDevID)
     The device must be connected and enumerated.
 
   Parameters:
-    BYTE deviceAddress	- USB Address of the device
+    uint8_t deviceAddress	- USB Address of the device
 
   Returns:
     Returns the number of bytes most recently received from the Generic
@@ -485,7 +487,7 @@ BOOL USBHostGenericGetDeviceAddress(GENERIC_DEVICE_ID *pDevID)
 
 /****************************************************************************
   Function:
-    void USBHostGenericRead( BYTE deviceAddress, BYTE *buffer, DWORD length )
+    void USBHostGenericRead( uint8_t deviceAddress, uint8_t *buffer, uint32_t length )
 
   Description:
     Use this routine to receive from the device and store it into memory.
@@ -494,9 +496,9 @@ BOOL USBHostGenericGetDeviceAddress(GENERIC_DEVICE_ID *pDevID)
     The device must be connected and enumerated.
 
   Parameters:
-    BYTE deviceAddress  - USB Address of the device.
-    BYTE *buffer        - Pointer to the data buffer
-    DWORD length        - Number of bytes to be transferred
+    uint8_t deviceAddress  - USB Address of the device.
+    uint8_t *buffer        - Pointer to the data buffer
+    uint32_t length        - Number of bytes to be transferred
 
   Return Values:
     USB_SUCCESS         - The Read was started successfully
@@ -515,9 +517,9 @@ BOOL USBHostGenericGetDeviceAddress(GENERIC_DEVICE_ID *pDevID)
     None
   ***************************************************************************/
 
-BYTE USBHostGenericRead( BYTE deviceAddress, void *buffer, DWORD length )
+uint8_t USBHostGenericRead( uint8_t deviceAddress, void *buffer, uint32_t length )
 {
-    BYTE RetVal;
+    uint8_t RetVal;
 
     // Validate the call
     if (!API_VALID(deviceAddress)) return USB_INVALID_STATE;
@@ -526,7 +528,7 @@ BYTE USBHostGenericRead( BYTE deviceAddress, void *buffer, DWORD length )
     // Set the busy flag, clear the count and start a new IN transfer.
     gc_DevData.flags.rxBusy = 1;
     gc_DevData.rxLength = 0;
-    RetVal = USBHostRead( deviceAddress, USB_IN_EP|USB_GENERIC_EP, (BYTE *)buffer, length );
+    RetVal = USBHostRead( deviceAddress, USB_IN_EP|USB_GENERIC_EP, (uint8_t *)buffer, length );
     if (RetVal != USB_SUCCESS)
     {
         gc_DevData.flags.rxBusy = 0;    // Clear flag to allow re-try
@@ -538,7 +540,7 @@ BYTE USBHostGenericRead( BYTE deviceAddress, void *buffer, DWORD length )
 
 /****************************************************************************
   Function:
-    BOOL USBHostGenericRxIsBusy( BYTE deviceAddress )
+    bool USBHostGenericRxIsBusy( uint8_t deviceAddress )
 
   Summary:
     This interface is used to check if the client driver is currently busy
@@ -554,12 +556,12 @@ BYTE USBHostGenericRead( BYTE deviceAddress, void *buffer, DWORD length )
     The device must be connected and enumerated.
 
   Parameters:
-    BYTE deviceAddress     - USB Address of the device
+    uint8_t deviceAddress     - USB Address of the device
 
   Return Values:
-    TRUE    - The device is receiving data or an invalid deviceAddress is
+    true    - The device is receiving data or an invalid deviceAddress is
                 given.
-    FALSE   - The device is not receiving data
+    false   - The device is not receiving data
 
   Example:
     <code>
@@ -578,8 +580,8 @@ BYTE USBHostGenericRead( BYTE deviceAddress, void *buffer, DWORD length )
 
 /****************************************************************************
   Function:
-    BOOL USBHostGenericRxIsComplete( BYTE deviceAddress, BYTE *errorCode,
-                DWORD *byteCount )
+    bool USBHostGenericRxIsComplete( uint8_t deviceAddress, uint8_t *errorCode,
+                uint32_t *byteCount )
 
   Summary:
     This routine indicates whether or not the last IN transfer is complete.
@@ -596,14 +598,14 @@ BYTE USBHostGenericRead( BYTE deviceAddress, void *buffer, DWORD length )
     None
 
   Parameters:
-    BYTE deviceAddress  - Address of the attached peripheral
-    BYTE *errorCode     - Error code of the last transfer, if complete
-    DWORD *byteCount    - Bytes transferred during the last transfer, if
+    uint8_t deviceAddress  - Address of the attached peripheral
+    uint8_t *errorCode     - Error code of the last transfer, if complete
+    uint32_t *byteCount    - Bytes transferred during the last transfer, if
                             complete
 
   Return Values:
-    TRUE    - The IN transfer is complete.  errorCode and byteCount are valid.
-    FALSE   - The IN transfer is not complete.  errorCode and byteCount are
+    true    - The IN transfer is complete.  errorCode and byteCount are valid.
+    false   - The IN transfer is not complete.  errorCode and byteCount are
                 invalid.
 
   Remarks:
@@ -611,18 +613,18 @@ BYTE USBHostGenericRead( BYTE deviceAddress, void *buffer, DWORD length )
   ***************************************************************************/
 
 #ifndef USB_ENABLE_TRANSFER_EVENT
-BOOL USBHostGenericRxIsComplete( BYTE deviceAddress,
-                                    BYTE *errorCode, DWORD *byteCount )
+bool USBHostGenericRxIsComplete( uint8_t deviceAddress,
+                                    uint8_t *errorCode, uint32_t *byteCount )
 {
     if (gc_DevData.flags.rxBusy)
     {
-        return FALSE;
+        return false;
     }
     else
     {
         *byteCount = gc_DevData.rxLength;
         *errorCode = gc_DevData.rxErrorCode;
-        return TRUE;
+        return true;
     }
 }
 #endif
@@ -658,8 +660,8 @@ BOOL USBHostGenericRxIsComplete( BYTE deviceAddress,
 #ifndef USB_ENABLE_TRANSFER_EVENT
 void USBHostGenericTasks( void )
 {
-    DWORD   byteCount;
-    BYTE    errorCode;
+    uint32_t   byteCount;
+    uint8_t    errorCode;
 
     if (gc_DevData.ID.deviceAddress && gc_DevData.flags.initialized)
     {
@@ -706,7 +708,7 @@ void USBHostGenericTasks( void )
 
 /****************************************************************************
   Function:
-    BOOL USBHostGenericTxIsBusy( BYTE deviceAddress )
+    bool USBHostGenericTxIsBusy( uint8_t deviceAddress )
 
   Summary:
     This interface is used to check if the client driver is currently busy
@@ -722,12 +724,12 @@ void USBHostGenericTasks( void )
     The device must be connected and enumerated.
 
   Parameters:
-    BYTE deviceAddress	- USB Address of the device
+    uint8_t deviceAddress	- USB Address of the device
 
   Return Values:
-    TRUE    - The device is transmitting data or an invalid deviceAddress
+    true    - The device is transmitting data or an invalid deviceAddress
                 is given.
-    FALSE   - The device is not transmitting data
+    false   - The device is not transmitting data
 
   Example:
     <code>
@@ -746,7 +748,7 @@ void USBHostGenericTasks( void )
 
 /****************************************************************************
   Function:
-    BOOL USBHostGenericTxIsComplete( BYTE deviceAddress, BYTE *errorCode )
+    bool USBHostGenericTxIsComplete( uint8_t deviceAddress, uint8_t *errorCode )
 
   Summary:
     This routine indicates whether or not the last OUT transfer is complete.
@@ -763,28 +765,28 @@ void USBHostGenericTasks( void )
     None
 
   Parameters:
-    BYTE deviceAddress  - Address of the attached peripheral
-    BYTE *errorCode     - Error code of the last transfer, if complete
+    uint8_t deviceAddress  - Address of the attached peripheral
+    uint8_t *errorCode     - Error code of the last transfer, if complete
 
   Return Values:
-    TRUE    - The OUT transfer is complete.  errorCode is valid.
-    FALSE   - The OUT transfer is not complete.  errorCode is invalid.
+    true    - The OUT transfer is complete.  errorCode is valid.
+    false   - The OUT transfer is not complete.  errorCode is invalid.
 
   Remarks:
     None
   ***************************************************************************/
 
 #ifndef USB_ENABLE_TRANSFER_EVENT
-BOOL USBHostGenericTxIsComplete( BYTE deviceAddress, BYTE *errorCode )
+bool USBHostGenericTxIsComplete( uint8_t deviceAddress, uint8_t *errorCode )
 {
     if (gc_DevData.flags.txBusy)
     {
-        return FALSE;
+        return false;
     }
     else
     {
         *errorCode = gc_DevData.txErrorCode;
-        return TRUE;
+        return true;
     }
 }
 #endif
@@ -792,7 +794,7 @@ BOOL USBHostGenericTxIsComplete( BYTE deviceAddress, BYTE *errorCode )
 
 /****************************************************************************
   Function:
-    void USBHostGenericWrite( BYTE deviceAddress, BYTE *buffer, DWORD length )
+    void USBHostGenericWrite( uint8_t deviceAddress, uint8_t *buffer, uint32_t length )
 
   Description:
     Use this routine to transmit data from memory to the device.
@@ -801,9 +803,9 @@ BOOL USBHostGenericTxIsComplete( BYTE deviceAddress, BYTE *errorCode )
     The device must be connected and enumerated.
 
   Parameters:
-    BYTE deviceAddress   - USB Address of the device.
-    BYTE *buffer         - Pointer to the data buffer
-    DWORD length         - Number of bytes to be transferred
+    uint8_t deviceAddress   - USB Address of the device.
+    uint8_t *buffer         - Pointer to the data buffer
+    uint32_t length         - Number of bytes to be transferred
 
   Return Values:
     USB_SUCCESS         - The Write was started successfully
@@ -822,9 +824,9 @@ BOOL USBHostGenericTxIsComplete( BYTE deviceAddress, BYTE *errorCode )
     None
   ***************************************************************************/
 
-BYTE USBHostGenericWrite( BYTE deviceAddress, void *buffer, DWORD length )
+uint8_t USBHostGenericWrite( uint8_t deviceAddress, void *buffer, uint32_t length )
 {
-    BYTE RetVal;
+    uint8_t RetVal;
 
     // Validate the call
     if (!API_VALID(deviceAddress)) return USB_INVALID_STATE;
@@ -832,7 +834,7 @@ BYTE USBHostGenericWrite( BYTE deviceAddress, void *buffer, DWORD length )
 
     // Set the busy flag and start a new OUT transfer.
     gc_DevData.flags.txBusy = 1;
-    RetVal = USBHostWrite( deviceAddress, USB_OUT_EP|USB_GENERIC_EP, (BYTE *)buffer, length );
+    RetVal = USBHostWrite( deviceAddress, USB_OUT_EP|USB_GENERIC_EP, (uint8_t *)buffer, length );
     if (RetVal != USB_SUCCESS)
     {
         gc_DevData.flags.txBusy = 0;    // Clear flag to allow re-try

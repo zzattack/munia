@@ -27,8 +27,10 @@ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 #define PHDC_H
 
 /** I N C L U D E S **********************************************************/
-#include "GenericTypeDefs.h"
-#include "USB/usb.h"
+#include <stdint.h>
+#include <stdbool.h>
+
+#include "usb.h"
 #include "usb_config.h"
 #include "phd_config.h"
 
@@ -88,39 +90,39 @@ extern volatile FAR unsigned char phdc_data_rx[PHDC_DATA_OUT_EP_SIZE];
 extern volatile FAR unsigned char phdc_data_tx[PHDC_DATA_IN_EP_SIZE];
 
 /* callback function pointer structure for Application to handle events */
-typedef void(* USB_PHDC_CB)(UINT8, void *);
+typedef void(* USB_PHDC_CB)(uint8_t, void *);
 
-extern volatile BYTE CtrlTrfData[USB_EP0_BUFF_SIZE];
+extern volatile uint8_t CtrlTrfData[USB_EP0_BUFF_SIZE];
 
 /** E X T E R N S ************************************************************/
 typedef struct PHDC_RX_ENDPOINT_STRUCT
 {
-	UINT8 ep_num;
-	UINT16 transfer_size;
-	UINT8 qos;
-	UINT16 offset;
-	UINT8 size;
-	UINT8 len;	
-	UINT8 *app_buff;
+	uint8_t ep_num;
+	uint16_t transfer_size;
+	uint8_t qos;
+	uint16_t offset;
+	uint8_t size;
+	uint8_t len;	
+	uint8_t *app_buff;
 	USB_HANDLE PHDCDataOutHandle;
 }PHDC_RX_ENDPOINT,*PTR_PHDC_RX_ENDPOINT;
 
 typedef struct PHDC_TX_ENDPOINT_STRUCT
 {
-	UINT8 ep_num;
-	UINT16 transfer_size;
-	BOOL memtype;
-	UINT8 qos;
-	UINT16 offset;	
-	UINT16 bytes_to_send;	
-	UINT8 size;
-	UINT8 len;	
-	UINT8 *app_buff;
+	uint8_t ep_num;
+	uint16_t transfer_size;
+	bool memtype;
+	uint8_t qos;
+	uint16_t offset;	
+	uint16_t bytes_to_send;	
+	uint8_t size;
+	uint8_t len;	
+	uint8_t *app_buff;
 	USB_HANDLE PHDCDataInHandle;
 }PHDC_TX_ENDPOINT,*PTR_PHDC_TX_ENDPOINT;
 
 extern volatile CTRL_TRF_SETUP SetupPkt;
-extern ROM UINT8 configDescriptor1[];
+extern const uint8_t configDescriptor1[];
 
 /******************************************************************************
  	Function:
@@ -178,7 +180,7 @@ void USBDevicePHDCCheckRequest(void);
 extern void USBDevicePHDCInit(USB_PHDC_CB);
 /**********************************************************************************
   Function:
-        UINT8 USBDevicePHDCReceiveData(UINT8 qos, UINT8 *buffer, UINT16 len)
+        uint8_t USBDevicePHDCReceiveData(uint8_t qos, uint8_t *buffer, uint16_t len)
     
   Summary:
     USBDevicePHDCReceiveData copies a string of BYTEs received through USB PHDC Bulk OUT
@@ -194,8 +196,8 @@ extern void USBDevicePHDCInit(USB_PHDC_CB);
     
     Typical Usage:
     <code>
-        BYTE numBytes;
-        BYTE buffer[64]
+        uint8_t numBytes;
+        uint8_t buffer[64]
     
         numBytes = USBDevicePHDCReceiveData(buffer,sizeof(buffer)); //until the buffer is free.
         if(numBytes \> 0)
@@ -217,11 +219,11 @@ extern void USBDevicePHDCInit(USB_PHDC_CB);
                                                                                    
   **********************************************************************************/
 
-UINT8 USBDevicePHDCReceiveData(UINT8 qos, UINT8 *buffer, UINT16 len);
+uint8_t USBDevicePHDCReceiveData(uint8_t qos, uint8_t *buffer, uint16_t len);
 
 /******************************************************************************
   Function:
-	void USBDevicePHDCSendData(UINT8 qos, UINT8 *data, UINT8 Length)
+	void USBDevicePHDCSendData(uint8_t qos, uint8_t *data, uint8_t Length)
 		
   Summary:
     USBDevicePHDCSendData writes an array of data to the USB. 
@@ -245,7 +247,7 @@ UINT8 USBDevicePHDCReceiveData(UINT8 qos, UINT8 *buffer, UINT16 len);
     must be called periodically to keep sending blocks of data to the host.
 
   Conditions:
-    USBUSARTIsTxTrfReady() must return TRUE. This indicates that the last
+    USBUSARTIsTxTrfReady() must return true. This indicates that the last
     transfer is complete and is ready to receive a new block of data.
 
   Input:
@@ -254,7 +256,7 @@ UINT8 USBDevicePHDCReceiveData(UINT8 qos, UINT8 *buffer, UINT16 len);
     length - the number of bytes to be transfered.
 		
  *****************************************************************************/
-void USBDevicePHDCSendData(UINT8 qos, UINT8 *data, UINT16 length, BOOL memtype);
+void USBDevicePHDCSendData(uint8_t qos, uint8_t *data, uint16_t length, bool memtype);
 /************************************************************************
   Function:
         void USBDevicePHDCTxRXService(void)
@@ -277,7 +279,7 @@ void USBDevicePHDCSendData(UINT8 qos, UINT8 *data, UINT16 length, BOOL memtype);
         {
             USBDeviceTasks();
             if((USBGetDeviceState() \< CONFIGURED_STATE) ||
-               (USBIsDeviceSuspended() == TRUE))
+               (USBIsDeviceSuspended() == true))
             {
                 //Either the device is not configured or we are suspended
                 //  so we don't want to do execute any application code
@@ -304,7 +306,7 @@ void USBDevicePHDCTxRXService(USTAT_FIELDS* event);
 
 /************************************************************************
   Function:
-        void USBDevicePHDCUpdateStatus (WORD EndpointNo, BIT Status)
+        void USBDevicePHDCUpdateStatus (uint16_t EndpointNo, bool Status)
     
   Summary:
     USBDevicePHDCUpdateStatus Function Gets the current status of an Endpoint and holds the status in variable phdcEpDataBitmap. The Status is sent to the host upon the 
@@ -316,14 +318,14 @@ void USBDevicePHDCTxRXService(USTAT_FIELDS* event);
     variable phdcEpDataBitmap. 
     
   Input:
-     WORD EndpointNo : The number of the endpoint, for which the status is requested. 
+     uint16_t EndpointNo : The number of the endpoint, for which the status is requested. 
      
-     BIT Status:  Current status of the Endpoint. 
+     bool Status:  Current status of the Endpoint. 
   
   Conditions:
     None
   Remarks:
     None                                                                 
   ************************************************************************/
-void USBDevicePHDCUpdateStatus (WORD EndpointNo, BIT Status);
+void USBDevicePHDCUpdateStatus (uint16_t EndpointNo, bool Status);
 #endif //PHDC_H

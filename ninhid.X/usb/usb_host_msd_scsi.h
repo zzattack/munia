@@ -27,9 +27,9 @@ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 #define __USBHOSTMSDSCSI_H__
 //DOM-IGNORE-END
 
-#include "usb/usb.h"
+#include "usb.h"
 #include "system_config.h"
-#include "fileio/fileio.h"
+#include "fileio.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -128,6 +128,30 @@ uint8_t    USBHostMSDSCSIMediaDetect( uint8_t * address);
 
 FILEIO_MEDIA_INFORMATION * USBHostMSDSCSIMediaInitialize( uint8_t * address );
 
+/****************************************************************************
+  Function:
+    bool USBHostMSDSCSIMediaDeinitialize( void * mediaConfig )
+
+  Summary:
+    This function deinitializes the media.
+
+  Description:
+    This function deinitializes the media.
+
+  Precondition:
+    None
+
+  Parameters:
+    mediaConfig - the media configuration information
+
+  Return Values:
+    true - successful
+    false - otherwise
+
+  Remarks:
+    None
+  ***************************************************************************/
+bool USBHostMSDSCSIMediaDeinitialize(void *mediaConfig);
 
 /****************************************************************************
   Function:

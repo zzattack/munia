@@ -31,7 +31,8 @@ KO/BC       2-20-2008   Initial Creation
 
 *******************************************************************************/
 
-
+#include <stdint.h>
+#include <stdbool.h>
 
 // To Do:  Put all PIC18-specific USB HW definitions here,
 
@@ -73,7 +74,7 @@ KO/BC       2-20-2008   Initial Creation
 //******************************************************************************
 typedef union
 {
-    BYTE UEP[16];
+    uint8_t UEP[16];
 } _UEP;
 
 #define UEP_STALL 0x0002
@@ -99,7 +100,7 @@ typedef union
 /* BDT entry structure definition */
 typedef union _BD_STAT
 {
-    BYTE Val;
+    uint8_t Val;
     struct{
         //If the CPU owns the buffer then these are the values
         unsigned BC8:1;         //bit 8 of the byte count
@@ -141,18 +142,18 @@ typedef union __BDT
     struct
     {
         BD_STAT STAT;
-        BYTE CNT;
-        BYTE ADRL;                      //Buffer Address Low
-        BYTE ADRH;                      //Buffer Address High
+        uint8_t CNT;
+        uint8_t ADRL;                      //Buffer Address Low
+        uint8_t ADRH;                      //Buffer Address High
     };
     struct
     {
         unsigned :8;
         unsigned :8;
-        BYTE* ADR;                      //Buffer Address
+        uint8_t* ADR;                      //Buffer Address
     };
-    DWORD Val;
-    BYTE v[4];
+    uint32_t Val;
+    uint8_t v[4];
 } BDT_ENTRY;
 
 
@@ -205,37 +206,37 @@ typedef union __BDT
 
 #define USBTransactionCompleteIE UIEbits.TRNIE
 #define USBTransactionCompleteIF UIRbits.TRNIF
-#define USBTransactionCompleteIFReg (BYTE*)&UIR
+#define USBTransactionCompleteIFReg (uint8_t*)&UIR
 #define USBTransactionCompleteIFBitNum 3
 
 #define USBResetIE  UIEbits.URSTIE
 #define USBResetIF  UIRbits.URSTIF
-#define USBResetIFReg (BYTE*)&UIR
+#define USBResetIFReg (uint8_t*)&UIR
 #define USBResetIFBitNum 0
 
 #define USBIdleIE UIEbits.IDLEIE
 #define USBIdleIF UIRbits.IDLEIF
-#define USBIdleIFReg (BYTE*)&UIR
+#define USBIdleIFReg (uint8_t*)&UIR
 #define USBIdleIFBitNum 4
 
 #define USBActivityIE UIEbits.ACTVIE
 #define USBActivityIF UIRbits.ACTVIF
-#define USBActivityIFReg (BYTE*)&UIR
+#define USBActivityIFReg (uint8_t*)&UIR
 #define USBActivityIFBitNum 2
 
 #define USBSOFIE UIEbits.SOFIE
 #define USBSOFIF UIRbits.SOFIF
-#define USBSOFIFReg (BYTE*)&UIR
+#define USBSOFIFReg (uint8_t*)&UIR
 #define USBSOFIFBitNum 6
 
 #define USBStallIE UIEbits.STALLIE
 #define USBStallIF UIRbits.STALLIF
-#define USBStallIFReg (BYTE*)&UIR
+#define USBStallIFReg (uint8_t*)&UIR
 #define USBStallIFBitNum 5
 
 #define USBErrorIE UIEbits.UERRIE
 #define USBErrorIF UIRbits.UERRIF
-#define USBErrorIFReg (BYTE*)&UIR
+#define USBErrorIFReg (uint8_t*)&UIR
 #define USBErrorIFBitNum 1
 
 #define USBSE0Event UCONbits.SE0

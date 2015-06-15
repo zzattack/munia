@@ -71,9 +71,11 @@ TL       17-Oct-2011    Preliminary release
 
 #include <stdlib.h>
 #include <string.h>
-#include "GenericTypeDefs.h"
-#include "USB/usb.h"
-#include "USB/usb_host_midi.h"
+#include <stdbool.h>
+#include <stdint.h>
+
+#include "usb.h"
+#include "usb_host_midi.h"
 
 //#define DEBUG_MODE
 #ifdef DEBUG_MODE
@@ -118,7 +120,7 @@ static MIDI_DEVICE devices[USB_MAX_MIDI_DEVICES];
 
 /****************************************************************************
   Function:
-    BOOL USBHostMIDIInit ( BYTE address, DWORD flags, BYTE clientDriverID )
+    bool USBHostMIDIInit ( uint8_t address, uint32_t flags, uint8_t clientDriverID )
 
   Summary:
     This function is called by the USB Embedded Host layer when a MIDI
@@ -134,15 +136,15 @@ static MIDI_DEVICE devices[USB_MAX_MIDI_DEVICES];
     The device has been configured.
 
   Parameters:
-    BYTE address        - Device's address on the bus
-    DWORD flags         - Initialization flags
-    BYTE clientDriverID - ID to send when issuing a Device Request via
+    uint8_t address        - Device's address on the bus
+    uint32_t flags         - Initialization flags
+    uint8_t clientDriverID - ID to send when issuing a Device Request via
                             USBHostIssueDeviceRequest(), USBHostSetDeviceConfiguration(),
                             or USBHostSetDeviceInterface().  
 
   Return Values:
-    TRUE    - Initialization was successful
-    FALSE   - Initialization failed
+    true    - Initialization was successful
+    false   - Initialization failed
 
   Remarks:
     Multiple client drivers may be used in a single application.  The USB
@@ -150,24 +152,24 @@ static MIDI_DEVICE devices[USB_MAX_MIDI_DEVICES];
     attached device.
   ***************************************************************************/
 
-BOOL USBHostMIDIInit ( BYTE address, DWORD flags, BYTE clientDriverID )
+bool USBHostMIDIInit ( uint8_t address, uint32_t flags, uint8_t clientDriverID )
 {
-    BYTE *config_descriptor;
-    BYTE *ptr;
-    BYTE bDescriptorType;
-    BYTE bLength;
-    BYTE bNumEndpoints;
-    BYTE bNumInterfaces;
-    BYTE bInterfaceNumber;
-    BYTE bAlternateSetting;
-    BYTE Class;
-    BYTE SubClass;
-    BYTE Protocol;
-    BYTE currentEndpoint;
-    WORD wTotalLength;
+    uint8_t *config_descriptor;
+    uint8_t *ptr;
+    uint8_t bDescriptorType;
+    uint8_t bLength;
+    uint8_t bNumEndpoints;
+    uint8_t bNumInterfaces;
+    uint8_t bInterfaceNumber;
+    uint8_t bAlternateSetting;
+    uint8_t Class;
+    uint8_t SubClass;
+    uint8_t Protocol;
+    uint8_t currentEndpoint;
+    uint16_t wTotalLength;
     
-    BYTE index = 0;
-    BOOL error = FALSE;
+    uint8_t index = 0;
+    bool error = false;
     
     MIDI_DEVICE *device = &devices[0];
     
@@ -227,7 +229,7 @@ BOOL USBHostMIDIInit ( BYTE address, DWORD flags, BYTE clientDriverID )
             if ((device->endpoints = (MIDI_ENDPOINT_DATA*)malloc( sizeof(MIDI_ENDPOINT_DATA) * bNumEndpoints)) == NULL)
             {
                 // Out of memory
-                error = TRUE;   
+                error = true;   
             }
              
             if (!error)   
@@ -255,13 +257,13 @@ BOOL USBHostMIDIInit ( BYTE address, DWORD flags, BYTE clientDriverID )
                         ptr++;
                         device->endpoints[currentEndpoint].endpointSize = *ptr++;
                         device->endpoints[currentEndpoint].endpointSize += (*ptr++) << 8;
-                        device->endpoints[currentEndpoint].busy = FALSE;
+                        device->endpoints[currentEndpoint].busy = false;
                         
                         if(device->endpoints[currentEndpoint].endpointSize > 64)
                         {
                             // For full speed bulk endpoints, only 8, 16, 32, and 64 byte packets are supported
                             // But we will accept anything less than or equal to 64.
-                            error = TRUE;
+                            error = true;
                         }
                         
                         // Get ready for the next endpoint.
@@ -275,7 +277,7 @@ BOOL USBHostMIDIInit ( BYTE address, DWORD flags, BYTE clientDriverID )
             // Ensure that we found all the endpoints for this interface.
             if (currentEndpoint != bNumEndpoints)
             {
-                error = TRUE;
+                error = true;
             }
         }
     }
@@ -289,7 +291,7 @@ BOOL USBHostMIDIInit ( BYTE address, DWORD flags, BYTE clientDriverID )
             free( device->endpoints );
             device->endpoints = NULL;
         }    
-        return FALSE;
+        return false;
     }
     
     #ifdef DEBUG_MODE
@@ -304,15 +306,15 @@ BOOL USBHostMIDIInit ( BYTE address, DWORD flags, BYTE clientDriverID )
     // Notify that application that we've been attached to a device.
     USB_HOST_APP_EVENT_HANDLER(address, EVENT_MIDI_ATTACH, device, sizeof(MIDI_DEVICE) );
 
-    return TRUE;
+    return true;
 
 } // USBHostMIDIInit
 
 
 /****************************************************************************
   Function:
-    BOOL USBHostMIDIEventHandler ( BYTE address, USB_EVENT event,
-                            void *data, DWORD size )
+    bool USBHostMIDIEventHandler ( uint8_t address, USB_EVENT event,
+                            void *data, uint32_t size )
 
   Summary:
     This routine is called by the Host layer to notify the general client of
@@ -321,27 +323,27 @@ BOOL USBHostMIDIInit ( BYTE address, DWORD flags, BYTE clientDriverID )
   Description:
     This routine is called by the Host layer to notify the general client of
     events that occur.  If the event is recognized, it is handled and the
-    routine returns TRUE.  Otherwise, it is ignored and the routine returns
-    FALSE.
+    routine returns true.  Otherwise, it is ignored and the routine returns
+    false.
 
   Preconditions:
     None
 
   Parameters:
-    BYTE address    - Address of device with the event
+    uint8_t address    - Address of device with the event
     USB_EVENT event - The bus event that occured
     void *data      - Pointer to event-specific data
-    DWORD size      - Size of the event-specific data
+    uint32_t size      - Size of the event-specific data
 
   Return Values:
-    TRUE    - The event was handled
-    FALSE   - The event was not handled
+    true    - The event was handled
+    false   - The event was not handled
 
   Remarks:
     None
   ***************************************************************************/
 
-BOOL USBHostMIDIEventHandler ( BYTE address, USB_EVENT event, void *data, DWORD size )
+bool USBHostMIDIEventHandler ( uint8_t address, USB_EVENT event, void *data, uint32_t size )
 {
     unsigned char i;
     
@@ -356,7 +358,7 @@ BOOL USBHostMIDIEventHandler ( BYTE address, USB_EVENT event, void *data, DWORD 
     }
     if(i == USB_MAX_MIDI_DEVICES)
     {
-        return FALSE;
+        return false;
     }    
     
     // Handle specific events
@@ -373,14 +375,14 @@ BOOL USBHostMIDIEventHandler ( BYTE address, USB_EVENT event, void *data, DWORD 
                 UART2PutDec( address );
                 UART2PrintString( "\r\n" );
             #endif
-            return TRUE;
+            return true;
     
         #ifdef USB_ENABLE_TRANSFER_EVENT
         case EVENT_TRANSFER:
             if ( (data != NULL) && (size == sizeof(HOST_TRANSFER_DATA)) )
             {
                 unsigned char currentEndpoint;
-                //DWORD dataCount = ((HOST_TRANSFER_DATA *)data)->dataCount;
+                //uint32_t dataCount = ((HOST_TRANSFER_DATA *)data)->dataCount;
     
                 for(currentEndpoint = 0; currentEndpoint < devices[i].numEndpoints; currentEndpoint++)
                 {
@@ -388,11 +390,11 @@ BOOL USBHostMIDIEventHandler ( BYTE address, USB_EVENT event, void *data, DWORD 
                     {
                         devices[i].endpoints[currentEndpoint].busy = 0;
                         USB_HOST_APP_EVENT_HANDLER(devices[i].deviceAddress, EVENT_MIDI_TRANSFER_DONE, &devices[i].endpoints[currentEndpoint], sizeof(MIDI_ENDPOINT_DATA));
-                        return TRUE;
+                        return true;
                     }
                 }    
             }
-            return FALSE;
+            return false;
         #endif
     
         case EVENT_SUSPEND:
@@ -402,7 +404,7 @@ BOOL USBHostMIDIEventHandler ( BYTE address, USB_EVENT event, void *data, DWORD 
             break;
     }
 
-    return FALSE;
+    return false;
 } // USBHostMIDIEventHandler
 
 
@@ -414,7 +416,7 @@ BOOL USBHostMIDIEventHandler ( BYTE address, USB_EVENT event, void *data, DWORD 
 
 /****************************************************************************
   Function:
-    BOOL USBHostMIDIDeviceDetached( void* handle )
+    bool USBHostMIDIDeviceDetached( void* handle )
 
   Description:
     This interface is used to check if the device has been detached from the
@@ -427,8 +429,8 @@ BOOL USBHostMIDIEventHandler ( BYTE address, USB_EVENT event, void *data, DWORD 
     void* handle - Pointer to a structure containing the Device Info
 
   Return Values:
-    TRUE    - The device has been detached, or an invalid handle is given.
-    FALSE   - The device is attached
+    true    - The device has been detached, or an invalid handle is given.
+    false   - The device is attached
 
   Example:
     <code>
@@ -447,7 +449,7 @@ BOOL USBHostMIDIEventHandler ( BYTE address, USB_EVENT event, void *data, DWORD 
 
 /****************************************************************************
   Function:
-    MIDI_ENDPOINT_DIRECTION USBHostMIDIEndpointDirection( void* handle, BYTE endpointIndex )
+    MIDI_ENDPOINT_DIRECTION USBHostMIDIEndpointDirection( void* handle, uint8_t endpointIndex )
 
   Description:
     This function retrieves the endpoint direction of the endpoint at
@@ -458,7 +460,7 @@ BOOL USBHostMIDIEventHandler ( BYTE address, USB_EVENT event, void *data, DWORD 
 
   Parameters:
     void* handle       - Pointer to a structure containing the Device Info
-    BYTE endpointIndex - the index of the endpoint whose direction is requested
+    uint8_t endpointIndex - the index of the endpoint whose direction is requested
 
   Returns:
     MIDI_ENDPOINT_DIRECTION - Returns the direction of the endpoint (IN or OUT)
@@ -472,7 +474,7 @@ BOOL USBHostMIDIEventHandler ( BYTE address, USB_EVENT event, void *data, DWORD 
 
 /****************************************************************************
   Function:
-    DWORD USBHostMIDISizeOfEndpoint( void* handle, BYTE endpointIndex )
+    uint32_t USBHostMIDISizeOfEndpoint( void* handle, uint8_t endpointIndex )
 
   Description:
     This function retrieves the endpoint size of the endpoint at 
@@ -483,10 +485,10 @@ BOOL USBHostMIDIEventHandler ( BYTE address, USB_EVENT event, void *data, DWORD 
 
   Parameters:
     void* handle       - Pointer to a structure containing the Device Info
-    BYTE endpointIndex - the index of the endpoint whose direction is requested
+    uint8_t endpointIndex - the index of the endpoint whose direction is requested
 
   Returns:
-    DWORD - Returns the number of bytes for the endpoint (4 - 64 bytes per USB spec)
+    uint32_t - Returns the number of bytes for the endpoint (4 - 64 bytes per USB spec)
 
   Remarks:
     None
@@ -497,7 +499,7 @@ BOOL USBHostMIDIEventHandler ( BYTE address, USB_EVENT event, void *data, DWORD 
 
 /****************************************************************************
   Function:
-    BYTE USBHostMIDINumberOfEndpoints( void* handle )
+    uint8_t USBHostMIDINumberOfEndpoints( void* handle )
 
   Description:
     This function retrieves the number of endpoints for the device that's
@@ -510,7 +512,7 @@ BOOL USBHostMIDIEventHandler ( BYTE address, USB_EVENT event, void *data, DWORD 
     void* handle - Pointer to a structure containing the Device Info
 
   Returns:
-    BYTE - Returns the number of endpoints for the device at handle.
+    uint8_t - Returns the number of endpoints for the device at handle.
 
   Remarks:
     None
@@ -521,7 +523,7 @@ BOOL USBHostMIDIEventHandler ( BYTE address, USB_EVENT event, void *data, DWORD 
 
 /****************************************************************************
   Function:
-    BYTE USBHostMIDIRead( void* handle, BYTE endpointIndex, void *buffer, WORD length)
+    uint8_t USBHostMIDIRead( void* handle, uint8_t endpointIndex, void *buffer, uint16_t length)
 
   Description:
     This function will attempt to read length number of bytes from the attached MIDI
@@ -533,9 +535,9 @@ BOOL USBHostMIDIEventHandler ( BYTE address, USB_EVENT event, void *data, DWORD 
 
   Parameters:
     void* handle       - Pointer to a structure containing the Device Info
-    BYTE endpointIndex - the index of the endpoint whose direction is requested
+    uint8_t endpointIndex - the index of the endpoint whose direction is requested
     void* buffer       - Pointer to the data buffer
-    WORD length        - Number of bytes to be read
+    uint16_t length        - Number of bytes to be read
 
   Return Values:
     USB_SUCCESS         - The Read was started successfully
@@ -554,17 +556,17 @@ BOOL USBHostMIDIEventHandler ( BYTE address, USB_EVENT event, void *data, DWORD 
     None
   ***************************************************************************/
 
-BYTE USBHostMIDIRead( void* handle, BYTE endpointIndex, void *buffer, WORD length)
+uint8_t USBHostMIDIRead( void* handle, uint8_t endpointIndex, void *buffer, uint16_t length)
 {
     MIDI_DEVICE *device = (MIDI_DEVICE*)handle;
-    BYTE RetVal;
+    uint8_t RetVal;
     
-    RetVal = USBHostRead( device->deviceAddress, device->endpoints[endpointIndex].endpointAddress, (BYTE *)buffer, length );
+    RetVal = USBHostRead( device->deviceAddress, device->endpoints[endpointIndex].endpointAddress, (uint8_t *)buffer, length );
     
     if (RetVal == USB_SUCCESS)
     {
         // Set the busy flag
-        device->endpoints[endpointIndex].busy = TRUE;
+        device->endpoints[endpointIndex].busy = true;
     }
 
     return RetVal;
@@ -573,7 +575,7 @@ BYTE USBHostMIDIRead( void* handle, BYTE endpointIndex, void *buffer, WORD lengt
 
 /****************************************************************************
   Function:
-    BOOL USBHostMIDITransferIsBusy( void* handle, BYTE endpointIndex )
+    bool USBHostMIDITransferIsBusy( void* handle, uint8_t endpointIndex )
 
   Summary:
     This interface is used to check if the client driver is currently busy
@@ -591,12 +593,12 @@ BYTE USBHostMIDIRead( void* handle, BYTE endpointIndex, void *buffer, WORD lengt
 
   Parameters:
     void* handle       - Pointer to a structure containing the Device Info
-    BYTE endpointIndex - the index of the endpoint whose direction is requested
+    uint8_t endpointIndex - the index of the endpoint whose direction is requested
 
   Return Values:
-    TRUE    - The device is receiving data or an invalid handle is
+    true    - The device is receiving data or an invalid handle is
                 given.
-    FALSE   - The device is not receiving data
+    false   - The device is not receiving data
 
   Example:
     <code>
@@ -615,8 +617,8 @@ BYTE USBHostMIDIRead( void* handle, BYTE endpointIndex, void *buffer, WORD lengt
 
 /****************************************************************************
   Function:
-    BOOL USBHostMIDITransferIsComplete( void* handle, BYTE endpointIndex,
-                                        BYTE *errorCode, DWORD *byteCount );
+    bool USBHostMIDITransferIsComplete( void* handle, uint8_t endpointIndex,
+                                        uint8_t *errorCode, uint32_t *byteCount );
 
   Summary:
     This routine indicates whether or not the last transfer over endpointIndex
@@ -635,14 +637,14 @@ BYTE USBHostMIDIRead( void* handle, BYTE endpointIndex, void *buffer, WORD lengt
 
   Parameters:
     void* handle        - Pointer to a structure containing the Device Info
-    BYTE endpointIndex  - index of endpoint in endpoints array
-    BYTE *errorCode     - Error code of the last transfer, if complete
-    DWORD *byteCount    - Bytes transferred during the last transfer, if
+    uint8_t endpointIndex  - index of endpoint in endpoints array
+    uint8_t *errorCode     - Error code of the last transfer, if complete
+    uint32_t *byteCount    - Bytes transferred during the last transfer, if
                             complete
 
   Return Values:
-    TRUE    - The IN transfer is complete.  errorCode and byteCount are valid.
-    FALSE   - The IN transfer is not complete.  errorCode and byteCount are
+    true    - The IN transfer is complete.  errorCode and byteCount are valid.
+    false   - The IN transfer is not complete.  errorCode and byteCount are
                 invalid.
 
   Remarks:
@@ -650,25 +652,25 @@ BYTE USBHostMIDIRead( void* handle, BYTE endpointIndex, void *buffer, WORD lengt
   ***************************************************************************/
 
 #ifndef USB_ENABLE_TRANSFER_EVENT
-BOOL USBHostMIDITransferIsComplete(void* handle, BYTE endpointIndex, BYTE* errorCode, DWORD *byteCount )
+bool USBHostMIDITransferIsComplete(void* handle, uint8_t endpointIndex, uint8_t* errorCode, uint32_t *byteCount )
 {
     MIDI_DEVICE* device = (MIDI_DEVICE*)handle;
     
-    if (USBHostTransferIsComplete(device->deviceAddress, endpointIndex, errorCode, byteCount) == TRUE)
+    if (USBHostTransferIsComplete(device->deviceAddress, endpointIndex, errorCode, byteCount) == true)
     {
         device->endpoints[endpointIndex].busy = 0;
-        return TRUE;
+        return true;
     }
     
     // Then this transfer is not complete
-    return FALSE;    
+    return false;    
 }
 #endif
 
 
 /****************************************************************************
   Function:
-    BYTE USBHostMIDIWrite(void* handle, BYTE endpointIndex, void *buffer, WORD length)
+    uint8_t USBHostMIDIWrite(void* handle, uint8_t endpointIndex, void *buffer, uint16_t length)
 
   Description:
     This function will attempt to write length number of bytes from memory at location
@@ -701,16 +703,16 @@ BOOL USBHostMIDITransferIsComplete(void* handle, BYTE endpointIndex, BYTE* error
     None
   ***************************************************************************/
 
-BYTE USBHostMIDIWrite(void* handle, BYTE endpointIndex, void *buffer, WORD length)
+uint8_t USBHostMIDIWrite(void* handle, uint8_t endpointIndex, void *buffer, uint16_t length)
 {
     MIDI_DEVICE *device = (MIDI_DEVICE*)handle;
-    BYTE RetVal;
+    uint8_t RetVal;
     
-    RetVal = USBHostWrite( device->deviceAddress, device->endpoints[endpointIndex].endpointAddress, (BYTE *)buffer, length );
+    RetVal = USBHostWrite( device->deviceAddress, device->endpoints[endpointIndex].endpointAddress, (uint8_t *)buffer, length );
     if (RetVal == USB_SUCCESS)
     {
         // Set the busy flag
-        device->endpoints[endpointIndex].busy = TRUE;
+        device->endpoints[endpointIndex].busy = true;
     }
 
     return RetVal;

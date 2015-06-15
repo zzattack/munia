@@ -51,9 +51,9 @@ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 #include <stdlib.h>
 #include <string.h>
 
-#include <usb/usb.h>
-#include <usb/usb_host_hid.h>
-#include <usb/usb_host_hid_parser.h>
+#include "usb.h"
+#include "usb_host_hid.h"
+#include "usb_host_hid_parser.h"
 
 
 //#define DEBUG_MODE

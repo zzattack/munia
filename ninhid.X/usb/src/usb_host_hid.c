@@ -70,9 +70,9 @@ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 #include <stdlib.h>
 #include <string.h>
 #include "usb_config.h"
-#include <usb/usb.h>
-#include <usb/usb_host_hid.h>
-#include <usb/usb_host_hid_parser.h>
+#include "usb.h"
+#include "usb_host_hid.h"
+#include "usb_host_hid_parser.h"
 
 
 
@@ -609,7 +609,7 @@ uint8_t USBHostHIDResetDeviceWithWait( uint8_t deviceAddress  )
 
     do
     {
-        USBTasks();
+        USBHostTasks();
         errorCode = USBHostHIDDeviceStatus( deviceAddress );
     } while (errorCode == USB_HID_RESETTING_DEVICE);
 
@@ -1918,6 +1918,38 @@ bool USBHostHIDEventHandler( uint8_t address, USB_EVENT event, void *data, uint3
             break;
     }
     return false;
+}
+/*******************************************************************************
+  Function:
+    bool USBHostHIDAppDataEventHandler( uint8_t address, USB_EVENT event,
+                        void *data, uint32_t size )
+
+  Precondition:
+    The device has been initialized.
+
+  Summary:
+    This function is the data event handler for this client driver.
+
+  Description:
+    This function is the data event handler for this client driver.  It is called
+    by the host layer when various events occur.
+
+  Parameters:
+    uint8_t address    - Address of the device
+    USB_EVENT event - Event that has occurred
+    void *data      - Pointer to data pertinent to the event
+    uint32_t size       - Size of the data
+
+  Return Values:
+    true   - Event was handled
+    false  - Event was not handled
+
+  Remarks:
+    None
+*******************************************************************************/
+bool USBHostHIDAppDataEventHandler( uint8_t address, USB_EVENT event, void *data, uint32_t size )
+{
+    return true;
 }
 
 /*******************************************************************************

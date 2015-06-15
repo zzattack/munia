@@ -50,15 +50,16 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <stdint.h>
 #include <stddef.h>
 
+#include "system.h"
 #include "system_config.h"
 
-#include <usb/usb.h>
-#include <usb/usb_ch9.h>
-#include <usb/usb_device.h>
-#include <usb/src/usb_device_local.h>
+#include "usb.h"
+#include "usb_ch9.h"
+#include "usb_device.h"
+#include "usb_device_local.h"
 
 #if defined(USB_USE_MSD)
-    #include "usb/usb_device_msd.h"
+    #include "usb_device_msd.h"
 #endif
 
 // *****************************************************************************
@@ -157,6 +158,8 @@ volatile bool USBStatusStageEnabledFlag1;
 volatile bool USBStatusStageEnabledFlag2;
 volatile bool USBDeferINDataStagePackets;
 volatile bool USBDeferOUTDataStagePackets;
+USB_VOLATILE uint32_t USB1msTickCount;
+USB_VOLATILE uint8_t USBTicksSinceSuspendEnd;
 
 /** USB FIXED LOCATION VARIABLES ***********************************/
 #if defined(COMPILER_MPLAB_C18)
@@ -320,7 +323,7 @@ void USBDeviceInit(void)
     USBSetBDTAddress(BDT);
 
     //Clear all of the BDT entries
-    for(i=0;i<(sizeof(BDT)/sizeof(BDT_ENTRY));i++)
+    for(i = 0; i < (sizeof(BDT)/sizeof(BDT_ENTRY)); i++)
     {
         BDT[i].Val = 0x00;
     }
@@ -338,14 +341,14 @@ void USBDeviceInit(void)
     USBPingPongBufferReset = 0;
 
     // Flush any pending transactions
-    while(USBTransactionCompleteIF == 1)      
+    do
     {
         USBClearInterruptFlag(USBTransactionCompleteIFReg,USBTransactionCompleteIFBitNum);
         //Initialize USB stack software state variables
         inPipes[0].info.Val = 0;
         outPipes[0].info.Val = 0;
         outPipes[0].wCount.Val = 0;
-    }
+    }while(USBTransactionCompleteIF == 1);
 
     //Set flags to true, so the USBCtrlEPAllowStatusStage() function knows not to
     //try and arm a status stage, even before the first control transfer starts.
@@ -379,9 +382,14 @@ void USBDeviceInit(void)
     // Clear active configuration
     USBActiveConfiguration = 0;     
 
-    //Indicate that we are now in the detached state        
+    USB1msTickCount = 0;            //Keeps track of total number of milliseconds since calling USBDeviceInit() when first initializing the USB module/stack code.
+    USBTicksSinceSuspendEnd = 0;    //Keeps track of the number of milliseconds since a suspend condition has ended.
+
+    //Indicate that we are now in the detached state
     USBDeviceState = DETACHED_STATE;
 }
+
+
 
 /**************************************************************************
   Function:
@@ -489,25 +497,25 @@ void USBDeviceTasks(void)
 {
     uint8_t i;
 
-#ifdef USB_SUPPORT_OTG
-    //SRP Time Out Check
-    if (USBOTGSRPIsReady())
-    {
-        if (USBT1MSECIF && USBT1MSECIE)
+    #ifdef USB_SUPPORT_OTG
+        //SRP Time Out Check
+        if (USBOTGSRPIsReady())
         {
-            if (USBOTGGetSRPTimeOutFlag())
+            if (USBT1MSECIF && USBT1MSECIE)
             {
-                if (USBOTGIsSRPTimeOutExpired())
+                if (USBOTGGetSRPTimeOutFlag())
                 {
-                    USB_OTGEventHandler(0,OTG_EVENT_SRP_FAILED,0,0);
-                }       
-            }
+                    if (USBOTGIsSRPTimeOutExpired())
+                    {
+                        USB_OTGEventHandler(0,OTG_EVENT_SRP_FAILED,0,0);
+                    }
+                }
 
-            //Clear Interrupt Flag
-            USBClearInterruptFlag(USBT1MSECIFReg,USBT1MSECIFBitNum);
+                //Clear Interrupt Flag
+                USBClearInterruptFlag(USBT1MSECIFReg,USBT1MSECIFBitNum);
+            }
         }
-    }
-#endif
+    #endif
 
     #if defined(USB_POLLING)
     //If the interrupt option is selected then the customer is required
@@ -611,7 +619,14 @@ void USBDeviceTasks(void)
 
         if(!USBSE0Event)
         {
-            USBClearInterruptRegister(U1IR);// Clear all USB interrupts
+            //We recently attached, make sure we are in a clean state
+            #if defined(__dsPIC33E__) || defined(_PIC24E__)
+                U1IR = 0xFFEF;  //Preserve IDLEIF info, so we can detect suspend
+                                //during attach debounce interval
+            #else
+                USBClearInterruptRegister(U1IR);
+            #endif
+
             #if defined(USB_POLLING)
                 U1IE=0;                        // Mask all USB interrupts
             #endif
@@ -693,21 +708,35 @@ void USBDeviceTasks(void)
         #ifdef  USB_SUPPORT_OTG 
             //If Suspended, Try to switch to Host
             USBOTGSelectRole(ROLE_HOST);
+            USBClearInterruptFlag(USBIdleIFReg,USBIdleIFBitNum);
         #else
             USBSuspend();
         #endif
-        
-        USBClearInterruptFlag(USBIdleIFReg,USBIdleIFBitNum);
     }
 
+    #if defined(__XC16__) || defined(__C30__) || defined(__XC32__)
+        //Check if a 1ms interval has elapsed.	
+        if(USBT1MSECIF)
+        {
+            USBClearInterruptFlag(USBT1MSECIFReg, USBT1MSECIFBitNum);
+            USBIncrement1msInternalTimers();
+        }
+    #endif
+
+    //Start-of-Frame Interrupt
     if(USBSOFIF)
     {
+        //Call the user SOF event callback if enabled.
         if(USBSOFIE)
         {
             USB_SOF_HANDLER(EVENT_SOF,0,1);
         }    
         USBClearInterruptFlag(USBSOFIFReg,USBSOFIFBitNum);
-        
+
+        #if defined(__XC8__) || defined(__C18__)
+            USBIncrement1msInternalTimers();
+        #endif
+
         #if defined(USB_ENABLE_STATUS_STAGE_TIMEOUTS)
             //Supporting this feature requires a 1ms timebase for keeping track of the timeout interval.
             #if(USB_SPEED_OPTION == USB_LOW_SPEED)
@@ -716,18 +745,9 @@ void USBDeviceTasks(void)
                 //not strictly needed in all applications (ex: those that never call 
                 //USBDeferStatusStage() and don't use host to device (OUT) control
                 //transfers with data stage).  
-                //However, if this feature is enabled and used, it requires a timer 
-                //(preferrably 1ms) to decrement the USBStatusStageTimeoutCounter.  
-                //In USB Full Speed applications, the host sends Start-of-Frame (SOF) 
-                //packets at a 1ms rate, which generates SOFIF interrupts.
-                //These interrupts can be used to decrement USBStatusStageTimeoutCounter as shown 
-                //below.  However, the host does not send SOF packets to Low Speed devices.  
-                //Therefore, some other method  (ex: using a general purpose microcontroller 
-                //timer, such as Timer0) needs to be implemented to call and execute the below code
-                //at a once/1ms rate, in a low speed USB application.
-                //Note: Pre-condition to executing the below code: USBDeviceInit() should have
-                //been called at least once (since the last microcontroller reset/power up), 
-                //prior to executing the below code.
+                //However, if this feature is enabled and used in a low speed application,
+                //it is required for the application code to periodically call the
+                //USBIncrement1msInternalTimers() function at a nominally 1ms rate.
             #endif
             
             //Decrement our status stage counter.
@@ -2274,6 +2294,7 @@ static void USBSuspend(void)
                                                 // mode, SIE clock inactive
     #endif
     USBBusIsSuspended = true;
+    USBTicksSinceSuspendEnd = 0;
  
     /*
      * At this point the PIC can go into sleep,idle, or
@@ -2341,6 +2362,8 @@ static void USBWakeFromSuspend(void)
     {
         USBClearInterruptFlag(USBActivityIFReg,USBActivityIFBitNum);
     }  // Added
+
+    USBTicksSinceSuspendEnd = 0;
 
 }//end USBWakeFromSuspend
 
@@ -2980,6 +3003,152 @@ static void USBStdFeatureReqHandler(void)
         }//end if(SetupPkt.bRequest == USB_REQUEST_SET_FEATURE)
     }//end if (lots of checks for set/clear endpoint halt)
 }//end USBStdFeatureReqHandler
+
+
+
+
+/**************************************************************************
+    Function:
+        void USBIncrement1msInternalTimers(void)
+
+    Description:
+        This function increments internal 1ms time base counters, which are
+        useful for application code (that can use a 1ms time base/counter), and
+        for certain USB event timing specific purposes.
+
+        In USB full speed applications, the application code does not need to (and should
+        not) explicitly call this function, as the USBDeviceTasks() function will
+        automatically call this function whenever a 1ms time interval has elapsed
+        (assuming the code is calling USBDeviceTasks() frequenctly enough in USB_POLLING
+        mode, or that USB interrupts aren't being masked for more than 1ms at a time
+        in USB_INTERRUPT mode).
+
+        In USB low speed applications, the application firmware is responsible for
+        periodically calling this function at a ~1ms rate.  This can be done using
+        a general purpose microcontroller timer set to interrupt every 1ms for example.
+        If the low speed application code does not call this function, the internal timers
+        will not increment, and the USBGet1msTickCount() API function will not be available.
+        Additionally, certain USB stack operations (like control transfer timeouts)
+        may be unavailable.
+
+    Precondition:
+        This function should be called only after USBDeviceInit() has been
+        called (at least once at the start of the application).  Ordinarily,
+        application code should never call this function, unless it is a low speed
+        USB device.
+
+    Parameters:
+        None
+
+    Return Values:
+        None
+
+    Remarks:
+        This function does not need to be called during USB suspend conditions, when
+        the USB module/stack is disabled, or when the USB cable is detached from the host.
+  ***************************************************************************/
+void USBIncrement1msInternalTimers(void)
+{
+    #if(USB_SPEED_OPTION == USB_LOW_SPEED)
+        #warning "For low speed USB applications, read the function comments for the USBIncrement1msInternalTimers() function, and implement code to call this function periodically."
+    #endif
+
+    //Increment timekeeping 1ms tick counters.  Useful for other APIs/code
+    //that needs a 1ms timebase that is active during USB non-suspended operation.
+    USB1msTickCount++;
+    if(USBIsBusSuspended() == false)
+    {
+        USBTicksSinceSuspendEnd++;
+        //Check for 8-bit wraparound.  If so, force it to saturate at 255.
+        if(USBTicksSinceSuspendEnd == 0)
+        {
+            USBTicksSinceSuspendEnd = 255;
+        }
+    }
+}
+
+
+
+
+/**************************************************************************
+    Function:
+        uint32_t USBGet1msTickCount(void)
+
+    Description:
+        This function retrieves a 32-bit unsigned integer that normally increments by
+        one every one millisecond.  The count value starts from zero when the
+        USBDeviceInit() function is first called.  See the remarks section for
+        details on special circumstances where the tick count will not increment.
+
+    Precondition:
+        This function should be called only after USBDeviceInit() has been
+        called (at least once at the start of the application).
+
+    Parameters:
+        None
+
+    Return Values:
+        uint32_t representing the approximate millisecond count, since the time the
+        USBDeviceInit() function was first called.
+
+    Remarks:
+        On 8-bit USB full speed devices, the internal counter is incremented on
+        every SOF packet deteceted.  Therefore, it will not increment during suspend
+        or when the USB cable is detached.  However, on 16-bit devices, the T1MSECIF
+        hardware interrupt source is used to increment the internal counter.  Therefore,
+        on 16-bit devices, the count continue to increment during USB suspend or
+        detach events, so long as the application code has not put the microcontroller
+        to sleep during these events, and the application firmware is regularly
+        calling the USBDeviceTasks() function (or allowing it to execute, if using
+        USB_INTERRUPT mode operation).
+
+        In USB low speed applications, the host does not broadcast SOF packets to
+        the device, so the application firmware becomes responsible for calling
+        USBIncrement1msInternalTimers() periodically (ex: from a general purpose
+        timer interrupt handler), or else the returned value from this function will
+        not increment.
+        
+        Prior to calling USBDeviceInit() for the first time the returned value will
+        be unpredictable.
+
+        This function is USB_INTERRUPT mode safe and may be called from main loop
+        code without risk of retrieving a partially updated 32-bit number.
+
+        However, this value only increments when the USBDeviceTasks() function is allowed
+        to execute.  If USB_INTERRUPT mode is used, it is allowable to block on this
+        function.  If however USB_POLLING mode is used, one must not block on this
+        function without also calling USBDeviceTasks() continuously for the blocking
+        duration (since the USB stack must still be allowed to execute, and the USB
+        stack is also responsible for updating the tick counter internally).
+
+        If the application is operating in USB_POLLING mode, this function should
+        only be called from the main loop context, and not from an interrupt handler,
+        as the returned value could be incorrect, if the main loop context code was in
+        the process of updating the internal count at the moment of the interrupt event.
+   ***************************************************************************/
+uint32_t USBGet1msTickCount(void)
+{
+    #if defined (USB_INTERRUPT)
+        uint32_t localContextValue;
+
+        //Repeatedly read the interrupt context variable, until we get a stable/unchanging
+        //value.  This ensures that the complete 32-bit value got read without
+        //getting interrupted in between bytes.
+        do
+        {
+            localContextValue = USB1msTickCount;
+        }while(localContextValue != USB1msTickCount);
+
+        return localContextValue;    
+    
+    #else
+        return USB1msTickCount;
+    #endif
+}
+
+
+
+
 
 
 /** EOF USBDevice.c *****************************************************/

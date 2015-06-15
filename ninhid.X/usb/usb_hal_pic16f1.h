@@ -33,6 +33,7 @@ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
+#include <system.h>
 
 #include "system_config.h"
 

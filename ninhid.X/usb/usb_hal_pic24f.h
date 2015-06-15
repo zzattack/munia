@@ -35,11 +35,43 @@ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 
 #include <stdint.h>
 #include <string.h>
-#include <usb/usb_common.h>
+#include "usb_common.h"
 
 /*****************************************************************************/
 /****** Constant definitions *************************************************/
 /*****************************************************************************/
+
+
+//Device specific IECx register count.  Useful during interrupt context save and 
+//restore operations (such as prior to and after entering sleep on suspend).
+//IEC0-IEC5 on PIC24FJ64GB004 Family devices
+//IEC0-IEC5 on PIC24FJ256GB110 Family devices
+//IEC0-IEC5 on PIC24FJ256GB210 Family devices
+//IEC0-IEC6 on PIC24FJ256DA210 Family devices
+//IEC0-IEC7 on PIC24FJ128GC010 Family devices
+//IEC0-IEC7 on PIC24FJ128GB204 Family devices
+//IEC0-IEC7 on PIC24FJ256GB412 Family devices
+#if defined(__PIC24FJ64GB004__) || defined(__PIC24FJ32GB004__) || defined(__PIC24FJ32GB004__) || defined(__PIC24FJ32GB002__)    \
+    || defined(__PIC24FJ256GB110__) || defined(__PIC24FJ192GB110__) || defined(__PIC24FJ128GB110__) || defined(__PIC24FJ64GB110__) || defined(__PIC24FJ256GB108__) || defined(__PIC24FJ192GB108__) || defined(__PIC24FJ128GB108__) || defined(__PIC24FJ64GB108__)  || defined(__PIC24FJ256GB106__) || defined(__PIC24FJ192GB106__) || defined(__PIC24FJ128GB106__) || defined(__PIC24FJ64GB106__)   \
+    || defined(__PIC24FJ256GB210__) || defined(__PIC24FJ128GB210__)  || defined(__PIC24FJ256GB206__) || defined(__PIC24FJ128GB206__)
+
+    #define DEVICE_SPECIFIC_IEC_REGISTER_COUNT  6   //Number of IECx registers implemented in the microcontroller (varies from device to device, make sure this is set correctly for the intended CPU)
+
+#elif defined(__PIC24FJ256DA210__) || defined(__PIC24FJ128DA210__) || defined(__PIC24FJ256DA206__) || defined(__PIC24FJ128DA206__) || defined(__PIC24FJ256DA110__) || defined(__PIC24FJ128DA110__) || defined(__PIC24FJ256DA106__) || defined(__PIC24FJ128DA106__)
+
+    #define DEVICE_SPECIFIC_IEC_REGISTER_COUNT  7   //Number of IECx registers implemented in the microcontroller (varies from device to device, make sure this is set correctly for the intended CPU)
+
+#elif defined(__PIC24FJ128GC010__) || defined(__PIC24FJ64GC010__) || defined(__PIC24FJ128GC006__) || defined(__PIC24FJ64GC006__)    \
+    || defined(__PIC24FJ128GB204__) || defined(__PIC24FJ64GB204) || defined(__PIC24FJ128GB202__) || defined(__PIC24FJ64GB202)       
+
+    #define DEVICE_SPECIFIC_IEC_REGISTER_COUNT  8   //Number of IECx registers implemented in the microcontroller (varies from device to device, make sure this is set correctly for the intended CPU)
+
+#else
+    #error "Unknown processor type selected.  Refer to device datasheet and update the definition for DEVICE_SPECIFIC_IEC_REGISTER_COUNT."
+    //#define DEVICE_SPECIFIC_IEC_REGISTER_COUNT  8    // <--- Update this number with the real number for your device and uncomment (and delete the above #error).
+#endif
+
+
 
 
 #if (USB_PING_PONG_MODE == USB_PING_PONG__NO_PING_PONG)
@@ -127,6 +159,16 @@ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 #define USBIDIF                         U1OTGIRbits.IDIF
 #define USBIDIFReg                      U1OTGIR
 #define USBIDIFBitNum                   7
+
+#define USBSESVDIE                      U1OTGIEbits.SESVDIE
+#define USBSESVDIF                      U1OTGIRbits.SESVDIF
+#define USBSESVDReg                     U1OTGIR
+#define USBSESVDBitNum                  3
+
+#define USBRESUMEIE                     U1IEbits.RESUMEIE
+#define USBRESUMEIF                     U1IRbits.RESUMEIF
+#define USBRESUMEIFReg                  U1IR
+#define USBRESUMEIFBitNum               5
 
 //----- Event call back defintions --------------------------------------------
 #if defined(USB_DISABLE_SOF_HANDLER)
@@ -323,32 +365,40 @@ typedef union _POINTER
                                             PullUpConfiguration();\
                                             U1EIE = 0x9F;\
                                             U1IE = 0x99 | USB_SOF_INTERRUPT | USB_ERROR_INTERRUPT;\
+                                            USBT1MSECIE = 1;\
                                         } 
 
 
 /********************************************************************
 Function:
     bool USBSleepOnSuspend(void)
-    
+
 Summary:
     Places the core into sleep and sets up the USB module
-    to wake up the device on USB activity.
+    to wake up the device on USB activity (either USB host resume or
+    USB VBUS going away, such as due to USB cable detach).
     
 PreCondition:
-    IPL (in the SR register) must be non-zero.
+    The USBDeviceInit() function should have been called at least once and the
+    USB host should have suspended the USB device.
     
 Parameters:
     None
-    
+
 Return Values:
     true  - if entered sleep successfully
     false - if there was an error entering sleep
-    
+
 Remarks:
     Please note that before calling this function that it is the
     responsibility of the application to place all of the other
     peripherals or board features into a lower power state if
     required.
+
+    Based on the USB specifications, upon detection of the suspend condition, a
+    USB device should promptly put itself into a low power mode (such that it consumes
+    no more than 2.5mA from the USB host (unless the host is a USB type-C host and
+    is actively advertising higher than standard USB spec current capability).
 
 *******************************************************************/
 bool USBSleepOnSuspend(void);
@@ -379,7 +429,11 @@ bool USBSleepOnSuspend(void);
         void USBModuleDisable(void)
         
     Description:
-        This macro is used to disable the USB module
+        This macro is used to disable the USB module.  This will perform a
+        USB soft detach operation from the host, if the device was already plugged
+        into the host at the time of calling this function.  All USB module
+        features including the internal USB 1ms timer and the USB VBUS
+        monitoring comparators will be disabled.
         
     Parameters:
         None
@@ -395,7 +449,8 @@ bool USBSleepOnSuspend(void);
     U1CON = 0;\
     U1IE = 0;\
     U1OTGIE = 0;\
-    U1PWRCbits.USBPWR = 1;\
+    U1PWRCbits.USUSPND = 0;\
+    U1PWRCbits.USBPWR = 0;\
     USBDeviceState = DETACHED_STATE;\
 }    
 
@@ -488,11 +543,180 @@ bool USBSleepOnSuspend(void);
 #define DisableNonZeroEndpoints(last_ep_num) memset((void*)&U1EP1,0x00,(last_ep_num * 2));                                          
 
 
+/********************************************************************
+Function:
+    bool USBRemoteWakeupAssertBlocking(void)
+
+Summary:
+    Checks if it is currently legal to send remote wakeup signalling to the
+    host, and if so, it sends it.  This is a blocking function that takes ~5-6ms
+    to execute.
+
+PreCondition:
+
+Parameters:
+    None
+
+Return Values:
+    true  - if it was legal to send remote wakeup signalling and the signalling was sent
+    false - if it was not legal to send remoate wakeup signalling (in this case, no signalling gets sent)
+
+Remarks:
+    To successfully use remote wakeup in an application, the device must first
+    let the host know that it supports remote wakeup (by setting the appropriate
+    bit in the attributes field of the USB configuration descriptor).  Additionally,
+    the end user must allow/enable remote wakeup for the device.  Hosts are not
+    obligated to always allow remote wakeup, and the end user can typically enable/disable this
+    feature for each device at their descretion.  Under Windows, devices supporting
+    remote wakeup will normally have an extra checkbox setting under the device
+    manager properties pages for the device, which the user can change.
+
+    Additionally, remote wakeup capability requires driver support, in the USB
+    class drivers being used for the device on the host.  Under Windows 7, the CDC
+    drivers do not support remote wakeup capability, while other drivers like HID
+    and WinUSB fully support this capability.  If the intended application is
+    CDC or based on some other driver not supporting remote wakeup, it is potentially
+    possible to make the device a composite device (ex: CDC+HID) and then use the
+    HID driver as a means of achieving the remote wakeup effect of the host.
+
+    Sometime prior to entering USB suspend (usually just prior), if the host and
+    driver(s) support remote wakeup, and the user has enabled the feature for the
+    device, then the host will send notification to the device firmware letting it
+    know that remote wakeup is legal.  The USBGetRemoteWakeupStatus() API function
+    can be used to check if the host has allowed remote wakeup or not.  The application
+    firmware should not send remote wakeup signalling to the host, unless both
+    USBGetRemoteWakeupStatus() and USBIsBusSuspended() return true.  Attempting to
+    send the remote wakeup signalling to the host when it is not legal to do so
+    will nomrally not wake up the host, and will instead create a violation of
+    the USB compliance criteria.  Additionally, devices should not send remote
+    wakeup signalling immediately upon entry into the suspended bus state.  Based on
+    the USB specifications, the bus must be continuously idle for at least 5ms before
+    a device may send remote wakeup signalling.  After the signalling is sent, the
+    device must become fully ready for normal USB communication/request
+    processing within 10ms.
+ *******************************************************************/
+bool USBRemoteWakeupAssertBlocking(void);
+
+
+/********************************************************************
+Function:
+    int8_t USBVBUSSessionValidStateGet(bool AllowInvasiveReads)
+
+Summary:
+    This function tries to check the current VBUS voltage level to see if it is
+    above the session valid threshold or not.  This is useful for detecting if the
+    device is currently attached to a host or hub that is actively supplying
+    power on the +5V VBUS net (instead of being powered down).
+
+PreCondition:
+    This function assumes that USBDeviceInit() has been called at least once,
+    although it is not necessary for the USB module to be already enabled, if
+    "invasive reads" are allowed.  However, it is always the caller's responsibility
+    to make sure that the microcontroller system clock settings have been
+    pre-configured for an operating mode that are compatible with USB operation
+    at the right frequency (ex: the USB module must have 48MHz clocking available
+    internally), prior to calling this function.
+
+Parameters:
+    bool AllowInvasiveReads - Specify false if you want this function to perform
+    a "passive" read attempt, which will not block or change the state of the USB module.
+    If this parameter is false, the function can return a negative number, indicating
+    that the read could not be performed (ex: if the comparators are currently off).
+
+    Specify true, if you want this function to perform a forceful read operation.
+    In this case, this function will turn on the USB module and/or unsuspend it if
+    needed, in order to read the actual value.  The function will always return 0 or 1
+    in this case.  However, the function may block for as much time as required to
+    ensure that any necessary analog startup/settling/propagation times have
+    elapsed, so as to get an accurate reading.  If invasive reads are allowed, and
+    this function turns on the USB module or unsuspends it, the module will remain
+    on and unsuspended subsequent to returning from this function.
+    It is the caller's responsibility to turn the USB module off if
+    desired/appropropriate for the application (ex: because the returned value was
+    0, indicating VBUS is not currently powered, in which case the application may
+    wish to shut things down for lower power consumption).
+
+
+Return Values:
+    Returns a signed 8-bit byte indicating the current VBUS level.  If VBUS is above
+    the session valid state (ex: because the cable is attached and a host or hub is actively
+    sourcing VBUS power), the return value will be 1.  If the VBUS level is below
+    the session valid level (ex: because the cable is detached or the host/hub is
+    powered down and not sourcing anything on VBUS), the return value will be 0.
+    If the function could not conclusively determine the state of the VBUS line
+    (ex: because the VBUS sensing comparator wasn't powered on for example), the
+    return value will be a negative number (ex: return value of -1 or less, with
+    the actual value indicating a code representing the reason why the value
+    couldn't be read).
+
+Remarks:
+    This function may block for upwards of ~5ms if AllowInvasiveReads was true
+    and the USB module wasn't previously turned or or was recently (or is still) suspended.
+
+ *******************************************************************/
+int8_t USBVBUSSessionValidStateGet(bool AllowInvasiveReads);
+
+
+
+/********************************************************************
+Function:
+    void USBMaskAllUSBInterrupts(void)
+
+Summary:
+    This function saves the current USBIE bit state, and then clears it
+    to prevent any USB interrupt vectoring.
+
+PreCondition:
+    None
+
+Parameters:
+    None
+
+Return Values:
+    None
+
+Remarks:
+     This function should always be called in a exact 1:1 ratio with the
+     corresponding USBRestoreUSBInterrupts() function (which restores the
+     setting saved by this function).  This function should not be called
+     more than once, prior to calling USBRestoreUSBInterrupts(),
+     as this will cause the previously saved value to get overwritten.
+  *******************************************************************/
+void USBMaskAllUSBInterrupts(void);
+
+
+
+/********************************************************************
+Function:
+    void USBRestoreUSBInterrupts(void)
+
+Summary:
+    This function restores the previous USB interrupt setting that was
+    in effect prior to calling the corresponding USBMaskAllUSBInterrupts().
+
+PreCondition:
+    None
+
+Parameters:
+    None
+
+Return Values:
+    None
+
+Remarks:
+ This function should only be called in an exact 1:1 ratio with the
+ USBMaskAllUSBInterrupts() function.  This function should never be
+ called without first being preceded by a call to USBMaskAllUSBInterrupts().
+  *******************************************************************/
+void USBRestoreUSBInterrupts(void);
+
+
+
+
+
 /*****************************************************************************/
 /****** Compiler checks ******************************************************/
 /*****************************************************************************/
-
-//Definitions for the BDT
 #ifndef USB_PING_PONG_MODE
     #error "No ping pong mode defined."
 #endif

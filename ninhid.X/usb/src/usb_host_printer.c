@@ -98,16 +98,16 @@ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 #include <string.h>
 #include <ctype.h>
 #include "usb_config.h"
-#include <usb/usb_struct_queue.h>
-#include <usb/usb.h>
-#include <usb/usb_host_printer.h>
+#include "usb_struct_queue.h"
+#include "usb.h"
+#include "usb_host_printer.h"
 
 #ifdef USB_PRINTER_LANGUAGE_PCL_5
-    #include <usb/usb_host_printer_pcl_5.h>
+    #include "usb_host_printer_pcl_5.h"
 #endif
 
 #ifdef USB_PRINTER_LANGUAGE_POSTSCRIPT
-    #include <usb/usb_host_printer_postscript.h>
+    #include "usb_host_printer_postscript.h"
 #endif
 
 #ifndef USB_MALLOC

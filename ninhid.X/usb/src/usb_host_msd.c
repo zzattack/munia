@@ -65,31 +65,13 @@ PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. THE COMPANY SHALL NOT,
 IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL OR
 CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 
-Change History:
-  Rev         Description
-  ----------  ----------------------------------------------------------
-  2.6 - 2.6a  No change
-
-  2.7         Fixed issue where a transfer event is incorrectly sent when
-              transfer events are enabled.
-
-  2.7a        No change
-  
-  2.9         Small change to allow certain types of subclass 0x05 flash drives
-              to work (in addition to normal 0x06 drives).
-
 *******************************************************************************/
 
 
 #include <stdlib.h>
 #include <string.h>
-#include "usb/usb.h"
-#include "usb/usb_host_msd.h"
-
-//#define DEBUG_MODE
-#ifdef DEBUG_MODE
-    #include "uart2.h"
-#endif
+#include "usb.h"
+#include "usb_host_msd.h"
 
 
 // *****************************************************************************

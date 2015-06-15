@@ -53,10 +53,9 @@ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 #include <system_config.h>
 #include <stdlib.h>
 #include <string.h>
-#include "usb/usb.h"
+#include <usb.h>
 #include "usb_host_local.h"
 #include "usb_hal_local.h"
-//#include "usb/usb_hal.h"
 
 #ifndef USB_MALLOC
     #define USB_MALLOC(size) malloc(size)
@@ -69,7 +68,7 @@ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 #define USB_FREE_AND_CLEAR(ptr) {USB_FREE(ptr); ptr = NULL;}
 
 #if defined( USB_ENABLE_TRANSFER_EVENT )
-    #include "usb/usb_struct_queue.h"
+    #include "usb_struct_queue.h"
 #endif
 
 // *****************************************************************************
@@ -4110,68 +4109,68 @@ bool _USB_FindServiceEndpoint( uint8_t transferType )
     {
         if (pEndpoint != NULL)
         {
-			if (pEndpoint->bmAttributes.bfTransferType == transferType)
-			{
-				switch (transferType)
-				{
-					case USB_TRANSFER_TYPE_CONTROL:
-						if (!pEndpoint->status.bfTransferComplete)
-						{
-							pCurrentEndpoint = pEndpoint;
-							return true;
-						}
-						break;
+            if (pEndpoint->bmAttributes.bfTransferType == transferType)
+            {
+                switch (transferType)
+                {
+                    case USB_TRANSFER_TYPE_CONTROL:
+                            if (!pEndpoint->status.bfTransferComplete)
+                            {
+                                    pCurrentEndpoint = pEndpoint;
+                                    return true;
+                            }
+                            break;
 
-					#ifdef USB_SUPPORT_ISOCHRONOUS_TRANSFERS
-					case USB_TRANSFER_TYPE_ISOCHRONOUS:
-					#endif
-					#ifdef USB_SUPPORT_INTERRUPT_TRANSFERS
-					case USB_TRANSFER_TYPE_INTERRUPT:
-					#endif
-					#if defined( USB_SUPPORT_ISOCHRONOUS_TRANSFERS ) || defined( USB_SUPPORT_INTERRUPT_TRANSFERS )
-						if (pEndpoint->status.bfTransferComplete)
-						{
-							// The endpoint doesn't need servicing.  If the interval count
-							// has reached 0 and the user has not initiated another transaction,
-							// reset the interval count for the next interval.
-							if (pEndpoint->wIntervalCount == 0)
-							{
-								// Reset the interval count for the next packet.
-								pEndpoint->wIntervalCount = pEndpoint->wInterval;
-							}
-						}
-						else
-						{
-							if (pEndpoint->wIntervalCount == 0)
-							{
-    							pCurrentEndpoint = pEndpoint;
-    							return true;
-    			            }				
-						}
-						break;
-					#endif
+                    #ifdef USB_SUPPORT_ISOCHRONOUS_TRANSFERS
+                    case USB_TRANSFER_TYPE_ISOCHRONOUS:
+                    #endif
+                    #ifdef USB_SUPPORT_INTERRUPT_TRANSFERS
+                    case USB_TRANSFER_TYPE_INTERRUPT:
+                    #endif
+                    #if defined( USB_SUPPORT_ISOCHRONOUS_TRANSFERS ) || defined( USB_SUPPORT_INTERRUPT_TRANSFERS )
+                            if (pEndpoint->status.bfTransferComplete)
+                            {
+                                    // The endpoint doesn't need servicing.  If the interval count
+                                    // has reached 0 and the user has not initiated another transaction,
+                                    // reset the interval count for the next interval.
+                                    if (pEndpoint->wIntervalCount == 0)
+                                    {
+                                            // Reset the interval count for the next packet.
+                                            pEndpoint->wIntervalCount = pEndpoint->wInterval;
+                                    }
+                            }
+                            else
+                            {
+                                    if (pEndpoint->wIntervalCount == 0)
+                                    {
+                                    pCurrentEndpoint = pEndpoint;
+                                    return true;
+                }
+                            }
+                            break;
+                    #endif
 
-					#ifdef USB_SUPPORT_BULK_TRANSFERS
-					case USB_TRANSFER_TYPE_BULK:
-						#ifdef ALLOW_MULTIPLE_NAKS_PER_FRAME
-						if (!pEndpoint->status.bfTransferComplete)
-						#else
-						if (!pEndpoint->status.bfTransferComplete &&
-							!pEndpoint->status.bfLastTransferNAKd)
-						#endif
-						{
-							usbBusInfo.countBulkTransactions ++;
-							if (usbBusInfo.countBulkTransactions > usbBusInfo.lastBulkTransaction)
-							{
-								usbBusInfo.lastBulkTransaction  = usbBusInfo.countBulkTransactions;
-								pCurrentEndpoint                = pEndpoint;
-								return true;
-							}
-						}
-						break;
-					#endif
-				}
-			}
+                    #ifdef USB_SUPPORT_BULK_TRANSFERS
+                    case USB_TRANSFER_TYPE_BULK:
+                            #ifdef ALLOW_MULTIPLE_NAKS_PER_FRAME
+                            if (!pEndpoint->status.bfTransferComplete)
+                            #else
+                            if (!pEndpoint->status.bfTransferComplete &&
+                                    !pEndpoint->status.bfLastTransferNAKd)
+                            #endif
+                            {
+                                    usbBusInfo.countBulkTransactions ++;
+                                    if (usbBusInfo.countBulkTransactions > usbBusInfo.lastBulkTransaction)
+                                    {
+                                            usbBusInfo.lastBulkTransaction  = usbBusInfo.countBulkTransactions;
+                                            pCurrentEndpoint                = pEndpoint;
+                                            return true;
+                                    }
+                            }
+                            break;
+                    #endif
+                }
+            }
 
 	        // Go to the next endpoint.
             pEndpoint = pEndpoint->next;
