@@ -86,7 +86,7 @@ Description:
 
 #include "system.h"
 #include "system_config.h"
-#include "usb/usb.h"
+#include "usb.h"
 
 //Only include the source for this file if you are using C30.  This code
 //  applies only to PIC24 parts.

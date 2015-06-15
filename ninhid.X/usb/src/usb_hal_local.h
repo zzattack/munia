@@ -24,7 +24,7 @@ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 #ifndef _USB_HAL_LOCAL_H_
 #define _USB_HAL_LOCAL_H_
 
-#include <usb/usb.h>
+#include "usb.h"
 
 #if defined (__18CXX) || defined(__XC8)
     #include "usb_pic18_local.h"
@@ -33,7 +33,7 @@ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
     #include <p33Exxxx.h>
     #endif
 #elif defined (__PIC32MX__)
-    #include "p32xxxx.h"
+    #include <p32xxxx.h>
     #include "usb_pic32.h"
 #else
     #error "Error!  Unsupported processor"

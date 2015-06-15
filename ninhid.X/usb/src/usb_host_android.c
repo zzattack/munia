@@ -23,9 +23,9 @@ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 #include <stdint.h>
 #include <stdbool.h>
 
-#include <usb/usb.h>
-#include <usb/usb_host_android.h>
-#include <usb/src/usb_host_android_local.h>
+#include "usb.h"
+#include "usb_host_android.h"
+#include "usb_host_android_local.h"
 
 //************************************************************
 // Internal type definitions

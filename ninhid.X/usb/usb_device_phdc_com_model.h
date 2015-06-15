@@ -27,17 +27,16 @@ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 #define _PHD_COM_H
 
 /** I N C L U D E S **********************************************************/
-#include "GenericTypeDefs.h"
-#include "Compiler.h"
-#include "HardwareProfile.h"
+#include <stdint.h>
+#include <stdbool.h>
 
 
 /** D E F I N I T I O N S ****************************************************/
-#define BYTE_SWAP16(a) (UINT16)((((UINT16)(a)&0xFF00)>>8) | \
-                                    (((UINT16)(a)&0x00FF)<<8))
+#define BYTE_SWAP16(a) (uint16_t)((((uint16_t)(a)&0xFF00)>>8) | \
+                                    (((uint16_t)(a)&0x00FF)<<8))
 
 /* callback function pointer structure for Application to handle events */
-typedef void(* PHDC_APP_CB)(UINT8);
+typedef void(* PHDC_APP_CB)(uint8_t);
 
 
 /* Application States */
@@ -82,7 +81,7 @@ typedef void(* PHDC_APP_CB)(UINT8);
  *	 an association response. The association response tells whether Manager
  *	 accepting the request or rejecting it. The Association response from
  *	 the Manager is handled by the PHD stack. The PHD stack calls a callback
- *	 function (void(* PHDC_APP_CB)(UINT8)) to the application with status of
+ *	 function (void(* PHDC_APP_CB)(uint8_t)) to the application with status of
  *	 the connection.
  *	 The Manager should respond to the Agent within the specified timeout of
  *	 ASSOCIATION_REQUEST_TIMEOUT. The Agent should send the Association request
@@ -120,7 +119,7 @@ void PHDConnect(void);
  *	 Release request to manager.  The Agent doesn't get disconnected from the Manager
  *	 immediately after calling this function. The PHD Manager sends back a release response
  *	 to the Agent. The Agent responds back with an Abort Message and the Agent moves to DISCONNECTED
- *	 state. The PHD stack calls a callback function (void(* PHDC_APP_CB)(UINT8)) to the application
+ *	 state. The PHD stack calls a callback function (void(* PHDC_APP_CB)(uint8_t)) to the application
  *	 with status of the connection. This function disables all timeout.
  *
  * Conditions:
@@ -235,7 +234,7 @@ void PHDSendMeasuredData(void);
 
 /******************************************************************************
  * Function:
- *      void PHDSendAppBufferPointer(UINT8 * pAppBuffer)
+ *      void PHDSendAppBufferPointer(uint8_t * pAppBuffer)
  *
  * Summary:
  *      This function is used to send measurement data to the PHD Manager.
@@ -248,7 +247,7 @@ void PHDSendMeasuredData(void);
  *
  *
  * Parameters:
- *	UINT8 *pAppBuffer - Pointer to Application Buffer.
+ *	uint8_t *pAppBuffer - Pointer to Application Buffer.
  *
  * Return:
  *	None
@@ -260,7 +259,7 @@ void PHDSendMeasuredData(void);
  *      None
  *
  *****************************************************************************/
-void PHDSendAppBufferPointer(UINT8 * pAppBuffer);
+void PHDSendAppBufferPointer(uint8_t * pAppBuffer);
 
 #endif
 

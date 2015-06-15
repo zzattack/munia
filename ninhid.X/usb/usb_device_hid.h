@@ -29,7 +29,7 @@ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 
 /** INCLUDES *******************************************************/
 
-#include <usb/usb_ch9.h>
+#include "usb_ch9.h"
 
 /** DEFINITIONS ****************************************************/
 

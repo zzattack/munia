@@ -2,7 +2,7 @@
   File Information:
     FileName:     	usb_device_local.h
     Dependencies:	See INCLUDES section
-    Processor:		PIC18,PIC24, PIC32 and dsPIC33E USB Microcontrollers
+    Processor:		PIC18,PIC24, PIC32MM and dsPIC33E USB Microcontrollers
     Hardware:		The code is natively intended to be used on the following
     				hardware platforms: PICDEM� FS USB Demo Board, 
     				PIC18F87J50 FS USB Plug-In Module, or

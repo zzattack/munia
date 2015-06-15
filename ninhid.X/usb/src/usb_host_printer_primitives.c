@@ -57,8 +57,8 @@ Change History:
 
 #include <stdlib.h>
 #include <string.h>
-#include <usb/usb.h>
-#include <usb/usb_host_printer_primitives.h>
+#include "usb.h"
+#include "usb_host_printer_primitives.h"
 
 #ifndef USB_MALLOC
     #define USB_MALLOC(size) malloc(size)

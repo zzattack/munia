@@ -73,9 +73,9 @@
   ********************************************************************************/
 
  /** I N C L U D E S *******************************************************/
-#include <system_config.h>
-#include <usb/usb.h>
-#include <usb/usb_device_audio.h>
+#include "system_config.h"
+#include "usb.h"
+#include "usb_device_audio.h"
 
 #ifdef USB_USE_AUDIO_CLASS
 

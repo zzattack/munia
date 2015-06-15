@@ -85,8 +85,8 @@
 ********************************************************************/
 
 /** I N C L U D E S **********************************************************/
-#include "USB/usb.h"
-#include "USB/usb_function_phdc.h"
+#include "usb.h"
+#include "usb_function_phdc.h"
 #include "HardwareProfile.h"
 
 

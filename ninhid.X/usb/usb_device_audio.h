@@ -26,7 +26,7 @@ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 #ifndef AUDIO_H
 #define AUDIO_H
 
-#include <usb/usb_ch9.h>
+#include "usb_ch9.h"
 
 /** I N C L U D E S *******************************************************/
 

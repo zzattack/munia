@@ -81,8 +81,8 @@
 ********************************************************************/
 
 /** I N C L U D E S **********************************************************/
-#include "USB/usb.h"
-#include "USB/usb_function_ccid.h"
+#include "usb.h"
+#include "usb_function_ccid.h"
 #if defined(USB_USE_CCID)
 
 /** V A R I A B L E S ********************************************************/

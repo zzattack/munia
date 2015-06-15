@@ -29,7 +29,7 @@ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 //DOM-IGNORE-END
 
 /** I N C L U D E S **********************************************************/
-#include <usb/usb.h>
+#include "usb.h"
 #include "usb_config.h"
 
 /** D E F I N I T I O N S ****************************************************/

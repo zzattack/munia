@@ -63,10 +63,12 @@ Change History:
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "GenericTypeDefs.h"
-#include "USB/usb.h"
-#include "USB/usb_host_printer.h"
-#include "USB/usb_host_printer_postscript.h"
+#include <stdint.h>
+#include <stdbool.h>
+
+#include "usb.h"
+#include "usb_host_printer.h"
+#include "usb_host_printer_postscript.h"
 
 //#define DEBUG_MODE
 #ifdef DEBUG_MODE

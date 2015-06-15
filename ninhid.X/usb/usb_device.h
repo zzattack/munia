@@ -44,7 +44,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #define _USB_DEVICE_H
 //DOM-IGNORE-END
 
-#include <usb/usb_common.h>
+#include "usb_common.h"
 #include <stdint.h>
 
 
@@ -1760,6 +1760,155 @@ USB_HANDLE USBRxOnePacket(uint8_t ep, uint8_t* data, uint16_t len);
 bool USB_APPLICATION_EVENT_HANDLER(uint8_t address, USB_EVENT event, void *pdata, uint16_t size);
 
 
+
+
+/**************************************************************************
+    Function:
+        void USBIncrement1msInternalTimers(void)
+
+    Description:
+        This function increments internal 1ms time base counters, which are
+        useful for application code (that can use a 1ms time base/counter), and
+        for certain USB event timing specific purposes.
+
+        In USB full speed applications, the application code does not need to (and should
+        not) explicitly call this function, as the USBDeviceTasks() function will
+        automatically call this function whenever a 1ms time interval has elapsed
+        (assuming the code is calling USBDeviceTasks() frequenctly enough in USB_POLLING
+        mode, or that USB interrupts aren't being masked for more than 1ms at a time
+        in USB_INTERRUPT mode).
+
+        In USB low speed applications, the application firmware is responsible for
+        periodically calling this function at a ~1ms rate.  This can be done using
+        a general purpose microcontroller timer set to interrupt every 1ms for example.
+        If the low speed application code does not call this function, the internal timers
+        will not increment, and the USBGet1msTickCount() API function will not be available.
+        Additionally, certain USB stack operations (like control transfer timeouts)
+        may be unavailable.
+
+    Precondition:
+        This function should be called only after USBDeviceInit() has been
+        called (at least once at the start of the application).  Ordinarily,
+        application code should never call this function, unless it is a low speed
+        USB device.
+
+    Parameters:
+        None
+
+    Return Values:
+        None
+
+    Remarks:
+        This function does not need to be called during USB suspend conditions, when
+        the USB module/stack is disabled, or when the USB cable is detached from the host.
+  ***************************************************************************/
+void USBIncrement1msInternalTimers(void);
+
+
+/**************************************************************************
+    Function:
+        uint32_t USBGet1msTickCount(void)
+
+    Description:
+        This function retrieves a 32-bit unsigned integer that normally increments by
+        one every one millisecond.  The count value starts from zero when the
+        USBDeviceInit() function is first called.  See the remarks section for
+        details on special circumstances where the tick count will not increment.
+
+    Precondition:
+        This function should be called only after USBDeviceInit() has been
+        called (at least once at the start of the application).
+
+    Parameters:
+        None
+
+    Return Values:
+        uint32_t representing the approximate millisecond count, since the time the
+        USBDeviceInit() function was first called.
+
+    Remarks:
+        On 8-bit USB full speed devices, the internal counter is incremented on
+        every SOF packet deteceted.  Therefore, it will not increment during suspend
+        or when the USB cable is detached.  However, on 16-bit devices, the T1MSECIF
+        hardware interrupt source is used to increment the internal counter.  Therefore,
+        on 16-bit devices, the count continue to increment during USB suspend or
+        detach events, so long as the application code has not put the microcontroller
+        to sleep during these events, and the application firmware is regularly
+        calling the USBDeviceTasks() function (or allowing it to execute, if using
+        USB_INTERRUPT mode operation).
+
+        In USB low speed applications, the host does not broadcast SOF packets to
+        the device, so the application firmware becomes responsible for calling
+        USBIncrement1msInternalTimers() periodically (ex: from a general purpose
+        timer interrupt handler), or else the returned value from this function will
+        not increment.
+
+        Prior to calling USBDeviceInit() for the first time the returned value will
+        be unpredictable.
+
+        This function is USB_INTERRUPT mode safe and may be called from main loop
+        code without risk of retrieving a partially updated 32-bit number.
+
+        However, this value only increments when the USBDeviceTasks() function is allowed
+        to execute.  If USB_INTERRUPT mode is used, it is allowable to block on this
+        function.  If however USB_POLLING mode is used, one must not block on this
+        function without also calling USBDeviceTasks() continuously for the blocking
+        duration (since the USB stack must still be allowed to execute, and the USB
+        stack is also responsible for updating the tick counter internally).
+
+        If the application is operating in USB_POLLING mode, this function should
+        only be called from the main loop context, and not from an interrupt handler,
+        as the returned value could be incorrect, if the main loop context code was in
+        the process of updating the internal count at the moment of the interrupt event.
+   ***************************************************************************/
+uint32_t USBGet1msTickCount(void);
+
+
+
+
+/**************************************************************************
+    Function:
+        uint8_t USBGetTicksSinceSuspendEnd(void);
+
+    Description:
+        This function retrieves a 8-bit unsigned byte that represents the number
+        of milliseconds that have elapsed since the end of a USB suspend event.
+        The value saturates at 255.
+
+    Precondition:
+        This function should be called only after USBDeviceInit() has been
+        called (at least once at the start of the application).
+
+    Parameters:
+        None
+
+    Return Values:
+        uint32_t representing the current millisecond count, since the time the
+        USBDeviceInit() function was first called, while the USB bus was non-suspended
+        and the device was attached to an active host.
+
+    Remarks:
+        This function does not increment during USB suspend conditions, or when the USB
+        cable is detached from the host.  Prior to calling USBDeviceInit() for the
+        first time the returned value will be unpredictable.
+
+        This function is USB_INTERRUPT mode safe and may be called from main loop
+        code without risk of retrieving a partially updated 32-bit number.
+
+        However, this value only increments when the USBDeviceTasks() function is allowed
+        to execute.  If USB_INTERRUPT mode is used, it is allowable to block on this
+        function.  If however USB_POLLING mode is used, one must not block on this
+        function without also calling USBDeviceTasks() continuously for the blocking
+        duration (since the USB stack must still be allowed to execute, and the USB
+        stack is also responsible for updating the tick counter internally).
+   ***************************************************************************/
+uint8_t USBGetTicksSinceSuspendEnd(void);
+/*DOM-IGNORE-BEGIN*/
+#define USBGetTicksSinceSuspendEnd()      USBTicksSinceSuspendEnd
+/*DOM-IGNORE-END*/
+
+
+
 /** Section: MACROS ******************************************************/
 
 /* The DESC_CONFIG_WORD() macro is implemented for convinence.  Since the
@@ -1905,9 +2054,10 @@ extern USB_VOLATILE bool RemoteWakeup;
 extern USB_VOLATILE bool USBBusIsSuspended;
 extern USB_VOLATILE USB_DEVICE_STATE USBDeviceState;
 extern USB_VOLATILE uint8_t USBActiveConfiguration;
+extern USB_VOLATILE uint8_t USBTicksSinceSuspendEnd;
 /******************************************************************************/
 /* DOM-IGNORE-END */
 
-#include <usb/usb_hal.h>
+#include <usb_hal.h>
 
 #endif //USB_DEVICE_H
