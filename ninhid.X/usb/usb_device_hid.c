@@ -83,8 +83,10 @@ typedef struct __attribute__((packed))
 static uint8_t idle_rate;
 static uint8_t active_protocol;   // [0] Boot Protocol [1] Report Protocol
 
-extern const struct{uint8_t report[HID_RPT01_SIZE];}hid_rpt01;
-extern const struct{uint8_t report[HID_RPT02_SIZE];}hid_rpt02;
+extern const struct{uint8_t report[HID_RPT_SNES_SIZE];}hid_rpt_snes;
+extern const struct{uint8_t report[HID_RPT_N64_SIZE];}hid_rpt_n64;
+extern const struct{uint8_t report[HID_RPT_NGC_SIZE];}hid_rpt_ngc;
+extern const struct{uint8_t report[HID_RPT_WII_SIZE];}hid_rpt_wii;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -158,7 +160,8 @@ extern const struct{uint8_t report[HID_RPT02_SIZE];}hid_rpt02;
 void USBCheckHIDRequest(void)
 {
     if(SetupPkt.Recipient != USB_SETUP_RECIPIENT_INTERFACE_BITFIELD) return;
-    if(SetupPkt.bIntfID != HID_INTF_ID1 && SetupPkt.bIntfID != HID_INTF_ID2) return;
+    if(SetupPkt.bIntfID != HID_INTF_SNES && SetupPkt.bIntfID != HID_INTF_N64
+         && SetupPkt.bIntfID != HID_INTF_NGC && SetupPkt.bIntfID != HID_INTF_WII) return;
     
     /*
      * There are two standard requests that hid.c may support.
@@ -172,17 +175,31 @@ void USBCheckHIDRequest(void)
             case DSC_HID: //HID Descriptor          
                 if(USBActiveConfiguration == 1)
                 {
-                    if (SetupPkt.bIntfID == HID_INTF_ID1)
+                    if (SetupPkt.bIntfID == HID_INTF_SNES)
                     {
                         USBEP0SendROMPtr(
                             (const uint8_t*)&configDescriptor1 + 18, //18 is a magic number.  It is the offset from start of the configuration descriptor to the start of the HID descriptor.
                             sizeof(USB_HID_DSC)+3,
                             USB_EP0_INCLUDE_ZERO);
                     }
-                    else if (SetupPkt.bIntfID == HID_INTF_ID2) 
+                    else if (SetupPkt.bIntfID == HID_INTF_N64) 
                     {
 						USBEP0SendROMPtr(
 							(const uint8_t*)&configDescriptor1 + 43, //43 is a magic number.  It is the offset from start of the configuration descriptor to the start of the HID descriptor.
+							sizeof(USB_HID_DSC)+3,
+							USB_EP0_INCLUDE_ZERO);                                                
+                    }
+                    else if (SetupPkt.bIntfID == HID_INTF_NGC) 
+                    {
+						USBEP0SendROMPtr(
+							(const uint8_t*)&configDescriptor1 + 68, // ???
+							sizeof(USB_HID_DSC)+3,
+							USB_EP0_INCLUDE_ZERO);                                                
+                    }
+                    else if (SetupPkt.bIntfID == HID_INTF_WII) 
+                    {
+						USBEP0SendROMPtr(
+							(const uint8_t*)&configDescriptor1 + 93, // ???
 							sizeof(USB_HID_DSC)+3,
 							USB_EP0_INCLUDE_ZERO);                                                
                     }
@@ -191,18 +208,32 @@ void USBCheckHIDRequest(void)
             case DSC_RPT:  //Report Descriptor           
                 //if(USBActiveConfiguration == 1)
                 {
-                    if (SetupPkt.bIntfID == HID_INTF_ID1)
+                    if (SetupPkt.bIntfID == HID_INTF_SNES)
                     {
                         USBEP0SendROMPtr(
-                            (const uint8_t*)&hid_rpt01,
-                            HID_RPT01_SIZE,     //See usbcfg.h
+                            (const uint8_t*)&hid_rpt_snes,
+                            HID_RPT_SNES_SIZE,     //See usbcfg.h
                             USB_EP0_INCLUDE_ZERO);
                     }
-                    else if (SetupPkt.bIntfID == HID_INTF_ID2)
+                    else if (SetupPkt.bIntfID == HID_INTF_N64)
                     {
                         USBEP0SendROMPtr(
-                            (const uint8_t*)&hid_rpt02,
-                            HID_RPT02_SIZE,     //See usbcfg.h
+                            (const uint8_t*)&hid_rpt_n64,
+                            HID_RPT_N64_SIZE,     //See usbcfg.h
+                            USB_EP0_INCLUDE_ZERO);
+                    }
+                    else if (SetupPkt.bIntfID == HID_INTF_NGC)
+                    {
+                        USBEP0SendROMPtr(
+                            (const uint8_t*)&hid_rpt_ngc,
+                            HID_RPT_NGC_SIZE,     //See usbcfg.h
+                            USB_EP0_INCLUDE_ZERO);
+                    }
+                    else if (SetupPkt.bIntfID == HID_INTF_WII)
+                    {
+                        USBEP0SendROMPtr(
+                            (const uint8_t*)&hid_rpt_wii,
+                            HID_RPT_WII_SIZE,     //See usbcfg.h
                             USB_EP0_INCLUDE_ZERO);
                     }
                 }

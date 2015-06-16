@@ -9,9 +9,10 @@
 /** DEFINITIONS ****************************************************/
 
 #define USB_EP0_BUFF_SIZE	8   // Valid Options: 8, 16, 32, or 64 bytes.
-#define USB_MAX_NUM_INT     2   // Set this number to match the maximum interface number used in the descriptors for this firmware project
-#define USB_MAX_EP_NUMBER	2   // Set this number to match the maximum endpoint number used in the descriptors for this firmware project
-#define USB_NUM_STRING_DESCRIPTORS 6
+#define USB_MAX_NUM_INT     4   // Set this number to match the maximum interface number used in the descriptors for this firmware project
+#define USB_MAX_EP_NUMBER	4   // Set this number to match the maximum endpoint number used in the descriptors for this firmware project
+#define HID_NUM_OF_DSC 1
+#define USB_NUM_STRING_DESCRIPTORS 8
 
 #define USB_USER_DEVICE_DESCRIPTOR &device_dsc
 #define USB_USER_DEVICE_DESCRIPTOR_INCLUDE extern const USB_DEVICE_DESCRIPTOR device_dsc
@@ -48,17 +49,24 @@
 
 
 /* HID */
-#define HID_INTF_ID1            0x00
-#define HID_INTF_ID2            0x01
-#define HID_EP1 				1
-#define HID_EP2					2
-#define HID_INT_OUT_EP1_SIZE    64
-#define HID_INT_IN_EP1_SIZE     64
-#define HID_INT_OUT_EP2_SIZE    64
-#define HID_INT_IN_EP2_SIZE     64
-#define HID_NUM_OF_DSC          1
-#define HID_RPT01_SIZE          74
-#define HID_RPT02_SIZE          74
+#define HID_INTF_SNES           0
+#define HID_INTF_N64            1
+#define HID_INTF_NGC            2
+#define HID_INTF_WII            3
+#define HID_EP_SNES				1
+#define HID_EP_N64				2
+#define HID_EP_NGC				3
+#define HID_EP_WII				4
+
+#define HID_INT_IN_SNES_SIZE    64
+#define HID_INT_IN_N64_SIZE     64
+#define HID_INT_IN_NGC_SIZE     64
+#define HID_INT_IN_WII_SIZE     64
+
+#define HID_RPT_SNES_SIZE         74
+#define HID_RPT_N64_SIZE          74
+#define HID_RPT_NGC_SIZE          74
+#define HID_RPT_WII_SIZE          46
 
 void usb_descriptors_check();
 
