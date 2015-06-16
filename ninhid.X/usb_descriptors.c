@@ -5,15 +5,15 @@
 #include <stdio.h>
 
 const USB_DEVICE_DESCRIPTOR device_dsc = {
-    0x12,    // Size of this descriptor in bytes
-    USB_DESCRIPTOR_DEVICE,                // DEVICE descriptor type
+    sizeof(USB_DEVICE_DESCRIPTOR), // Size of this descriptor in bytes
+    USB_DESCRIPTOR_DEVICE,  // DEVICE descriptor type
     0x0200,                 // USB Spec Release Number in BCD format
     0x00,                   // Class Code
     0x00,                   // Subclass code
     0x00,                   // Protocol code
-    USB_EP0_BUFF_SIZE,          // Max packet size for EP0, see usb_config.h
-    0x04D8,                 // Vendor ID (VID))
-    0x005E,                 // Product ID (PID))
+    USB_EP0_BUFF_SIZE,      // Max packet size for EP0, see usb_config.h
+    0x04d8,                 // Vendor ID (VID))
+    0x0060,                 // Product ID (PID))
     0x0001,                 // Device release number in BCD format
     0x01,                   // Manufacturer string index
     0x02,                   // Product string index
@@ -26,8 +26,8 @@ const uint8_t configDescriptor1[]={
     // Configuration Descriptor
     sizeof(USB_CONFIGURATION_DESCRIPTOR), // Size of this descriptor in bytes
     USB_DESCRIPTOR_CONFIGURATION, // CONFIGURATION descriptor type
-    DESC_CONFIG_WORD(0x0049), // Total length of data for this cfg
-    2, // Number of interfaces in this cfg
+    DESC_CONFIG_WORD(0x0022), // Total length of data for this cfg
+    USB_MAX_NUM_INT, // Number of interfaces in this cfg
     1, // Index value of this configuration
     0, // Configuration string index
     _DEFAULT, //| _SELF, // Attributes, see usb_device.h
@@ -38,7 +38,7 @@ const uint8_t configDescriptor1[]={
     USB_DESCRIPTOR_INTERFACE,    // INTERFACE descriptor type
     HID_INTF_ID1,           // Interface Number
     0,                      // Alternate Setting Number
-    2,                      // Number of endpoints in this intf
+    1,                      // Number of endpoints in this intf
     HID_INTF,               // Class code
     0,                      // Subclass code
     0,                      // Protocol code
@@ -60,22 +60,14 @@ const uint8_t configDescriptor1[]={
     _INTERRUPT,                  // Attributes
     DESC_CONFIG_WORD(64),        // size
     0x01,                        // Interval
-
-    // Endpoint Descriptor
-    sizeof(USB_ENDPOINT_DESCRIPTOR), 
-    USB_DESCRIPTOR_ENDPOINT,     // Endpoint Descriptor
-    HID_EP1 | _EP_OUT,           // EndpointAddress
-    _INTERRUPT,                  // Attributes
-    DESC_CONFIG_WORD(64),        // size
-    0x01,                        // Interval
     // -------------------------------------------------------------------------
-    
-    // Interface Descriptor2
+    /*
+    // Interface Descriptor2----------------------------------------------------
     sizeof(USB_INTERFACE_DESCRIPTOR), // Size of this descriptor in bytes
-    USB_DESCRIPTOR_INTERFACE, // INTERFACE descriptor type
+    USB_DESCRIPTOR_INTERFACE,    // INTERFACE descriptor type
     HID_INTF_ID2,           // Interface Number
     0,                      // Alternate Setting Number
-    2,                      // Number of endpoints in this intf
+    1,                      // Number of endpoints in this intf
     HID_INTF,               // Class code
     0,                      // Subclass code
     0,                      // Protocol code
@@ -92,72 +84,96 @@ const uint8_t configDescriptor1[]={
     
     // Endpoint Descriptor
     sizeof(USB_ENDPOINT_DESCRIPTOR), 
-    USB_DESCRIPTOR_ENDPOINT,     //Endpoint Descriptor
-    HID_EP2 | _EP_IN,            //EndpointAddress
-    _INTERRUPT,                  //Attributes
-    DESC_CONFIG_WORD(64),        //size
-    0x01,                        //Interval
-
-    // Endpoint Descriptor
-    sizeof(USB_ENDPOINT_DESCRIPTOR), 
-    USB_DESCRIPTOR_ENDPOINT,     //Endpoint Descriptor
-    HID_EP2 | _EP_OUT,           //EndpointAddress
-    _INTERRUPT,                  //Attributes
-    DESC_CONFIG_WORD(64),        //size
-    0x01,                        //Interval
+    USB_DESCRIPTOR_ENDPOINT,     // Endpoint Descriptor
+    HID_EP2 | _EP_IN,            // EndpointAddress
+    _INTERRUPT,                  // Attributes
+    DESC_CONFIG_WORD(64),        // size
+    0x01,                        // Interval
+     */ 
+    // -------------------------------------------------------------------------
 };
 
 
 //Class specific descriptor - HID
 const struct{uint8_t report[HID_RPT01_SIZE];}hid_rpt01={ {
-    0x05, 0x01, // USAGE_PAGE (Generic Desktop)
-    0x09, 0x04, // USAGE (Joystick)
-    0xA1, 0x01, // COLLECTION (Application)
-    0x15, 0x00, // LOGICAL_MINIMUM (0)
-    0x26, 0xff, 0x03, // LOGICAL_MAXIMUM (1023)
-    0x09, 0x30, // USAGE (X)
-    0x09, 0x31, // USAGE (Y)
-    0x09, 0x32, // USAGE (Z)
-    0x09, 0x33, // USAGE (Rx)
-    0x75, 0x10, // Report Size (16)
-    0x95, 0x04, // Report Count (4)
-    0x81, 0x02, // Input (Data, Variable, Absolute)
-    0x05, 0x09, // Usage Page (Buttons)
-    0x19, 0x01, // Usage Minimum (1)
-    0x29, 0x20, // Usage Maximum (32)
-    0x15, 0x00, // Logical Minimum (0)
-    0x25, 0x01, // Logical Maximum (1)
-    0x75, 0x01, // Report Size (1)
-    0x95, 0x20, // Report Count (32)
-    0x81, 0x02, // Input (Data, Variable, Absolute)
-    0xC0 // End Collection 1 byte 
-// 42 
+  0x05,0x01,        //USAGE_PAGE (Generic Desktop)
+  0x09,0x05,        //USAGE (Game Pad)
+  0xA1,0x01,        //COLLECTION (Application)
+  0x15,0x00,        //  LOGICAL_MINIMUM(0)
+  0x25,0x01,        //  LOGICAL_MAXIMUM(1)
+  0x35,0x00,        //  PHYSICAL_MINIMUM(0)
+  0x45,0x01,        //  PHYSICAL_MAXIMUM(1)
+  0x75,0x01,        //  REPORT_SIZE(1)
+  0x95,0x0D,        //  REPORT_COUNT(13)
+  0x05,0x09,        //  USAGE_PAGE(Button)
+  0x19,0x01,        //  USAGE_MINIMUM(Button 1)
+  0x29,0x0D,        //  USAGE_MAXIMUM(Button 13)
+  0x81,0x02,        //  INPUT(Data,Var,Abs)
+  0x95,0x03,        //  REPORT_COUNT(3)
+  0x81,0x01,        //  INPUT(Cnst,Ary,Abs)
+  0x05,0x01,        //  USAGE_PAGE(Generic Desktop)
+  0x25,0x07,        //  LOGICAL_MAXIMUM(7)
+  0x46,0x3B,0x01,   //  PHYSICAL_MAXIMUM(315)
+  0x75,0x04,        //  REPORT_SIZE(4)
+  0x95,0x01,        //  REPORT_COUNT(1)
+  0x65,0x14,        //  UNIT(Eng Rot:Angular Pos)
+  0x09,0x39,        //  USAGE(Hat Switch)
+  0x81,0x42,        //  INPUT(Data,Var,Abs,Null)
+  0x65,0x00,        //  UNIT(None)
+  0x95,0x01,        //  REPORT_COUNT(1)
+  0x81,0x01,        //  INPUT(Cnst,Ary,Abs)
+  0x26,0xFF,0x00,   //  LOGICAL_MAXIMUM(255)
+  0x46,0xFF,0x00,   //  PHYSICAL_MAXIMUM(255)
+  0x09,0x30,        //  USAGE(X)
+  0x09,0x31,        //  USAGE(Y)
+  0x09,0x32,        //  USAGE(Z)
+  0x09,0x35,        //  USAGE(Rz)
+  0x75,0x08,        //  REPORT_SIZE(8)
+  0x95,0x04,        //  REPORT_COUNT(4)
+  0x81,0x02,        //  INPUT(Data,Var,Abs)
+  0xC0              //END_COLLECTION
 } };
 
+
+//Class specific descriptor - HID
 const struct{uint8_t report[HID_RPT02_SIZE];}hid_rpt02={ {
-    0x05, 0x01, // USAGE_PAGE (Generic Desktop)
-    0x09, 0x04, // USAGE (Joystick)
-    0xA1, 0x01, // COLLECTION (Application)
-    0x15, 0x00, // LOGICAL_MINIMUM (0)
-    0x26, 0xff, 0x03, // LOGICAL_MAXIMUM (1023)
-    0x09, 0x30, // USAGE (X)
-    0x09, 0x31, // USAGE (Y)
-    0x09, 0x32, // USAGE (Z)
-    0x09, 0x33, // USAGE (Rx)
-    0x75, 0x10, // Report Size (16)
-    0x95, 0x04, // Report Count (4)
-    0x81, 0x02, // Input (Data, Variable, Absolute)
-    0x05, 0x09, // Usage Page (Buttons)
-    0x19, 0x01, // Usage Minimum (1)
-    0x29, 0x20, // Usage Maximum (32)
-    0x15, 0x00, // Logical Minimum (0)
-    0x25, 0x01, // Logical Maximum (1)
-    0x75, 0x01, // Report Size (1)
-    0x95, 0x20, // Report Count (32)
-    0x81, 0x02, // Input (Data, Variable, Absolute)
-    0xC0 // End Collection 1 byte 
-// 42 
-} };  
+  0x05,0x01,        //USAGE_PAGE (Generic Desktop)
+  0x09,0x05,        //USAGE (Game Pad)
+  0xA1,0x01,        //COLLECTION (Application)
+  0x15,0x00,        //  LOGICAL_MINIMUM(0)
+  0x25,0x01,        //  LOGICAL_MAXIMUM(1)
+  0x35,0x00,        //  PHYSICAL_MINIMUM(0)
+  0x45,0x01,        //  PHYSICAL_MAXIMUM(1)
+  0x75,0x01,        //  REPORT_SIZE(1)
+  0x95,0x0D,        //  REPORT_COUNT(13)
+  0x05,0x09,        //  USAGE_PAGE(Button)
+  0x19,0x01,        //  USAGE_MINIMUM(Button 1)
+  0x29,0x0D,        //  USAGE_MAXIMUM(Button 13)
+  0x81,0x02,        //  INPUT(Data,Var,Abs)
+  0x95,0x03,        //  REPORT_COUNT(3)
+  0x81,0x01,        //  INPUT(Cnst,Ary,Abs)
+  0x05,0x01,        //  USAGE_PAGE(Generic Desktop)
+  0x25,0x07,        //  LOGICAL_MAXIMUM(7)
+  0x46,0x3B,0x01,   //  PHYSICAL_MAXIMUM(315)
+  0x75,0x04,        //  REPORT_SIZE(4)
+  0x95,0x01,        //  REPORT_COUNT(1)
+  0x65,0x14,        //  UNIT(Eng Rot:Angular Pos)
+  0x09,0x39,        //  USAGE(Hat Switch)
+  0x81,0x42,        //  INPUT(Data,Var,Abs,Null)
+  0x65,0x00,        //  UNIT(None)
+  0x95,0x01,        //  REPORT_COUNT(1)
+  0x81,0x01,        //  INPUT(Cnst,Ary,Abs)
+  0x26,0xFF,0x00,   //  LOGICAL_MAXIMUM(255)
+  0x46,0xFF,0x00,   //  PHYSICAL_MAXIMUM(255)
+  0x09,0x30,        //  USAGE(X)
+  0x09,0x31,        //  USAGE(Y)
+  0x09,0x32,        //  USAGE(Z)
+  0x09,0x35,        //  USAGE(Rz)
+  0x75,0x08,        //  REPORT_SIZE(8)
+  0x95,0x04,        //  REPORT_COUNT(4)
+  0x81,0x02,        //  INPUT(Data,Var,Abs)
+  0xC0              //END_COLLECTION
+} };
 
 //Language code string descriptor
 const struct{uint8_t bLength;uint8_t bDscType;uint16_t string[1];}sd000={
@@ -208,7 +224,7 @@ const uint8_t *const USB_SD_Ptr[]=
     (const uint8_t *const)&sd002,
     (const uint8_t *const)&sd003,
     (const uint8_t *const)&sd004,
-    (const uint8_t *const)&sd005,
+    // (const uint8_t *const)&sd005,
 };
 
 
