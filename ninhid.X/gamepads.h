@@ -1,0 +1,39 @@
+#ifndef GAMEPADS_H
+#define	GAMEPADS_H
+
+struct wii_classic {
+	uint16_t buttons;
+	int8_t left_x;
+	int8_t left_y;
+	int8_t right_x;
+	int8_t right_y;
+}
+
+struct ngc_packet {
+    uint8_t zero1 : 1;
+    uint8_t zero2 : 1;
+    uint8_t zero3 : 1;
+    uint8_t start : 1;
+    uint8_t y : 1;
+    uint8_t x : 1;
+    uint8_t b : 1;
+    uint8_t a : 1;
+    uint8_t one : 1;
+    uint8_t l : 1;
+    uint8_t r : 1;
+    uint8_t z : 1;
+    uint8_t dup : 1;
+    uint8_t ddown : 1;
+    uint8_t dright : 1;
+    uint8_t dleft : 1;
+    int8_t joy_x;
+    int8_t joy_y;
+    int8_t c_x;
+    int8_t c_y;
+    uint8_t left_trig;
+    uint8_t right_trig;
+};
+
+
+#endif	/* GAMEPADS_H */
+

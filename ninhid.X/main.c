@@ -1,209 +1,100 @@
 #include "config_bits.h"
+#include "hardware.h"
+#include "system_config.h"
+#include <xc.h>
 #include <usb/usb.h>
 #include <usb/usb_device_hid.h>
-#include <stdint.h>
-#include <GenericTypeDefs.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <xc.h>
-#include "xlcd.h"
+
+USB_HANDLE USBOutHandle1 = 0;
+USB_HANDLE USBInHandle1 = 0;
+USB_HANDLE USBOutHandle2 = 0;
+USB_HANDLE USBInHandle2 = 0;
+unsigned char usbOutBuffer1[64];
+unsigned char usbOutBuffer2[64];
+unsigned char usbInBuffer1[64];
+unsigned char usbInBuffer2[64];
 
 void init();
-void sample();
-void handle_packet_n64();
-void handle_packet_gc();
-void handle_packet_snes();
-void (*packet_handler)();
 
-void USBCheck_GetDescriptor_SerialNumber();
+void main() {
+    init();
+	    
+    usb_descriptors_check();
+	USBDeviceInit();
+#ifdef USB_INTERRUPT
+    USBDeviceAttach();
+#endif
 
-#define N64DAT PORTCbits.RC0
-#define GCDAT PORTCbits.RC1
-#define SNESDAT PORTCbits.RC2
-#define SCOPE_TEAL LATAbits.LATA5
+    LED_SNES_GREEN = 0;
+    LED_SNES_ORANGE = 0;
+    LED_GC_ORANGE = 0;
+    LED_GC_GREEN = 0;
 
-BYTE usbOutBuffer[HID_INT_OUT_EP_SIZE];
-BYTE usbInBuffer[HID_INT_IN_EP_SIZE];
-USB_HANDLE USBInHandle = 0;
+    LED_SNES_GREEN = 1;
+    LED_SNES_ORANGE = 1;
+    LED_GC_ORANGE = 1;
+    LED_GC_GREEN = 1;
+    
+    BOOL sentOnce = FALSE;
 
-BOOL packet_available = FALSE;
-BYTE packet[8];
-
-BYTE buff[90] = {0};
-BYTE* w = buff;
-
-typedef union _INTPUT_CONTROLS_TYPEDEF {
-    struct {
-        struct         {
-            uint8_t square:1;
-            uint8_t x:1;
-            uint8_t o:1;
-            uint8_t triangle:1;
-            uint8_t L1:1;
-            uint8_t R1:1;
-            uint8_t L2:1;
-            uint8_t R2:1;//
-            uint8_t select:1;
-            uint8_t start:1;
-            uint8_t left_stick:1;
-            uint8_t right_stick:1;
-            uint8_t home:1;
-            uint8_t :3;    //filler
-        } buttons;
-        struct        {
-            uint8_t hat_switch:4;
-            uint8_t :4;//filler
-        } hat_switch;
-        struct        {
-            uint8_t X;
-            uint8_t Y;
-            uint8_t Z;
-            uint8_t Rz;
-        } analog_stick;
-    } members;
-    uint8_t val[7];
-} INPUT_CONTROLS;
-
-INPUT_CONTROLS joystick_input;
-
-void sample_packet();
+	while (1) {
+#ifdef USB_POLLING
+        USBDeviceTasks();
+#endif
+        
+		if (USBDeviceState < CONFIGURED_STATE || USBSuspendControl == 1)
+			continue;
+        
+        if (!HIDTxHandleBusy(USBInHandle1)) {
+            if (!sentOnce) {
+                //Send the 8 byte packet over USB to the host.
+                uint8_t blah = {0};
+                USBInHandle1 = HIDTxPacket(HID_INTF_ID1, (uint8_t*)&blah, sizeof(blah));
+                sentOnce = TRUE;
+            }
+        }
+    }
+}
 
 void init() {
-	TRISA = 0xFF;
-	TRISC = 0xFF;
-    TRISCbits.TRISC0 = 1; // N64
-    TRISCbits.TRISC1 = 1; // GC
-    TRISCbits.TRISC2 = 1; // SNES
-    TRISAbits.TRISA5 = 0; // scope teal
-
-	ANSELA = 0b00000000; // all digital
-	ANSELB = 0b00000000;
-	ANSELC = 0b00000000;
-	
 	OSCTUNE = 0x80; // 3X PLL ratio mode selected
 	OSCCON = 0x70;  // Switch to 16MHz HFINTOSC
 	OSCCON2 = 0x10; // Enable PLL, SOSC, PRI OSC drivers turned off
 	while (!OSCCON2bits.PLLRDY); // Wait for PLL lock
 	ACTCON = 0x90;  // Enable active clock tuning for USB operation
-}
 
-void switch_operation_mode() {    
+    // analog ports
+	ANSELA = 0b00000000; // all digital
+	ANSELB = 0b00000000;
+	ANSELC = 0b00000000;
+    
+    // io directions
+    TRISA = 0b11000000; // RA0-4 for LCD, RA5 for led, RA6/7 snes LATCH/CLOCK
+    TRISB = 0b00000000; // outputs for leds, LCD, fake signal, switches
+    TRISC = 0b10000111; // usb sense, uart tx, snes/n64/gc input signals
+    
+    
 	// cfg timer
 	INTCONbits.TMR0IE = 0; // Disables the TMR0 overflow interrupt
 	T0CONbits.TMR0ON = 1; // Enables Timer0
-	T0CONbits.T08BIT = 1; // Timer0 is configured as an 8-bit timer/counter
+	T0CONbits.T08BIT = 0; // Timer0 is configured as an 16-bit timer/counter
 	T0CONbits.T0CS = 0; // Internal instruction cycle clock (FOSC/4)
-	T0CONbits.PSA = 1; // TImer0 prescaler is NOT assigned. Timer0 clock input bypasses prescaler
+	T0CONbits.PSA = 0; // Timer0 prescaler is NOT assigned. Timer0 clock input bypasses prescaler
+    T0CONbits.T0PS = 0b100;
 
 	// setup interrupt on falling change of data on gamepad ports
 	INTCONbits.IOCIE = 1; // IOC interrupt enabled
 	INTCON2bits.IOCIP = 1; // High priority group
-	// IOCCbits.IOCC0 = 1; // enable IOC on RC0
+	IOCCbits.IOCC0 = 1; // enable IOC on RC0
 	IOCCbits.IOCC1 = 1; // enable IOC on RC1
-	// IOCCbits.IOCC2 = 1; // enable IOC on RC2
+	IOCCbits.IOCC2 = 1; // enable IOC on RC2
 
 	RCONbits.IPEN = 1; // Enable priority levels on interrupts
 	INTCONbits.GIEH = 1; // Enable high priority interrupts
 	INTCONbits.GIEL = 1; // Enable low priority interrupts
-}
-
-void DelayFor18TCY() {
-    __delay_us(18);
-}
-
-void DelayPORXLCD() {
-     __delay_ms(15);
-}
-
-void DelayXLCD() {
-    __delay_ms(5);
-}
-
-void main() {
-    init();
-	
-    // PWM pin
-    TRISBbits.RB5 = 0;
-    LATBbits.LATB5 = 1;
-    
-    OpenXLCD(FOUR_BIT & 0b00111000 & CURSOR_ON & BLINK_ON);
-    while(1) {
-        WriteCmdXLCD(SHIFT_DISP_LEFT);
-        putrsXLCD("somssomssomssoms");
-    }
-
-
-	USBDeviceInit();
-
-	while (1) {
-		USBDeviceTasks();
-
-		if (USBDeviceState < CONFIGURED_STATE || USBSuspendControl == 1)
-			continue;
-
-		if (packet_available && !HIDTxHandleBusy(USBInHandle)) {
-			usbInBuffer[0] = 36;
-			usbInBuffer[1] = 4;
-			memcpy(usbInBuffer + 2, packet, 8);
-			USBInHandle = HIDTxPacket(JOYSTICK_EP, (uint8_t*)&joystick_input, sizeof(joystick_input));
-			packet_available = FALSE;
-		}
-		SCOPE_TEAL = packet_available;
-
-	}
-}
-
-void high_priority interrupt isr_high() {
-	 // interrupt latency is 3 or 4 cycles, so waste another 20 then sample
-	w = buff; // 3 instructions
-	Nop(); Nop(); Nop(); Nop(); Nop(); Nop();
-	Nop(); Nop(); Nop(); Nop(); Nop(); Nop();
-	*w = PORTC; // total 4 instr, samples at 4th
-
-	w++; //
-	while (!GCDAT);
-	TMR0 = 150; // 1.5 bit wait
-	TMR0IF = 0;
-	
-loop:
-	if (TMR0IF) {
-		handle_packet_gc();
-		INTCONbits.IOCIF = 0;
-		return;
-	}
-	else if (!GCDAT) {
-		// getting from here to the point where PORTC is read takes 12 instructions,
-		// so waste the other 11:
-		Nop(); Nop(); Nop(); Nop(); Nop(); Nop();
-		Nop(); Nop(); Nop(); Nop(); Nop();
-
-		*w = PORTC; // sample happens exactly 24 instructions after loop entry
-
-		w++;
-		while (!GCDAT);
-		TMR0 = 150; // 1.5 bit wait
-	}
-	goto loop;
-}
-
-void low_priority interrupt isr_low() {
-	Nop();
-}
-
-void handle_packet_gc() {
-	UINT8 idx = w - buff;
-
-	if (idx == 90) {
-		BYTE* b = packet;
-		// bits 0-23 are request, 24 is stop bit, 25-88 is data
-		for (UINT8 i = 25; i < 88; i++) {
-			*b <<= 1;
-			*b |= (buff[i] >> 1) & 1;
-			if ((i - 25) % 8 == 7) b++;
-		}
-		packet_available = TRUE;
-	}
 }
 
 
@@ -211,50 +102,14 @@ void handle_packet_gc() {
 // ************** USB Callback Functions **************************************
 // ****************************************************************************
 
-void USBCBSuspend(void) {
-}
-
-void USBCBWakeFromSuspend() {
-}
-
-void USBCB_SOF_Handler() {
-}
-
-void USBCBErrorHandler() {
-}
-
-void USBCBStdSetDscHandler() {
-}
-
-void USBCheck_GetDescriptor_SerialNumber() {
-    // pick up Get_Descriptor( STRING, serial number ) request
-    if (SetupPkt.bmRequestType == 0x80
-            && SetupPkt.bRequest == USB_REQUEST_GET_DESCRIPTOR
-            && SetupPkt.bDescriptorType == USB_DESCRIPTOR_STRING
-            && SetupPkt.bDscIndex == 3) {
-        // here, read out serial number string desc to CtrlTrfData[]
-        // The size of CtrlTrfData[] array is USB_EP0_BUFF_SIZE (default: 8)
-        // if the desc size doesn't fit to this size, declare greater array and assign it instead.
-
-        // copy to CtrlTrfData
-        CtrlTrfData[0] = 22; // number of bytes
-        CtrlTrfData[1] = USB_DESCRIPTOR_STRING;
-        unsigned char i;
-        for (i = 0; i < 10; i++) {
-            CtrlTrfData[2 + i * 2] = 'x';
-            CtrlTrfData[2 + i * 2 + 1] = '\0';
-        }
-        inPipes[0].info.bits.ctrl_trf_mem = USB_EP0_RAM; // Set memory type
-        inPipes[0].pSrc.bRam = (BYTE*) CtrlTrfData; // Set Source
-        inPipes[0].wCount.v[0] = CtrlTrfData[0]; // Set data count
-        inPipes[0].info.bits.busy = 1;
-    }
-}
-
+void USBCBSuspend() { }
+void USBCBWakeFromSuspend() { }
+void USBCB_SOF_Handler() { }
+void USBCBErrorHandler() { }
+void USBCBStdSetDscHandler() { }
 
 void USBCBCheckOtherReq() {
     USBCheckHIDRequest();
-    USBCheck_GetDescriptor_SerialNumber(); // add custom Get_Descriptor( serial number ) handler
 }
 
 void USBCBSendResume() {
@@ -303,16 +158,18 @@ BOOL USER_USB_CALLBACK_EVENT_HANDLER(USB_EVENT event, void *pdata, WORD size) {
             USBCBWakeFromSuspend();
             break;
         case EVENT_CONFIGURED:
-			//enable the HID endpoint
-			USBEnableEndpoint(JOYSTICK_EP, USB_IN_ENABLED | USB_HANDSHAKE_ENABLED | USB_DISALLOW_SETUP);
-			
+            // enable the HID endpoint
+            USBEnableEndpoint(HID_EP1, USB_IN_ENABLED | USB_OUT_ENABLED | USB_HANDSHAKE_ENABLED | USB_DISALLOW_SETUP);
+            USBEnableEndpoint(HID_EP2, USB_IN_ENABLED | USB_OUT_ENABLED | USB_HANDSHAKE_ENABLED | USB_DISALLOW_SETUP);
+            // Re-arm the OUT endpoint for the next packet
+            USBOutHandle1 = HIDRxPacket(HID_EP1, (BYTE*)&usbOutBuffer1, sizeof(usbOutBuffer1));
+            USBOutHandle2 = HIDRxPacket(HID_EP2, (BYTE*)&usbOutBuffer2, sizeof(usbOutBuffer2));
 			break;
         case EVENT_SET_DESCRIPTOR:
             USBCBStdSetDscHandler();
             break;
         case EVENT_EP0_REQUEST:
             USBCheckHIDRequest();
-            USBCheck_GetDescriptor_SerialNumber();
 			break;
         case EVENT_BUS_ERROR:
             USBCBErrorHandler();
