@@ -4,8 +4,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Frank/Desktop/ninhid/ninhid.X/config_bits.h</file>
-            <file>file:/C:/Users/Frank/Desktop/ninhid/ninhid.X/nbproject/Makefile-impl.mk</file>
+            <file>file:/C:/Users/Frank/Desktop/ninhid/ninhid.X/main.c</file>
+            <file>file:/C:/Users/Frank/Desktop/ninhid/ninhid.X/system_config.h</file>
+            <file>file:/C:/Users/Frank/Desktop/ninhid/ninhid.X/usb_descriptors.c</file>
         </group>
     </open-files>
 </project-private>
