@@ -3,15 +3,14 @@
 
 #include <xc.h>
 #include <stdbool.h>
-
+#include "hardware.h"
 #include "usb/usb_ch9.h"
 
 /** DEFINITIONS ****************************************************/
-#define _XTAL_FREQ 48000000
 
-#define USB_EP0_BUFF_SIZE	16  // Valid Options: 8, 16, 32, or 64 bytes.
-#define USB_MAX_NUM_INT     	1   // Set this number to match the maximum interface number used in the descriptors for this firmware project
-#define USB_MAX_EP_NUMBER	1   // Set this number to match the maximum endpoint number used in the descriptors for this firmware project
+#define USB_EP0_BUFF_SIZE	64  // Valid Options: 8, 16, 32, or 64 bytes.
+#define USB_MAX_NUM_INT     2   // Set this number to match the maximum interface number used in the descriptors for this firmware project
+#define USB_MAX_EP_NUMBER	4   // Set this number to match the maximum endpoint number used in the descriptors for this firmware project
 
 #define USB_USER_DEVICE_DESCRIPTOR &device_dsc
 #define USB_USER_DEVICE_DESCRIPTOR_INCLUDE extern const USB_DEVICE_DESCRIPTOR device_dsc
@@ -23,7 +22,7 @@
 
 #define USB_PING_PONG_MODE USB_PING_PONG__FULL_PING_PONG
 #define USB_POLLING
-// #define USB_INTERRUPT
+//#define USB_INTERRUPT
 
 #define USB_SPEED_OPTION USB_FULL_SPEED
 #define USB_PULLUP_OPTION USB_PULLUP_ENABLE
@@ -40,20 +39,27 @@
 //Timeout(in milliseconds) = ((1000 * (USB_STATUS_STAGE_TIMEOUT - 1)) / (USBDeviceTasks() polling frequency in Hz))
 //------------------------------------------------------------------------------------------------------------------
 #define USB_SUPPORT_DEVICE
-#define USB_NUM_STRING_DESCRIPTORS 3
 #define USB_ENABLE_ALL_HANDLERS
 
 #define USB_USE_HID
+#define USB_NUM_STRING_DESCRIPTORS 6
 
 /** ENDPOINTS ALLOCATION *******************************************/
 
 
 /* HID */
-#define HID_INTF_ID             0x00
-#define JOYSTICK_EP		1
-#define HID_INT_OUT_EP_SIZE     64
-#define HID_INT_IN_EP_SIZE      64
+#define HID_INTF_ID1            0x00
+#define HID_INTF_ID2            0x01
+#define HID_EP1 				1
+#define HID_EP2					2
+#define HID_INT_OUT_EP1_SIZE    64
+#define HID_INT_IN_EP1_SIZE     64
+#define HID_INT_OUT_EP2_SIZE    64
+#define HID_INT_IN_EP2_SIZE     64
 #define HID_NUM_OF_DSC          1
-#define HID_RPT01_SIZE          74
+#define HID_RPT01_SIZE          42
+#define HID_RPT02_SIZE          42
+
+void usb_descriptors_check();
 
 #endif // _SYSTEM_CONFIG_H_

@@ -1,5 +1,4 @@
-
-// PIC18LF24K50 Configuration Bit Settings
+// PIC18F24K50 Configuration Bit Settings
 
 // 'C' source line config statements
 
@@ -9,38 +8,38 @@
 // Use project enums instead of #define for ON and OFF.
 
 // CONFIG1L
-#pragma config PLLSEL = PLL3X   // PLL Selection (4x clock multiplier)
+#pragma config PLLSEL = PLL3X   // PLL Selection (3x clock multiplier)
 #pragma config CFGPLLEN = OFF   // PLL Enable Configuration bit (PLL Disabled (firmware controlled))
 #pragma config CPUDIV = NOCLKDIV// CPU System Clock Postscaler (CPU uses system clock (no divide))
-#pragma config LS48MHZ = SYS48X8
+#pragma config LS48MHZ = SYS48X8// Low Speed USB mode with 48 MHz system clock (System clock at 48 MHz, USB clock divider is set to 8)
 
 // CONFIG1H
-#pragma config FOSC = INTOSCIO     // Oscillator Selection (EC oscillator, high power 16MHz to 48MHz)
-#pragma config PCLKEN = OFF     // Primary Oscillator Shutdown (Primary oscillator enabled)
+#pragma config FOSC = INTOSCIO  // Oscillator Selection (Internal oscillator)
+#pragma config PCLKEN = ON      // Primary Oscillator Shutdown (Primary oscillator enabled)
 #pragma config FCMEN = OFF      // Fail-Safe Clock Monitor (Fail-Safe Clock Monitor disabled)
 #pragma config IESO = OFF       // Internal/External Oscillator Switchover (Oscillator Switchover mode disabled)
 
 // CONFIG2L
 #pragma config nPWRTEN = OFF    // Power-up Timer Enable (Power up timer disabled)
-#pragma config BOREN = SBORDIS  // Brown-out Reset Enable (BOR enabled in hardware (SBOREN is ignored))
+#pragma config BOREN = OFF      // Brown-out Reset Enable (BOR disabled in hardware (SBOREN is ignored))
 #pragma config BORV = 190       // Brown-out Reset Voltage (BOR set to 1.9V nominal)
 #pragma config nLPBOR = OFF     // Low-Power Brown-out Reset (Low-Power Brown-out Reset disabled)
 
 // CONFIG2H
-#pragma config WDTEN = OFF       // Watchdog Timer Enable bits (WDT enabled in hardware (SWDTEN ignored))
+#pragma config WDTEN = OFF      // Watchdog Timer Enable bits (WDT disabled in hardware (SWDTEN ignored))
 #pragma config WDTPS = 32768    // Watchdog Timer Postscaler (1:32768)
 
 // CONFIG3H
 #pragma config CCP2MX = RC1     // CCP2 MUX bit (CCP2 input/output is multiplexed with RC1)
-#pragma config PBADEN = ON      // PORTB A/D Enable bit (PORTB<5:0> pins are configured as analog input channels on Reset)
+#pragma config PBADEN = OFF     // PORTB A/D Enable bit (PORTB<5:0> pins are configured as digital I/O on Reset)
 #pragma config T3CMX = RC0      // Timer3 Clock Input MUX bit (T3CKI function is on RC0)
 #pragma config SDOMX = RB3      // SDO Output MUX bit (SDO function is on RB3)
 #pragma config MCLRE = ON       // Master Clear Reset Pin Enable (MCLR pin enabled; RE3 input disabled)
 
 // CONFIG4L
 #pragma config STVREN = ON      // Stack Full/Underflow Reset (Stack full/underflow will cause Reset)
-#pragma config LVP = ON         // Single-Supply ICSP Enable bit (Single-Supply ICSP enabled if MCLRE is also 1)
-#pragma config XINST = OFF      // Extended Instruction Set Enable bit (Instruction set extension and Indexed Addressing mode disabled)
+#pragma config LVP = OFF        // Single-Supply ICSP Enable bit (Single-Supply ICSP disabled)
+#pragma config XINST = OFF
 
 // CONFIG5L
 #pragma config CP0 = OFF        // Block 0 Code Protect (Block 0 is not code-protected)
