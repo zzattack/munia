@@ -178,10 +178,10 @@ volatile uint8_t CtrlTrfData[USB_EP0_BUFF_SIZE] CTRL_TRF_DATA_ADDR_TAG;
  * non-EP0 Buffer Space
  *******************************************************************/
 #if defined(USB_USE_HID)
-    volatile unsigned char hid_report_out1[HID_INT_OUT_EP1_SIZE];
-    volatile unsigned char hid_report_in1[HID_INT_IN_EP1_SIZE];
-    volatile unsigned char hid_report_out2[HID_INT_OUT_EP2_SIZE];
-    volatile unsigned char hid_report_in2[HID_INT_IN_EP2_SIZE];
+    volatile unsigned char hid_report_in_snes[HID_INT_IN_SNES_SIZE];
+    volatile unsigned char hid_report_in_n64[HID_INT_IN_N64_SIZE];
+    volatile unsigned char hid_report_in_ngc[HID_INT_IN_NGC_SIZE];
+    volatile unsigned char hid_report_in_wii[HID_INT_IN_WII_SIZE];
 #endif
 
 #if defined(USB_USE_MSD)
