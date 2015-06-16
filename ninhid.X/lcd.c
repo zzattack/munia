@@ -1,4 +1,3 @@
-#include <GenericTypeDefs.h>
 #include "lcd.h"
 #include "hardware.h"
 
@@ -9,15 +8,15 @@
 #define SPECIAL_TOCMD 251
 #define SPECIAL_TOCHR 250
 
-UINT8 lcd_outputBuffer[LCD_BUFFER_SIZE];
+uint8_t lcd_outputBuffer[LCD_BUFFER_SIZE];
 BOOL lcd_commandMode = TRUE;
-UINT8 lcd_inputIndex;
-UINT8 lcd_outputIndex;
-UINT8 lcd_bufferInUse;
+uint8_t lcd_inputIndex;
+uint8_t lcd_outputIndex;
+uint8_t lcd_bufferInUse;
 
-UINT8 lcd_timerCount;
-UINT8 lcd_startupTimer = 100;
-UINT8 lcd_pwmTimer = 0;
+uint8_t lcd_timerCount;
+uint8_t lcd_startupTimer = 100;
+uint8_t lcd_pwmTimer = 0;
 
 #define addByte(b) do { \
     lcd_outputBuffer[lcd_inputIndex++] = b; \
@@ -26,21 +25,40 @@ UINT8 lcd_pwmTimer = 0;
     lcd_bufferInUse++; \
 } while (FALSE)
 
-void sendPortHigh(UINT8 b) {
-    LATA = (LATA & 0b11110000) | (b >> 4);
+#define LCD_RS LATBbits.LATB4
+#define LCD_PWM LATBbits.LATB5
+#define LCD_E LATAbits.LATA4        
+#define LCD_D4 LATAbits.LATA3
+#define LCD_D5 LATAbits.LATA2
+#define LCD_D6 LATAbits.LATA1
+#define LCD_D7 LATAbits.LATA0
+
+void sendPortHigh(uint8_t b) {
+    //LATA = (LATA & 0b11110000) | (b >> 4);
+    b >>= 4;
+    LCD_D7 = (b >> 3) & 1;
+    LCD_D6 = (b >> 2) & 1;
+    LCD_D5 = (b >> 1) & 1;
+    LCD_D4 = (b >> 0) & 1;
+    
     LCD_E = 1;
     __delay_us(1);
     LCD_E = 0;
 }
 
-void sendPortLow(UINT8 b) {
-    LATA = (LATA & 0b11110000) | (b & 0x0F);
+void sendPortLow(uint8_t b) {
+    //LATA = (LATA & 0b11110000) | (b & 0x0F);
+    LCD_D7 = (b >> 3) & 1;
+    LCD_D6 = (b >> 2) & 1;
+    LCD_D5 = (b >> 1) & 1;
+    LCD_D4 = (b >> 0) & 1;
+    
     LCD_E = 1;
     __delay_us(1);
     LCD_E = 0;
 }
 
-void lcd_command(UINT8 cmd) {
+void lcd_command(uint8_t cmd) {
     if (lcd_bufferInUse > LCD_BUFFER_SIZE-3)
         return;
 
@@ -51,7 +69,7 @@ void lcd_command(UINT8 cmd) {
     addByte(cmd);
 }
 
-void lcd_goto(UINT8 line, UINT8 pos) {
+void lcd_goto(uint8_t line, uint8_t pos) {
     if (1 == 1) {
         lcd_command(0x80 + pos);
     }
@@ -66,7 +84,7 @@ void lcd_goto(UINT8 line, UINT8 pos) {
     }
 }
 
-void lcd_char(UINT8 chr) {
+void lcd_char(uint8_t chr) {
     if (lcd_bufferInUse > LCD_BUFFER_SIZE-3)
         return;
 
@@ -80,6 +98,11 @@ void lcd_char(UINT8 chr) {
 void lcd_string(const char *q) {
     while(*q)
         lcd_char(*q++);
+}
+
+
+void lcd_setBacklight(uint8_t value) {
+    lcd_backLightValue = value;
 }
 
 void lcd_process() {
