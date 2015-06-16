@@ -10,17 +10,17 @@
 
 USB_HANDLE USBOutHandle1 = 0;
 USB_HANDLE USBInHandle1 = 0;
-//USB_HANDLE USBOutHandle2 = 0;
-//USB_HANDLE USBInHandle2 = 0;
+USB_HANDLE USBOutHandle2 = 0;
+USB_HANDLE USBInHandle2 = 0;
 unsigned char usbOutBuffer1[16] @ 0x560;
-//unsigned char usbOutBuffer2[16] @ 0x580;
+unsigned char usbOutBuffer2[16] @ 0x580;
 
 typedef struct _INTPUT_CONTROLS_TYPEDEF
 {
     uint8_t val[7];
 } INPUT_CONTROLS;
 INPUT_CONTROLS joystick_input1 @ 0x500;
-//INPUT_CONTROLS joystick_input2 @ 0x540;
+INPUT_CONTROLS joystick_input2 @ 0x540;
 
 void init();
 
@@ -50,17 +50,17 @@ void main() {
         
 		if (USBDeviceState < CONFIGURED_STATE || USBSuspendControl == 1)
 			continue;
-                
+            
         if (!HIDTxHandleBusy(USBInHandle1)) {
             memset(&joystick_input1, 0x11, sizeof(joystick_input1));
             //Send the packet over USB to the host.
             USBInHandle1 = HIDTxPacket(HID_EP1, (uint8_t*)&joystick_input1, sizeof(joystick_input1));
-        }
-        /*if (!HIDTxHandleBusy(USBInHandle2)) {
+        }  
+        if (!HIDTxHandleBusy(USBInHandle2)) {
             memset(&joystick_input2, 0x22, sizeof(joystick_input2));
             //Send the packet over USB to the host.
             USBInHandle2 = HIDTxPacket(HID_EP2, (uint8_t*)&joystick_input2, sizeof(joystick_input2));
-        }*/
+        }
     }
 }
 
@@ -165,10 +165,10 @@ BOOL USER_USB_CALLBACK_EVENT_HANDLER(USB_EVENT event, void *pdata, WORD size) {
         case EVENT_CONFIGURED:
             // enable the HID endpoint
             USBEnableEndpoint(HID_EP1, USB_IN_ENABLED | USB_HANDSHAKE_ENABLED | USB_DISALLOW_SETUP);
-            //USBEnableEndpoint(HID_EP2, USB_IN_ENABLED | USB_HANDSHAKE_ENABLED | USB_DISALLOW_SETUP);
+            USBEnableEndpoint(HID_EP2, USB_IN_ENABLED | USB_HANDSHAKE_ENABLED | USB_DISALLOW_SETUP);
             // Re-arm the OUT endpoint for the next packet
             USBOutHandle1 = HIDRxPacket(HID_EP1, (BYTE*)&usbOutBuffer1, sizeof(usbOutBuffer1));
-            //USBOutHandle2 = HIDRxPacket(HID_EP2, (BYTE*)&usbOutBuffer2, sizeof(usbOutBuffer2));
+            USBOutHandle2 = HIDRxPacket(HID_EP2, (BYTE*)&usbOutBuffer2, sizeof(usbOutBuffer2));
 			break;
         case EVENT_SET_DESCRIPTOR:
             USBCBStdSetDscHandler();

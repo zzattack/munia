@@ -13,11 +13,11 @@ const USB_DEVICE_DESCRIPTOR device_dsc = {
     0x00,                   // Protocol code
     USB_EP0_BUFF_SIZE,      // Max packet size for EP0, see usb_config.h
     0x04d8,                 // Vendor ID (VID))
-    0x0060,                 // Product ID (PID))
+    0x0058,                 // Product ID (PID))
     0x0001,                 // Device release number in BCD format
     0x01,                   // Manufacturer string index
     0x02,                   // Product string index
-    0x00,                   // Device serial number string index
+    0x03,                   // Device serial number string index
     0x01                    // Number of possible configurations         
 };
 
@@ -26,7 +26,7 @@ const uint8_t configDescriptor1[]={
     // Configuration Descriptor
     sizeof(USB_CONFIGURATION_DESCRIPTOR), // Size of this descriptor in bytes
     USB_DESCRIPTOR_CONFIGURATION, // CONFIGURATION descriptor type
-    DESC_CONFIG_WORD(0x0022), // Total length of data for this cfg
+    DESC_CONFIG_WORD(0x003b), // Total length of data for this cfg
     USB_MAX_NUM_INT, // Number of interfaces in this cfg
     1, // Index value of this configuration
     0, // Configuration string index
@@ -61,7 +61,7 @@ const uint8_t configDescriptor1[]={
     DESC_CONFIG_WORD(64),        // size
     0x01,                        // Interval
     // -------------------------------------------------------------------------
-    /*
+    
     // Interface Descriptor2----------------------------------------------------
     sizeof(USB_INTERFACE_DESCRIPTOR), // Size of this descriptor in bytes
     USB_DESCRIPTOR_INTERFACE,    // INTERFACE descriptor type
@@ -89,7 +89,6 @@ const uint8_t configDescriptor1[]={
     _INTERRUPT,                  // Attributes
     DESC_CONFIG_WORD(64),        // size
     0x01,                        // Interval
-     */ 
     // -------------------------------------------------------------------------
 };
 
@@ -224,7 +223,7 @@ const uint8_t *const USB_SD_Ptr[]=
     (const uint8_t *const)&sd002,
     (const uint8_t *const)&sd003,
     (const uint8_t *const)&sd004,
-    // (const uint8_t *const)&sd005,
+    (const uint8_t *const)&sd005,
 };
 
 

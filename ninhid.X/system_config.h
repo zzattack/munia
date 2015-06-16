@@ -9,9 +9,9 @@
 /** DEFINITIONS ****************************************************/
 
 #define USB_EP0_BUFF_SIZE	8   // Valid Options: 8, 16, 32, or 64 bytes.
-#define USB_MAX_NUM_INT     1   // Set this number to match the maximum interface number used in the descriptors for this firmware project
-#define USB_MAX_EP_NUMBER	1   // Set this number to match the maximum endpoint number used in the descriptors for this firmware project
-#define USB_NUM_STRING_DESCRIPTORS 5
+#define USB_MAX_NUM_INT     2   // Set this number to match the maximum interface number used in the descriptors for this firmware project
+#define USB_MAX_EP_NUMBER	2   // Set this number to match the maximum endpoint number used in the descriptors for this firmware project
+#define USB_NUM_STRING_DESCRIPTORS 6
 
 #define USB_USER_DEVICE_DESCRIPTOR &device_dsc
 #define USB_USER_DEVICE_DESCRIPTOR_INCLUDE extern const USB_DEVICE_DESCRIPTOR device_dsc
