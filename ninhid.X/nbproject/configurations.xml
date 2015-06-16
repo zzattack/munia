@@ -8,6 +8,8 @@
       <itemPath>system_config.h</itemPath>
       <itemPath>system.h</itemPath>
       <itemPath>hardware.h</itemPath>
+      <itemPath>lcd.h</itemPath>
+      <itemPath>gamepads.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -18,10 +20,11 @@
                    projectFiles="true">
       <itemPath>main.c</itemPath>
       <itemPath>usb_descriptors.c</itemPath>
+      <itemPath>lcd.c</itemPath>
     </logicalFolder>
     <logicalFolder name="f1" displayName="USB" projectFiles="true">
-      <itemPath>usb/src/usb_device.c</itemPath>
-      <itemPath>usb/src/usb_device_hid.c</itemPath>
+      <itemPath>usb/usb_device.c</itemPath>
+      <itemPath>usb/usb_device_hid.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -30,15 +33,14 @@
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
-    <Elem>usb</Elem>
-    <Elem>xlcd</Elem>
+    <Elem>.</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
     <conf name="debug" type="2">
       <toolsSet>
         <developmentServer>localhost</developmentServer>
-        <targetDevice>PIC18LF24K50</targetDevice>
+        <targetDevice>PIC18F24K50</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
         <platformTool>PICkit3PlatformTool</platformTool>
@@ -71,12 +73,12 @@
       <HI-TECH-COMP>
         <property key="asmlist" value="true"/>
         <property key="define-macros" value="DEBUG"/>
-        <property key="extra-include-directories" value="."/>
+        <property key="extra-include-directories" value=".;.\USB"/>
         <property key="identifier-length" value="100"/>
-        <property key="operation-mode" value="pro"/>
+        <property key="operation-mode" value="std"/>
         <property key="opt-xc8-compiler-strict_ansi" value="false"/>
         <property key="optimization-assembler" value="true"/>
-        <property key="optimization-assembler-files" value="true"/>
+        <property key="optimization-assembler-files" value="false"/>
         <property key="optimization-debug" value="false"/>
         <property key="optimization-global" value="true"/>
         <property key="optimization-invariant-enable" value="false"/>
@@ -138,6 +140,7 @@
         <property key="ToolFirmwareFilePath"
                   value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="true"/>
@@ -171,7 +174,7 @@
         <property key="programoptions.testmodeentrymethod" value="VPPFirst"/>
         <property key="programoptions.usehighvoltageonmclr" value="false"/>
         <property key="programoptions.uselvpprogramming" value="false"/>
-        <property key="voltagevalue" value="3.5"/>
+        <property key="voltagevalue" value="5.0"/>
       </PICkit3PlatformTool>
       <XC8-config-global>
         <property key="advanced-elf" value="true"/>
