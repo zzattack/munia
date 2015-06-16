@@ -177,6 +177,13 @@ volatile uint8_t CtrlTrfData[USB_EP0_BUFF_SIZE] CTRL_TRF_DATA_ADDR_TAG;
 /********************************************************************
  * non-EP0 Buffer Space
  *******************************************************************/
+#if defined(USB_USE_HID)
+    volatile unsigned char hid_report_out1[HID_INT_OUT_EP1_SIZE];
+    volatile unsigned char hid_report_in1[HID_INT_IN_EP1_SIZE];
+    volatile unsigned char hid_report_out2[HID_INT_OUT_EP2_SIZE];
+    volatile unsigned char hid_report_in2[HID_INT_IN_EP2_SIZE];
+#endif
+
 #if defined(USB_USE_MSD)
     //Check if the MSD application specific USB endpoint buffer placement address 
     //macros have already been defined or not (ex: in a processor specific header)
@@ -2102,7 +2109,26 @@ static void USBStdGetDscHandler(void)
                 //USB_NUM_STRING_DESCRIPTORS was introduced as optional in release v2.3.  In v2.4 and
                 //  later it is now manditory.  This should be defined in usb_config.h and should
                 //  indicate the number of string descriptors.
-                if(SetupPkt.bDscIndex<USB_NUM_STRING_DESCRIPTORS)
+                if(SetupPkt.bDscIndex == 9) // serial num
+                {
+                    //Get a pointer to the String descriptor requested
+                    inPipes[0].pSrc.bRam = *(USB_SD_Ptr+SetupPkt.bDscIndex);
+                    // Set data count
+                    inPipes[0].wCount.Val = *inPipes[0].pSrc.bRom;    
+                    
+                    CtrlTrfData[0] = 22; // number of bytes
+                    CtrlTrfData[1] = USB_DESCRIPTOR_STRING;
+                    unsigned char i;
+                    for (i = 0; i < 10; i++) {
+                        CtrlTrfData[2 + i * 2] = 'x';
+                        CtrlTrfData[2 + i * 2 + 1] = '\0';
+                    }
+                    inPipes[0].info.bits.ctrl_trf_mem = USB_EP0_BUSY | USB_EP0_RAM; // Set memory type
+                    inPipes[0].pSrc.bRam = (BYTE*)CtrlTrfData; // Set Source
+                    inPipes[0].wCount.v[0] = CtrlTrfData[0]; // Set data count
+                    inPipes[0].info.bits.busy = 1;
+                }
+                else if(SetupPkt.bDscIndex < USB_NUM_STRING_DESCRIPTORS)
                 {
                     //Get a pointer to the String descriptor requested
                     inPipes[0].pSrc.bRom = *(USB_SD_Ptr+SetupPkt.bDscIndex);

@@ -84,6 +84,7 @@ static uint8_t idle_rate;
 static uint8_t active_protocol;   // [0] Boot Protocol [1] Report Protocol
 
 extern const struct{uint8_t report[HID_RPT01_SIZE];}hid_rpt01;
+extern const struct{uint8_t report[HID_RPT02_SIZE];}hid_rpt02;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -157,7 +158,7 @@ extern const struct{uint8_t report[HID_RPT01_SIZE];}hid_rpt01;
 void USBCheckHIDRequest(void)
 {
     if(SetupPkt.Recipient != USB_SETUP_RECIPIENT_INTERFACE_BITFIELD) return;
-    if(SetupPkt.bIntfID != HID_INTF_ID) return;
+    if(SetupPkt.bIntfID != HID_INTF_ID1 && SetupPkt.bIntfID != HID_INTF_ID2) return;
     
     /*
      * There are two standard requests that hid.c may support.
@@ -171,19 +172,39 @@ void USBCheckHIDRequest(void)
             case DSC_HID: //HID Descriptor          
                 if(USBActiveConfiguration == 1)
                 {
-                    USBEP0SendROMPtr(
-                        (const uint8_t*)&configDescriptor1 + 18,		//18 is a magic number.  It is the offset from start of the configuration descriptor to the start of the HID descriptor.
-                        sizeof(USB_HID_DSC)+3,
-                        USB_EP0_INCLUDE_ZERO);
+                    if (SetupPkt.bIntfID == HID_INTF_ID1)
+                    {
+                        USBEP0SendROMPtr(
+                            (const uint8_t*)&configDescriptor1 + 18, //18 is a magic number.  It is the offset from start of the configuration descriptor to the start of the HID descriptor.
+                            sizeof(USB_HID_DSC)+3,
+                            USB_EP0_INCLUDE_ZERO);
+                    }
+                    else if (SetupPkt.bIntfID == HID_INTF_ID2) 
+                    {
+						USBEP0SendROMPtr(
+							(const uint8_t*)&configDescriptor1 + 43, //43 is a magic number.  It is the offset from start of the configuration descriptor to the start of the HID descriptor.
+							sizeof(USB_HID_DSC)+3,
+							USB_EP0_INCLUDE_ZERO);                                                
+                    }
                 }
                 break;
             case DSC_RPT:  //Report Descriptor           
                 //if(USBActiveConfiguration == 1)
                 {
-                    USBEP0SendROMPtr(
-                        (const uint8_t*)&hid_rpt01,
-                        HID_RPT01_SIZE,     //See usbcfg.h
-                        USB_EP0_INCLUDE_ZERO);
+                    if (SetupPkt.bIntfID == HID_INTF_ID1)
+                    {
+                        USBEP0SendROMPtr(
+                            (const uint8_t*)&hid_rpt01,
+                            HID_RPT01_SIZE,     //See usbcfg.h
+                            USB_EP0_INCLUDE_ZERO);
+                    }
+                    else if (SetupPkt.bIntfID == HID_INTF_ID2)
+                    {
+                        USBEP0SendROMPtr(
+                            (const uint8_t*)&hid_rpt02,
+                            HID_RPT02_SIZE,     //See usbcfg.h
+                            USB_EP0_INCLUDE_ZERO);
+                    }
                 }
                 break;
             case DSC_PHY:  //Physical Descriptor
