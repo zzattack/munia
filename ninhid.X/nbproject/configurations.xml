@@ -33,6 +33,8 @@
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
+    <Elem>usb</Elem>
+    <Elem>xlcd</Elem>
     <Elem>.</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
