@@ -1,26 +1,10 @@
 #ifndef LCD_H
 #define	LCD_H
 
-/******************************************************************************/
-/* Files to Include                                                           */
-/******************************************************************************/
+UINT8  lcd_backLightValue;
 
-#include "basic.h"              /* For the basic definitions */
-
-/******************************************************************************/
-/* Public variables                                                           */
-/******************************************************************************/
-
-#ifdef LCD_BACKLIGHT
-uint8_t LCD_PRIVATE_BANK lcd_backLightValue;
-#endif
-
-/******************************************************************************/
-/* Function Prototypes                                                        */
-/******************************************************************************/
-
-void lcd_command(uint8_t cmd);
-void lcd_goto(uint8_t line, uint8_t pos);
+void lcd_command(UINT8 cmd);
+void lcd_goto(UINT8 line, UINT8 pos);
 #define lcd_clear() lcd_command(0x01)
 #define lcd_home() lcd_command(0x80)
 
@@ -39,11 +23,9 @@ void lcd_goto(uint8_t line, uint8_t pos);
     } \
 } while (false)
 
-void lcd_char(uint8_t chr);
+void lcd_char(UINT8 chr);
 void lcd_string(const char *q);
-
-void lcd_setBacklight(uint8_t value);   // 0-10
-
+void lcd_setBacklight(UINT8 value);   // 0-10
 void lcd_process();
 
 
