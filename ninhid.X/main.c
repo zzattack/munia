@@ -1,14 +1,12 @@
 #include "config_bits.h"
+#include "system_config.h"
 #include "gamepads.h"
 #include "hardware.h"
-#include "system_config.h"
-#include "lcd.h"
-#include <xc.h>
 #include <usb/usb.h>
 #include <usb/usb_device_hid.h>
-#include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include "lcd.h"
+
 
 snes_packet joydata_snes @ 0x500;
 n64_packet joydata_n64 @ 0x510;
@@ -25,20 +23,20 @@ void init_pll();
 void init_io();
 void init_timers();
 void init_interrupts();
+void low_priority interrupt updatePwm();
+void high_priority interrupt blahblah();
+
+BOOL tick1khz = FALSE;
+uint8_t timer100hz;
+uint16_t timer1000hz;
 
 void main() {
     // init_random();
     init_pll();
     init_io();
-    init_timers();
+        
     init_interrupts();
-    
-    lcd_clear();
-    lcd_setBacklight(10);
-    
-    lcd_process();
-    lcd_string("soms");
-	    
+    init_timers();
     usb_descriptors_check();
 	USBDeviceInit();
     USBDeviceAttach();
@@ -52,16 +50,36 @@ void main() {
     LED_SNES_ORANGE = 1;
     LED_GC_ORANGE = 1;
     LED_GC_GREEN = 1;
+        
+    lcd_setup();
+    lcd_setBacklight(1);
+    lcd_home();
+    lcd_clear();
+    
+    lcd_string("xXx#");
     
 	while (1) {
-        USBDeviceTasks();
         
-        if (PIR1bits.TMR1IF) {
-            PIR1bits.TMR1IF = 0;
-            WRITETIMER1(53536); // 1khz
+        if (tick1khz) {
+            tick1khz = FALSE;
+            timer100hz++;
+            timer1000hz++;
             lcd_process();
         }
+        if (timer1000hz == 1000) {
+            timer1000hz = 0;
+            LED_GC_ORANGE = !LED_GC_ORANGE;
+            LED_GC_GREEN = !LED_GC_GREEN;
+            LED_SNES_GREEN = !LED_SNES_GREEN;
+            LED_SNES_ORANGE = !LED_SNES_ORANGE;
+            static int x = 0;
+            lcd_char('0' + x);
+            x++;
+            if (x == 10) x = 0;
+        }
         
+        USBDeviceTasks();
+              
 		if (USBDeviceState < CONFIGURED_STATE || USBSuspendControl == 1)
 			continue;
             
@@ -107,16 +125,20 @@ void init_io() {
 
 void init_timers() {    
 	// cfg timer
-	INTCONbits.TMR0IE = 0; // Disables the TMR0 overflow interrupt
+	/*INTCONbits.TMR0IE = 0; // Disables the TMR0 overflow interrupt
 	T0CONbits.TMR0ON = 1; // Enables Timer0
 	T0CONbits.T08BIT = 0; // Timer0 is configured as an 16-bit timer/counter
 	T0CONbits.T0CS = 0; // Internal instruction cycle clock (FOSC/4)
 	T0CONbits.PSA = 0; // Timer0 prescaler is NOT assigned. Timer0 clock input bypasses prescaler
-    T0CONbits.T0PS = 0b100;
+    T0CONbits.T0PS = 0b100;*/
     
+    //Timer1 Registers Prescaler= 1 - TMR1 Preset = 53536 - Freq = 1000.00 Hz - Period = 0.001000 seconds
     T1CONbits.TMR1CS = 0b00; // clock source is instruction clock (FOSC/4)
     T1CONbits.T1CKPS = 0b00; // 1:1 prescaler
+    IPR1bits.TMR1IP = 0; // // Interrupt on low priority group
+	PIE1bits.TMR1IE = 1; // Enables the TMR1 overflow interrupt
     T1CONbits.TMR1ON = 1; // start
+    WRITETIMER1(53536);
 }
 
 void init_random() {
@@ -145,13 +167,12 @@ void init_random() {
 
 void init_interrupts() {
 	// setup interrupt on falling change of data on gamepad ports
-	INTCONbits.IOCIE = 1; // IOC interrupt enabled
-	INTCON2bits.IOCIP = 1; // High priority group
-    
+	// INTCONbits.IOCIE = 0; // IOC interrupt enabled
+	// INTCON2bits.IOCIP = 1; // High priority group      
 	IOCCbits.IOCC0 = 1; // enable IOC on RC0
 	IOCCbits.IOCC1 = 1; // enable IOC on RC1
 	IOCCbits.IOCC2 = 1; // enable IOC on RC2
-
+    
 	RCONbits.IPEN = 1; // Enable priority levels on interrupts
 	INTCONbits.GIEH = 1; // Enable high priority interrupts
 	INTCONbits.GIEL = 1; // Enable low priority interrupts
@@ -234,3 +255,19 @@ BOOL USER_USB_CALLBACK_EVENT_HANDLER(USB_EVENT event, void *pdata, WORD size) {
     return TRUE;
 }
 
+
+// Low priority interrupt procedure
+UINT8 pwmCycle = 0;
+void low_priority interrupt updatePwm() {    
+    WRITETIMER1(53536);
+    PIR1bits.TMR1IF = 0;  // Clear the timer1 interrupt flag
+    LCD_PWM = pwmCycle < lcd_backLightValue;
+    pwmCycle++;
+    if (pwmCycle == 10) pwmCycle = 0;
+    tick1khz = 1;
+}
+
+void high_priority interrupt blahbla() { 
+    // determine why
+    Nop();
+}
