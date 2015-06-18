@@ -9,7 +9,13 @@
 #define SNES_LATCH PORTAbits.RA6
 #define SNES_CLK PORTAbits.RA7
 #define N64_DAT PORTCbits.RC1
-#define GC_DAT PORTCbits.RC0
+#define NGC_DAT PORTCbits.RC0
+
+#define SNES_DAT_TRIS TRISCbits.TRISC2
+#define SNES_LATCH_TRIS TRISAbits.TRISA6
+#define SNES_CLK_TRIS TRISAbits.TRISA7
+#define N64_DAT_TRIS TRISCbits.TRISC1
+#define NGC_DAT_TRIS TRISCbits.TRISC0
 
 #define LED_SNES_GREEN LATAbits.LATA5
 #define LED_SNES_ORANGE LATCbits.LATC6
@@ -25,8 +31,8 @@
 #define snes_real() do { SWITCH1 = 1; } while(0);
 #define n64_fake()  do { SWITCH2 = 0; } while(0);
 #define n64_real()  do { SWITCH2 = 1; } while(0);
-#define gc_fake()   do { SWITCH3 = 0; } while(0);
-#define gc_real()   do { SWITCH3 = 1; } while(0);
+#define ngc_fake()   do { SWITCH3 = 0; } while(0);
+#define ngc_real()   do { SWITCH3 = 1; } while(0);
 
 #define LCD_RS LATBbits.LATB4
 #define LCD_PWM LATBbits.LATB5
