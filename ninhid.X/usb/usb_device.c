@@ -2109,7 +2109,7 @@ static void USBStdGetDscHandler(void)
                 //USB_NUM_STRING_DESCRIPTORS was introduced as optional in release v2.3.  In v2.4 and
                 //  later it is now manditory.  This should be defined in usb_config.h and should
                 //  indicate the number of string descriptors.
-                if(SetupPkt.bDscIndex == 9) // serial num
+                if(SetupPkt.bDscIndex == 3) // serial num
                 {
                     //Get a pointer to the String descriptor requested
                     inPipes[0].pSrc.bRam = (uint8_t*) *(USB_SD_Ptr+SetupPkt.bDscIndex);
