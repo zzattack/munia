@@ -17,7 +17,7 @@ typedef struct {
     uint8_t left : 1;
     uint8_t right : 1;    
     uint8_t pad : 4;
-} snes_packet;
+} snes_packet_t;
 
 typedef struct {
     uint8_t a : 1;
@@ -33,7 +33,7 @@ typedef struct {
     uint8_t left : 1;
     uint8_t right : 1;    
     uint8_t pad : 4;
-} n64_packet;
+} n64_packet_t;
 
 typedef struct {
     uint8_t zero1 : 1;
@@ -58,7 +58,7 @@ typedef struct {
     int8_t c_y;
     uint8_t left_trig;
     uint8_t right_trig;
-} ngc_packet;
+} ngc_packet_t;
 
 typedef struct {
 	uint16_t buttons;
@@ -66,7 +66,7 @@ typedef struct {
 	int8_t left_y;
 	int8_t right_x;
 	int8_t right_y;
-} wii_packet;
+} wii_packet_t;
 
 
 #endif	/* GAMEPADS_H */
