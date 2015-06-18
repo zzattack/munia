@@ -30,7 +30,7 @@
 
 #define LCD_RS LATBbits.LATB4
 #define LCD_PWM LATBbits.LATB5
-#define LCD_E LATAbits.LATA4        
+#define LCD_E LATAbits.LATA4
 #define LCD_D4 LATAbits.LATA3
 #define LCD_D5 LATAbits.LATA2
 #define LCD_D6 LATAbits.LATA1
