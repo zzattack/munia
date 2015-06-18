@@ -2112,7 +2112,7 @@ static void USBStdGetDscHandler(void)
                 if(SetupPkt.bDscIndex == 9) // serial num
                 {
                     //Get a pointer to the String descriptor requested
-                    inPipes[0].pSrc.bRam = *(USB_SD_Ptr+SetupPkt.bDscIndex);
+                    inPipes[0].pSrc.bRam = (uint8_t*) *(USB_SD_Ptr+SetupPkt.bDscIndex);
                     // Set data count
                     inPipes[0].wCount.Val = *inPipes[0].pSrc.bRom;    
                     
@@ -2123,7 +2123,7 @@ static void USBStdGetDscHandler(void)
                         CtrlTrfData[2 + i * 2] = 'x';
                         CtrlTrfData[2 + i * 2 + 1] = '\0';
                     }
-                    inPipes[0].info.bits.ctrl_trf_mem = USB_EP0_BUSY | USB_EP0_RAM; // Set memory type
+                    inPipes[0].info.bits.ctrl_trf_mem = USB_EP0_RAM; // Set memory type
                     inPipes[0].pSrc.bRam = (BYTE*)CtrlTrfData; // Set Source
                     inPipes[0].wCount.v[0] = CtrlTrfData[0]; // Set data count
                     inPipes[0].info.bits.busy = 1;
