@@ -17,7 +17,6 @@ uint8_t lcd_timerCount = 0;
 uint8_t lcd_startupTimer = 30;
 
 void lcd_setup() {
-    lcd_backLightValue = 4;
     lcd_startupTimer = 30;
 }
 
@@ -99,10 +98,6 @@ void lcd_int(int value, uint8_t width, char fill, BOOL right) {
     if (width > 1)
         align(itoaBuffer, width, fill, right);
     lcd_string(itoaBuffer);
-}
-
-void lcd_setBacklight(uint8_t value) {
-    lcd_backLightValue = value; // 0-10
 }
 
 // call me @ 1khz
