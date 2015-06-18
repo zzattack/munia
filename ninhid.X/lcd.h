@@ -22,8 +22,6 @@
 #define SPECIAL_TOCMD 251
 #define SPECIAL_TOCHR 250
 
-uint8_t lcd_backLightValue;
-
 void lcd_setup();
 void lcd_command(uint8_t cmd);
 void lcd_goto(uint8_t line, uint8_t pos);
@@ -32,7 +30,6 @@ void lcd_goto(uint8_t line, uint8_t pos);
 
 void lcd_char(uint8_t chr);
 void lcd_string(const char *q);
-void lcd_setBacklight(uint8_t value);
 void lcd_process();
 
 
