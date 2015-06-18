@@ -31,7 +31,7 @@ DEFAULTCONF=debug
 CONF=${DEFAULTCONF}
 
 # All Configurations
-ALLCONFS=debug release 
+ALLCONFS=debug 
 
 
 # build
@@ -46,14 +46,12 @@ ALLCONFS=debug release
 # clobber
 .clobber-impl: .clobber-pre .depcheck-impl
 	    ${MAKE} SUBPROJECTS=${SUBPROJECTS} CONF=debug clean
-	    ${MAKE} SUBPROJECTS=${SUBPROJECTS} CONF=release clean
 
 
 
 # all
 .all-impl: .all-pre .depcheck-impl
 	    ${MAKE} SUBPROJECTS=${SUBPROJECTS} CONF=debug build
-	    ${MAKE} SUBPROJECTS=${SUBPROJECTS} CONF=release build
 
 
 
