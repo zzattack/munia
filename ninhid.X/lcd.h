@@ -32,5 +32,4 @@ void lcd_char(uint8_t chr);
 void lcd_string(const char *q);
 void lcd_process();
 
-
 #endif	/* LCD_H */
