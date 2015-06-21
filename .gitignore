@@ -20,3 +20,8 @@ licenses.licx
 Makefile-genesis.properties
 /ninhid.X/Thumbs.db
 Thumbs.db
+/ninhid.X/nbproject/*.mk
+/ninhid.X/disassembly/listing.disasm
+/ninhid.X/nbproject/private/SuppressibleMessageMemo.properties
+/ninhid.X/funclist
+/ninhid.X/nbproject/Package-release.bash
