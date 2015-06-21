@@ -2,6 +2,7 @@
 #define	HARDWARE_H
 
 #include <xc.h>
+#include <stdint.h>
 
 #define _XTAL_FREQ 48000000
 
@@ -27,20 +28,13 @@
 #define SWITCH2 LATBbits.LATB1
 #define SWITCH3 LATBbits.LATB0
 
-#define snes_fake() do { SWITCH1 = 0; } while(0);
-#define snes_real() do { SWITCH1 = 1; } while(0);
-#define n64_fake()  do { SWITCH2 = 0; } while(0);
-#define n64_real()  do { SWITCH2 = 1; } while(0);
-#define ngc_fake()   do { SWITCH3 = 0; } while(0);
-#define ngc_real()   do { SWITCH3 = 1; } while(0);
-
 #define LCD_RS LATBbits.LATB4
 #define LCD_PWM LATBbits.LATB5
 #define LCD_E LATAbits.LATA4
-#define LCD_D4 LATAbits.LATA3
-#define LCD_D5 LATAbits.LATA2
-#define LCD_D6 LATAbits.LATA1
-#define LCD_D7 LATAbits.LATA0
+#define LCD_D4 LATAbits.LATA0
+#define LCD_D5 LATAbits.LATA1
+#define LCD_D6 LATAbits.LATA2
+#define LCD_D7 LATAbits.LATA3
+
 
 #endif	/* HARDWARE_H */
-

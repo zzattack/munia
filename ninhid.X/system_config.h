@@ -8,11 +8,11 @@
 
 /** DEFINITIONS ****************************************************/
 
-#define USB_EP0_BUFF_SIZE	8   // Valid Options: 8, 16, 32, or 64 bytes.
-#define USB_MAX_NUM_INT     4   // Set this number to match the maximum interface number used in the descriptors for this firmware project
-#define USB_MAX_EP_NUMBER	4   // Set this number to match the maximum endpoint number used in the descriptors for this firmware project
+#define USB_EP0_BUFF_SIZE  16   // Valid Options: 8, 16, 32, or 64 bytes.
+#define USB_MAX_NUM_INT     3   // Set this number to match the maximum interface number used in the descriptors for this firmware project
+#define USB_MAX_EP_NUMBER	3   // Set this number to match the maximum endpoint number used in the descriptors for this firmware project
 #define HID_NUM_OF_DSC 1
-#define USB_NUM_STRING_DESCRIPTORS 8
+#define USB_NUM_STRING_DESCRIPTORS 7
 
 #define USB_USER_DEVICE_DESCRIPTOR &device_dsc
 #define USB_USER_DEVICE_DESCRIPTOR_INCLUDE extern const USB_DEVICE_DESCRIPTOR device_dsc
@@ -30,9 +30,9 @@
 #define USB_PULLUP_OPTION USB_PULLUP_ENABLE
 #define USB_TRANSCEIVER_OPTION USB_INTERNAL_TRANSCEIVER
 
-#define USE_USB_BUS_SENSE_IO 0
-#define USB_BUS_SENSE 1
-#define self_power 1
+#define USE_USB_BUS_SENSE_IO 1
+#define USB_BUS_SENSE PORTCbits.RC7
+#define self_power 0
 
 #define USB_ENABLE_STATUS_STAGE_TIMEOUTS    //Comment this out to disable this feature.
 #define USB_STATUS_STAGE_TIMEOUT     (uint8_t)45   //Approximate timeout in milliseconds, except when
@@ -56,18 +56,11 @@
 #define HID_EP_SNES				1
 #define HID_EP_N64				2
 #define HID_EP_NGC				3
-#define HID_EP_WII				4
 
 #define HID_INT_IN_SNES_SIZE    64
 #define HID_INT_IN_N64_SIZE     64
 #define HID_INT_IN_NGC_SIZE     64
-#define HID_INT_IN_WII_SIZE     64
-
-#define HID_RPT_SNES_SIZE         74
-#define HID_RPT_N64_SIZE          74
-#define HID_RPT_NGC_SIZE          74
-#define HID_RPT_WII_SIZE          46
 
 void usb_descriptors_check();
 
-#endif // _SYSTEM_CONFIG_H_
+#endif // _SYSTEM_CONFIG_H

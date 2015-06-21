@@ -6,7 +6,8 @@
 #include "lcd.h"
 #include <stdlib.h>
 
-
+void addByte(uint8_t b);
+void lcd_pulseE();
 
 uint8_t lcd_outputBuffer[LCD_BUFFER_SIZE];
 BOOL lcd_commandMode = TRUE;
@@ -20,23 +21,23 @@ void lcd_setup() {
     lcd_startupTimer = 30;
 }
 
-#define addByte(b) do { \
-    lcd_outputBuffer[lcd_inputIndex++] = b; \
-    if (lcd_inputIndex == LCD_BUFFER_SIZE) \
-        lcd_inputIndex = 0; \
-    lcd_bufferInUse++; \
-} while(FALSE)
+void addByte(uint8_t b) {
+    lcd_outputBuffer[lcd_inputIndex++] = b;
+    if (lcd_inputIndex == LCD_BUFFER_SIZE)
+        lcd_inputIndex = 0;
+    lcd_bufferInUse++;
+}
+
+void lcd_pulseE() {            
+    __delay_us(1); LCD_E = 1;
+    __delay_us(1); LCD_E = 0;
+}
 
 #define sendPortHigh(b) sendPortLow((b) >> 4)
 void sendPortLow(uint8_t b) {
-    LCD_D7 = (b >> 0) & 1;
-    LCD_D6 = (b >> 1) & 1;
-    LCD_D5 = (b >> 2) & 1;
-    LCD_D4 = (b >> 3) & 1;
-    LCD_E = 1;
-    __delay_us(1);
-    LCD_E = 0;
-    __delay_us(1);
+    LATA &= 0xF0;
+    LATA |= b;
+    lcd_pulseE();
 }
 
 void lcd_command(uint8_t cmd) {
@@ -57,12 +58,6 @@ void lcd_goto(uint8_t line, uint8_t pos) {
     if (line == 2) {
         lcd_command(0x80 + 0x40 + pos);
     }
-    if (line == 3) {
-        lcd_command(0x80 + 0x14 + pos);
-    }
-    if (line == 4) {
-        lcd_command(0x80 + 0x54 + pos);
-    }
 }
 
 void lcd_char(uint8_t chr) {
@@ -81,7 +76,7 @@ void lcd_string(const char *q) {
         lcd_char(*q++);
 }
 
-
+/*
 char itoaBuffer[8];
 void align(char* buffer, uint8_t width, char fill, BOOL right) {
     
@@ -99,7 +94,7 @@ void lcd_int(int value, uint8_t width, char fill, BOOL right) {
         align(itoaBuffer, width, fill, right);
     lcd_string(itoaBuffer);
 }
-
+*/
 // call me @ 1khz
 void lcd_process() {
     if (lcd_timerCount < 255)
@@ -114,12 +109,10 @@ void lcd_process() {
             sendPortHigh(0b00110000); // set interface to 8-bit for proper init
         } 
         else if (lcd_startupTimer == 5) { // 5 ms later just pulse E again
-            __delay_us(1); LCD_E = 1;
-            __delay_us(1); LCD_E = 0;
+            lcd_pulseE();
         } 
         else if (lcd_startupTimer == 4) { // 1 ms later again
-            __delay_us(1); LCD_E = 1;
-            __delay_us(1); LCD_E = 0;
+            lcd_pulseE();
         } 
         else if (lcd_startupTimer == 3) { 
             // 1 ms later, set to 4-bit mode

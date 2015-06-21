@@ -48,6 +48,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "system_config.h"
 #include "usb.h"
 #include "usb_device_hid.h"
+#include "report_descriptors.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -82,11 +83,6 @@ typedef struct __attribute__((packed))
 // *****************************************************************************
 static uint8_t idle_rate;
 static uint8_t active_protocol;   // [0] Boot Protocol [1] Report Protocol
-
-extern const struct{uint8_t report[HID_RPT_SNES_SIZE];}hid_rpt_snes;
-extern const struct{uint8_t report[HID_RPT_N64_SIZE];}hid_rpt_n64;
-extern const struct{uint8_t report[HID_RPT_NGC_SIZE];}hid_rpt_ngc;
-extern const struct{uint8_t report[HID_RPT_WII_SIZE];}hid_rpt_wii;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -196,13 +192,6 @@ void USBCheckHIDRequest(void)
 							sizeof(USB_HID_DSC)+3,
 							USB_EP0_INCLUDE_ZERO);                                                
                     }
-                    else if (SetupPkt.bIntfID == HID_INTF_WII) 
-                    {
-						USBEP0SendROMPtr(
-							(const uint8_t*)&configDescriptor1 + 93, // ???
-							sizeof(USB_HID_DSC)+3,
-							USB_EP0_INCLUDE_ZERO);                                                
-                    }
                 }
                 break;
             case DSC_RPT:  //Report Descriptor           
@@ -227,13 +216,6 @@ void USBCheckHIDRequest(void)
                         USBEP0SendROMPtr(
                             (const uint8_t*)&hid_rpt_ngc,
                             HID_RPT_NGC_SIZE,     //See usbcfg.h
-                            USB_EP0_INCLUDE_ZERO);
-                    }
-                    else if (SetupPkt.bIntfID == HID_INTF_WII)
-                    {
-                        USBEP0SendROMPtr(
-                            (const uint8_t*)&hid_rpt_wii,
-                            HID_RPT_WII_SIZE,     //See usbcfg.h
                             USB_EP0_INCLUDE_ZERO);
                     }
                 }

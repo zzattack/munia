@@ -1,3 +1,4 @@
+
 // PIC18F24K50 Configuration Bit Settings
 
 // 'C' source line config statements
@@ -20,26 +21,34 @@
 #pragma config IESO = OFF       // Internal/External Oscillator Switchover (Oscillator Switchover mode disabled)
 
 // CONFIG2L
-#pragma config nPWRTEN = OFF    // Power-up Timer Enable (Power up timer disabled)
-#pragma config BOREN = OFF      // Brown-out Reset Enable (BOR disabled in hardware (SBOREN is ignored))
-#pragma config BORV = 190       // Brown-out Reset Voltage (BOR set to 1.9V nominal)
+#pragma config nPWRTEN = ON     // Power-up Timer Enable (Power up timer enabled)
+#pragma config BOREN = SBORDIS  // Brown-out Reset Enable (BOR enabled in hardware (SBOREN is ignored))
+#pragma config BORV = 285       // Brown-out Reset Voltage (BOR set to 2.85V nominal)
 #pragma config nLPBOR = OFF     // Low-Power Brown-out Reset (Low-Power Brown-out Reset disabled)
 
 // CONFIG2H
-#pragma config WDTEN = OFF      // Watchdog Timer Enable bits (WDT disabled in hardware (SWDTEN ignored))
-#pragma config WDTPS = 32768    // Watchdog Timer Postscaler (1:32768)
+#if DEBUG
+#pragma config WDTEN = OFF
+#else
+#pragma config WDTEN = ON       // Watchdog Timer Enable bits (WDT enabled in hardware (SWDTEN ignored))
+#pragma config WDTPS = 16       // Watchdog Timer Postscaler (1:16)
+#endif
 
 // CONFIG3H
-#pragma config CCP2MX = RC1     // CCP2 MUX bit (CCP2 input/output is multiplexed with RC1)
+#pragma config CCP2MX = RB3     // CCP2 MUX bit (CCP2 input/output is multiplexed with RB3)
 #pragma config PBADEN = OFF     // PORTB A/D Enable bit (PORTB<5:0> pins are configured as digital I/O on Reset)
-#pragma config T3CMX = RC0      // Timer3 Clock Input MUX bit (T3CKI function is on RC0)
+#pragma config T3CMX = RB5      // Timer3 Clock Input MUX bit (T3CKI function is on RB5)
 #pragma config SDOMX = RB3      // SDO Output MUX bit (SDO function is on RB3)
-#pragma config MCLRE = ON       // Master Clear Reset Pin Enable (MCLR pin enabled; RE3 input disabled)
+#if DEBUG
+#pragma config MCLRE = ON      // Master Clear Reset Pin Enable (RE3 input pin enabled; external MCLR disabled)
+#else
+#pragma config MCLRE = OFF      // Master Clear Reset Pin Enable (RE3 input pin enabled; external MCLR disabled)
+#endif
 
 // CONFIG4L
 #pragma config STVREN = ON      // Stack Full/Underflow Reset (Stack full/underflow will cause Reset)
 #pragma config LVP = OFF        // Single-Supply ICSP Enable bit (Single-Supply ICSP disabled)
-#pragma config XINST = OFF
+#pragma config XINST = OFF      // Extended Instruction Set Enable bit (Instruction set extension and Indexed Addressing mode disabled)
 
 // CONFIG5L
 #pragma config CP0 = OFF        // Block 0 Code Protect (Block 0 is not code-protected)
@@ -64,5 +73,3 @@
 
 // CONFIG7H
 #pragma config EBTRB = OFF      // Boot Block Table Read Protect (Boot block is not protected from table reads executed in other blocks)
-
-
