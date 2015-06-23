@@ -3,6 +3,7 @@
 #include "globals.h"
 #include <usb/usb_device_hid.h>
 #include "gamepad.h"
+#include "menu.h"
 
 ngc_packet_t joydata_ngc_last;
 
@@ -27,7 +28,7 @@ const uint8_t hat_lookup_ngc[16] = {
 };
 
 void ngc_tasks() {
-    if (ngc_mode == pc && pollNeeded && USB_READY) {
+    if (config.ngc_mode == pc && pollNeeded && (in_menu || USB_READY)) {
         di();
         USBDeviceTasks();
         ngc_poll();
@@ -51,7 +52,7 @@ void ngc_tasks() {
             ngc_packet_available = false;
     }
     
-    if (ngc_packet_available && (ngc_mode == pc || ngc_mode == real) && USB_READY && !HIDTxHandleBusy(USBInHandleNGC)) {
+    if (ngc_packet_available && !in_menu && (config.ngc_mode == pc || config.ngc_mode == console) && USB_READY && !HIDTxHandleBusy(USBInHandleNGC)) {
         // hid tx
         USBInHandleNGC = HIDTxPacket(HID_EP_NGC, (uint8_t*)&joydata_ngc, sizeof(ngc_packet_t));
         ngc_packet_available = false;

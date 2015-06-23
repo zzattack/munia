@@ -3,6 +3,7 @@
 #include "globals.h"
 #include <usb/usb_device_hid.h>
 #include "gamepad.h"
+#include "menu.h"
 
 n64_packet_t joydata_n64_last;
 
@@ -27,7 +28,7 @@ const uint8_t hat_lookup_n64[16] = {
 };
 
 void n64_tasks() {
-    if (n64_mode == pc && pollNeeded && USB_READY) {
+    if (config.n64_mode == pc && pollNeeded && (in_menu || USB_READY)) {
         di();
         USBDeviceTasks();
         n64_poll();
@@ -50,7 +51,7 @@ void n64_tasks() {
             n64_packet_available = false;
     }
     
-    if (n64_packet_available && (n64_mode == pc || n64_mode == real) && USB_READY && !HIDTxHandleBusy(USBInHandleN64)) {
+    if (n64_packet_available && !in_menu && (config.n64_mode == pc || config.n64_mode == console) && USB_READY && !HIDTxHandleBusy(USBInHandleN64)) {
         // hid tx
         USBInHandleN64 = HIDTxPacket(HID_EP_N64, (uint8_t*)&joydata_n64, sizeof(n64_packet_t));
         n64_packet_available = false;
@@ -109,7 +110,7 @@ void n64_handle_packet() {
 	if (idx == 42) {
 		uint8_t* r = sample_buff;
         
-        if (n64_mode == real) {
+        if (config.n64_mode == console) {
             // see if this is a 'command 1' request from the console
             uint8_t cmd = 0;
             for (uint8_t m = 0x80; m; m >>= 1) {

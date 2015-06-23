@@ -10,6 +10,8 @@
 #include "n64.h"
 #include "gamecube.h"
 #include "gamepad.h"
+#include "menu.h"
+#include "buttonchecker.h"
 
 void init_random();
 void init_pll();
@@ -19,6 +21,10 @@ void init_interrupts();
 void low_priority interrupt isr_low();
 void high_priority interrupt isr_high();
 
+void load_config();
+void apply_config();
+void save_config();
+
 bool tick1khz = FALSE;
 uint8_t timer100hz;
 uint16_t timer1000hz;
@@ -27,28 +33,21 @@ uint8_t counter60hz = 0;
 void main() {
     // init_random();
     init_io();
-    init_pll();
-        
+    init_pll();        
     init_interrupts();
     init_timers();
     usb_descriptors_check();
 	USBDeviceInit();
     USBDeviceAttach();
+    bcInit();
+    lcd_setup();
 
     LED_SNES_GREEN = 0;
     LED_SNES_ORANGE = 0;
     LED_GC_ORANGE = 0;
     LED_GC_GREEN = 0;
-    
-    lcd_setup();
-    lcd_backLightValue = 3;
-    lcd_home();
-    lcd_clear();
-    lcd_string("ninhid--zzattack");
-    
-    snes_fake();
-    n64_real();
-    ngc_fake();
+    load_config();
+    apply_config();
 
 	while (1) {
         ClrWdt();
@@ -61,6 +60,20 @@ void main() {
             timer100hz++;
             timer1000hz++;
             lcd_process();
+
+            if (timer100hz == 10) {
+                timer100hz = 0;
+                
+                if (bcCheck()) {
+                    if (BTN_MENU_PRESSED) {
+                        if (in_menu) menu_exit(false);
+                        else menu_enter();
+                    }
+                    BTN_MENU_PRESSED = false;
+                }
+            }
+            
+            menu_tasks();
         }
         
         if (PIR2bits.TMR3IF) {
@@ -98,6 +111,8 @@ void init_io() {
     // pull ups on the inputs
     LATA |= 0b11000000;
     LATC |= 0b10000111;
+    
+    LCD_PWM = 0;
 }
 
 void init_timers() {    
@@ -158,41 +173,6 @@ void init_interrupts() {
 	INTCONbits.GIEL = 1; // Enable low priority interrupts
 }
 
-void snes_fake() { 
-    SWITCH1 = 0;
-    snes_mode = pc;
-	IOCCbits.IOCC2 = 0; // disable IOC on RC2 (snes)
-}
-void snes_real() { 
-    SWITCH1 = 1;
-    snes_mode = real;
-	IOCCbits.IOCC2 = 1; // enable IOC on RC2 (snes)
-}
-void n64_fake() { 
-    SWITCH2 = 1;
-    n64_mode = pc;
-	IOCCbits.IOCC1 = 0; // disable IOC on RC1 (n64)
-}
-void n64_real() { 
-    // pull up, in case no device attached
-    LATC |= 0b00000010;
-    SWITCH2 = 1;
-    n64_mode = real;
-	IOCCbits.IOCC1 = 1; // enable IOC on RC1 (n64)
-}
-void ngc_fake() { 
-    SWITCH3 = 0;
-    ngc_mode = pc;
-	IOCCbits.IOCC0 = 0; // disable IOC on RC0 (ngc)
-}
-void ngc_real() {
-    // pull up, in case no device attached
-    LATC |= 0b00000001;
-    SWITCH3 = 1;
-    ngc_mode = real;
-	IOCCbits.IOCC0 = 1; // enable IOC on RC0 (ngc)
-}
-
 
 // Low priority interrupt procedure
 uint8_t pwmCycle = 0;
@@ -215,4 +195,53 @@ void high_priority interrupt isr_high() {
         if (mask & 0b100) snes_sample();
     }
     INTCONbits.IOCIF = 0;
+}
+
+
+void load_config() {
+    uint8_t* w = (uint8_t*)&config;
+    for (uint8_t i = 0; i < sizeof(config); i++)
+        *w++ = eeprom_read(i);
+}
+void save_config() {
+    uint8_t* r = (uint8_t*)&config;
+    for (uint8_t i = 0; i < sizeof(config); i++)
+        eeprom_write(i, *r++);
+}
+
+void apply_config() {
+    if (config.n64_mode == pc) {
+        SWITCH2 = 1;
+        IOCCbits.IOCC1 = 0; // disable IOC on RC1 (n64)
+    }
+    else {
+        config.n64_mode == console;
+        // pull up, in case no device attached
+        LATC |= 0b00000010;
+        SWITCH2 = 1;
+        IOCCbits.IOCC1 = 1; // enable IOC on RC1 (n64)
+    }
+    
+    if (config.ngc_mode == pc) {
+        SWITCH3 = 0;
+        IOCCbits.IOCC0 = 0; // disable IOC on RC0 (ngc)
+    }
+    else {
+        config.ngc_mode == console;
+        // pull up, in case no device attached
+        LATC |= 0b00000001;
+        SWITCH3 = 1;
+        IOCCbits.IOCC0 = 1; // enable IOC on RC0 (ngc)
+    }
+    
+    if (config.snes_mode == pc) {
+        LATC |= 0b00000100;
+        SWITCH1 = 0;
+        IOCCbits.IOCC2 = 0; // disable IOC on RC2 (snes)
+    }
+    else {
+        config.snes_mode == console;
+        SWITCH1 = 1;
+        IOCCbits.IOCC2 = 1; // enable IOC on RC2 (snes)
+    }
 }

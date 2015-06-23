@@ -36,5 +36,9 @@
 #define LCD_D6 LATAbits.LATA2
 #define LCD_D7 LATAbits.LATA3
 
+#define BUTTON_COUNT 1
+#define BUTTON_0 BTN_MENU
+#define BTN_MENU (!PORTEbits.RE3)
+#define BTN_MENU_PRESSED bcPressed[0]
 
 #endif	/* HARDWARE_H */
