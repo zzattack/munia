@@ -2,22 +2,13 @@
 #define	LCD_H
 
 #include <stdint.h>
+#include "circular_buffer.h"
 
 #define LCD_LINES 2
 #define LCD_INIT 0b00101000 // for 2 lines
-#if LCD_CURSOR==1
-  #if LCD_CURSORBLINK==1
-    #define LCD_DISPL 0b00001111
-  #else
-    #define LCD_DISPL 0b00001110
-  #endif
-#else
-  #define LCD_DISPL 0b00001100 // display on, cursor off
-#endif
-
-#ifndef LCD_BUFFER_SIZE
-  #define LCD_BUFFER_SIZE (LCD_LINES)*20
-#endif
+#define LCD_DISPLAY_OFF 0x08
+#define LCD_DISPLAY_ON_CURSOR_OFF 0x0C
+#define LCD_DISPLAY LCD_DISPLAY_OFF // display off initially
 
 #define SPECIAL_TOCMD 251
 #define SPECIAL_TOCHR 250
@@ -31,5 +22,7 @@ void lcd_goto(uint8_t line, uint8_t pos);
 void lcd_char(uint8_t chr);
 void lcd_string(const char *q);
 void lcd_process();
+
+uint8_t lcd_backLightValue = 0;
 
 #endif	/* LCD_H */
