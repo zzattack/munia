@@ -34,7 +34,6 @@ void main() {
     // init_random();
     init_io();
     init_pll();        
-    init_interrupts();
     init_timers();
     usb_descriptors_check();
 	USBDeviceInit();
@@ -45,9 +44,13 @@ void main() {
     LED_SNES_GREEN = 0;
     LED_SNES_ORANGE = 0;
     LED_GC_ORANGE = 0;
-    LED_GC_GREEN = 0;
+    LED_GC_GREEN = 0;    
+    LCD_PWM = 0;
+    lcd_backLightValue = 0;
+    
     load_config();
     apply_config();
+    init_interrupts();
 
 	while (1) {
         ClrWdt();
@@ -111,8 +114,6 @@ void init_io() {
     // pull ups on the inputs
     LATA |= 0b11000000;
     LATC |= 0b10000111;
-    
-    LCD_PWM = 0;
 }
 
 void init_timers() {    
