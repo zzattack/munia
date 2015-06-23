@@ -304,10 +304,6 @@ typedef struct _USB_HID_DSC
 } USB_HID_DSC;
 
 /** Section: EXTERNS ********************************************************/
-extern volatile unsigned char hid_report_in_snes[HID_INT_IN_SNES_SIZE];
-extern volatile unsigned char hid_report_in_n64[HID_INT_IN_N64_SIZE];
-extern volatile unsigned char hid_report_in_ngc[HID_INT_IN_NGC_SIZE];
-
 extern volatile CTRL_TRF_SETUP SetupPkt;
 extern const uint8_t configDescriptor1[];
 extern volatile uint8_t CtrlTrfData[USB_EP0_BUFF_SIZE];

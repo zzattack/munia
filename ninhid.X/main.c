@@ -47,8 +47,8 @@ void main() {
     lcd_string("ninhid--zzattack");
     
     snes_fake();
-    n64_fake();
-    ngc_real();
+    n64_real();
+    ngc_fake();
 
 	while (1) {
         ClrWdt();
