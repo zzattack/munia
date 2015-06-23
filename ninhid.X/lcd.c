@@ -5,32 +5,26 @@
 #include "hardware.h"
 #include "lcd.h"
 #include <stdlib.h>
+#include <stdbool.h>
 
 void addByte(uint8_t b);
 void lcd_pulseE();
 
-uint8_t lcd_outputBuffer[LCD_BUFFER_SIZE];
-BOOL lcd_commandMode = TRUE;
-uint8_t lcd_inputIndex;
-uint8_t lcd_outputIndex;
-uint8_t lcd_bufferInUse;
+bool lcd_commandMode = true;
 uint8_t lcd_timerCount = 0;
-uint8_t lcd_startupTimer = 30;
+uint8_t lcd_startupTimer = 50;
+CircularBuffer lcd_cb;
 
 void lcd_setup() {
-    lcd_startupTimer = 30;
+    cbInit(&lcd_cb);
+    lcd_startupTimer = 100;
 }
 
-void addByte(uint8_t b) {
-    lcd_outputBuffer[lcd_inputIndex++] = b;
-    if (lcd_inputIndex == LCD_BUFFER_SIZE)
-        lcd_inputIndex = 0;
-    lcd_bufferInUse++;
-}
+#define addByte(b) do { cbWrite(&lcd_cb, b); } while (0);
 
 void lcd_pulseE() {            
-    __delay_us(1); LCD_E = 1;
-    __delay_us(1); LCD_E = 0;
+    __delay_us(4); LCD_E = 1;
+    __delay_us(4); LCD_E = 0;
 }
 
 #define sendPortHigh(b) sendPortLow((b) >> 4)
@@ -41,9 +35,6 @@ void sendPortLow(uint8_t b) {
 }
 
 void lcd_command(uint8_t cmd) {
-    if (lcd_bufferInUse > LCD_BUFFER_SIZE - 3)
-        return;
-
     if (!lcd_commandMode) {
         addByte(SPECIAL_TOCMD);
         lcd_commandMode = TRUE;
@@ -61,12 +52,9 @@ void lcd_goto(uint8_t line, uint8_t pos) {
 }
 
 void lcd_char(uint8_t chr) {
-    if (lcd_bufferInUse > LCD_BUFFER_SIZE - 3)
-        return;
-
     if (lcd_commandMode) {
         addByte(SPECIAL_TOCHR);
-        lcd_commandMode = FALSE;
+        lcd_commandMode = false;
     }
     addByte(chr);
 }
@@ -96,6 +84,7 @@ void lcd_int(int value, uint8_t width, char fill, BOOL right) {
 }
 */
 // call me @ 1khz
+
 void lcd_process() {
     if (lcd_timerCount < 255)
         lcd_timerCount++;
@@ -104,13 +93,13 @@ void lcd_process() {
         LCD_E = 0;
         LCD_RS = 0;
         
-        // timer is initialized at 30, which blocks lcd ops during the first 20ms
-        if (lcd_startupTimer == 10) {
+        // timer is initialized at 100, which blocks lcd ops during the first 100ms
+        if (lcd_startupTimer == 12) {
             sendPortHigh(0b00110000); // set interface to 8-bit for proper init
         } 
         else if (lcd_startupTimer == 5) { // 5 ms later just pulse E again
             lcd_pulseE();
-        } 
+        }
         else if (lcd_startupTimer == 4) { // 1 ms later again
             lcd_pulseE();
         } 
@@ -125,29 +114,23 @@ void lcd_process() {
         } 
         else if (lcd_startupTimer == 1) {
             // display on, cursor off
-            sendPortHigh(LCD_DISPL);
-            sendPortLow(LCD_DISPL);
+            sendPortHigh(LCD_DISPLAY);
+            sendPortLow(LCD_DISPLAY);
         }
 
         lcd_startupTimer--;
     } 
-    else if (lcd_bufferInUse > 0 && lcd_timerCount == 255) {
-        if (lcd_outputBuffer[lcd_outputIndex] < 4) {
-            lcd_timerCount = 210;
-        }
-        if (lcd_outputBuffer[lcd_outputIndex] == SPECIAL_TOCHR) {
+    else if (!cbIsEmpty(&lcd_cb) && lcd_timerCount == 255) {
+        char c = cbRead(&lcd_cb);
+        if (c == SPECIAL_TOCHR) {
             LCD_RS = 1;
         } 
-        else if (lcd_outputBuffer[lcd_outputIndex] == SPECIAL_TOCMD) {
+        else if (c == SPECIAL_TOCMD) {
             LCD_RS = 0;
         } 
         else {
-            sendPortHigh(lcd_outputBuffer[lcd_outputIndex]);
-            sendPortLow(lcd_outputBuffer[lcd_outputIndex]);
+            sendPortHigh(c);
+            sendPortLow(c);
         }
-        lcd_outputIndex++;
-        if (lcd_outputIndex == LCD_BUFFER_SIZE)
-            lcd_outputIndex = 0;
-        lcd_bufferInUse--;
     }
 }
