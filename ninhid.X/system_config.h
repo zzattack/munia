@@ -57,9 +57,9 @@
 #define HID_EP_N64				2
 #define HID_EP_NGC				3
 
-#define HID_INT_IN_SNES_SIZE    64
-#define HID_INT_IN_N64_SIZE     64
-#define HID_INT_IN_NGC_SIZE     64
+#define HID_INT_IN_SNES_SIZE    16
+#define HID_INT_IN_N64_SIZE     16
+#define HID_INT_IN_NGC_SIZE     16
 
 void usb_descriptors_check();
 

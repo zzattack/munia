@@ -39,14 +39,14 @@ typedef struct {
     uint8_t right_trig;
 } ngc_packet_t;
 
-ngc_packet_t joydata_ngc @ 0x520;
+ngc_packet_t joydata_ngc @ 0x500;
 bool ngc_test_packet = false;
 
 void ngc_tasks();
 void ngc_fake(); 
 void ngc_real();
 void ngc_poll();
+void ngc_sample();
 void ngc_handle_packet();
-
 #endif	/* GAMECUBE_H */
 
