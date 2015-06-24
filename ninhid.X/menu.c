@@ -1,6 +1,8 @@
 #include "menu.h"
 #include "lcd.h"
 #include "globals.h"
+#include "snes.h"
+#include "n64.h"
 #include "gamecube.h"
 #include "gamepad.h"
 #include <stdbool.h>
@@ -98,8 +100,25 @@ void menu_tasks() {
         menu_next_press_delay--; 
         return; 
     }
+    if (snes_packet_available) {
+        if (joydata_snes.dpad == HAT_SWITCH_WEST) menu_press(left);
+        else if (joydata_snes.dpad == HAT_SWITCH_EAST) menu_press(right);
+        if (joydata_snes.l) menu_press(prev_page);
+        else if (joydata_snes.r) menu_press(next_page);
+        else if (joydata_snes.start) menu_press(exit);
+        else if (joydata_snes.a) menu_press(confirm);
+        else if (joydata_snes.b) menu_press(cancel);
+        snes_packet_available = false;
+    }
     if (n64_packet_available) {
-        
+        if (joydata_n64.dpad == HAT_SWITCH_WEST) menu_press(left);
+        else if (joydata_n64.dpad == HAT_SWITCH_EAST) menu_press(right);
+        if (joydata_n64.l) menu_press(prev_page);
+        else if (joydata_n64.r) menu_press(next_page);
+        else if (joydata_n64.start) menu_press(exit);
+        else if (joydata_n64.a) menu_press(confirm);
+        else if (joydata_n64.b) menu_press(cancel);
+        n64_packet_available = false;
     }
     else if (ngc_packet_available) {
         if (joydata_ngc.hat == HAT_SWITCH_WEST) menu_press(left);
@@ -109,6 +128,7 @@ void menu_tasks() {
         else if (joydata_ngc.start) menu_press(exit);
         else if (joydata_ngc.a) menu_press(confirm);
         else if (joydata_ngc.b) menu_press(cancel);
+        ngc_packet_available = false;
     }
 }
 
