@@ -33,6 +33,14 @@ uint8_t counter60hz = 0;
 void main() {
     // init_random();
     init_io();
+    
+    LED_SNES_GREEN = 0;
+    LED_SNES_ORANGE = 0;
+    LED_GC_ORANGE = 0;
+    LED_GC_GREEN = 0;    
+    LCD_PWM = 0;
+    lcd_backLightValue = 0;
+    
     init_pll();        
     init_timers();
     usb_descriptors_check();
@@ -40,13 +48,6 @@ void main() {
     USBDeviceAttach();
     bcInit();
     lcd_setup();
-
-    LED_SNES_GREEN = 0;
-    LED_SNES_ORANGE = 0;
-    LED_GC_ORANGE = 0;
-    LED_GC_GREEN = 0;    
-    LCD_PWM = 0;
-    lcd_backLightValue = 0;
     
     load_config();
     apply_config();
@@ -77,6 +78,10 @@ void main() {
             }
             
             menu_tasks();
+        }
+        if (timer1000hz == 1000) {
+            timer1000hz = 0;
+            LED_SNES_ORANGE = !LED_SNES_ORANGE;
         }
         
         if (PIR2bits.TMR3IF) {
@@ -212,11 +217,10 @@ void save_config() {
 
 void apply_config() {
     if (config.n64_mode == pc) {
-        SWITCH2 = 1;
+        SWITCH2 = 0;
         IOCCbits.IOCC1 = 0; // disable IOC on RC1 (n64)
     }
-    else {
-        config.n64_mode == console;
+    else { 
         // pull up, in case no device attached
         LATC |= 0b00000010;
         SWITCH2 = 1;

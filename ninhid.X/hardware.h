@@ -7,7 +7,7 @@
 #define _XTAL_FREQ 48000000
 
 #define SNES_DAT PORTCbits.RC2
-#define SNES_LATCH PORTAbits.RA6
+#define SNES_LATCH PORTCbits.RC7
 #define SNES_CLK PORTAbits.RA7
 #define N64_DAT PORTCbits.RC1
 #define NGC_DAT PORTCbits.RC0

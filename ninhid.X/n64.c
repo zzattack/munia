@@ -39,7 +39,7 @@ void n64_tasks() {
         USBDeviceTasks();
         ei();
     }
-    else if (n64_test_packet) {
+    if (n64_test_packet) {
         n64_test_packet = false;
         n64_handle_packet();
     }
@@ -79,8 +79,9 @@ void n64_poll() {
 void n64_sample() {
     // latency from interrupt to calling this should be about 12 cycles
     *sample_w = PORTC; // sample happens exactly 24 instructions after loop entry
-    LATA &= 0b11111110;
+    //LATA &= 0b11111110;
     sample_w++;
+    
     while (!N64_DAT);
     TMR0 = 255 - 60; // 1.5 bit wait
     INTCONbits.TMR0IF = 0;
@@ -93,10 +94,10 @@ loop:
     if (N64_DAT) goto loop;
 
     // waste some time (aligned with scope)
-    Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop();
+    Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop();
 
     *sample_w = PORTC; // sample happens exactly 24 instructions after loop entry
-    LATA ^= 0b00000001;
+    //LATA ^= 0b00000001;
     sample_w++;
     
     while (!N64_DAT);
