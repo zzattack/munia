@@ -2,6 +2,7 @@
 #define	SNES_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
 typedef struct {
     uint8_t a : 1;
@@ -12,14 +13,23 @@ typedef struct {
     uint8_t select : 1;
     uint8_t l : 1;
     uint8_t r : 1;
-    uint8_t up : 1;
-    uint8_t down : 1;
-    uint8_t left : 1;
-    uint8_t right : 1;    
-    uint8_t pad : 4;
+    union {
+        struct {
+            uint8_t up : 1;
+            uint8_t down : 1;
+            uint8_t left : 1;
+            uint8_t right : 1;    
+            uint8_t pad : 4;
+        };
+        struct {
+            uint8_t dpad : 4;
+            uint8_t pad2 : 4;        
+        };
+    };
 } snes_packet_t;
 
-snes_packet_t joydata_snes @ 0x500;
+snes_packet_t joydata_snes @ 0x520;
+bool snes_console_attached = false;
 
 void snes_tasks();
 void snes_fake();
