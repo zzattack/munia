@@ -30,8 +30,6 @@
 #define USB_PULLUP_OPTION USB_PULLUP_ENABLE
 #define USB_TRANSCEIVER_OPTION USB_INTERNAL_TRANSCEIVER
 
-#define USE_USB_BUS_SENSE_IO 1
-#define USB_BUS_SENSE PORTAbits.RA6
 #define self_power 0
 
 #define USB_ENABLE_STATUS_STAGE_TIMEOUTS    //Comment this out to disable this feature.
