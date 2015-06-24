@@ -83,7 +83,7 @@ void ngc_poll() {
 void ngc_sample() {
     // latency from interrupt to calling this should be about 12 cycles
     *sample_w = PORTC; // sample happens exactly 24 instructions after loop entry
-    LATA &= 0b11111110;
+    //LATA &= 0b11111110;
     sample_w++;
     while (!NGC_DAT);
     TMR0 = 255 - 60; // 1.5 bit wait
@@ -92,7 +92,7 @@ void ngc_sample() {
 loop:
     if (INTCONbits.TMR0IF) { // timeout - no bit received
         ngc_test_packet = true;
-        LATA |= 0b00000001;
+        //LATA |= 0b00000001;
         return;
     }
     if (NGC_DAT) goto loop;
@@ -101,9 +101,9 @@ loop:
     Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop();
 
     *sample_w = PORTC; // sample happens exactly 24 instructions after loop entry
-    LATA ^= 0b00000001;
-
+    //LATA ^= 0b00000001;
     sample_w++;
+    
     while (!NGC_DAT);
     TMR0 = 255 - 60; // 1.5 bit wait
     INTCONbits.TMR0IF = 0;
@@ -111,6 +111,7 @@ loop:
 }
 
 void ngc_handle_packet() {
+    // translate samples in sample_buff to joydata_ngc
 	uint8_t idx = sample_w - sample_buff;
 	if (idx == 90 && !HIDTxHandleBusy(USBInHandleNGC)) {
 		uint8_t* w = (uint8_t*)&joydata_ngc;
