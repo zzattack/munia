@@ -57,7 +57,8 @@ void main() {
         ClrWdt();
         USBDeviceTasks();
         
-        LED_SNES_GREEN = USB_READY;
+        LED_SNES_GREEN = USBDeviceState >= CONFIGURED_STATE;
+        LED_SNES_ORANGE = !USBSuspendControl;
         
         if (tick1khz) {
             tick1khz = FALSE;
