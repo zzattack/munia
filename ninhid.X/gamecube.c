@@ -85,6 +85,7 @@ void ngc_sample() {
     *sample_w = PORTC; // sample happens exactly 24 instructions after loop entry
     //LATA &= 0b11111110;
     sample_w++;
+    
     while (!NGC_DAT);
     TMR0 = 255 - 60; // 1.5 bit wait
     INTCONbits.TMR0IF = 0;
@@ -98,7 +99,7 @@ loop:
     if (NGC_DAT) goto loop;
 
     // waste some time (aligned with scope)
-    Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop();
+    Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop();
 
     *sample_w = PORTC; // sample happens exactly 24 instructions after loop entry
     //LATA ^= 0b00000001;
@@ -133,5 +134,4 @@ void ngc_handle_packet() {
         
         ngc_packet_available = true;
 	}
-	sample_w = sample_buff;
 }
