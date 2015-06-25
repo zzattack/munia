@@ -77,7 +77,7 @@ void menu_display_setting() {
     else if (current_menu_page == MENU_PAGE_N64) {
         lcd_string("N64 [");
         lcd_char(config_edit.n64_mode == console ? '*' : ' ');
-        lcd_string("]  PC[");
+        lcd_string("]  PC[ ");
         lcd_char(config_edit.n64_mode == pc ? '*' : ' ');
         lcd_string("]");
     }
