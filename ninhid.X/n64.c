@@ -89,6 +89,7 @@ void n64_sample() {
 loop:
     if (INTCONbits.TMR0IF) { // timeout - no bit received
         n64_test_packet = true;
+        //LATA |= 0b00000001;
         return;
     }
     if (N64_DAT) goto loop;
@@ -145,5 +146,4 @@ void n64_handle_packet() {
         
 		n64_packet_available = true;
 	}
-    sample_w = sample_buff;
 }
