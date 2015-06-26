@@ -3,32 +3,38 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "n64.h"
+#include "gamecube.h"
 
 typedef struct {
-    uint8_t a : 1;
-    uint8_t b : 1;
-    uint8_t x : 1;
-    uint8_t y : 1;
-    uint8_t start : 1;
-    uint8_t select : 1;
-    uint8_t l : 1;
-    uint8_t r : 1;
     union {
         struct {
-            uint8_t up : 1;
-            uint8_t down : 1;
+            uint8_t right : 1;
             uint8_t left : 1;
-            uint8_t right : 1;    
-            uint8_t pad : 4;
+            uint8_t down : 1;
+            uint8_t up : 1;
+            uint8_t start : 1;
+            uint8_t select : 1;
+            uint8_t y : 1;
+            uint8_t b : 1;
         };
         struct {
-            uint8_t dpad : 4;
-            uint8_t pad2 : 4;        
+            uint8_t dpad : 4;     
+            uint8_t start2 : 1;
+            uint8_t select2 : 1;
+            uint8_t y2 : 1;
+            uint8_t b2 : 1;
         };
     };
+    uint8_t unused : 4;
+    uint8_t r : 1;
+    uint8_t l : 1;
+    uint8_t x : 1;
+    uint8_t a : 1;
+
 } snes_packet_t;
 
-snes_packet_t joydata_snes @ 0x520;
+snes_packet_t joydata_snes @ 0x50D /*+ sizeof(n64_packet_t)*/;
 bool snes_console_attached = false;
 
 void snes_tasks();

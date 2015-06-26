@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "gamecube.h"
 
 typedef struct {
     union {
@@ -34,7 +35,7 @@ typedef struct {
     int8_t joy_y;
 } n64_packet_t;
 
-n64_packet_t joydata_n64 @ 0x510;
+n64_packet_t joydata_n64 @ 0x508; // (0x500 + sizeof(ngc_packet_t));
 bool n64_test_packet = false;
 
 void n64_tasks();
