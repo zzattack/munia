@@ -195,11 +195,11 @@ void low_priority interrupt isr_low() {
 void high_priority interrupt isr_high() {
     if (INTCONbits.IOCIF) {
         sample_w = sample_buff; // 3 instructions
-        uint8_t mask = ~PORTC & IOCC;
         // see who went low
-        if (mask & 0b001) ngc_sample();
-        if (mask & 0b010) n64_sample();
-        if (mask & 0b100) snes_sample();
+        uint8_t mask = ~PORTC & IOCC;
+        if (mask & 0b00000010) n64_sample();
+        if (mask & 0b00000001) ngc_sample();
+        if (PORTC & IOCC & 0b10000000) snes_sample();
     }
     INTCONbits.IOCIF = 0;
 }
@@ -241,13 +241,12 @@ void apply_config() {
     }
     
     if (config.snes_mode == pc) {
-        LATC |= 0b00000100;
         SWITCH1 = 0;
-        IOCCbits.IOCC2 = 0; // disable IOC on RC2 (snes)
+        IOCCbits.IOCC7 = 0; // disable IOC on RC7 (snes latch)
     }
     else {
         config.snes_mode == console;
         SWITCH1 = 1;
-        IOCCbits.IOCC2 = 1; // enable IOC on RC2 (snes)
+        IOCCbits.IOCC7 = 1; // enable IO7 on RC7 (snes latch)
     }
 }

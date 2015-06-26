@@ -7,26 +7,6 @@
 
 n64_packet_t joydata_n64_last;
 
-const uint8_t hat_lookup_n64[16] = {
-    // l and r are swapped compared to ngc
-    HAT_SWITCH_NULL,       // 0b0000, centered
-    HAT_SWITCH_EAST,       // 0b0001, right
-    HAT_SWITCH_WEST,       // 0b0010, left
-    HAT_SWITCH_NULL,       // 0b0011, left+right, not possible
-    HAT_SWITCH_SOUTH,      // 0b0100, down
-    HAT_SWITCH_SOUTH_EAST, // 0b0101, down+right
-    HAT_SWITCH_SOUTH_WEST, // 0b0110, down+left
-    HAT_SWITCH_NULL,       // 0b0111, // 3 at once
-    HAT_SWITCH_NORTH, // 0b1000, up
-    HAT_SWITCH_NORTH_EAST, // 0b1001, up+right
-    HAT_SWITCH_NORTH_WEST, // 0b1010, up+left
-    HAT_SWITCH_NULL, // 0b1011, // 3 at once
-    HAT_SWITCH_NULL, // 0b1100, up+down, not possible
-    HAT_SWITCH_NULL, // 0b1101, // 3 at once
-    HAT_SWITCH_NULL, // 0b1110, // 3 at once
-    HAT_SWITCH_NULL, // 0b1111, // 3 at once
-};
-
 void n64_tasks() {
     if (config.n64_mode == pc && pollNeeded && (in_menu || USB_READY)) {
         di();
@@ -140,7 +120,7 @@ void n64_handle_packet() {
         
         joydata_n64.joy_x -= 128;
         joydata_n64.joy_y = 128 - joydata_n64.joy_y;
-        joydata_n64.dpad = hat_lookup_n64[joydata_n64.dpad];
+        joydata_n64.dpad = hat_lookup_n64_snes[joydata_n64.dpad];
         // when l and r are pressed, the start button bit seems to shift to unused1
         joydata_n64.start |= joydata_n64.__unused1 & joydata_n64.l & joydata_n64.r;
         

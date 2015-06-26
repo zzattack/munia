@@ -21,20 +21,19 @@ void snes_tasks() {
         snes_handle_packet();
     }
     
-    if (snes_packet_available) {
-        // see if this packet is equal to the last transmitted 
-        // one, and if so, discard it
-        if (memcmp(&joydata_snes, &joydata_snes_last, sizeof(snes_packet_t)) == 0) 
-            snes_packet_available = false;
-    }
-    
     if (snes_packet_available && !in_menu && (config.snes_mode == pc || config.snes_mode == console) && USB_READY && !HIDTxHandleBusy(USBInHandleSNES)) {
-        // hid tx
-        USBDeviceTasks();
-        USBInHandleSNES = HIDTxPacket(HID_EP_SNES, (uint8_t*)&joydata_snes, sizeof(snes_packet_t));
-        snes_packet_available = false;
-        // save last packet
-        memcpy(&joydata_snes_last, &joydata_snes, sizeof(snes_packet_t));
+        if (memcmp(&joydata_snes, &joydata_snes_last, sizeof(snes_packet_t)) == 0) {
+            // see if this packet is equal to the last transmitted 
+            // one, and if so, discard it
+            snes_packet_available = false;
+        }
+        else {
+            // hid tx
+            USBInHandleSNES = HIDTxPacket(HID_EP_SNES, (uint8_t*)&joydata_snes, sizeof(snes_packet_t));
+            snes_packet_available = false;
+            // save last packet
+            memcpy(&joydata_snes_last, &joydata_snes, sizeof(snes_packet_t));
+        }
     }    
 }
 
@@ -52,14 +51,14 @@ void snes_handle_packet() {
 		for (uint8_t i = 0; i < sizeof(snes_packet_t); i++) {
             uint8_t x = 0;
             for (uint8_t m = 0x80; m; m >>= 1) {
-                if (*r++ & 0b00000001)
+                if (*r++ & 0b00000100) // RC2
                    x |= m;
             }            
-            *w++ = x;
+            *w++ = ~x; // high's are not pressed, lows are pressed --> invert
 		}
         
         // these are inverted in HID reports
-        // joydata_snes.hat = hat_lookup_ngc[joydata_ngc.hat];
+        joydata_snes.dpad = hat_lookup_n64_snes[joydata_snes.dpad];
         
         snes_packet_available = true;
 	}
@@ -68,4 +67,28 @@ void snes_handle_packet() {
 
 void snes_sample() { 
     // called in interrupt: watches the SNES_CLK for 16 pulses
+    // The controllers serially shift the latched button states out SNES_DAT on every rising edge
+    // and the CPU samples the data on every falling edge.
+    sample_w = sample_buff;
+    uint8_t i = 16;
+    TMR0 = 150;
+    TMR0IF = 0;
+    
+    while (SNES_LATCH) {
+        if (TMR0IF) return;
+    }
+    TMR0 = 150;
+    TMR0IF = 0;
+    while (i && !TMR0IF && !SNES_LATCH) {
+        while (SNES_CLK && !TMR0IF); 
+        *sample_w = PORTC;
+        LCD_D7 = 0;
+        sample_w++;
+        i--;
+        TMR0 = 255-100; TMR0IF = 0;
+        while (!SNES_CLK && !TMR0IF);
+        TMR0 = 255-100; TMR0IF = 0;
+        LCD_D7 = 1;
+    }
+    snes_test_packet = !i;
 }
