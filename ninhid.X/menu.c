@@ -54,13 +54,14 @@ void menu_page(uint8_t page) {
     lcd_home();
     
     if (page == MENU_PAGE_NGC) 
-        lcd_string("NGC config");    
+        lcd_string("NGC");    
     else if (page == MENU_PAGE_N64)
-        lcd_string("N64 config");
+        lcd_string("N64");
     else if (page == MENU_PAGE_SNES)
-        lcd_string("SNES config");
+        lcd_string("SNES");
     else if (page == MENU_PAGE_EXIT) 
-        lcd_string("Save config?");
+        lcd_string("Save");
+    lcd_string(" config");
     
     menu_display_setting();
 }
