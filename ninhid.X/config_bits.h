@@ -27,23 +27,15 @@
 #pragma config nLPBOR = OFF     // Low-Power Brown-out Reset (Low-Power Brown-out Reset disabled)
 
 // CONFIG2H
-#if DEBUG
-#pragma config WDTEN = OFF
-#else
 #pragma config WDTEN = ON       // Watchdog Timer Enable bits (WDT enabled in hardware (SWDTEN ignored))
-#pragma config WDTPS = 16       // Watchdog Timer Postscaler (1:16)
-#endif
+#pragma config WDTPS = 8192       // Watchdog Timer Postscaler (1:16)
 
 // CONFIG3H
 #pragma config CCP2MX = RB3     // CCP2 MUX bit (CCP2 input/output is multiplexed with RB3)
 #pragma config PBADEN = OFF     // PORTB A/D Enable bit (PORTB<5:0> pins are configured as digital I/O on Reset)
 #pragma config T3CMX = RB5      // Timer3 Clock Input MUX bit (T3CKI function is on RB5)
 #pragma config SDOMX = RB3      // SDO Output MUX bit (SDO function is on RB3)
-#if DEBUG
-#pragma config MCLRE = ON      // Master Clear Reset Pin Enable (RE3 input pin enabled; external MCLR disabled)
-#else
 #pragma config MCLRE = OFF      // Master Clear Reset Pin Enable (RE3 input pin enabled; external MCLR disabled)
-#endif
 
 // CONFIG4L
 #pragma config STVREN = ON      // Stack Full/Underflow Reset (Stack full/underflow will cause Reset)
