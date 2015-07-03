@@ -6,7 +6,7 @@
 //Class specific descriptor - HID
 const uint8_t hid_rpt_snes[] = {
     0x05, 0x01,                    // USAGE_PAGE (Generic Desktop)
-    0x09, 0x05,                    // USAGE (Game Pad)
+    0x09, 0x04,                    // USAGE (Joystick)
     0xa1, 0x01,                    // COLLECTION (Application)
     
     // dpad hat
@@ -50,7 +50,7 @@ const uint8_t hid_rpt_snes[] = {
 //Class specific descriptor - HID
 const uint8_t hid_rpt_n64[] = {
     0x05, 0x01,                    // USAGE_PAGE (Generic Desktop)
-    0x09, 0x05,                    // USAGE (Game Pad)
+    0x09, 0x04,                    // USAGE (Joystick)
     0xa1, 0x01,                    // COLLECTION (Application)
 
     // dpad hat
@@ -104,7 +104,7 @@ const uint8_t hid_rpt_n64[] = {
 //Class specific descriptor - HID
 const uint8_t hid_rpt_ngc[] = {
     0x05, 0x01,                    // USAGE_PAGE (Generic Desktop)
-    0x09, 0x05,                    // USAGE (Game Pad)
+    0x09, 0x04,                    // USAGE (Joystick)
     0xa1, 0x01,                    // COLLECTION (Application)
 
     // a b x y start
