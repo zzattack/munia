@@ -74,7 +74,7 @@ void ngc_poll() {
     
     // stop bit, 2 us
     CLR(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); 
-    Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); 
+    Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop();
     
     SET();// back set to open collector input with pull up
     LATC |= portc_mask; // reset pull up
@@ -86,9 +86,10 @@ void ngc_sample() {
     //LATA &= 0b11111110;
     sample_w++;
     
-    while (!NGC_DAT);
     TMR0 = 255 - 60; // 1.5 bit wait
     INTCONbits.TMR0IF = 0;
+    while (!NGC_DAT && !INTCONbits.TMR0IF);
+    TMR0 = 255 - 60; // 1.5 bit wait
 
 loop:
     if (INTCONbits.TMR0IF) { // timeout - no bit received

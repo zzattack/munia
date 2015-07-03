@@ -40,8 +40,10 @@ void main() {
     LED_GC_GREEN = 0;    
     LCD_PWM = 0;
     lcd_backLightValue = 0;
+#ifndef DEBUG    
+    init_pll(); // disable on simulator!
+#endif
     
-    init_pll();        
     init_timers();
     usb_descriptors_check();
 	USBDeviceInit();
