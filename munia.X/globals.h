@@ -7,7 +7,7 @@
 
 #define USB_READY (USBDeviceState >= CONFIGURED_STATE && !USBSuspendControl)
 
-bool pollNeeded = FALSE;
+bool pollNeeded = false;
 bool snes_packet_available, n64_packet_available,  ngc_packet_available;
 
 extern void load_config();

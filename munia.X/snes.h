@@ -35,7 +35,6 @@ typedef struct {
 } snes_packet_t;
 
 snes_packet_t joydata_snes @ 0x50D /*+ sizeof(n64_packet_t)*/;
-bool snes_console_attached = false;
 
 void snes_tasks();
 void snes_fake();

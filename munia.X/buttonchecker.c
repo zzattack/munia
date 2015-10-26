@@ -15,7 +15,7 @@ void bcInit() {
 }
 
 bool bcCheck() {
-    bool result = FALSE;
+    bool result = false;
     bool button[BUTTON_COUNT];
     
 #if BUTTON_COUNT >= 1

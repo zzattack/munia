@@ -7,11 +7,24 @@
 snes_packet_t joydata_snes_last;
 bool snes_test_packet = false;
 
-void snes_tasks() { 
-    if (config.snes_mode == pc && !snes_console_attached && pollNeeded && (in_menu || USB_READY)) {
+void snes_tasks() {
+    static uint8_t snes_block = 0;
+    
+    if (pollNeeded & snes_block > 0) snes_block--;
+    else if (config.snes_mode == pc && pollNeeded && (in_menu || USB_READY)) {
         di();        
         USBDeviceTasks();
-        snes_poll();
+        
+        // if latch is low without us driving it low, then there's a console attached!
+        // in this case we should never drive the lines, this is dangerous!
+        if (SNES_LATCH == 0) {
+            // block snes lines for 2 seconds
+            snes_block = 120; // 120 frames
+        }
+        else {
+            snes_poll();
+        }
+        
         USBDeviceTasks();
         ei();
     }
@@ -34,11 +47,34 @@ void snes_tasks() {
             // save last packet
             memcpy(&joydata_snes_last, &joydata_snes, sizeof(snes_packet_t));
         }
-    }    
+    }
 }
 
 void snes_poll() {
+    sample_w = sample_buff;
 
+    // Every 16.67ms (or about 60Hz), the SNES CPU sends out a 12us wide, positive
+    // going data latch pulse on pin 3
+    SNES_CLK_TRIS = 0;
+    SNES_LATCH = 1;
+    SNES_LATCH_TRIS = 0;
+    __delay_us(12);
+    SNES_LATCH = 0;    
+    
+    // 6 ms after the fall of the data latch pulse, the CPU sends out 16 data clock pulses on
+    // pin 2. These are 50% duty cycle with 12us per full cycle.
+    __delay_us(6);
+    for (uint8_t i = 0; i < 16; i++) {
+        SNES_CLK = 0;
+        __delay_us(6);
+        *sample_w++ = PORTC;
+        SNES_CLK = 1;
+        __delay_us(6);
+    }
+    
+    SNES_CLK_TRIS = 1;
+    SNES_LATCH_TRIS = 1;
+    snes_test_packet = true;
 }
 
 void snes_handle_packet() {
@@ -46,7 +82,7 @@ void snes_handle_packet() {
 	if (idx == 16 && !HIDTxHandleBusy(USBInHandleSNES)) {
 		uint8_t* w = (uint8_t*)&joydata_snes;
         
-		// bit 0 is not sampled, then 0-23 are request, 24 is stop bit, 25-88 is data
+		// bit 0 is not sampled
 		uint8_t* r = sample_buff + 0;
 		for (uint8_t i = 0; i < sizeof(snes_packet_t); i++) {
             uint8_t x = 0;
@@ -69,7 +105,6 @@ void snes_sample() {
     // called in interrupt: watches the SNES_CLK for 16 pulses
     // The controllers serially shift the latched button states out SNES_DAT on every rising edge
     // and the CPU samples the data on every falling edge.
-    sample_w = sample_buff;
     uint8_t i = 16;
     TMR0 = 150;
     TMR0IF = 0;
@@ -82,13 +117,11 @@ void snes_sample() {
     while (i && !TMR0IF && !SNES_LATCH) {
         while (SNES_CLK && !TMR0IF); 
         *sample_w = PORTC;
-        LCD_D7 = 0;
         sample_w++;
         i--;
         TMR0 = 255-100; TMR0IF = 0;
         while (!SNES_CLK && !TMR0IF);
         TMR0 = 255-100; TMR0IF = 0;
-        LCD_D7 = 1;
     }
     snes_test_packet = !i;
 }

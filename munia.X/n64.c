@@ -43,7 +43,7 @@ void n64_tasks() {
 void n64_poll() {
     portc_mask = 0b00000010;
     LATC &= ~portc_mask; // pull down - always call this before CLR() calls
-    CLR(); // set data pin to output, making the pin low
+    CLR(); // set data pin to output, making the pin low despite the pull up
     // send 01000000
     //      00000011    
     //      00000010

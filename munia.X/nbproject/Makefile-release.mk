@@ -312,7 +312,7 @@ dist/${CND_CONF}/${IMAGE_TYPE}/munia.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}: ${OBJECTF
 	${MP_CC} $(MP_EXTRA_LD_PRE) --chip=$(MP_PROCESSOR_OPTION) -G -mdist/${CND_CONF}/${IMAGE_TYPE}/munia.X.${IMAGE_TYPE}.map  --double=24 --float=24 --emi=wordwrite --rom=-0-FFF,-1006-1007,-1016-1017 --opt=default,+asm,+asmfile,+speed,-space,-debug --addrqual=require --mode=pro -P -N100 -I"." -I"./USB" --warn=0 --asmlist --summary=default,-psect,-class,+mem,-hex,-file --codeoffset=0x1000 --output=default,-inhx032 --runtime=default,+clear,+init,-keep,-no_startup,-download,+config,+clib,+plib --output=-mcof,+elf:multilocs --stack=compiled:auto:auto:auto "--errformat=%f:%l: error: (%n) %s" "--warnformat=%f:%l: warning: (%n) %s" "--msgformat=%f:%l: advisory: (%n) %s"    --memorysummary dist/${CND_CONF}/${IMAGE_TYPE}/memoryfile.xml -odist/${CND_CONF}/${IMAGE_TYPE}/munia.X.${IMAGE_TYPE}.${DEBUGGABLE_SUFFIX}  ${OBJECTFILES_QUOTED_IF_SPACED}     
 	
 	@echo "Creating unified hex file"
-	@"C:/Program Files (x86)/Microchip/MPLABX/v3.00/mplab_ide/mplab_ide/modules/../../bin/hexmate" --edf="C:/Program Files (x86)/Microchip/MPLABX/v3.00/mplab_ide/mplab_ide/modules/../../dat/en_msgs.txt" dist/${CND_CONF}/${IMAGE_TYPE}/munia.X.${IMAGE_TYPE}.hex bootloader.hex -odist/${CND_CONF}/production/munia.X.production.unified.hex
+	@"C:/Program Files (x86)/Microchip/MPLABX/v3.05/mplab_ide/mplab_ide/modules/../../bin/hexmate" --edf="C:/Program Files (x86)/Microchip/MPLABX/v3.05/mplab_ide/mplab_ide/modules/../../dat/en_msgs.txt" dist/${CND_CONF}/${IMAGE_TYPE}/munia.X.${IMAGE_TYPE}.hex bootloader.hex -odist/${CND_CONF}/production/munia.X.production.unified.hex
 
 endif
 
