@@ -9,16 +9,16 @@ void USBCBErrorHandler() { }
 void USBCBStdSetDscHandler() { }
 void USBCBSendResume() {
     static WORD delay_count;
-    if (USBGetRemoteWakeupStatus() == TRUE) {
+    if (USBGetRemoteWakeupStatus() == true) {
         //Verify that the USB bus is in fact suspended, before we send
         //remote wakeup signalling.
-        if (USBIsBusSuspended() == TRUE) {
+        if (USBIsBusSuspended() == true) {
             USBMaskInterrupts();
 
             //Clock switch to settings consistent with normal USB operation.
             USBCBWakeFromSuspend();
             USBSuspendControl = 0;
-            USBBusIsSuspended = FALSE; //So we don't execute this code again,
+            USBBusIsSuspended = false; //So we don't execute this code again,
             //until a new suspend condition is detected.
             delay_count = 3600U;
             do {
@@ -71,6 +71,6 @@ BOOL USER_USB_CALLBACK_EVENT_HANDLER(USB_EVENT event, void *pdata, WORD size) {
         default:
             break;
     }
-    return TRUE;
+    return true;
 }
 

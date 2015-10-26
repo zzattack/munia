@@ -37,7 +37,7 @@ void sendPortLow(uint8_t b) {
 void lcd_command(uint8_t cmd) {
     if (!lcd_commandMode) {
         addByte(SPECIAL_TOCMD);
-        lcd_commandMode = TRUE;
+        lcd_commandMode = true;
     }
     addByte(cmd);
 }

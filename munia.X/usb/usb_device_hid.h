@@ -142,8 +142,8 @@ void USBCheckHIDRequest(void);
         to NULL.
         
     Return Values:
-        TRUE - the HID handle is still busy
-        FALSE - the HID handle is not busy and is ready to send
+        true - the HID handle is still busy
+        false - the HID handle is not busy and is ready to send
                 additional data.
         
    Remarks:
@@ -191,8 +191,8 @@ void USBCheckHIDRequest(void);
         to NULL.
         
     Return Values:
-        TRUE - the HID handle is still busy
-        FALSE - the HID handle is not busy and is ready to receive
+        true - the HID handle is still busy
+        false - the HID handle is not busy and is ready to receive
                 additional data.
         
    Remarks:

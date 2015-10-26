@@ -25,7 +25,7 @@ void load_config();
 void apply_config();
 void save_config();
 
-bool tick1khz = FALSE;
+bool tick1khz = false;
 uint8_t timer100hz;
 uint16_t timer1000hz;
 uint8_t counter60hz = 0;
@@ -40,7 +40,7 @@ void main() {
     LED_GC_GREEN = 0;    
     LCD_PWM = 0;
     lcd_backLightValue = 0;
-#ifndef DEBUG    
+#ifndef SIMUL    
     init_pll(); // disable on simulator!
 #endif
     
@@ -55,6 +55,7 @@ void main() {
     apply_config();
     init_interrupts();
 
+    
 	while (1) {
         ClrWdt();
         USBDeviceTasks();
@@ -63,7 +64,7 @@ void main() {
         LED_SNES_ORANGE = !USBSuspendControl;
         
         if (tick1khz) {
-            tick1khz = FALSE;
+            tick1khz = false;
             timer100hz++;
             timer1000hz++;
             lcd_process();
@@ -90,13 +91,13 @@ void main() {
         if (PIR2bits.TMR3IF) {
             WRITETIMER3(15536);
             PIR2bits.TMR3IF = 0;
-            pollNeeded = TRUE;
+            pollNeeded = true;
         }
         
         snes_tasks();
         n64_tasks();        
         ngc_tasks();
-        pollNeeded = FALSE;
+        pollNeeded = false;
     }
 }
     

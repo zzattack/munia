@@ -131,6 +131,7 @@ void ngc_handle_packet() {
         
         // these are inverted in HID reports
         joydata_ngc.joy_y = -joydata_ngc.joy_y;
+        joydata_ngc.c_y = -joydata_ngc.c_y;
         joydata_ngc.hat = hat_lookup_ngc[joydata_ngc.hat];
         
         ngc_packet_available = true;
