@@ -33,9 +33,9 @@ void menu_enter() {
     config_backup = config;
     config_edit = config;
     
-    config.ngc_mode = pc;
-    config.n64_mode = pc;
-    config.snes_mode = pc;
+    config.ngc_mode = NGC_MODE_PC;
+    config.n64_mode = N64_MODE_PC;
+    config.snes_mode = SNES_MODE_PC;
     apply_config();
     
     menu_page(MENU_PAGE_NGC);
