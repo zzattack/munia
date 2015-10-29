@@ -7,10 +7,18 @@
 #include "gamepad.h"
 #include <stdbool.h>
 
+#define max(x, y) (((x) > (y)) ? (x) : (y))
+#define min(x, y) (((x) < (y)) ? (x) : (y))
+
 config_t config_edit, config_backup;
 uint8_t current_menu_page;
+uint8_t submenu_idx = 0;
+bool menu_leftalign = true;
 const uint8_t num_menu_pages = MENU_PAGE_COUNT;
 uint8_t menu_next_press_delay;
+char** menu_current_items;
+uint8_t submenu_count = 0;
+
 
 void menu_page(uint8_t page);
 void menu_press(uint8_t command);
@@ -50,9 +58,15 @@ void menu_exit(bool save_settings) {
 
 void menu_page(uint8_t page) {
     current_menu_page = page;
+    menu_current_items = menu_sub_items[current_menu_page];
+    submenu_idx = 0;
+    menu_leftalign = true;
+    submenu_count = 0;
+    while (menu_current_items[submenu_count] != NULL) submenu_count++;
+
     lcd_clear();
-    lcd_home();
-    
+    lcd_goto(1, 0);
+
     if (page == MENU_PAGE_NGC) 
         lcd_string("NGC");    
     else if (page == MENU_PAGE_N64)
@@ -67,31 +81,25 @@ void menu_page(uint8_t page) {
 }
 
 void menu_display_setting() {
+    
+    
+    uint8_t left_display = min(submenu_count - 2, max(0, menu_leftalign  ? submenu_idx - 1 : submenu_idx));
+    uint8_t right_display = left_display + 1;
+        
     lcd_goto(2, 0);
-    if (current_menu_page == MENU_PAGE_NGC) {
-        lcd_string("NGC [");
-        lcd_char(config_edit.ngc_mode == console ? '*' : ' ');
-        lcd_string("]  PC [");
-        lcd_char(config_edit.ngc_mode == pc ? '*' : ' ');
-        lcd_string("]");
+    lcd_char(left_display != 0 ? '<' : ' ');
+
+    for (uint8_t i = left_display; i <= right_display; i++) {
+        lcd_string(menu_current_items[i]);
+        if (current_menu_page != MENU_PAGE_EXIT) {
+            lcd_char('[');
+            lcd_char(submenu_idx == i ? '*' : ' ');
+            lcd_string("] ");
+        }
     }
-    else if (current_menu_page == MENU_PAGE_N64) {
-        lcd_string("N64 [");
-        lcd_char(config_edit.n64_mode == console ? '*' : ' ');
-        lcd_string("]  PC [");
-        lcd_char(config_edit.n64_mode == pc ? '*' : ' ');
-        lcd_string("]");
-    }
-    else if (current_menu_page == MENU_PAGE_SNES) {
-        lcd_string("SNES[");
-        lcd_char(config_edit.snes_mode == console ? '*' : ' ');
-        lcd_string("]  PC [");
-        lcd_char(config_edit.snes_mode == pc ? '*' : ' ');
-        lcd_string("]");
-    }
-    else if (current_menu_page == MENU_PAGE_EXIT) {
-        lcd_string("A:Ok    B:Cancel");
-    }
+    
+    lcd_goto(2, 15);
+    lcd_char(right_display < submenu_count - 1 ? '>' : ' ');    
 }
 
 
@@ -147,15 +155,25 @@ void menu_press(uint8_t command) {
         menu_exit(false);
     
     else if (command == left) {
-        if (current_menu_page == MENU_PAGE_NGC) config_edit.ngc_mode = console;
-        if (current_menu_page == MENU_PAGE_N64) config_edit.n64_mode = console;
-        if (current_menu_page == MENU_PAGE_SNES) config_edit.snes_mode = console;
+        if (submenu_idx == submenu_count - 2 && !menu_leftalign) 
+            menu_leftalign = true;
+        else {
+            submenu_idx = max(0, submenu_idx - 1);
+            if (current_menu_page == MENU_PAGE_NGC) config_edit.ngc_mode   = submenu_idx;
+            if (current_menu_page == MENU_PAGE_N64) config_edit.n64_mode   = submenu_idx;
+            if (current_menu_page == MENU_PAGE_SNES) config_edit.snes_mode = submenu_idx;
+        }
         menu_display_setting();
     }
     else if (command == right) {
-        if (current_menu_page == MENU_PAGE_NGC) config_edit.ngc_mode = pc;
-        if (current_menu_page == MENU_PAGE_N64) config_edit.n64_mode = pc;
-        if (current_menu_page == MENU_PAGE_SNES) config_edit.snes_mode = pc;
+        if (submenu_idx == 1 && menu_leftalign) 
+            menu_leftalign = false;
+        else {
+            submenu_idx = min(submenu_idx + 1, submenu_count - 1);
+            if (current_menu_page == MENU_PAGE_NGC) config_edit.ngc_mode   = submenu_idx;
+            if (current_menu_page == MENU_PAGE_N64) config_edit.n64_mode   = submenu_idx;
+            if (current_menu_page == MENU_PAGE_SNES) config_edit.snes_mode = submenu_idx;
+        }        
         menu_display_setting();    
     }
 }
