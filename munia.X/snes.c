@@ -6,12 +6,15 @@
 
 snes_packet_t joydata_snes_last;
 bool snes_test_packet = false;
+void snes_create_ngc_fake();
 
 void snes_tasks() {
     static uint8_t snes_block = 0;
     
-    if (pollNeeded & snes_block > 0) snes_block--;
-    else if (config.snes_mode == pc && pollNeeded && (in_menu || USB_READY)) {
+    // don't toggle the port is console is attached
+    if (pollNeeded && snes_block > 0) snes_block--;
+    
+    else if (pollNeeded && (in_menu || (config.snes_mode == SNES_MODE_NGC || (config.snes_mode == PC && USB_READY)))) {
         di();        
         USBDeviceTasks();
         
@@ -26,27 +29,29 @@ void snes_tasks() {
         }
         
         USBDeviceTasks();
-        ei();
     }
     
     if (snes_test_packet) {
         snes_test_packet = false;
         snes_handle_packet();
     }
+    ei();
     
-    if (snes_packet_available && !in_menu && (config.snes_mode == pc || config.snes_mode == console) && USB_READY && !HIDTxHandleBusy(USBInHandleSNES)) {
-        if (memcmp(&joydata_snes, &joydata_snes_last, sizeof(snes_packet_t)) == 0) {
-            // see if this packet is equal to the last transmitted 
-            // one, and if so, discard it
-            snes_packet_available = false;
+    if (snes_packet_available && !in_menu) {        
+        if (config.snes_mode == SNES_MODE_NGC) {
+            snes_create_ngc_fake();
+            ngc_fake_unpack();
+            ngc_fake_packet_available = true;
         }
-        else {
-            // hid tx
+        
+        // send packet over USB if usb connected and packet doesnt equal last one
+        if (USB_READY && !HIDTxHandleBusy(USBInHandleSNES) && memcmp(&joydata_snes, &joydata_snes_last, sizeof(snes_packet_t))) {
             USBInHandleSNES = HIDTxPacket(HID_EP_SNES, (uint8_t*)&joydata_snes, sizeof(snes_packet_t));
-            snes_packet_available = false;
             // save last packet
-            memcpy(&joydata_snes_last, &joydata_snes, sizeof(snes_packet_t));
+            memcpy(&joydata_snes_last, &joydata_snes, sizeof(snes_packet_t));            
         }
+        
+        snes_packet_available = false; // now consumed    
     }
 }
 
@@ -92,10 +97,10 @@ void snes_handle_packet() {
             }            
             *w++ = ~x; // high's are not pressed, lows are pressed --> invert
 		}
-        
         // these are inverted in HID reports
+        joydata_snes_raw = joydata_snes;
         joydata_snes.dpad = hat_lookup_n64_snes[joydata_snes.dpad];
-        
+
         snes_packet_available = true;
 	}
 	sample_w = sample_buff;
@@ -124,4 +129,60 @@ void snes_sample() {
         TMR0 = 255-100; TMR0IF = 0;
     }
     snes_test_packet = !i;
+}
+
+void snes_create_ngc_fake() {
+    ngc_fake_packet.one = 1;
+    ngc_fake_packet.zero1 = 0;
+    ngc_fake_packet.zero2 = 0;
+    ngc_fake_packet.zero3 = 0;
+
+    ngc_fake_packet.a = joydata_snes_raw.b;
+    ngc_fake_packet.b = joydata_snes_raw.y;
+    ngc_fake_packet.x = joydata_snes_raw.a;
+    ngc_fake_packet.y = joydata_snes_raw.x;
+    ngc_fake_packet.start = joydata_snes_raw.start;
+    ngc_fake_packet.z = 0;
+    ngc_fake_packet.l = joydata_snes_raw.l;
+    ngc_fake_packet.r = joydata_snes_raw.r;
+    ngc_fake_packet.left_trig = joydata_snes_raw.l ? 127 : 0;
+    ngc_fake_packet.right_trig = joydata_snes_raw.r ? 127 : 0;
+
+    if (!joydata_snes_raw.select) {
+        ngc_fake_packet.joy_x = 128;
+        if (joydata_snes_raw.left)
+            ngc_fake_packet.joy_x -= 127;
+        else if (joydata_snes_raw.right)
+            ngc_fake_packet.joy_x += 127;
+
+        ngc_fake_packet.joy_y = 128;
+        if (joydata_snes_raw.up)
+            ngc_fake_packet.joy_y += 127;
+        else if (joydata_snes_raw.down)
+            ngc_fake_packet.joy_y -= 127;
+
+        ngc_fake_packet.dup = 0;
+        ngc_fake_packet.ddown = 0;
+        ngc_fake_packet.dleft = 0;
+        ngc_fake_packet.dright = 0;
+
+        ngc_fake_packet.c_x = 128;
+        ngc_fake_packet.c_y = 128;
+    }
+    else {
+        ngc_fake_packet.dup = joydata_snes_raw.up;
+        ngc_fake_packet.ddown = joydata_snes_raw.down;
+        ngc_fake_packet.dleft = joydata_snes_raw.left;
+        ngc_fake_packet.dright = joydata_snes_raw.right;
+        ngc_fake_packet.joy_x = 128;
+        ngc_fake_packet.joy_y = 128;
+
+        ngc_fake_packet.c_x = 128;
+        ngc_fake_packet.c_y = 128;
+        if (joydata_snes_raw.y) ngc_fake_packet.c_x -= 127;
+        if (joydata_snes_raw.a) ngc_fake_packet.c_x -= 127;
+        if (joydata_snes_raw.b) ngc_fake_packet.c_y += 127;
+        if (joydata_snes_raw.x) ngc_fake_packet.c_y += 127;
+    }
+                
 }
