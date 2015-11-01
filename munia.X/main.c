@@ -54,7 +54,7 @@ void main() {
     load_config();
     apply_config();
     init_interrupts();
-
+    
     
 	while (1) {
         ClrWdt();
@@ -72,6 +72,7 @@ void main() {
             if (timer100hz == 10) {
                 timer100hz = 0;
                 
+#ifndef DEBUG
                 if (bcCheck()) {
                     if (BTN_MENU_PRESSED) {
                         if (in_menu) menu_exit(false);
@@ -79,6 +80,7 @@ void main() {
                     }
                     BTN_MENU_PRESSED = false;
                 }
+#endif
             }
             
             menu_tasks();
@@ -236,7 +238,6 @@ void apply_config() {
         IOCCbits.IOCC0 = 0; // disable IOC on RC0 (ngc)
     }
     else {
-        config.ngc_mode == NGC_MODE_NGC;
         // pull up, in case no device attached
         LATC |= 0b00000001;
         SWITCH3 = 1;
@@ -248,7 +249,6 @@ void apply_config() {
         IOCCbits.IOCC7 = 0; // disable IOC on RC7 (snes latch)
     }
     else {
-        config.snes_mode == SNES_MODE_SNES;
         SWITCH1 = 1;
         IOCCbits.IOCC7 = 1; // enable IO7 on RC7 (snes latch)
     }

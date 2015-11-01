@@ -5,6 +5,36 @@
 #include "gamepad.h"
 #include "menu.h"
 
+uint8_t ngc_outbuf_idx = 0;
+
+
+// Packets below should not be stored in program memory but kept in RAM,
+// otherwise timing requirements cannot be met in ngc_fakeout()
+
+// controller sends these 24 bits when wii sends a 9-bit all low packet
+uint8_t ngc_id_packet[] = { 
+    0, 0, 0, 0, 1, 0, 0, 1, 
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 1, 1
+};
+// controller sends these 80 bits when wii sends a 9-bit packet with 2 bits high
+uint8_t ngc_init_packet[] = {
+    0, 0, 0, 0, 0, 0, 0, 0,
+    1, 0, 0, 0, 0, 0, 0, 0,
+    1, 0, 0, 0, 0, 0, 1, 0,
+    1, 0, 0, 0, 0, 0, 0, 0,
+    1, 0, 0, 0, 0, 0, 1, 1,
+    1, 0, 0, 0, 1, 0, 0, 0,
+    0, 0, 1, 0, 0, 0, 1, 1,
+    0, 0, 1, 0, 1, 0, 1, 1,
+    0, 0, 0, 0, 0, 0, 0, 1,
+    0, 0, 0, 0, 0, 0, 0, 1, 1
+};
+    
+
+void ngc_fakeout();
+void ngc_send_id();
+
 ngc_packet_t joydata_ngc_last;
 
 // ngc report: <left><right><down>up>
@@ -28,7 +58,7 @@ const uint8_t hat_lookup_ngc[16] = {
 };
 
 void ngc_tasks() {
-    if (config.ngc_mode == pc && pollNeeded && (in_menu || USB_READY)) {
+    if (config.ngc_mode == NGC_MODE_PC && pollNeeded && (in_menu || USB_READY)) {
         di();
         USBDeviceTasks();
         ngc_poll();
@@ -52,12 +82,14 @@ void ngc_tasks() {
             ngc_packet_available = false;
     }
     
-    if (ngc_packet_available && !in_menu && (config.ngc_mode == pc || config.ngc_mode == console) && USB_READY && !HIDTxHandleBusy(USBInHandleNGC)) {
-        // hid tx
-        USBInHandleNGC = HIDTxPacket(HID_EP_NGC, (uint8_t*)&joydata_ngc, sizeof(ngc_packet_t));
+    if (ngc_packet_available && !in_menu) {
+        if (USB_READY && !HIDTxHandleBusy(USBInHandleNGC)) {
+            // hid tx
+            USBInHandleNGC = HIDTxPacket(HID_EP_NGC, (uint8_t*)&joydata_ngc, sizeof(ngc_packet_t));
+            // save last packet
+            memcpy(&joydata_ngc_last, &joydata_ngc, sizeof(ngc_packet_t));
+        }
         ngc_packet_available = false;
-        // save last packet
-        memcpy(&joydata_ngc_last, &joydata_ngc, sizeof(ngc_packet_t));
     }
 }
 
@@ -93,8 +125,28 @@ void ngc_sample() {
 
 loop:
     if (INTCONbits.TMR0IF) { // timeout - no bit received
-        ngc_test_packet = true;
-        //LATA |= 0b00000001;
+        uint8_t idx = sample_w - sample_buff;
+        if (config.snes_mode == SNES_MODE_NGC) {            
+            if (idx == 9 && (sample_buff[1] & 1) == 0 && (sample_buff[7] & 1) == 0) {
+                // tell wii we're here
+                ngc_outbuf_idx = 24;
+                ngc_outbuf = ngc_id_packet;
+                ngc_fakeout();
+            }
+            else if (idx == 9) {
+                ngc_outbuf_idx = 80;
+                ngc_outbuf = ngc_init_packet;
+                ngc_fakeout();
+            }
+            else if (idx == 25) {
+                ngc_outbuf_idx = 64;
+                ngc_outbuf = ngc_fake_buffer;
+                ngc_fakeout();
+                WRITETIMER3(40000); // request next poll cycle asap
+            }
+        }
+        else
+            ngc_test_packet = true;
         return;
     }
     if (NGC_DAT) goto loop;
@@ -103,7 +155,6 @@ loop:
     Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop();
 
     *sample_w = PORTC; // sample happens exactly 24 instructions after loop entry
-    //LATA ^= 0b00000001;
     sample_w++;
     
     while (!NGC_DAT);
@@ -112,9 +163,42 @@ loop:
     goto loop;
 }
 
+void ngc_fakeout() {
+    portc_mask = 0b00000001;
+    LATC &= ~portc_mask; // pull down - always call this before CLR() calls
+    CLR(); // set data pin to output, making the pin low
+    uint8_t* r = ngc_outbuf;
+        
+    while (ngc_outbuf_idx) {
+        CLR(); // use stopwatch to verify this happens either 1 or 3 µs after SET() call below)
+        if (!*r) {
+            // low
+            r++; ngc_outbuf_idx--; Nop();
+            Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop();
+            Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop();
+            SET(); // use stopwatch to verify this happens 3µs after CLR())
+        }
+        else {
+            Nop(); Nop(); Nop();
+            SET(); // use stopwatch to verify this happens 3µs after CLR()
+            r++; ngc_outbuf_idx--; Nop();
+            Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop();
+            Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop();
+        }
+        Nop(); Nop(); Nop(); Nop();
+    }
+        
+    // stop bit, 2 us
+    CLR(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); 
+    Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop();
+    SET();// back set to open collector input with pull up
+    LATC |= portc_mask; // reset pull up    
+}
+
 void ngc_handle_packet() {
     // translate samples in sample_buff to joydata_ngc
 	uint8_t idx = sample_w - sample_buff;
+    
 	if (idx == 90 && !HIDTxHandleBusy(USBInHandleNGC)) {
 		uint8_t* w = (uint8_t*)&joydata_ngc;
         
@@ -136,4 +220,14 @@ void ngc_handle_packet() {
         
         ngc_packet_available = true;
 	}
+}
+
+void ngc_fake_unpack() {
+    uint8_t* r = (uint8_t*)&ngc_fake_packet;
+    uint8_t* w = ngc_fake_buffer;
+    for (uint8_t i = 0; i < sizeof(ngc_packet_t); i++) {
+        uint8_t b = *r++;
+        for (uint8_t m = 0x80; m; m >>= 1)
+            *w++ = (b & m) ? 1 : 0;
+    }
 }
