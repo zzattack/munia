@@ -14,7 +14,7 @@ void snes_tasks() {
     // don't toggle the port is console is attached
     if (pollNeeded && snes_block > 0) snes_block--;
     
-    else if (pollNeeded && (in_menu || (config.snes_mode == SNES_MODE_NGC || (config.snes_mode == PC && USB_READY)))) {
+    else if (pollNeeded && (in_menu || (config.snes_mode == SNES_MODE_NGC || (config.snes_mode == SNES_MODE_PC && USB_READY)))) {
         di();        
         USBDeviceTasks();
         
