@@ -179,10 +179,16 @@ void snes_create_ngc_fake() {
 
         ngc_fake_packet.c_x = 128;
         ngc_fake_packet.c_y = 128;
+        
         if (joydata_snes_raw.y) ngc_fake_packet.c_x -= 127;
-        if (joydata_snes_raw.a) ngc_fake_packet.c_x -= 127;
+        if (joydata_snes_raw.a) ngc_fake_packet.c_x += 127;
         if (joydata_snes_raw.b) ngc_fake_packet.c_y += 127;
         if (joydata_snes_raw.x) ngc_fake_packet.c_y += 127;
+        
+        ngc_fake_packet.a = false;
+        ngc_fake_packet.b = false;
+        ngc_fake_packet.x = false;
+        ngc_fake_packet.y = false;
     }
                 
 }
