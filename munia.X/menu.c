@@ -67,12 +67,18 @@ void menu_page(uint8_t page) {
     lcd_clear();
     lcd_goto(1, 0);
 
-    if (page == MENU_PAGE_NGC) 
-        lcd_string("NGC");    
-    else if (page == MENU_PAGE_N64)
-        lcd_string("N64");
-    else if (page == MENU_PAGE_SNES)
+    if (page == MENU_PAGE_NGC) {
+        lcd_string("NGC");
+        submenu_idx = config_edit.ngc_mode;
+    }
+    else if (page == MENU_PAGE_N64) {
+        lcd_string("N64"); 
+        submenu_idx = config_edit.n64_mode;
+    }
+    else if (page == MENU_PAGE_SNES) {
         lcd_string("SNES");
+        submenu_idx = config_edit.snes_mode;
+    }
     else if (page == MENU_PAGE_EXIT) 
         lcd_string("Save");
     lcd_string(" config");
@@ -80,9 +86,7 @@ void menu_page(uint8_t page) {
     menu_display_setting();
 }
 
-void menu_display_setting() {
-    
-    
+void menu_display_setting() {    
     uint8_t left_display = min(submenu_count - 2, max(0, menu_leftalign  ? submenu_idx - 1 : submenu_idx));
     uint8_t right_display = left_display + 1;
         
