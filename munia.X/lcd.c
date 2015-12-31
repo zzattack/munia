@@ -31,6 +31,10 @@ void lcd_pulseE() {
 void sendPortLow(uint8_t b) {
     LATA &= 0xF0;
     LATA |= b;
+    //LCD_D7 = b >> 3;
+    //LCD_D6 = b >> 2;
+    //LCD_D5 = b >> 1;
+    //LCD_D4 = b >> 0;
     lcd_pulseE();
 }
 
