@@ -24,17 +24,17 @@
 #define LED_GC_ORANGE LATBbits.LATB7
 
 #define FAKE_DAT LATBbits.LATB3
-#define SWITCH1 LATBbits.LATB2
-#define SWITCH2 LATBbits.LATB1
-#define SWITCH3 LATBbits.LATB0
+#define SWITCH1 LATBbits.LATB2 // for ngc
+#define SWITCH2 LATBbits.LATB1 // for n64
+#define SWITCH3 LATBbits.LATB0 // for snes
 
 #define LCD_RS LATBbits.LATB4
 #define LCD_PWM LATBbits.LATB5
 #define LCD_E LATAbits.LATA4
-#define LCD_D4 LATAbits.LATA0
-#define LCD_D5 LATAbits.LATA1
-#define LCD_D6 LATAbits.LATA2
-#define LCD_D7 LATAbits.LATA3
+#define LCD_D7 LATAbits.LATA0
+#define LCD_D6 LATAbits.LATA1
+#define LCD_D5 LATAbits.LATA2
+#define LCD_D4 LATAbits.LATA3
 
 #define BUTTON_COUNT 1
 #define BUTTON_0 BTN_MENU

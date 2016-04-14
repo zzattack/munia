@@ -221,7 +221,18 @@ void save_config() {
         eeprom_write(i, *r++);
 }
 
-void apply_config() {
+void apply_config() {    
+    if (config.ngc_mode == NGC_MODE_PC) {
+        SWITCH1 = 0;
+        IOCCbits.IOCC0 = 0; // disable IOC on RC0 (ngc)
+    }
+    else {
+        // pull up, in case no device attached
+        LATC |= 0b00000001;
+        SWITCH1 = 1;
+        IOCCbits.IOCC0 = 1; // enable IOC on RC0 (ngc)
+    }
+    
     if (config.n64_mode == N64_MODE_PC) {
         SWITCH2 = 0;
         IOCCbits.IOCC1 = 0; // disable IOC on RC1 (n64)
@@ -233,23 +244,12 @@ void apply_config() {
         IOCCbits.IOCC1 = 1; // enable IOC on RC1 (n64)
     }
     
-    if (config.ngc_mode == NGC_MODE_PC) {
-        SWITCH3 = 0;
-        IOCCbits.IOCC0 = 0; // disable IOC on RC0 (ngc)
-    }
-    else {
-        // pull up, in case no device attached
-        LATC |= 0b00000001;
-        SWITCH3 = 1;
-        IOCCbits.IOCC0 = 1; // enable IOC on RC0 (ngc)
-    }
-    
     if (config.snes_mode == SNES_MODE_PC) {
-        SWITCH1 = 0;
+        SWITCH3 = 0;
         IOCCbits.IOCC7 = 0; // disable IOC on RC7 (snes latch)
     }
     else {
-        SWITCH1 = 1;
+        SWITCH3 = 1;
         IOCCbits.IOCC7 = 1; // enable IO7 on RC7 (snes latch)
     }
 }
