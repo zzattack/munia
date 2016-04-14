@@ -2,7 +2,6 @@
 #define	GLOBALS_H
 
 #include <stdint.h>
-#include <GenericTypeDefs.h>
 #include <usb/usb_device.h>
 
 #define USB_READY (USBDeviceState >= CONFIGURED_STATE && !USBSuspendControl)

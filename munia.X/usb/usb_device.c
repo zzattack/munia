@@ -2120,7 +2120,7 @@ static void USBStdGetDscHandler(void)
                         CtrlTrfData[2 + i * 2 + 1] = '\0';
                     }
                     inPipes[0].info.bits.ctrl_trf_mem = USB_EP0_RAM; // Set memory type
-                    inPipes[0].pSrc.bRam = (BYTE*)CtrlTrfData; // Set Source
+                    inPipes[0].pSrc.bRam = (uint8_t*)CtrlTrfData; // Set Source
                     inPipes[0].wCount.v[0] = CtrlTrfData[0]; // Set data count
                     inPipes[0].info.bits.busy = 1;
                 }

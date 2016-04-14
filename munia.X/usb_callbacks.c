@@ -8,7 +8,7 @@ void USBCB_SOF_Handler() { }
 void USBCBErrorHandler() { }
 void USBCBStdSetDscHandler() { }
 void USBCBSendResume() {
-    static WORD delay_count;
+    static uint16_t delay_count;
     if (USBGetRemoteWakeupStatus() == true) {
         //Verify that the USB bus is in fact suspended, before we send
         //remote wakeup signalling.
@@ -37,7 +37,7 @@ void USBCBSendResume() {
         }
     }
 }
-BOOL USER_USB_CALLBACK_EVENT_HANDLER(USB_EVENT event, void *pdata, WORD size) {
+bool USER_USB_CALLBACK_EVENT_HANDLER(USB_EVENT event, void *pdata, uint16_t size) {
     switch (event) {
         case EVENT_TRANSFER:
             //Add application specific callback task or callback function here if desired.

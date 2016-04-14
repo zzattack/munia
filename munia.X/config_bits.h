@@ -3,6 +3,8 @@
 
 // 'C' source line config statements
 
+#ifndef BOOTLOADER_INCLUDED
+
 #include <xc.h>
 
 // #pragma config statements should precede project file includes.
@@ -65,3 +67,6 @@
 
 // CONFIG7H
 #pragma config EBTRB = OFF      // Boot Block Table Read Protect (Boot block is not protected from table reads executed in other blocks)
+
+
+#endif
