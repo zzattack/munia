@@ -1,0 +1,21 @@
+bin
+obj
+*.suo
+*.user
+/PIC Code/EasyRadio Firmware/MPLAB.X/build
+/PIC Code/EasyRadio Firmware/MPLAB.X/dist
+_ReSharper.*
+Makefile-.*.mk
+/Installer/*.exe
+licenses.licx
+/packages/*
+*.cof
+*.lst
+*.map
+*.obj
+*.rlf
+*.sdb
+*.sym
+.nuget
+Makefile-genesis.properties
+~$*.docx
