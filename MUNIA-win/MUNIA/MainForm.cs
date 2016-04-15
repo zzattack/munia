@@ -48,10 +48,13 @@ namespace MUNIA {
             var pc = _controller.Project(MouseClickLocation, glControl.Width, glControl.Height);
             Debug.WriteLine("Clicked @ ({0},{1})", pc.X, pc.Y);
 
-            var b = _controller.Buttons.FirstOrDefault(x => _controller.GetBounds((SvgGroup)x).Contains(pc)) as SvgGroup;
+            var bs = _controller.Buttons.Select(x => Tuple.Create(x, _controller.GetBounds(x)))
+                .OrderBy(x => x.Item2.Width * x.Item2.Height);
 
+            var b = bs.FirstOrDefault(x => x.Item2.Contains(pc));
             if (b != null) {
-                b.Visible = !b.Visible;
+                var e = b.Item1 as SvgVisualElement;
+                e.Visible = !e.Visible;
                 _controller.Render(glControl.Width, glControl.Height);
             }
 
@@ -61,6 +64,13 @@ namespace MUNIA {
         private void MainForm_Shown(object sender, EventArgs e) {
             _controller.Load(gcpath);
             Application.Idle += OnApplicationOnIdle;
+
+            GlInit();
+        }
+
+        private void GlInit() {
+            GL.Enable(EnableCap.Blend);
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
             GlControl1OnResize(this, EventArgs.Empty);
         }
 
@@ -85,7 +95,8 @@ namespace MUNIA {
         private void Render() {
             glControl.MakeCurrent();
             _stopwatch.Restart();
-            GL.ClearColor(Color.CornflowerBlue);
+
+            GL.ClearColor(Color.Black);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
@@ -110,7 +121,7 @@ namespace MUNIA {
             
             _stopwatch.Stop();
             glControl.SwapBuffers();
-   
+            Thread.Sleep(10);
         }
         
 
