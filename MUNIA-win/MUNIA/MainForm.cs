@@ -30,6 +30,7 @@ namespace MUNIA {
             InitializeComponent();
             glControl.Resize += GlControl1OnResize;
             glControl.MouseClick += GlControl_Click;
+            glControl.MouseDoubleClick += GlControl_Click;
             glControl.MouseMove += GlControl_MouseMove;
         }
 
@@ -46,7 +47,7 @@ namespace MUNIA {
             if (!MouseClicked) return;
 
             var pc = _controller.Project(MouseClickLocation, glControl.Width, glControl.Height);
-            Debug.WriteLine("Clicked @ ({0},{1})", pc.X, pc.Y);
+            // Debug.WriteLine("Clicked @ ({0},{1})", pc.X, pc.Y);
 
             var bs = _controller.Buttons.Select(x => Tuple.Create(x, _controller.GetBounds(x)))
                 .OrderBy(x => x.Item2.Width * x.Item2.Height);
@@ -64,18 +65,19 @@ namespace MUNIA {
         private void MainForm_Shown(object sender, EventArgs e) {
             _controller.Load(gcpath);
             Application.Idle += OnApplicationOnIdle;
-
-            GlInit();
+            GlControl1OnResize(this, EventArgs.Empty);
         }
-
-        private void GlInit() {
+        
+        private void glControl_Load(object sender, EventArgs e) {
+            glControl.MakeCurrent();
+            glControl.VSync = true;
             GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
-            GlControl1OnResize(this, EventArgs.Empty);
         }
 
         private void OnApplicationOnIdle(object s, EventArgs a) {
             while (glControl.IsIdle) {
+                _stopwatch.Restart();
                 Render();
                 frames++;
 
@@ -88,16 +90,18 @@ namespace MUNIA {
                     frames = 0;
                     timestamp = now;
                 }
+
+                _stopwatch.Stop();
                 // Thread.Sleep((int)Math.Max(1000 / 60.0 - _stopwatch.Elapsed.TotalSeconds, 0));
             }
         }
 
         private void Render() {
             glControl.MakeCurrent();
-            _stopwatch.Restart();
 
-            GL.ClearColor(Color.Black);
+            GL.ClearColor(Color.FromArgb(0, glControl.BackColor));
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
             
@@ -119,9 +123,7 @@ namespace MUNIA {
             GL.Vertex2(-1.0f, -1.0f);
             GL.End();
             
-            _stopwatch.Stop();
             glControl.SwapBuffers();
-            Thread.Sleep(10);
         }
         
 

@@ -1,4 +1,7 @@
-﻿namespace MUNIA {
+﻿using GlControlBasics;
+using OpenTK;
+
+namespace MUNIA {
     partial class MainForm {
         /// <summary>
         /// Required designer variable.
@@ -23,24 +26,14 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            this.glControl = new OpenTK.GLControl();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.somsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.gCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.n64ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.glControl = new OpenTK.GLControl();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // glControl
-            // 
-            this.glControl.BackColor = System.Drawing.Color.Black;
-            this.glControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.glControl.Location = new System.Drawing.Point(0, 24);
-            this.glControl.Name = "glControl";
-            this.glControl.Size = new System.Drawing.Size(577, 358);
-            this.glControl.TabIndex = 0;
-            this.glControl.VSync = false;
             // 
             // menuStrip1
             // 
@@ -65,23 +58,34 @@
             // somsToolStripMenuItem
             // 
             this.somsToolStripMenuItem.Name = "somsToolStripMenuItem";
-            this.somsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.somsToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
             this.somsToolStripMenuItem.Text = "SNES";
             this.somsToolStripMenuItem.Click += new System.EventHandler(this.somsToolStripMenuItem_Click);
-            // 
-            // gCToolStripMenuItem
-            // 
-            this.gCToolStripMenuItem.Name = "gCToolStripMenuItem";
-            this.gCToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.gCToolStripMenuItem.Text = "GC";
-            this.gCToolStripMenuItem.Click += new System.EventHandler(this.gCToolStripMenuItem_Click);
             // 
             // n64ToolStripMenuItem
             // 
             this.n64ToolStripMenuItem.Name = "n64ToolStripMenuItem";
-            this.n64ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.n64ToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
             this.n64ToolStripMenuItem.Text = "N64";
             this.n64ToolStripMenuItem.Click += new System.EventHandler(this.n64ToolStripMenuItem_Click);
+            // 
+            // gCToolStripMenuItem
+            // 
+            this.gCToolStripMenuItem.Name = "gCToolStripMenuItem";
+            this.gCToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
+            this.gCToolStripMenuItem.Text = "GC";
+            this.gCToolStripMenuItem.Click += new System.EventHandler(this.gCToolStripMenuItem_Click);
+            // 
+            // glControl
+            // 
+            this.glControl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.glControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.glControl.Location = new System.Drawing.Point(0, 24);
+            this.glControl.Name = "glControl";
+            this.glControl.Size = new System.Drawing.Size(577, 358);
+            this.glControl.TabIndex = 0;
+            this.glControl.VSync = false;
+            this.glControl.Load += new System.EventHandler(this.glControl_Load);
             // 
             // MainForm
             // 
@@ -102,13 +106,12 @@
         }
 
         #endregion
-
-        private OpenTK.GLControl glControl;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem somsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem n64ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem gCToolStripMenuItem;
+        private GLControl glControl;
     }
 }
 
