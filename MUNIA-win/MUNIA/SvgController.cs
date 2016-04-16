@@ -4,6 +4,8 @@ using System.Runtime.InteropServices;
 using Svg;
 using GlControlBasics;
 using System.Diagnostics;
+using System.Linq;
+using System;
 
 namespace MUNIA {
 	public class SvgController {
@@ -15,6 +17,10 @@ namespace MUNIA {
 
         public List<SvgElement> Buttons = new List<SvgElement>();
 
+
+        public Dictionary<SvgElement, bool> Toggled = new Dictionary<SvgElement, bool>();
+        public Dictionary<SvgElement, Tuple<RectangleF, int>> ToggledTextures = new Dictionary<SvgElement, Tuple<RectangleF, int>>();
+
         private SvgDocument _svgDocument;
 
         public int TextureHandle { get; set; } 
@@ -23,7 +29,10 @@ namespace MUNIA {
             _svgDocument = SvgDocument.Open(svgPath);
             Dimensions = _svgDocument.GetDimensions();
             RecursiveGetButtons(_svgDocument);
-            Buttons.ForEach(x => ((SvgGroup)x).Visible = false);
+            Buttons.ForEach(x => {
+                ((SvgGroup)x).Visible = false;
+                Toggled[x] = false;
+            });
         }
 
         private void RecursiveGetButtons(SvgElement e) {
@@ -37,15 +46,36 @@ namespace MUNIA {
                     Debug.WriteLine("Bounding box for button '{0}': [({1},{2}),({3},{4})]", c.ID, r.X, r.Y, r.Right, r.Bottom);
                 }
                 RecursiveGetButtons(c);
-            }
+            }           
         }
 
         internal void Render(int width, int height) {
             if (_svgDocument == null || width == 0 || height == 0) return;
             _svgDocument.Height = height;
             _svgDocument.Width = width;
+
+            Buttons.ForEach(x => ((SvgGroup)x).Visible = false);
+
             var img = _svgDocument.Draw();
             TextureHandle = GLGraphics.CreateTexture(img);
+
+            foreach (SvgGroup g in Buttons) {
+            
+                RenderToggledButton(g);
+        
+            }
+        }
+
+        private void RenderToggledButton(SvgGroup g) {
+            g.Visible = true;
+            var b = GetBounds(g);
+            var l = Unproject(b.Location);
+            var s = Unproject(new PointF(b.X + b.Width, b.Y + b.Height));
+            var r = new RectangleF(l.X, l.Y, s.X - l.X, s.Y - l.Y);
+            var img = _svgDocument.Draw();
+            var t = GLGraphics.CreateTexture(img.Clone(r, img.PixelFormat));
+            ToggledTextures[g] = new Tuple<RectangleF, int>(r, t);
+            g.Visible = false;
         }
 
         internal PointF Project(PointF p, float width, float height) {
@@ -67,6 +97,27 @@ namespace MUNIA {
 
             var x = p.X / width * Dimensions.Width;
             var y = p.Y / height * Dimensions.Height;
+            return new PointF(x, y);
+        }
+
+        internal PointF Unproject(PointF p) {
+            float svgAR = Dimensions.Width / Dimensions.Height;
+            float imgAR = _svgDocument.Width / _svgDocument.Height;
+            var width = _svgDocument.Width;
+            var height = _svgDocument.Height;
+            if (svgAR > imgAR)
+                height = width / svgAR;
+            else
+                width = height * svgAR;
+
+            var x = p.X / Dimensions.Width * width;
+            var y = p.Y / Dimensions.Height * height;
+
+            if (svgAR > imgAR)
+                p.Y += ((_svgDocument.Height - _svgDocument.Width / svgAR) / 2f);
+            else
+                p.X -= ((_svgDocument.Width - _svgDocument.Height * svgAR) / 2f);
+
             return new PointF(x, y);
         }
 

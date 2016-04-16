@@ -5,7 +5,6 @@ using System.Drawing.Imaging;
 namespace GlControlBasics {
     public static class GLGraphics {
 
-
         public static int CreateTexture(Bitmap bmp) {
             GL.Enable(EnableCap.Texture2D);
 

@@ -13,9 +13,9 @@ namespace MUNIA {
         private readonly Stopwatch _stopwatch = new Stopwatch();
         private SvgController _controller = new SvgController();
 
-        private string gcpath = @"./svg/gc.svg";
-        private string snespath = @"./svg/gc.svg";
-        private string n64path = @"./svg/gc.svg";
+        private string gcpath = @"../../svg/gc.svg";
+        private string snespath = @"../svg/gc.svg";
+        private string n64path = @"../svg/gc.svg";
 
         double timestamp;
         int frames;
@@ -54,9 +54,7 @@ namespace MUNIA {
 
             var b = bs.FirstOrDefault(x => x.Item2.Contains(pc));
             if (b != null) {
-                var e = b.Item1 as SvgVisualElement;
-                e.Visible = !e.Visible;
-                _controller.Render(glControl.Width, glControl.Height);
+                _controller.Toggled[b.Item1] = !_controller.Toggled[b.Item1];
             }
 
             MouseClicked = false;
@@ -104,28 +102,40 @@ namespace MUNIA {
 
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
-            
+
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
-            GL.Ortho(-1.0, 1.0, -1.0, 1.0, 0.0, 4.0);
+            GL.Ortho(0, glControl.Width, glControl.Height, 0, 0.0, 4.0);
 
             GL.Enable(EnableCap.Texture2D);
             GL.BindTexture(TextureTarget.Texture2D, _controller.TextureHandle);
 
-            GL.Begin(PrimitiveType.Quads);
-            GL.TexCoord2(0, 0);   
-            GL.Vertex2(-1.0f, 1.0f);
-            GL.TexCoord2(1, 0);
-            GL.Vertex2(1.0f, 1.0f);
-            GL.TexCoord2(1, 1);
-            GL.Vertex2(1.0f, -1.0f);
-            GL.TexCoord2(0, 1);
-            GL.Vertex2(-1.0f, -1.0f);
-            GL.End();
-            
+            RenderTexture(0, glControl.Width, 0, glControl.Height);
+
+            foreach (SvgGroup b in _controller.Buttons) {
+                if (!_controller.Toggled[b]) continue;
+                var t = _controller.ToggledTextures[b];
+                GL.BindTexture(TextureTarget.Texture2D, t.Item2);
+
+                RenderTexture(t.Item1.X, t.Item1.X + t.Item1.Width, 
+                    t.Item1.Y, t.Item1.Y + t.Item1.Height);
+            }
+
             glControl.SwapBuffers();
         }
-        
+
+        private static void RenderTexture(float l, float r, float t, float b) {
+            GL.Begin(PrimitiveType.Quads);
+            GL.TexCoord2(0, 0);
+            GL.Vertex2(l, t);
+            GL.TexCoord2(1, 0);
+            GL.Vertex2(r, t);
+            GL.TexCoord2(1, 1);
+            GL.Vertex2(r, b);
+            GL.TexCoord2(0, 1);
+            GL.Vertex2(l, b);
+            GL.End();
+        }
 
         private void GlControl1OnResize(object sender, EventArgs e) {
             _controller.Render(glControl.Width, glControl.Height);
