@@ -1,5 +1,4 @@
-﻿using GlControlBasics;
-using OpenTK;
+﻿using OpenTK;
 
 namespace MUNIA {
     partial class MainForm {
@@ -27,10 +26,7 @@ namespace MUNIA {
         /// </summary>
         private void InitializeComponent() {
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.somsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.n64ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.gCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiController = new System.Windows.Forms.ToolStripMenuItem();
             this.glControl = new OpenTK.GLControl();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -38,43 +34,19 @@ namespace MUNIA {
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem});
+            this.tsmiController});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(577, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
-            // fileToolStripMenuItem
+            // tsmiController
             // 
-            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.somsToolStripMenuItem,
-            this.n64ToolStripMenuItem,
-            this.gCToolStripMenuItem});
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-            this.fileToolStripMenuItem.Text = "File";
-            // 
-            // somsToolStripMenuItem
-            // 
-            this.somsToolStripMenuItem.Name = "somsToolStripMenuItem";
-            this.somsToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
-            this.somsToolStripMenuItem.Text = "SNES";
-            this.somsToolStripMenuItem.Click += new System.EventHandler(this.somsToolStripMenuItem_Click);
-            // 
-            // n64ToolStripMenuItem
-            // 
-            this.n64ToolStripMenuItem.Name = "n64ToolStripMenuItem";
-            this.n64ToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
-            this.n64ToolStripMenuItem.Text = "N64";
-            this.n64ToolStripMenuItem.Click += new System.EventHandler(this.n64ToolStripMenuItem_Click);
-            // 
-            // gCToolStripMenuItem
-            // 
-            this.gCToolStripMenuItem.Name = "gCToolStripMenuItem";
-            this.gCToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
-            this.gCToolStripMenuItem.Text = "GC";
-            this.gCToolStripMenuItem.Click += new System.EventHandler(this.gCToolStripMenuItem_Click);
+            this.tsmiController.Name = "tsmiController";
+            this.tsmiController.Size = new System.Drawing.Size(104, 20);
+            this.tsmiController.Text = "Select controller";
+            this.tsmiController.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // glControl
             // 
@@ -107,10 +79,7 @@ namespace MUNIA {
 
         #endregion
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem somsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem n64ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem gCToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tsmiController;
         private GLControl glControl;
     }
 }

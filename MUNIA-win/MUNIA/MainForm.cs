@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using OpenTK.Graphics.OpenGL;
 using System.Linq;
 using Svg;
 using System.Threading;
+using SharpLib.Win32;
 
 namespace MUNIA {
     public partial class MainForm : Form {
 
         private readonly Stopwatch _stopwatch = new Stopwatch();
-        private SvgController _controller = new SvgController();
-
-        private string gcpath = @"../../svg/gc.svg";
-        private string snespath = @"../svg/gc.svg";
-        private string n64path = @"../svg/gc.svg";
+        private SvgController _controller;
 
         double timestamp;
         int frames;
@@ -24,8 +22,7 @@ namespace MUNIA {
         public Point MouseLocation { get; private set; }
         public Point MouseClickLocation { get; set; }
         public bool MouseClicked { get; private set; }
-
-
+        
         public MainForm() {
             InitializeComponent();
             glControl.Resize += GlControl1OnResize;
@@ -48,20 +45,26 @@ namespace MUNIA {
 
             var pc = _controller.Project(MouseClickLocation, glControl.Width, glControl.Height);
             // Debug.WriteLine("Clicked @ ({0},{1})", pc.X, pc.Y);
-
-            var bs = _controller.Buttons.Select(x => Tuple.Create(x, _controller.GetBounds(x)))
-                .OrderBy(x => x.Item2.Width * x.Item2.Height);
-
-            var b = bs.FirstOrDefault(x => x.Item2.Contains(pc));
-            if (b != null) {
-                _controller.Toggled[b.Item1] = !_controller.Toggled[b.Item1];
-            }
-
+            
             MouseClicked = false;
         }
 
         private void MainForm_Shown(object sender, EventArgs e) {
-            _controller.Load(gcpath);
+            foreach (string svgPath in Directory.GetFiles("./svg", "*.svg")) {
+                var svgc = new SvgController();
+                var res = svgc.Load(svgPath);
+                if (res != SvgController.LoadResult.Fail) {
+                    var tsmi = new ToolStripMenuItem(svgc.DeviceName);
+                    tsmi.Enabled = res == SvgController.LoadResult.Ok;
+                    tsmi.Click += delegate {
+                        _controller = svgc;
+                        _controller?.Render(glControl.Width, glControl.Height);
+                        svgc.Activate(Handle);
+                    };
+                    tsmiController.DropDownItems.Add(tsmi);
+                }
+            }
+
             Application.Idle += OnApplicationOnIdle;
             GlControl1OnResize(this, EventArgs.Empty);
         }
@@ -94,9 +97,23 @@ namespace MUNIA {
             }
         }
 
+        /// <summary>
+        /// Hook in HID handler.
+        /// </summary>
+        /// <param name="message"></param>
+        protected override void WndProc(ref Message message) {
+            switch (message.Msg) {
+                case Const.WM_INPUT:
+                    // Returning zero means we processed that message
+                    message.Result = IntPtr.Zero;
+                    _controller?.WndProc(ref message);
+                    break;
+            }
+            base.WndProc(ref message);
+        }
+
         private void Render() {
             glControl.MakeCurrent();
-
             GL.ClearColor(Color.FromArgb(0, glControl.BackColor));
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
@@ -105,56 +122,17 @@ namespace MUNIA {
 
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
-            GL.Ortho(0, glControl.Width, glControl.Height, 0, 0.0, 4.0);
-
-            GL.Enable(EnableCap.Texture2D);
-            GL.BindTexture(TextureTarget.Texture2D, _controller.TextureHandle);
-
-            RenderTexture(0, glControl.Width, 0, glControl.Height);
-
-            foreach (SvgGroup b in _controller.Buttons) {
-                if (!_controller.Toggled[b]) continue;
-                var t = _controller.ToggledTextures[b];
-                GL.BindTexture(TextureTarget.Texture2D, t.Item2);
-
-                RenderTexture(t.Item1.X, t.Item1.X + t.Item1.Width, 
-                    t.Item1.Y, t.Item1.Y + t.Item1.Height);
-            }
+            GL.Ortho(0, Width, Height, 0, 0.0, 4.0);
+            _controller?.Render();
 
             glControl.SwapBuffers();
         }
 
-        private static void RenderTexture(float l, float r, float t, float b) {
-            GL.Begin(PrimitiveType.Quads);
-            GL.TexCoord2(0, 0);
-            GL.Vertex2(l, t);
-            GL.TexCoord2(1, 0);
-            GL.Vertex2(r, t);
-            GL.TexCoord2(1, 1);
-            GL.Vertex2(r, b);
-            GL.TexCoord2(0, 1);
-            GL.Vertex2(l, b);
-            GL.End();
-        }
 
         private void GlControl1OnResize(object sender, EventArgs e) {
-            _controller.Render(glControl.Width, glControl.Height);
+            _controller?.Render(glControl.Width, glControl.Height);
             GL.Viewport(0, 0, glControl.Width, glControl.Height);
         }
-
-        private void somsToolStripMenuItem_Click(object sender, EventArgs e) {
-            _controller.Load(snespath);
-            GlControl1OnResize(this, EventArgs.Empty);
-        }
-
-        private void gCToolStripMenuItem_Click(object sender, EventArgs e) {
-            _controller.Load(gcpath);
-            GlControl1OnResize(this, EventArgs.Empty);
-        }
-
-        private void n64ToolStripMenuItem_Click(object sender, EventArgs e) {
-            _controller.Load(n64path);
-            GlControl1OnResize(this, EventArgs.Empty);
-        }
+        
     }
 }
