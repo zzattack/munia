@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 
-namespace GlControlBasics {
+namespace MUNIA {
     public static class GLGraphics {
 
         public static int CreateTexture(Bitmap bmp) {
