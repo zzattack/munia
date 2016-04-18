@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg xmlns:munia="http://www.munia.io/namespaces/munia" xmlns:osb="http://www.openswatchbook.org/uri/2009/osb" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" version="1.1" width="3912.7253" height="2771.842" viewBox="0 0 3912.7253 2771.842" overflow="visible" enable-background="new 0 0 6200 3000" xml:space="preserve" id="svg3336" inkscape:version="0.91 r13725" sodipodi:docname="gc.svg" style="overflow:visible" inkscape:export-filename="C:\Users\Marcel\Desktop\padpyght-master\padpyght-master\MUNIA\Controller_Pressed.png" inkscape:export-xdpi="24.141798" inkscape:export-ydpi="24.141798">
-	<sodipodi:namedview pagecolor="#000000" bordercolor="#666666" borderopacity="1" objecttolerance="10" gridtolerance="10" guidetolerance="10" inkscape:pageopacity="0" inkscape:pageshadow="2" inkscape:window-width="1920" inkscape:window-height="1147" id="namedview3773" showgrid="false" inkscape:zoom="0.17392546" inkscape:cx="1565.8867" inkscape:cy="2898.873" inkscape:window-x="1072" inkscape:window-y="-8" inkscape:window-maximized="1" inkscape:current-layer="Controller" showguides="true" fit-margin-top="50" fit-margin-left="50" fit-margin-bottom="50" fit-margin-right="50"/>
+	<sodipodi:namedview pagecolor="#000000" bordercolor="#666666" borderopacity="1" objecttolerance="10" gridtolerance="10" guidetolerance="10" inkscape:pageopacity="0" inkscape:pageshadow="2" inkscape:window-width="1920" inkscape:window-height="1147" id="namedview3773" showgrid="false" inkscape:zoom="0.34785091" inkscape:cx="2086.4986" inkscape:cy="2707.9169" inkscape:window-x="1072" inkscape:window-y="-8" inkscape:window-maximized="1" inkscape:current-layer="Shoulder Buttons" showguides="true" fit-margin-top="50" fit-margin-left="50" fit-margin-bottom="50" fit-margin-right="50"/>
 	<munia:info munia:device-name="NinHID NGC"/>
 	<metadata id="Metadata">
 		<rdf:RDF>
@@ -68,7 +68,7 @@
 		<radialGradient inkscape:collect="always" xlink:href="#linearGradient4352" id="radialGradient4371" gradientUnits="userSpaceOnUse" gradientTransform="matrix(1,0,0,0.95203092,0,35.377591)" cx="3130.4919" cy="737.50824" fx="3130.4919" fy="737.50824" r="545.48181"/>
 	</defs>
 	<g inkscape:groupmode="layer" id="Shoulder Buttons" inkscape:label="Shoulder Buttons" style="display:inline;opacity:0.93000034" transform="translate(-1267.9533,-78)">
-		<g id="L" munia:trigger-id="0" munia:trigger-axis="5" munia:offset-scale="1.0" transform="translate(0,-24)">
+		<g id="L" munia:trigger-id="0" munia:trigger-axis="4" munia:z-index="-2" munia:offset-scale="1.2" transform="translate(0,-66)">
 			<ellipse cx="2016" cy="646" rx="381.55499" ry="410.27399" id="ellipse3348" style="fill:#c8c8c8;fill-opacity:1;stroke:#969696;stroke-width:16;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"/>
 			<text xml:space="preserve" style="font-style:normal;font-weight:normal;font-size:64.93060303px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#969696;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" x="2550.9373" y="312.34351" id="text4368" sodipodi:linespacing="125%" transform="scale(0.73837619,1.3543232)">
 				<tspan sodipodi:role="line" x="2550.9373" y="312.34351" id="tspan4370">
@@ -77,7 +77,7 @@
 				</tspan>
 			</text>
 		</g>
-		<g id="R" munia:trigger-id="1" munia:trigger-axis="6" munia:offset-scale="1.0" transform="translate(0,-24)">
+		<g id="R" munia:trigger-id="1" munia:trigger-axis="5" munia:z-index="-2" munia:offset-scale="1.2" transform="translate(0,-66)">
 			<ellipse cx="4444" cy="647" rx="381.55499" ry="410.27399" id="ellipse3363" style="fill:#c8c8c8;fill-opacity:1;stroke:#969696;stroke-width:16;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"/>
 			<text xml:space="preserve" style="font-style:normal;font-weight:normal;font-size:64.93060303px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#969696;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" x="6059.7495" y="299.05273" id="text4360" sodipodi:linespacing="125%" transform="scale(0.73837619,1.3543232)">
 				<tspan sodipodi:role="line" x="6059.7495" y="299.05273" id="tspan4362">
@@ -86,16 +86,16 @@
 				</tspan>
 			</text>
 		</g>
-		<g id="L Pressed" munia:button-id="5" munia:button-state="pressed" transform="matrix(0.87185404,0,0,0.89671213,-710.77457,-67.758776)" style="fill:url(#radialGradient4340);fill-opacity:1;stroke:none">
+		<g id="L Pressed" munia:button-id="5" munia:button-state="pressed" munia:z-index="-3" style="fill:url(#radialGradient4340);fill-opacity:1;stroke:none" transform="translate(-1106.7491,-117.70132)">
 			<ellipse cx="3130.4919" cy="737.50824" rx="545.48181" ry="519.31555" id="ellipse3348-1" style="display:inline;opacity:0.93000034;fill:url(#radialGradient4371);fill-opacity:1;stroke:none;stroke-width:21.52336884;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"/>
 		</g>
-		<g id="R Pressed" munia:button-id="6" munia:button-state="pressed" transform="translate(2675.1475,-80.918032)">
+		<g id="R Pressed" munia:button-id="6" munia:button-state="pressed" munia:z-index="-3" transform="translate(2675.1475,-80.918032)">
 			<ellipse cx="1772.5903" cy="662.29517" rx="475.58054" ry="465.67654" id="ellipse3348-1-1" style="opacity:0.93000034;fill:url(#radialGradient4340-6);fill-opacity:1;stroke:none;stroke-width:21.52336884;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"/>
 		</g>
 	</g>
 	<g inkscape:groupmode="layer" id="Z Button" inkscape:label="Z Button" style="display:inline" transform="translate(-1267.9533,-78)">
-		<path id="Z" munia:button-id="7" munia:button-state="released" d="m 4862.77,543.293 c -8.855,-19.636 -136.71,-106.2 -302.801,-151.075 -166.091,-44.875 -431.57,-73.446 -455.203,-64.418 -23.633,9.028 -20.008,92.95 -20.008,92.95 l 730.548,228.689 c 0,0 56.319,-86.51 47.464,-106.146 z" style="fill:#5600ae;stroke:#490094;stroke-width:16;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" inkscape:connector-curvature="0"/>
-		<path id="Z Pressed" munia:button-id="7" munia:button-state="pressed" inkscape:connector-curvature="0" style="fill:#b299fb;fill-opacity:1;stroke:#b299fb;stroke-width:16;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="m 4862.77,543.293 c -8.855,-19.636 -136.71,-106.2 -302.801,-151.075 -166.091,-44.875 -431.57,-73.446 -455.203,-64.418 -23.633,9.028 -20.008,92.95 -20.008,92.95 l 730.548,228.689 c 0,0 56.319,-86.51 47.464,-106.146 z"/>
+		<path id="Z" munia:button-id="7" munia:button-state="released" munia:z-index="-1" d="m 4862.77,543.293 c -8.855,-19.636 -136.71,-106.2 -302.801,-151.075 -166.091,-44.875 -431.57,-73.446 -455.203,-64.418 -23.633,9.028 -20.008,92.95 -20.008,92.95 l 730.548,228.689 c 0,0 56.319,-86.51 47.464,-106.146 z" style="fill:#5600ae;stroke:#490094;stroke-width:16;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" inkscape:connector-curvature="0"/>
+		<path id="Z Pressed" munia:button-id="7" munia:button-state="pressed" munia:z-index="-1" inkscape:connector-curvature="0" style="fill:#b299fb;fill-opacity:1;stroke:#b299fb;stroke-width:16;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="m 4862.77,543.293 c -8.855,-19.636 -136.71,-106.2 -302.801,-151.075 -166.091,-44.875 -431.57,-73.446 -455.203,-64.418 -23.633,9.028 -20.008,92.95 -20.008,92.95 l 730.548,228.689 c 0,0 56.319,-86.51 47.464,-106.146 z"/>
 	</g>
 	<g inkscape:groupmode="layer" id="Controller" inkscape:label="Controller" style="display:inline" transform="translate(-1267.9533,-78)">
 		<path d="m 3228,136 c -767.991,0 -1504,388 -1504,388 l 460,1390 c 0,0 194.991,-457.373 1044,-457.373 779.869,0 1036,437.373 1036,437.373 L 4700,516 c 0,0 -719.978,-380 -1472,-380 z" id="Center" style="fill:#62499d;fill-opacity:1;stroke:#000000;stroke-width:16;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" inkscape:connector-curvature="0"/>
@@ -124,13 +124,13 @@
 		<path id="C-Stick Base" inkscape:transform-center-x="-9.8675896e-005" inkscape:transform-center-y="-1.821091" d="m 3826.7214,2283.1129 -215.3764,-89.2118 -89.2118,-215.3764 89.2118,-215.3764 215.3764,-89.2119 215.3764,89.2119 89.2119,215.3764 -89.2119,215.3764 z" inkscape:randomized="0" inkscape:rounded="0" inkscape:flatsided="true" sodipodi:arg2="1.9634954" sodipodi:arg1="1.5707963" sodipodi:r2="273.85132" sodipodi:r1="304.58823" sodipodi:cy="1978.5247" sodipodi:cx="3826.7214" sodipodi:sides="8" style="fill:url(#radialGradient5069);fill-opacity:1;stroke:#543f88;stroke-width:14.33399963;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" sodipodi:type="star"/>
 	</g>
 	<g inkscape:groupmode="layer" id="Sticks" inkscape:label="Sticks" style="display:inline" transform="translate(-1267.9533,-78)">
-		<g id="Control Stick" munia:stick-id="0" munia:axis-h="0" munia:axis-v="1" munia:offset-scale="1.0" transform="translate(8.6180222,-28.433458)">
+		<g id="Control Stick" munia:stick-id="0" munia:axis-h="0" munia:axis-v="1" munia:offset-scale="2.0" transform="translate(8.6180222,-28.433458)">
 			<ellipse cx="2055.343" cy="1140.4144" rx="248.07381" ry="238.42455" id="ellipse3475" style="fill:#eeeeee;stroke:#a4a4a4;stroke-width:16.94153214;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"/>
 			<ellipse cx="2053.6677" cy="1141.4341" rx="211.16457" ry="199.39655" id="ellipse3485" style="fill:#eeeeee;stroke:#c9c9c9;stroke-width:16.94153214;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"/>
 			<ellipse cx="2053.4849" cy="1147.0046" rx="131.24287" ry="123.92943" id="ellipse3495" style="fill:#eeeeee;stroke:#c9c9c9;stroke-width:16.94153214;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"/>
 			<ellipse cx="2055.7612" cy="1146.9158" rx="44.596466" ry="42.111355" id="ellipse3505" style="fill:#eeeeee;stroke:#c9c9c9;stroke-width:16.94153214;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"/>
 		</g>
-		<g id="C-Stick" munia:stick-id="1" munia:axis-h="2" munia:axis-v="3" munia:offset-scale="1.0" transform="translate(2.7214355,2.5246582)">
+		<g id="C-Stick" munia:stick-id="1" munia:axis-h="2" munia:axis-v="3" munia:offset-scale="2.0" transform="translate(2.7214355,2.5246582)">
 			<circle cx="3824" cy="1976" r="144" id="circle3526" style="fill:#ffc900;fill-opacity:1;stroke:#caa000;stroke-width:16;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"/>
 			<ellipse style="fill:none;fill-opacity:1;stroke:#eba400;stroke-width:22.8156929;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" id="path4902" cx="3840.7258" cy="1971.5422" rx="42.84795" ry="47.878845" clip-path="url(#clipPath4932)" transform="translate(-0.6122751,4.4577637)"/>
 		</g>
