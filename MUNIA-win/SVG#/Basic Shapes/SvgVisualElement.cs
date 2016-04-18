@@ -111,7 +111,7 @@ namespace Svg
 
         private void Render(ISvgRenderer renderer, bool renderFilter)
         {
-            if (this.Visible && this.Displayable && this.PushTransforms(renderer) &&
+            if (this.Visible && /*this.Displayable && */this.PushTransforms(renderer) &&
                 (!Renderable || this.Path(renderer) != null))
             {
                 bool renderNormal = true;

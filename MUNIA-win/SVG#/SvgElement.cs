@@ -101,7 +101,7 @@ namespace Svg
         /// <summary>
         /// Gets the name of the element.
         /// </summary>
-        protected internal string ElementName
+        public string ElementName
         {
             get
             {
