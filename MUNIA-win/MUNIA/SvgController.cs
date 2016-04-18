@@ -150,11 +150,11 @@ namespace MUNIA {
 			var btn = Buttons[i];
 			if (_inputDevice.Buttons[i] && btn.Pressed != null) {
 				GL.BindTexture(TextureTarget.Texture2D, btn.PressedTexture);
-				RenderTexture(btn.Bounds, btn.Z);
+				RenderTexture(btn.Bounds);
 			}
 			else if (!_inputDevice.Buttons[i] && btn.Element != null) {
 				GL.BindTexture(TextureTarget.Texture2D, btn.Texture);
-				RenderTexture(btn.Bounds, btn.Z);
+				RenderTexture(btn.Bounds);
 			}
 		}
 		private void RenderStick(int i) {
@@ -166,7 +166,7 @@ namespace MUNIA {
 			y *= _svgDocument.Height / _dimensions.Height * stick.OffsetScale;
 			r.Offset(new PointF(x, y));
 			GL.BindTexture(TextureTarget.Texture2D, stick.Texture);
-			RenderTexture(r, stick.Z);
+			RenderTexture(r);
 		}
 
 		private void RenderTrigger(int i) {
@@ -176,7 +176,7 @@ namespace MUNIA {
 			o *= _svgDocument.Height / _dimensions.Height * trigger.OffsetScale;
 			r.Offset(new PointF(0, o));
 			GL.BindTexture(TextureTarget.Texture2D, trigger.Texture);
-			RenderTexture(r, trigger.Z);
+			RenderTexture(r);
 		}
 
 		private void RenderBase(int width, int height) {
@@ -242,8 +242,8 @@ namespace MUNIA {
 
 			if (boundsScaled.Left < 0f) boundsScaled.X = 0f;
 			if (boundsScaled.Top < 0f) boundsScaled.Y = 0f;
-			//if (boundsScaled.Right > work.Width) boundsScaled.Width = work.Width - boundsScaled.Left;
-			//if (boundsScaled.Bottom > work.Height) boundsScaled.Height = work.Height - boundsScaled.Top;
+			if (boundsScaled.Right > work.Width) boundsScaled.Width = work.Width - boundsScaled.Left;
+			if (boundsScaled.Bottom > work.Height) boundsScaled.Height = work.Height - boundsScaled.Top;
 
 			// unhide temporarily 
 			SetVisibleToRoot(e, true);
@@ -275,20 +275,20 @@ namespace MUNIA {
 				SetVisibleToRoot(e.Parent, visible);
 		}
 
-		private void RenderTexture(RectangleF r, float z = 0f) {
-			RenderTexture(r.Left, r.Right, r.Top, r.Bottom, z);
+		private void RenderTexture(RectangleF r) {
+			RenderTexture(r.Left, r.Right, r.Top, r.Bottom);
 		}
 
-		private static void RenderTexture(float l, float r, float t, float b, float z = 0f) {
+		private static void RenderTexture(float l, float r, float t, float b) {
 			GL.Begin(PrimitiveType.Quads);
 			GL.TexCoord2(0, 0);
-			GL.Vertex3(l, t, z);
+			GL.Vertex2(l, t);
 			GL.TexCoord2(1, 0);
-			GL.Vertex3(r, t, z);
+			GL.Vertex2(r, t);
 			GL.TexCoord2(1, 1);
-			GL.Vertex3(r, b, z);
+			GL.Vertex2(r, b);
 			GL.TexCoord2(0, 1);
-			GL.Vertex3(l, b, z);
+			GL.Vertex2(l, b);
 			GL.End();
 		}
 
