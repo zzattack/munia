@@ -202,6 +202,9 @@ namespace MUNIA {
 			var baseImg = _svgDocument.Draw();
 			BaseTexture = GLGraphics.CreateTexture(baseImg);
 
+			// System.IO.Directory.CreateDirectory(SkinName);
+			// baseImg.Save(SkinName + "/base_texture.png");
+
 			// hide everything
 			SetVisibleRecursive(_svgDocument, false);
 			var work = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
@@ -250,6 +253,8 @@ namespace MUNIA {
 				SetVisibleRecursive(e, true);
 
 				_svgDocument.Draw(work);
+				// work.Clone(boundsScaled, work.PixelFormat).Save(SkinName + "/" + e.ID + ".png");
+
 				ret = GLGraphics.CreateTexture(work.Clone(boundsScaled, work.PixelFormat));
 				using (Graphics g = Graphics.FromImage(work))
 					g.Clear(Color.Transparent);
