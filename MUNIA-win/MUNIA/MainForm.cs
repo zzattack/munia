@@ -4,9 +4,6 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using OpenTK.Graphics.OpenGL;
-using System.Linq;
-using Svg;
-using System.Threading;
 using SharpLib.Win32;
 
 namespace MUNIA {
@@ -26,29 +23,9 @@ namespace MUNIA {
         public MainForm() {
             InitializeComponent();
             glControl.Resize += GlControl1OnResize;
-            glControl.MouseClick += GlControl_Click;
-            glControl.MouseDoubleClick += GlControl_Click;
-            glControl.MouseMove += GlControl_MouseMove;
         }
-
-        private void GlControl_MouseMove(object sender, MouseEventArgs e) {
-            MouseLocation = e.Location;
-        }
-
-        private void GlControl_Click(object sender, MouseEventArgs e) {
-            MouseClicked = true;
-            MouseClickLocation = e.Location;
-        }
-
-        private void ResolveMouseClicks() {
-            if (!MouseClicked) return;
-
-            var pc = _controller.Project(MouseClickLocation, glControl.Width, glControl.Height);
-            // Debug.WriteLine("Clicked @ ({0},{1})", pc.X, pc.Y);
-            
-            MouseClicked = false;
-        }
-
+        
+        
         private void MainForm_Shown(object sender, EventArgs e) {
             foreach (string svgPath in Directory.GetFiles("./svg", "*.svg")) {
                 var svgc = new SvgController();
@@ -66,8 +43,12 @@ namespace MUNIA {
             }
 
             Application.Idle += OnApplicationOnIdle;
+
+#if DEBUG
+			tsmiController.DropDownItems[0].PerformClick();
             GlControl1OnResize(this, EventArgs.Empty);
-        }
+#endif
+		}
         
         private void glControl_Load(object sender, EventArgs e) {
             glControl.MakeCurrent();
@@ -81,8 +62,6 @@ namespace MUNIA {
                 _stopwatch.Restart();
                 Render();
                 frames++;
-
-                ResolveMouseClicks();
 
                 // Every second, update the frames_per_second count
                 double now = _stopwatch.Elapsed.TotalSeconds;
