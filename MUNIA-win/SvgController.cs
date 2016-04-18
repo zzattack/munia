@@ -1,4 +1,0 @@
-﻿namespace MUNIA {
-	class SvgController {
-	}
-}
