@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Drawing;
 using SharpLib.Hid;
 
 namespace MuniaInput {
@@ -42,9 +41,9 @@ namespace MuniaInput {
             _axes[0] = ev.InputReport[3] - 128;
             _axes[1] = ev.InputReport[4] - 128;
             _axes[2] = ev.InputReport[5] - 128;
-            _axes[3] = ev.InputReport[4] - 128;
-            _axes[5] = ev.InputReport[7];
-            _axes[6] = ev.InputReport[8];
+            _axes[3] = ev.InputReport[6] - 128;
+            _axes[4] = ev.InputReport[7];
+            _axes[5] = ev.InputReport[8];
 
             return true;
         }
