@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Globalization;
+﻿using System.Collections.Generic;
+using MuniaInput;
 using SharpLib.Hid;
 
-namespace MuniaInput {
+namespace MUNIA.Controllers {
     public class SnesController : MuniaController {
         private readonly List<bool> _buttons = new List<bool>(12); 
 

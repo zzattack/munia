@@ -1,12 +1,6 @@
 ﻿
 using System;
-using System.Drawing;
-using System.Linq;
-using System.Threading;
 using System.Windows.Forms;
-using OpenTK;
-using OpenTK.Graphics.OpenGL;
-using OpenTK.Input;
 
 namespace MUNIA {
 
