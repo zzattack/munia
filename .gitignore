@@ -1,5 +1,3 @@
-build
-dist
 bin
 obj
 *.suo
@@ -18,10 +16,13 @@ licenses.licx
 *.sym
 .nuget
 Makefile-genesis.properties
-/ninhid.X/Thumbs.db
 Thumbs.db
-/ninhid.X/nbproject/*.mk
-/ninhid.X/disassembly/listing.disasm
-/ninhid.X/nbproject/private/SuppressibleMessageMemo.properties
-/ninhid.X/funclist
-/ninhid.X/nbproject/Package-release.bash
+
+# mplab projects
+dist
+build
+Makefile-*
+Package-*
+private
+funclist
+disassembly
