@@ -239,12 +239,8 @@ namespace MUNIA {
 			var s = Unproject(new PointF(bounds.Right, bounds.Bottom));
 			var boundsScaled = new RectangleF(l.X, l.Y, s.X - l.X, s.Y - l.Y);
 			boundsScaled.Inflate(3f, 3f);
-
-			if (boundsScaled.Left < 0f) boundsScaled.X = 0f;
-			if (boundsScaled.Top < 0f) boundsScaled.Y = 0f;
-			if (boundsScaled.Right > work.Width) boundsScaled.Width = work.Width - boundsScaled.Left;
-			if (boundsScaled.Bottom > work.Height) boundsScaled.Height = work.Height - boundsScaled.Top;
-
+			boundsScaled.Intersect(new RectangleF(0f, 0f, work.Width, work.Height));
+			
 			// unhide temporarily 
 			SetVisibleToRoot(e, true);
 			SetVisibleRecursive(e, true);
@@ -337,14 +333,17 @@ namespace MUNIA {
 
 		public RectangleF CalcBounds(SvgElement x) {
 			var b = (x as ISvgBoundable).Bounds;
+			var points = new PointF[2];
+			points[0] = b.Location;
+			points[1] = b.Location + b.Size;
+
 			// x = x.Parent;
 			while (x is SvgVisualElement) {
 				var m = x.Transforms.GetMatrix();
-
-				b.Offset(m.OffsetX, m.OffsetY);
+				m.TransformPoints(points);
 				x = x.Parent;
 			}
-			return b;
+			return new RectangleF(points[0].X, points[0].Y, points[1].X, points[1].Y);
 		}
 
 		public void WndProc(ref Message message) {
