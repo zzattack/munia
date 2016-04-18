@@ -4,6 +4,7 @@ using Svg;
 using System.Linq;
 using System;
 using System.Diagnostics;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using MuniaInput;
 using OpenTK;
@@ -19,6 +20,7 @@ namespace MUNIA {
 		private MuniaController _inputDevice;
 
 		public string DeviceName { get; set; }
+		public string SkinName { get; set; }
 		public List<Button> Buttons = new List<Button>();
 		public List<Stick> Sticks = new List<Stick>();
 		public List<Trigger> Triggers = new List<Trigger>();
@@ -67,6 +69,7 @@ namespace MUNIA {
 			foreach (var c in e.Children) {
 				if (c.ElementName == "info") {
 					DeviceName = c.CustomAttributes["device-name"];
+					SkinName = c.CustomAttributes["skin-name"];
 				}
 
 				if (c.ContainsAttribute("button-id")) {
@@ -150,7 +153,7 @@ namespace MUNIA {
 			var btn = Buttons[i];
 			if (_inputDevice.Buttons[i] && btn.Pressed != null) {
 				GL.BindTexture(TextureTarget.Texture2D, btn.PressedTexture);
-				RenderTexture(btn.Bounds);
+				RenderTexture(btn.PressedBounds);
 			}
 			else if (!_inputDevice.Buttons[i] && btn.Element != null) {
 				GL.BindTexture(TextureTarget.Texture2D, btn.Texture);
@@ -207,7 +210,7 @@ namespace MUNIA {
 				if (btn.Pressed != null) {
 					var tb = SvgElementToTexture(work, btn.Pressed);
 					btn.PressedTexture = tb.Item1;
-					btn.Bounds = tb.Item2;
+					btn.PressedBounds = tb.Item2;
 				}
 				if (btn.Element != null) {
 					var tb = SvgElementToTexture(work, btn.Element);
@@ -233,26 +236,27 @@ namespace MUNIA {
 			}
 		}
 
-		private Tuple<int, RectangleF> SvgElementToTexture(Bitmap work, SvgElement e) {
+		private Tuple<int, RectangleF> SvgElementToTexture(Bitmap work, SvgVisualElement e) {
 			var bounds = CalcBounds(e);
 			var l = Unproject(bounds.Location);
 			var s = Unproject(new PointF(bounds.Right, bounds.Bottom));
-			var boundsScaled = new RectangleF(l.X, l.Y, s.X - l.X, s.Y - l.Y);
-			boundsScaled.Inflate(3f, 3f);
+			var boundsScaled = RectangleF.FromLTRB(l.X, l.Y, s.X, s.Y);
+			boundsScaled.Inflate(5f, 5f); // small margins
 			boundsScaled.Intersect(new RectangleF(0f, 0f, work.Width, work.Height));
-			
-			// unhide temporarily 
-			SetVisibleToRoot(e, true);
-			SetVisibleRecursive(e, true);
+			int ret = -1;
+			if (!boundsScaled.IsEmpty) {
+				// unhide temporarily
+				SetVisibleToRoot(e, true);
+				SetVisibleRecursive(e, true);
 
-			_svgDocument.Draw(work);
-			int ret = GLGraphics.CreateTexture(work.Clone(boundsScaled, work.PixelFormat));
-			using (Graphics g = Graphics.FromImage(work))
-				g.Clear(Color.Transparent);
+				_svgDocument.Draw(work);
+				ret = GLGraphics.CreateTexture(work.Clone(boundsScaled, work.PixelFormat));
+				using (Graphics g = Graphics.FromImage(work))
+					g.Clear(Color.Transparent);
 
-			SetVisibleRecursive(e, false);
-			SetVisibleToRoot(e, false);
-
+				SetVisibleRecursive(e, false);
+				SetVisibleToRoot(e, false);
+			}
 			return Tuple.Create(ret, boundsScaled);
 		}
 
@@ -288,7 +292,7 @@ namespace MUNIA {
 			GL.End();
 		}
 
-		internal PointF Project(PointF p, float width, float height) {
+		private PointF Project(PointF p, float width, float height) {
 			float svgAR = _dimensions.Width / _dimensions.Height;
 			float imgAR = width / height;
 			int dx = 0, dy = 0;
@@ -333,9 +337,11 @@ namespace MUNIA {
 
 		public RectangleF CalcBounds(SvgElement x) {
 			var b = (x as ISvgBoundable).Bounds;
-			var points = new PointF[2];
-			points[0] = b.Location;
-			points[1] = b.Location + b.Size;
+			var points = new PointF[4];
+			points[0] = new PointF(b.Left, b.Top);
+			points[1] = new PointF(b.Right, b.Top);
+			points[2] = new PointF(b.Left, b.Bottom);
+			points[3] = new PointF(b.Right, b.Bottom);
 
 			// x = x.Parent;
 			while (x is SvgVisualElement) {
@@ -343,7 +349,11 @@ namespace MUNIA {
 				m.TransformPoints(points);
 				x = x.Parent;
 			}
-			return new RectangleF(points[0].X, points[0].Y, points[1].X, points[1].Y);
+			float minX = points.Min(p => p.X);
+			float minY = points.Min(p => p.Y);
+			float maxX = points.Max(p => p.X);
+			float maxY = points.Max(p => p.Y);
+			return RectangleF.FromLTRB(minX, minY, maxX, maxY);
 		}
 
 		public void WndProc(ref Message message) {
@@ -363,6 +373,7 @@ namespace MUNIA {
 	public class Button : ControllerItem {
 		public SvgVisualElement Pressed;
 		public int PressedTexture = -1;
+		public RectangleF PressedBounds;
 	}
 	public class Stick : ControllerItem {
 		public float OffsetScale;
