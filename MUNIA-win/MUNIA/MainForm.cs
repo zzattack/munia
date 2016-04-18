@@ -54,7 +54,7 @@ namespace MUNIA {
             glControl.MakeCurrent();
             glControl.VSync = true;
             GL.Enable(EnableCap.Blend);
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+            GL.BlendFunc(BlendingFactorSrc.One, BlendingFactorDest.OneMinusSrcAlpha);
         }
 
         private void OnApplicationOnIdle(object s, EventArgs a) {
