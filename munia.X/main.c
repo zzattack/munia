@@ -12,6 +12,7 @@
 #include "gamepad.h"
 #include "menu.h"
 #include "buttonchecker.h"
+#include "memory.h"
 
 void init_random();
 void init_pll();
@@ -53,8 +54,7 @@ void main() {
     
     load_config();
     apply_config();
-    init_interrupts();
-    
+    init_interrupts();    
     
 	while (1) {
         ClrWdt();
@@ -213,12 +213,12 @@ void high_priority interrupt isr_high() {
 void load_config() {
     uint8_t* w = (uint8_t*)&config;
     for (uint8_t i = 0; i < sizeof(config); i++)
-        *w++ = eeprom_read(i);
+        *w++ = DATAEE_ReadByte(i);
 }
 void save_config() {
     uint8_t* r = (uint8_t*)&config;
     for (uint8_t i = 0; i < sizeof(config); i++)
-        eeprom_write(i, *r++);
+        DATAEE_WriteByte(i, *r++);
 }
 
 void apply_config() {    
