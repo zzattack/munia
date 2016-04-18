@@ -5,6 +5,7 @@ using System.IO;
 using System.Windows.Forms;
 using OpenTK.Graphics.OpenGL;
 using SharpLib.Win32;
+using SPAA05.Shared.USB;
 
 namespace MUNIA {
     public partial class MainForm : Form {
@@ -23,34 +24,40 @@ namespace MUNIA {
         public MainForm() {
             InitializeComponent();
             glControl.Resize += GlControl1OnResize;
-        }
-        
+			UsbNotification.DeviceArrival += (sender, args) => BuildMenu();
+			UsbNotification.DeviceRemovalComplete += (sender, args) => BuildMenu();
+		}
         
         private void MainForm_Shown(object sender, EventArgs e) {
-            foreach (string svgPath in Directory.GetFiles("./svg", "*.svg")) {
-                var svgc = new SvgController();
-                var res = svgc.Load(svgPath);
-                if (res != SvgController.LoadResult.Fail) {
-                    var tsmi = new ToolStripMenuItem(string.Format("{0} ({1})", svgc.SkinName, svgc.DeviceName));
-                    tsmi.Enabled = res == SvgController.LoadResult.Ok;
-                    tsmi.Click += delegate {
-                        _controller = svgc;
-                        _controller?.Render(glControl.Width, glControl.Height);
-                        svgc.Activate(Handle);
-                    };
-                    tsmiController.DropDownItems.Add(tsmi);
-                }
-            }
+			BuildMenu();
 
-            Application.Idle += OnApplicationOnIdle;
+			Application.Idle += OnApplicationOnIdle;
 
 #if DEBUG
 			tsmiController.DropDownItems[0].PerformClick();
-            GlControl1OnResize(this, EventArgs.Empty);
+			GlControl1OnResize(this, EventArgs.Empty);
 #endif
 		}
-        
-        private void glControl_Load(object sender, EventArgs e) {
+
+		private void BuildMenu() {
+			tsmiController.DropDownItems.Clear();
+			foreach (string svgPath in Directory.GetFiles("./skins", "*.svg")) {
+				var svgc = new SvgController();
+				var res = svgc.Load(svgPath);
+				if (res != SvgController.LoadResult.Fail) {
+					var tsmi = new ToolStripMenuItem(string.Format("{0} ({1})", svgc.SkinName, svgc.DeviceName));
+					tsmi.Enabled = res == SvgController.LoadResult.Ok;
+					tsmi.Click += delegate {
+						_controller = svgc;
+						_controller?.Render(glControl.Width, glControl.Height);
+						svgc.Activate(Handle);
+					};
+					tsmiController.DropDownItems.Add(tsmi);
+				}
+			}
+		}
+
+		private void glControl_Load(object sender, EventArgs e) {
             glControl.MakeCurrent();
             glControl.VSync = true;
             GL.Enable(EnableCap.Blend);
