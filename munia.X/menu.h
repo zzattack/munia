@@ -13,7 +13,7 @@ enum __menu_pages {
     MENU_PAGE_COUNT,
 };
 enum __menu_command {
-    next_page, prev_page, left, right, confirm, cancel, exit,
+    mc_next_page, mc_prev_page, mc_left, mc_right, mc_confirm, mc_cancel, mc_exit
 };
 
 // this is where the input is redirected to

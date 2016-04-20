@@ -52,9 +52,14 @@ void main() {
     bcInit();
     lcd_setup();
     
+    __delay_ms(10);
     load_config();
     apply_config();
     init_interrupts();    
+    
+#ifdef DEBUG
+    menu_enter();
+#endif
     
 	while (1) {
         ClrWdt();
@@ -214,7 +219,7 @@ void load_config() {
     uint8_t* w = (uint8_t*)&config;
     for (uint8_t i = 0; i < sizeof(config); i++)
         *w++ = DATAEE_ReadByte(i);
-}
+    }
 void save_config() {
     uint8_t* r = (uint8_t*)&config;
     for (uint8_t i = 0; i < sizeof(config); i++)
