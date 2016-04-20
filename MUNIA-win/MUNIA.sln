@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MUNIA", "MUNIA\MUNIA.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Svg", "SVG#\Svg.csproj", "{886A98C5-37C0-4E8B-885E-30C1D2F98B47}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MuniaInput", "MuniaInput\MuniaInput.csproj", "{5288D75E-C006-417B-AF05-D50125F9D06B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,6 +30,10 @@ Global
 		{886A98C5-37C0-4E8B-885E-30C1D2F98B47}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{886A98C5-37C0-4E8B-885E-30C1D2F98B47}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{886A98C5-37C0-4E8B-885E-30C1D2F98B47}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5288D75E-C006-417B-AF05-D50125F9D06B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5288D75E-C006-417B-AF05-D50125F9D06B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5288D75E-C006-417B-AF05-D50125F9D06B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5288D75E-C006-417B-AF05-D50125F9D06B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
