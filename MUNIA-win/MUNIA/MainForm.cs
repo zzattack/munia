@@ -45,7 +45,7 @@ namespace MUNIA {
 				var svgc = new SvgController();
 				var res = svgc.Load(svgPath);
 				if (res != SvgController.LoadResult.Fail) {
-					var tsmi = new ToolStripMenuItem(string.Format("{0} ({1})", svgc.SkinName, svgc.DeviceName));
+					var tsmi = new ToolStripMenuItem($"{svgc.SkinName} ({svgc.DeviceName})");
 					tsmi.Enabled = res == SvgController.LoadResult.Ok;
 					tsmi.Click += delegate {
 						_controller = svgc;
