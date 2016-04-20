@@ -30,8 +30,8 @@ void menu_enter() {
     in_menu = true;
     
     // copy config
-    config_backup = config;
-    config_edit = config;
+    memcpy(&config_backup, &config, sizeof(config_t));
+    memcpy(&config_edit, &config, sizeof(config_t));
     
     config.ngc_mode = NGC_MODE_PC;
     config.n64_mode = N64_MODE_PC;
@@ -46,7 +46,7 @@ void menu_exit(bool save_settings) {
     in_menu = false;
     
     if (save_settings) {
-        config = config_edit;
+        memcpy(&config, &config_edit, sizeof(config_t));
         save_config();
     }
     else {
@@ -114,51 +114,51 @@ void menu_tasks() {
         return; 
     }
     if (snes_packet_available) {
-        if (joydata_snes.dpad == HAT_SWITCH_WEST) menu_press(left);
-        else if (joydata_snes.dpad == HAT_SWITCH_EAST) menu_press(right);
-        if (joydata_snes.l) menu_press(prev_page);
-        else if (joydata_snes.r) menu_press(next_page);
-        else if (joydata_snes.start) menu_press(exit);
-        else if (joydata_snes.a) menu_press(confirm);
-        else if (joydata_snes.b) menu_press(cancel);
+        if (joydata_snes.dpad == HAT_SWITCH_WEST) menu_press(mc_left);
+        else if (joydata_snes.dpad == HAT_SWITCH_EAST) menu_press(mc_right);
+        if (joydata_snes.l) menu_press(mc_prev_page);
+        else if (joydata_snes.r) menu_press(mc_next_page);
+        else if (joydata_snes.start) menu_press(mc_exit);
+        else if (joydata_snes.a) menu_press(mc_confirm);
+        else if (joydata_snes.b) menu_press(mc_cancel);
         snes_packet_available = false;
     }
     if (n64_packet_available) {
-        if (joydata_n64.dpad == HAT_SWITCH_WEST) menu_press(left);
-        else if (joydata_n64.dpad == HAT_SWITCH_EAST) menu_press(right);
-        if (joydata_n64.l) menu_press(prev_page);
-        else if (joydata_n64.r) menu_press(next_page);
-        else if (joydata_n64.start) menu_press(exit);
-        else if (joydata_n64.a) menu_press(confirm);
-        else if (joydata_n64.b) menu_press(cancel);
+        if (joydata_n64.dpad == HAT_SWITCH_WEST) menu_press(mc_left);
+        else if (joydata_n64.dpad == HAT_SWITCH_EAST) menu_press(mc_right);
+        if (joydata_n64.l) menu_press(mc_prev_page);
+        else if (joydata_n64.r) menu_press(mc_next_page);
+        else if (joydata_n64.start) menu_press(mc_exit);
+        else if (joydata_n64.a) menu_press(mc_confirm);
+        else if (joydata_n64.b) menu_press(mc_cancel);
         n64_packet_available = false;
     }
     else if (ngc_packet_available) {
-        if (joydata_ngc.hat == HAT_SWITCH_WEST) menu_press(left);
-        else if (joydata_ngc.hat == HAT_SWITCH_EAST) menu_press(right);
-        if (joydata_ngc.l) menu_press(prev_page);
-        else if (joydata_ngc.r) menu_press(next_page);
-        else if (joydata_ngc.start) menu_press(exit);
-        else if (joydata_ngc.a) menu_press(confirm);
-        else if (joydata_ngc.b) menu_press(cancel);
+        if (joydata_ngc.hat == HAT_SWITCH_WEST) menu_press(mc_left);
+        else if (joydata_ngc.hat == HAT_SWITCH_EAST) menu_press(mc_right);
+        if (joydata_ngc.l) menu_press(mc_prev_page);
+        else if (joydata_ngc.r) menu_press(mc_next_page);
+        else if (joydata_ngc.start) menu_press(mc_exit);
+        else if (joydata_ngc.a) menu_press(mc_confirm);
+        else if (joydata_ngc.b) menu_press(mc_cancel);
         ngc_packet_available = false;
     }
 }
 
 void menu_press(uint8_t command) {
     menu_next_press_delay = 250; // 250ms
-    if (command == prev_page) 
+    if (command == mc_prev_page) 
         menu_page((current_menu_page + MENU_PAGE_COUNT - 1) % MENU_PAGE_COUNT);
-    else if (command == next_page) 
+    else if (command == mc_next_page) 
         menu_page((current_menu_page + 1) % MENU_PAGE_COUNT);
-    else if (command == exit)
+    else if (command == mc_exit)
         menu_page(MENU_PAGE_EXIT);
-    else if (command == confirm && current_menu_page == MENU_PAGE_EXIT)
+    else if (command == mc_confirm && current_menu_page == MENU_PAGE_EXIT)
         menu_exit(true);
-    else if (command == cancel && current_menu_page == MENU_PAGE_EXIT)
+    else if (command == mc_cancel && current_menu_page == MENU_PAGE_EXIT)
         menu_exit(false);
     
-    else if (command == left) {
+    else if (command == mc_left) {
         if (submenu_idx == submenu_count - 2 && !menu_leftalign) 
             menu_leftalign = true;
         else {
@@ -169,7 +169,7 @@ void menu_press(uint8_t command) {
         }
         menu_display_setting();
     }
-    else if (command == right) {
+    else if (command == mc_right) {
         if (submenu_idx == 1 && menu_leftalign) 
             menu_leftalign = false;
         else {
