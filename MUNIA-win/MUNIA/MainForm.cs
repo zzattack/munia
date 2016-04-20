@@ -12,10 +12,9 @@ namespace MUNIA {
 
         private readonly Stopwatch _stopwatch = new Stopwatch();
         private SvgController _controller;
-
-        double timestamp;
-        int frames;
-        int fps;
+		private double _timestamp;
+		private int _frames;
+        private int _fps;
 
         public Point MouseLocation { get; private set; }
         public Point MouseClickLocation { get; set; }
@@ -60,22 +59,20 @@ namespace MUNIA {
 		private void glControl_Load(object sender, EventArgs e) {
             glControl.MakeCurrent();
             glControl.VSync = true;
-            GL.Enable(EnableCap.Blend);
-            GL.BlendFunc(BlendingFactorSrc.One, BlendingFactorDest.OneMinusSrcAlpha);
         }
 
         private void OnApplicationOnIdle(object s, EventArgs a) {
             while (glControl.IsIdle) {
                 _stopwatch.Restart();
                 Render();
-                frames++;
+                _frames++;
 
                 // Every second, update the frames_per_second count
                 double now = _stopwatch.Elapsed.TotalSeconds;
-                if (now - timestamp >= 1.0) {
-                    fps = frames;
-                    frames = 0;
-                    timestamp = now;
+                if (now - _timestamp >= 1.0) {
+                    _fps = _frames;
+                    _frames = 0;
+                    _timestamp = now;
                 }
 
                 _stopwatch.Stop();

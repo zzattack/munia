@@ -127,12 +127,15 @@ namespace MUNIA {
 		}
 
 		public void Render() {
-			GL.Enable(EnableCap.Texture2D);
 			List<Tuple<ControllerItem, int>> all = new List<Tuple<ControllerItem, int>>();
 			all.AddRange(Buttons.Select((b, idx) => Tuple.Create((ControllerItem)b, idx)));
 			all.AddRange(Sticks.Select((b, idx) => Tuple.Create((ControllerItem)b, idx)));
 			all.AddRange(Triggers.Select((b, idx) => Tuple.Create((ControllerItem)b, idx)));
 			all.Sort((tuple, tuple1) => tuple.Item1.Z.CompareTo(tuple1.Item1.Z));
+
+			GL.Enable(EnableCap.Blend);
+			GL.BlendFunc(BlendingFactorSrc.One, BlendingFactorDest.OneMinusSrcAlpha);
+			GL.Enable(EnableCap.Texture2D);
 
 			foreach (var ci in all.Where(x => x.Item1.Z < 0))
 				RenderItem(ci.Item1, ci.Item2);
@@ -142,6 +145,8 @@ namespace MUNIA {
 
 			foreach (var ci in all.Where(x => x.Item1.Z >= 0))
 				RenderItem(ci.Item1, ci.Item2);
+
+			GL.Disable(EnableCap.Blend);
 		}
 
 		private void RenderItem(ControllerItem i, int itemidx) {
