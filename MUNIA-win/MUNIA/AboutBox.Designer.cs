@@ -31,8 +31,8 @@ namespace MUNIA {
 			this.labelVersion = new System.Windows.Forms.Label();
 			this.labelCopyright = new System.Windows.Forms.Label();
 			this.labelCompanyName = new System.Windows.Forms.Label();
-			this.textBoxDescription = new System.Windows.Forms.RichTextBox();
 			this.okButton = new System.Windows.Forms.Button();
+			this.textBoxDescription = new MUNIA.RichTextBoxEx();
 			this.tableLayoutPanel.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).BeginInit();
 			this.SuspendLayout();
@@ -122,18 +122,6 @@ namespace MUNIA {
 			this.labelCompanyName.Text = "Company Name";
 			this.labelCompanyName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
-			// textBoxDescription
-			// 
-			this.textBoxDescription.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.textBoxDescription.Location = new System.Drawing.Point(143, 107);
-			this.textBoxDescription.Margin = new System.Windows.Forms.Padding(6, 3, 3, 3);
-			this.textBoxDescription.Name = "textBoxDescription";
-			this.textBoxDescription.ReadOnly = true;
-			this.textBoxDescription.Size = new System.Drawing.Size(271, 126);
-			this.textBoxDescription.TabIndex = 23;
-			this.textBoxDescription.TabStop = false;
-			this.textBoxDescription.Text = "Description";
-			// 
 			// okButton
 			// 
 			this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -144,6 +132,19 @@ namespace MUNIA {
 			this.okButton.TabIndex = 24;
 			this.okButton.Text = "&OK";
 			this.okButton.Click += new System.EventHandler(this.okButton_Click);
+			// 
+			// textBoxDescription
+			// 
+			this.textBoxDescription.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.textBoxDescription.Location = new System.Drawing.Point(143, 107);
+			this.textBoxDescription.Margin = new System.Windows.Forms.Padding(6, 3, 3, 3);
+			this.textBoxDescription.Name = "textBoxDescription";
+			this.textBoxDescription.ReadOnly = true;
+			this.textBoxDescription.Size = new System.Drawing.Size(271, 126);
+			this.textBoxDescription.TabIndex = 23;
+			this.textBoxDescription.TabStop = false;
+			this.textBoxDescription.Text = "";
+			this.textBoxDescription.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.textBoxDescription_LinkClicked);
 			// 
 			// AboutBox
 			// 
@@ -175,7 +176,7 @@ namespace MUNIA {
 		private System.Windows.Forms.Label labelVersion;
 		private System.Windows.Forms.Label labelCopyright;
 		private System.Windows.Forms.Label labelCompanyName;
-		private System.Windows.Forms.RichTextBox textBoxDescription;
+		private RichTextBoxEx textBoxDescription;
 		private System.Windows.Forms.Button okButton;
 	}
 }
