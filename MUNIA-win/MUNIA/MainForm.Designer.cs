@@ -35,6 +35,7 @@ namespace MUNIA {
 			this.glControl = new OpenTK.GLControl();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
+			this.lblSkins = new System.Windows.Forms.ToolStripStatusLabel();
 			this.lblFill = new System.Windows.Forms.ToolStripStatusLabel();
 			this.pbProgress = new System.Windows.Forms.ToolStripProgressBar();
 			this.menuStrip1.SuspendLayout();
@@ -112,15 +113,15 @@ namespace MUNIA {
 			// statusStrip1
 			// 
 			this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.lblStatus,
+            this.lblSkins,
             this.lblFill,
+            this.lblStatus,
             this.pbProgress});
 			this.statusStrip1.Location = new System.Drawing.Point(0, 360);
 			this.statusStrip1.Name = "statusStrip1";
 			this.statusStrip1.Size = new System.Drawing.Size(577, 22);
 			this.statusStrip1.TabIndex = 2;
-			this.statusStrip1.Text = "statusStrip1";
-			this.statusStrip1.Visible = false;
+			this.statusStrip1.Text = "statusStrip";
 			// 
 			// lblStatus
 			// 
@@ -128,10 +129,15 @@ namespace MUNIA {
 			this.lblStatus.Size = new System.Drawing.Size(42, 17);
 			this.lblStatus.Text = "Status:";
 			// 
+			// lblSkins
+			// 
+			this.lblSkins.Name = "lblSkins";
+			this.lblSkins.Size = new System.Drawing.Size(0, 17);
+			// 
 			// lblFill
 			// 
 			this.lblFill.Name = "lblFill";
-			this.lblFill.Size = new System.Drawing.Size(387, 17);
+			this.lblFill.Size = new System.Drawing.Size(344, 17);
 			this.lblFill.Spring = true;
 			// 
 			// pbProgress
@@ -174,6 +180,7 @@ namespace MUNIA {
 		private System.Windows.Forms.ToolStripStatusLabel lblStatus;
 		private System.Windows.Forms.ToolStripStatusLabel lblFill;
 		private System.Windows.Forms.ToolStripProgressBar pbProgress;
+		private System.Windows.Forms.ToolStripStatusLabel lblSkins;
 	}
 }
 
