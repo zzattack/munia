@@ -61,8 +61,7 @@ namespace MUNIA {
 		}
 
 		public void Activate(IntPtr wnd) {
-			_inputDevice.Activate(wnd);
-			_inputDevice.StateUpdated += InputDeviceOnStateUpdated;
+			_inputDevice?.Activate(wnd);
 		}
 
 		private void RecursiveGetElements(SvgElement e) {
@@ -145,7 +144,7 @@ namespace MUNIA {
 
 			foreach (var ci in all.Where(x => x.Item1.Z >= 0))
 				RenderItem(ci.Item1, ci.Item2);
-
+			
 			GL.Disable(EnableCap.Blend);
 		}
 
@@ -156,11 +155,12 @@ namespace MUNIA {
 		}
 		private void RenderButton(int i) {
 			var btn = Buttons[i];
-			if (_inputDevice.Buttons[i] && btn.Pressed != null) {
+			bool pressed = _inputDevice != null && _inputDevice.Buttons[i];
+			if (pressed && btn.Pressed != null) {
 				GL.BindTexture(TextureTarget.Texture2D, btn.PressedTexture);
 				RenderTexture(btn.PressedBounds);
 			}
-			else if (!_inputDevice.Buttons[i] && btn.Element != null) {
+			else if (!pressed && btn.Element != null) {
 				GL.BindTexture(TextureTarget.Texture2D, btn.Texture);
 				RenderTexture(btn.Bounds);
 			}
@@ -168,11 +168,17 @@ namespace MUNIA {
 		private void RenderStick(int i) {
 			var stick = Sticks[i];
 			var r = stick.Bounds;
-			float x = _inputDevice.Axes[stick.HorizontalAxis];
-			float y = _inputDevice.Axes[stick.VerticalAxis];
+			float x, y;
+			if (_inputDevice != null) {
+				x = _inputDevice.Axes[stick.HorizontalAxis];
+				y = _inputDevice.Axes[stick.VerticalAxis];
+			}
+			else {
+				x = y = 0f;
+			}
 			x *= _svgDocument.Width / _dimensions.Width * stick.OffsetScale;
-			y *= _svgDocument.Height / _dimensions.Height * stick.OffsetScale;
-			r.Offset(new PointF(x, y));
+				y *= _svgDocument.Height / _dimensions.Height * stick.OffsetScale;
+				r.Offset(new PointF(x, y));
 			GL.BindTexture(TextureTarget.Texture2D, stick.Texture);
 			RenderTexture(r);
 		}
@@ -180,7 +186,7 @@ namespace MUNIA {
 		private void RenderTrigger(int i) {
 			var trigger = Triggers[i];
 			var r = trigger.Bounds;
-			float o = _inputDevice.Axes[trigger.Axis];
+			float o = _inputDevice?.Axes[trigger.Axis] ?? 0f;
 			o *= _svgDocument.Height / _dimensions.Height * trigger.OffsetScale;
 			r.Offset(new PointF(0, o));
 			GL.BindTexture(TextureTarget.Texture2D, trigger.Texture);

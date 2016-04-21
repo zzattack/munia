@@ -33,6 +33,7 @@ namespace MUNIA {
 			Application.Idle += OnApplicationOnIdle;
 
 #if DEBUG
+			tsmiController.DropDownItems[0].Enabled = true;
 			tsmiController.DropDownItems[0].PerformClick();
 			GlControl1OnResize(this, EventArgs.Empty);
 #endif
