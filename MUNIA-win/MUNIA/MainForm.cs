@@ -105,7 +105,7 @@ namespace MUNIA {
 
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
-            GL.Ortho(0, Width, Height, 0, 0.0, 4.0);
+            GL.Ortho(0, glControl.Width, glControl.Height, 0, 0.0, 4.0);
             _controller?.Render();
 
             glControl.SwapBuffers();
