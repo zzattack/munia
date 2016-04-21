@@ -5,6 +5,7 @@ using System.Linq;
 using System;
 using System.Diagnostics;
 using System.Drawing.Drawing2D;
+using System.Globalization;
 using System.Windows.Forms;
 using MuniaInput;
 using OpenTK;
@@ -93,7 +94,7 @@ namespace MUNIA {
 					Sticks[id].Element = s;
 					Sticks[id].HorizontalAxis = int.Parse(c.CustomAttributes["axis-h"]);
 					Sticks[id].VerticalAxis = int.Parse(c.CustomAttributes["axis-v"]);
-					Sticks[id].OffsetScale = float.Parse(c.CustomAttributes["offset-scale"]);
+					Sticks[id].OffsetScale = float.Parse(c.CustomAttributes["offset-scale"], CultureInfo.InvariantCulture);
 
 					if (c.ContainsAttribute("z-index"))
 						Sticks[id].Z = int.Parse(c.CustomAttributes["z-index"]);
@@ -107,7 +108,7 @@ namespace MUNIA {
 					Triggers.EnsureSize(id);
 					Triggers[id].Element = t;
 					Triggers[id].Axis = int.Parse(c.CustomAttributes["trigger-axis"]);
-					Triggers[id].OffsetScale = float.Parse(c.CustomAttributes["offset-scale"]);
+					Triggers[id].OffsetScale = float.Parse(c.CustomAttributes["offset-scale"], CultureInfo.InvariantCulture);
 					if (c.ContainsAttribute("z-index"))
 						Triggers[id].Z = int.Parse(c.CustomAttributes["z-index"]);
 					else
