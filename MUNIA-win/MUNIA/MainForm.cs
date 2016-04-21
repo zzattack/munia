@@ -117,6 +117,12 @@ namespace MUNIA {
             _controller?.Render(glControl.Width, glControl.Height);
             GL.Viewport(0, 0, glControl.Width, glControl.Height);
         }
-        
-    }
+
+		private void setWindowSizeToolStripMenuItem_Click(object sender, EventArgs e) {
+			var frm = new WindowSizePicker(glControl.Size);
+			if (frm.ShowDialog() == DialogResult.OK) {
+				this.Size = frm.ChosenSize - glControl.Size + this.Size;
+			}
+		}
+	}
 }
