@@ -4,12 +4,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("GlControlBasics")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("MUNIA input viewer")]
+[assembly: AssemblyDescription("MUNIA input viewer\r\n\r\nwww.munia.io\r\n\r\nProgram by Frank Razenberg - frank@zzattack.org\r\nSkins by dutchj - twitter.com/ldutchjl")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("GlControlBasics")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
+[assembly: AssemblyProduct("MUNA")]
+[assembly: AssemblyCopyright("Copyright © Frank Razenberg 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

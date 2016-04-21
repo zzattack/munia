@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Net;
 using System.Windows.Forms;
 using OpenTK.Graphics.OpenGL;
 using SharpLib.Win32;
@@ -124,5 +126,86 @@ namespace MUNIA {
 				this.Size = frm.ChosenSize - glControl.Size + this.Size;
 			}
 		}
+
+		private void aboutToolStripMenuItem_Click(object sender, EventArgs e) {
+			new AboutBox().Show(this);
+		}
+
+		#region update checking/performing
+		private void tsmiCheckUpdates_Click(object sender, EventArgs e) {
+			statusStrip1.Visible = true;
+			PerformUpdateCheck();
+		}
+
+		private void UpdateStatus(string text, int progressBarValue) {
+			if (InvokeRequired) {
+				Invoke((Action<string,int>)UpdateStatus, text, progressBarValue);
+				return;
+			}
+			if (progressBarValue < pbProgress.Value && pbProgress.Value != 100) {
+				return;
+			}
+
+			lblStatus.Text = "Status: " + text;
+			if (progressBarValue < 100)
+				// forces 'instant update'
+				pbProgress.Value = progressBarValue + 1;
+			pbProgress.Value = progressBarValue;
+		}
+
+		private void PerformUpdateCheck() {
+			var uc = new UpdateChecker();
+			uc.AlreadyLatest += (o, e) => UpdateStatus("already latest version", 100);
+			uc.Connected += (o, e) => UpdateStatus("connected", 10);
+			uc.DownloadProgressChanged += (o, e) => { /* care, xml is small anyway */ };
+			uc.UpdateCheckFailed += (o, e) => UpdateStatus("update check failed", 100);
+			uc.UpdateAvailable += (o, e) => {
+				UpdateStatus("update available", 100);
+
+				var dr =
+					MessageBox.Show(
+						string.Format(
+							"An update to version {0} released on {1} is available. Release notes: \r\n\r\n{2}\r\n\r\nUpdate now?",
+							e.Version.ToString(), e.ReleaseDate.ToShortDateString(), e.ReleaseNotes), "Update available",
+						MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+				if (dr == DialogResult.Yes)
+					DownloadAndUpdate(e.DownloadUrl);
+			};
+			uc.CheckVersion();
+		}
+		private void DownloadAndUpdate(string url) {
+			UpdateStatus("downloading new program version", 0);
+			var wc = new WebClient();
+			wc.Proxy = null;
+
+			var address = new Uri(UpdateChecker.UpdateCheckHost + url);
+			wc.DownloadProgressChanged += (sender, args) => BeginInvoke((Action)delegate {
+				UpdateStatus(string.Format("downloading, {0}%", args.ProgressPercentage * 95 / 100), args.ProgressPercentage * 95 / 100);
+			});
+
+			wc.DownloadDataCompleted += (sender, args) => {
+				UpdateStatus("download complete, running installer", 100);
+				string appPath = Path.GetTempPath();
+				string dest = Path.Combine(appPath, "MUNIA_update");
+
+				int suffixNr = 0;
+				while (File.Exists(dest + (suffixNr > 0 ? suffixNr.ToString() : "") + ".exe"))
+					suffixNr++;
+
+				dest += (suffixNr > 0 ? suffixNr.ToString() : "") + ".exe";
+				File.WriteAllBytes(dest, args.Result);
+				// invoke 
+				var psi = new ProcessStartInfo(dest);
+				psi.Arguments = "/Q";
+				Process.Start(psi);
+				Close();
+			};
+
+			// trigger it all
+			wc.DownloadDataAsync(address);
+		}
+
+
+		#endregion
 	}
 }
