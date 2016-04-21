@@ -177,18 +177,24 @@ namespace MUNIA {
 			else {
 				x = y = 0f;
 			}
-			x *= _svgDocument.Width / _dimensions.Width * stick.OffsetScale;
-				y *= _svgDocument.Height / _dimensions.Height * stick.OffsetScale;
-				r.Offset(new PointF(x, y));
+
+			SizeF img = GetCorrectedDimensions(new SizeF(_svgDocument.Width, _svgDocument.Height));
+			x *= img.Width / _dimensions.Width * stick.OffsetScale;
+			y *= img.Height / _dimensions.Height * stick.OffsetScale;
+			r.Offset(new PointF(x, y));
+
 			GL.BindTexture(TextureTarget.Texture2D, stick.Texture);
 			RenderTexture(r);
 		}
-
+		
 		private void RenderTrigger(int i) {
 			var trigger = Triggers[i];
 			var r = trigger.Bounds;
 			float o = _inputDevice?.Axes[trigger.Axis] ?? 0f;
-			o *= _svgDocument.Height / _dimensions.Height * trigger.OffsetScale;
+
+			SizeF img = GetCorrectedDimensions(new SizeF(_svgDocument.Width, _svgDocument.Height));
+			o *= img.Height / _dimensions.Height * trigger.OffsetScale;
+
 			r.Offset(new PointF(0, o));
 			GL.BindTexture(TextureTarget.Texture2D, trigger.Texture);
 			RenderTexture(r);
@@ -309,26 +315,37 @@ namespace MUNIA {
 			GL.End();
 		}
 
-		private PointF Project(PointF p, float width, float height) {
+		private PointF Project(PointF p, SizeF dim) {
 			float svgAR = _dimensions.Width / _dimensions.Height;
-			float imgAR = width / height;
+			float imgAR = dim.Width / dim.Height;
 			int dx = 0, dy = 0;
 			if (svgAR > imgAR) {
 				// compensate for black box
-				p.Y -= ((height - width / svgAR) / 2f);
+				p.Y -= ((dim.Height - dim.Width / svgAR) / 2f);
 				// adjust ratio
-				height = width / svgAR;
+				dim.Height = dim.Width / svgAR;
 			}
 			else {
 				// compensate for black box
-				p.X -= ((width - height * svgAR) / 2f);
+				p.X -= ((dim.Width - dim.Height * svgAR) / 2f);
 				// adjust ratio
-				width = height * svgAR;
+				dim.Width = dim.Height * svgAR;
 			}
 
-			var x = p.X / width * _dimensions.Width;
-			var y = p.Y / height * _dimensions.Height;
+			var x = p.X / dim.Width * _dimensions.Width;
+			var y = p.Y / dim.Height * _dimensions.Height;
 			return new PointF(x, y);
+		}
+
+		private SizeF GetCorrectedDimensions(SizeF dim) {
+			// find real width/height, compensating for black box
+			float svgAR = _dimensions.Width / _dimensions.Height;
+			float imgAR = dim.Width / dim.Height;
+			if (svgAR > imgAR)
+				dim.Height = dim.Width / svgAR;
+			else
+				dim.Width = dim.Height * svgAR;
+			return dim;
 		}
 
 		internal PointF Unproject(PointF p) {
