@@ -13,10 +13,6 @@ using OpenTK.Graphics.OpenGL;
 
 namespace MUNIA {
 	public class SvgController {
-		public SvgController() {
-			int x = 0;
-		}
-
 		private SvgDocument _svgDocument;
 		private MuniaController _inputDevice;
 
@@ -27,6 +23,7 @@ namespace MUNIA {
 		public List<Trigger> Triggers = new List<Trigger>();
 		private SizeF _dimensions;
 		public int BaseTexture { get; set; }
+		public string OriginPath { get; set; }
 
 		public enum LoadResult {
 			Ok,
@@ -35,6 +32,7 @@ namespace MUNIA {
 		}
 		public LoadResult Load(string svgPath) {
 			try {
+				OriginPath = svgPath;
 				_svgDocument = SvgDocument.Open(svgPath);
 				_dimensions = _svgDocument.GetDimensions();
 
