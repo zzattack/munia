@@ -1,0 +1,6 @@
+<version>
+  <version_string>{{ version }}</version_string>
+  <release_date>{{ release_date |date:"Y-m-d"}}</release_date>
+  <release_notes>{{ release_notes |escape }}</release_notes>
+  <url>{{ url |escape }}</url>
+</version>

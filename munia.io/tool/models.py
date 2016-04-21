@@ -1,5 +1,12 @@
-from __future__ import unicode_literals
-
 from django.db import models
+  
+class ProgramVersion(models.Model):
+    version = models.CharField(max_length=100, unique=True)
+    release_date = models.DateField(auto_now_add=True)
+    release_notes = models.CharField(max_length=100, unique=True)
+    file = models.FileField(upload_to='versions')
+    
+    def __unicode__ (self):
+        return 'Version ' + self.version.__str__()
 
-# Create your models here.
+    class Admin: pass
