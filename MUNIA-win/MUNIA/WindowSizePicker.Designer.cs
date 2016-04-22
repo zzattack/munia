@@ -41,7 +41,7 @@
 			// 
 			this.BtnAccept.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.BtnAccept.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.BtnAccept.Location = new System.Drawing.Point(119, 110);
+			this.BtnAccept.Location = new System.Drawing.Point(156, 110);
 			this.BtnAccept.Name = "BtnAccept";
 			this.BtnAccept.Size = new System.Drawing.Size(75, 23);
 			this.BtnAccept.TabIndex = 2;
@@ -53,7 +53,7 @@
 			// 
 			this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.btnCancel.Location = new System.Drawing.Point(38, 110);
+			this.btnCancel.Location = new System.Drawing.Point(75, 110);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(75, 23);
 			this.btnCancel.TabIndex = 1;
@@ -91,7 +91,7 @@
 			this.gb.Controls.Add(this.lblWidth);
 			this.gb.Location = new System.Drawing.Point(12, 12);
 			this.gb.Name = "gb";
-			this.gb.Size = new System.Drawing.Size(182, 92);
+			this.gb.Size = new System.Drawing.Size(219, 92);
 			this.gb.TabIndex = 0;
 			this.gb.TabStop = false;
 			this.gb.Text = "Inner window dimensions";
@@ -166,7 +166,7 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.btnCancel;
-			this.ClientSize = new System.Drawing.Size(206, 145);
+			this.ClientSize = new System.Drawing.Size(243, 145);
 			this.Controls.Add(this.gb);
 			this.Controls.Add(this.btnCancel);
 			this.Controls.Add(this.BtnAccept);

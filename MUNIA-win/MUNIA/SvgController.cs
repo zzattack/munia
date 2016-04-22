@@ -316,7 +316,6 @@ namespace MUNIA {
 		private PointF Project(PointF p, SizeF dim) {
 			float svgAR = _dimensions.Width / _dimensions.Height;
 			float imgAR = dim.Width / dim.Height;
-			int dx = 0, dy = 0;
 			if (svgAR > imgAR) {
 				// compensate for black box
 				p.Y -= ((dim.Height - dim.Width / svgAR) / 2f);
