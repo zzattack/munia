@@ -23,7 +23,7 @@ namespace MUNIA {
 		public List<Trigger> Triggers = new List<Trigger>();
 		private SizeF _dimensions;
 		public int BaseTexture { get; set; }
-		public string OriginPath { get; set; }
+		public string SvgPath { get; set; }
 
 		public enum LoadResult {
 			Ok,
@@ -32,7 +32,7 @@ namespace MUNIA {
 		}
 		public LoadResult Load(string svgPath) {
 			try {
-				OriginPath = svgPath;
+				SvgPath = svgPath;
 				_svgDocument = SvgDocument.Open(svgPath);
 				_dimensions = _svgDocument.GetDimensions();
 

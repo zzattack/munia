@@ -90,7 +90,7 @@ namespace MUNIA {
 			}
 			catch (Exception exc) {
 				AskBugReport(exc);
-				_mf?.SaveSettings();
+				Settings.Save();
 			}
 		}
 
@@ -99,7 +99,6 @@ namespace MUNIA {
 		private static void KillDanglingProcess(string pid) {
 			try {
 				var proc = Process.GetProcessById(int.Parse(pid));
-				string executable = proc.MainModule.FileName.Replace(".vshost", string.Empty);
 				proc.CloseMainWindow();
 				if (!proc.WaitForExit(100)) proc.Kill();
 			}
@@ -141,20 +140,19 @@ namespace MUNIA {
 				return;
 
 			AskBugReport(e.ExceptionObject as Exception);
-			_mf?.SaveSettings();
+			Settings.Save();
 		}
 
 		private static void AskBugReport(Exception exc) {
 			var form = new SubmitBug();
-			form.Email = Settings.Default.email;
+			form.Email = Settings.Email;
 			if (form.ShowDialog() == DialogResult.OK) {
 				//if (!string.IsNullOrWhiteSpace(form.Email))
 				//	Settings.Default.email = form.Email;
 				SubmitBugReport(form.Email, exc);
 			}
 		}
-
-
+		
 		private static void SubmitBugReport(string email, Exception exc) {
 			try {
 				const string url = UpdateChecker.UpdateCheckHost + "tool/report_bug";
@@ -163,9 +161,9 @@ namespace MUNIA {
 				var data = new NameValueCollection();
 				data.Set("program_version", typeof(Program).Assembly.GetName().Version.ToString());
 				data.Set("exception", exc?.ToString() ?? "");
-				if (_mf != null && _mf.Controller != null) {
-					data.Set("skin_name", _mf.Controller.SkinName);
-					data.Set("skin_svg", File.ReadAllText(_mf.Controller.OriginPath));
+				if (SkinManager.ActiveSkin != null) {
+					data.Set("skin_name", SkinManager.ActiveSkin.Controller.SkinName);
+					data.Set("skin_svg", File.ReadAllText(SkinManager.ActiveSkin.Controller.SvgPath));
 				}
 				data.Set("command_line", _cmdLine);
 				data.Set("email", email);

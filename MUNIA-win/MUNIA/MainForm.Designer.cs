@@ -34,9 +34,9 @@ namespace MUNIA {
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.glControl = new OpenTK.GLControl();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-			this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
 			this.lblSkins = new System.Windows.Forms.ToolStripStatusLabel();
 			this.lblFill = new System.Windows.Forms.ToolStripStatusLabel();
+			this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
 			this.pbProgress = new System.Windows.Forms.ToolStripProgressBar();
 			this.menuStrip1.SuspendLayout();
 			this.statusStrip1.SuspendLayout();
@@ -123,12 +123,6 @@ namespace MUNIA {
 			this.statusStrip1.TabIndex = 2;
 			this.statusStrip1.Text = "statusStrip";
 			// 
-			// lblStatus
-			// 
-			this.lblStatus.Name = "lblStatus";
-			this.lblStatus.Size = new System.Drawing.Size(42, 17);
-			this.lblStatus.Text = "Status:";
-			// 
 			// lblSkins
 			// 
 			this.lblSkins.Name = "lblSkins";
@@ -137,8 +131,14 @@ namespace MUNIA {
 			// lblFill
 			// 
 			this.lblFill.Name = "lblFill";
-			this.lblFill.Size = new System.Drawing.Size(344, 17);
+			this.lblFill.Size = new System.Drawing.Size(418, 17);
 			this.lblFill.Spring = true;
+			// 
+			// lblStatus
+			// 
+			this.lblStatus.Name = "lblStatus";
+			this.lblStatus.Size = new System.Drawing.Size(42, 17);
+			this.lblStatus.Text = "Status:";
 			// 
 			// pbProgress
 			// 
@@ -157,6 +157,7 @@ namespace MUNIA {
 			this.MainMenuStrip = this.menuStrip1;
 			this.Name = "MainForm";
 			this.Text = "MUNIA";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
 			this.Shown += new System.EventHandler(this.MainForm_Shown);
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
