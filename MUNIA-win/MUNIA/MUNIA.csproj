@@ -13,7 +13,7 @@
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,9 +22,10 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -88,6 +89,7 @@
     <Compile Include="SvgController.cs" />
     <Compile Include="UpdateChecker.cs" />
     <Compile Include="UsbNotification.cs" />
+    <Compile Include="Properties\VersionInfo.cs" />
     <Compile Include="WindowSizePicker.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -136,4 +138,15 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Import Project="..\Packages\MSBuildTasks.1.4.0.128\tools\MSBuild.Community.Tasks.Targets" />
+  <UsingTask AssemblyFile="..\Packages\MSBuildTasks.1.4.0.128\tools\MSBuild.Community.Tasks.Targets.dll" TaskName="MSBuild.Community.Tasks.Zip" />
+  <Target Name="BeforeBuild">
+    <Version VersionFile="Properties\version.txt" Major="0" Minor="9" BuildType="Automatic" StartDate="1/1/2016" RevisionType="BuildIncrement">
+      <Output TaskParameter="Major" PropertyName="Major" />
+      <Output TaskParameter="Minor" PropertyName="Minor" />
+      <Output TaskParameter="Build" PropertyName="Build" />
+      <Output TaskParameter="Revision" PropertyName="Revision" />
+    </Version>
+    <AssemblyInfo CodeLanguage="CS" OutputFile="Properties\VersionInfo.cs" AssemblyVersion="$(Major).$(Minor)" AssemblyFileVersion="$(Major).$(Minor).$(Build).$(Revision)" />
+  </Target>
 </Project>
