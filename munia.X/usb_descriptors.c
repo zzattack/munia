@@ -134,7 +134,7 @@ const uint8_t configDescriptor1[]={
     HID_INTF,                    // Class code
     0,                           // Subclass code
     0,                           // Protocol code
-    0,                           // Interface string index
+    7,                           // Interface string index
 
     /* HID Class-Specific Descriptor */
     0x09,//sizeof(USB_HID_DSC)+3,    // Size of this descriptor in bytes
@@ -205,6 +205,12 @@ sizeof(sd006),USB_DESCRIPTOR_STRING,
 {'N','i','n','H','I','D',' ','N','G','C'
 }};
 
+//Interface 4 string descriptor
+const struct{uint8_t bLength;uint8_t bDscType;uint16_t string[10];}sd007={
+sizeof(sd007),USB_DESCRIPTOR_STRING,
+{'N','i','n','H','I','D',' ','C','F','G'
+}};
+
 //Array of configuration descriptors
 const uint8_t *const USB_CD_Ptr[]=
 {(const uint8_t *const)&configDescriptor1
@@ -220,6 +226,7 @@ const uint8_t *const USB_SD_Ptr[]=
     (const uint8_t *const)&sd004,
     (const uint8_t *const)&sd005,
     (const uint8_t *const)&sd006,
+    (const uint8_t *const)&sd007,
 };
 
 

@@ -226,6 +226,13 @@ void USBCheckHIDRequest(void)
                             HID_RPT_NGC_SIZE,     //See usbcfg.h
                             USB_EP0_INCLUDE_ZERO);
                     }
+                    else if (SetupPkt.bIntfID == HID_INTF_CFG)
+                    {
+                        USBEP0SendROMPtr(
+                            (const uint8_t*)&hid_rpt_cfg,
+                            HID_RPT_CFG_SIZE,     //See usbcfg.h
+                            USB_EP0_INCLUDE_ZERO);
+                    }
                 }
                 break;
             case DSC_PHY:  //Physical Descriptor
