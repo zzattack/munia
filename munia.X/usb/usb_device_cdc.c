@@ -1,86 +1,29 @@
-/********************************************************************************
-  File Information:
-    FileName:       usb_function_cdc.c
-    Dependencies:   See INCLUDES section
-    Processor:      PIC18 or PIC24 USB Microcontrollers
-    Hardware:       The code is natively intended to be used on the following
-                    hardware platforms: PICDEM(TM) FS USB Demo Board,
-                    PIC18F87J50 FS USB Plug-In Module, or
-                    Explorer 16 + PIC24 USB PIM.  The firmware may be
-                    modified for use on other USB platforms by editing the
-                    HardwareProfile.h file.
-    Complier:   Microchip C18 (for PIC18) or C30 (for PIC24)
-    Company:        Microchip Technology, Inc.
+// DOM-IGNORE-BEGIN
+/*******************************************************************************
+Copyright 2015 Microchip Technology Inc. (www.microchip.com)
 
-    Software License Agreement:
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-    The software supplied herewith by Microchip Technology Incorporated
-    (the "Company") for its PIC(R) Microcontroller is intended and
-    supplied to you, the Company's customer, for use solely and
-    exclusively on Microchip PIC Microcontroller products. The
-    software is owned by the Company and/or its supplier, and is
-    protected under applicable copyright laws. All rights are reserved.
-    Any use in violation of the foregoing restrictions may subject the
-    user to criminal sanctions under applicable laws, as well as to
-    civil liability for the breach of the terms and conditions of this
-    license.
+    http://www.apache.org/licenses/LICENSE-2.0
 
-    THIS SOFTWARE IS PROVIDED IN AN "AS IS" CONDITION. NO WARRANTIES,
-    WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED
-    TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-    PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. THE COMPANY SHALL NOT,
-    IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL OR
-    CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
-    
-  Summary:
-    This file contains all of functions, macros, definitions, variables,
-    datatypes, etc. that are required for usage with the CDC function
-    driver. This file should be included in projects that use the CDC
-    \function driver.
-    
-    
-    
-    This file is located in the "\<Install Directory\>\\Microchip\\USB\\CDC
-    Device Driver" directory.
-  Description:
-    USB CDC Function Driver File
-    
-    This file contains all of functions, macros, definitions, variables,
-    datatypes, etc. that are required for usage with the CDC function
-    driver. This file should be included in projects that use the CDC
-    \function driver.
-    
-    This file is located in the "\<Install Directory\>\\Microchip\\USB\\CDC
-    Device Driver" directory.
-    
-    When including this file in a new project, this file can either be
-    referenced from the directory in which it was installed or copied
-    directly into the user application folder. If the first method is
-    chosen to keep the file located in the folder in which it is installed
-    then include paths need to be added so that the library and the
-    application both know where to reference each others files. If the
-    application folder is located in the same folder as the Microchip
-    folder (like the current demo folders), then the following include
-    paths need to be added to the application's project:
-    
-    ..\\Include
-    
-    .
-    
-    If a different directory structure is used, modify the paths as
-    required. An example using absolute paths instead of relative paths
-    would be the following:
-    
-    C:\\Microchip Solutions\\Microchip\\Include
-    
-    C:\\Microchip Solutions\\My Demo Application                                 
-  ********************************************************************************/
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+To request to license the code under the MLA license (www.microchip.com/mla_license), 
+please contact mla_licensing@microchip.com
+*******************************************************************************/
+//DOM-IGNORE-END
 
 /********************************************************************
  Change History:
   Rev    Description
   ----   -----------
-  2.3    Decricated the mUSBUSARTIsTxTrfReady() macro.  It is 
+  2.3    Deprecated the mUSBUSARTIsTxTrfReady() macro.  It is 
          replaced by the USBUSARTIsTxTrfReady() function.
 
   2.6    Minor definition changes
@@ -95,7 +38,7 @@
          http://www.microchip.com/forums/fb.aspx?m=487397
 
   2.8    Minor change to CDCInitEP() to enhance ruggedness in
-         multithreaded usage scenarios.
+         multi0-threaded usage scenarios.
   
   2.9b   Updated to implement optional support for DTS reporting.
 
@@ -149,7 +92,7 @@ USB_HANDLE CDCDataInHandle;
 
 
 CONTROL_SIGNAL_BITMAP control_signal_bitmap;
-uint32_t BaudRateGen;			// BRG value calculated from baudrate
+uint32_t BaudRateGen;			// BRG value calculated from baud rate
 
 #if defined(USB_CDC_SUPPORT_DSR_REPORTING)
     BM_SERIAL_STATE SerialStateBitmap;
@@ -269,7 +212,7 @@ void USBCheckCDCRequest(void)
             //based on the amount of remaining buffer space available for the 
             //actual hardware UART of this microcontroller.  In this case, the 
             //below code should be left commented out, but instead RTS should be 
-            //controlled in the application firmware reponsible for operating the 
+            //controlled in the application firmware responsible for operating the 
             //hardware UART of this microcontroller.
             //---------            
             //CONFIGURE_RTS(control_signal_bitmap.CARRIER_CONTROL);  
@@ -294,7 +237,7 @@ void USBCheckCDCRequest(void)
             inPipes[0].info.bits.busy = 1;
 			if (SetupPkt.wValue == 0xFFFF)  //0xFFFF means send break indefinitely until a new SEND_BREAK command is received
 			{
-				UART_Tx = 0;       // Prepare to drive TX low (for break signalling)
+				UART_Tx = 0;       // Prepare to drive TX low (for break signaling)
 				UART_TRISTx = 0;   // Make sure TX pin configured as an output
 				UART_ENABLE = 0;   // Turn off USART (to relinquish TX pin control)
 			}
@@ -305,7 +248,7 @@ void USBCheckCDCRequest(void)
 			}
 			else
 			{
-                //Send break signalling on the pin for (SetupPkt.wValue) milliseconds
+                //Send break signaling on the pin for (SetupPkt.wValue) milliseconds
                 UART_SEND_BREAK();
 			}
             break;
@@ -473,7 +416,7 @@ void CDCNotificationHandler(void)
     class. Input argument 'buffer' should point to a buffer area that is
     bigger or equal to the size specified by 'len'.
   Input:
-    event - the type of event that occured
+    event - the type of event that occurred
     pdata - pointer to the data that caused the event
     size - the size of the data that is pointed to by pdata
                                                                                    
@@ -576,12 +519,12 @@ uint8_t getsUSBUSART(uint8_t *buffer, uint8_t len)
 		
   Summary:
     putUSBUSART writes an array of data to the USB. Use this version, is
-    capable of transfering 0x00 (what is typically a NULL character in any of
+    capable of transferring 0x00 (what is typically a NULL character in any of
     the string transfer functions).
 
   Description:
     putUSBUSART writes an array of data to the USB. Use this version, is
-    capable of transfering 0x00 (what is typically a NULL character in any of
+    capable of transferring 0x00 (what is typically a NULL character in any of
     the string transfer functions).
     
     Typical Usage:
@@ -615,13 +558,13 @@ void putUSBUSART(uint8_t *data, uint8_t  length)
     /*
      * User should have checked that cdc_trf_state is in CDC_TX_READY state
      * before calling this function.
-     * As a safety precaution, this fuction checks the state one more time
+     * As a safety precaution, this function checks the state one more time
      * to make sure it does not override any pending transactions.
      *
      * Currently it just quits the routine without reporting any errors back
      * to the user.
      *
-     * Bottomline: User MUST make sure that USBUSARTIsTxTrfReady()==1
+     * Bottom line: User MUST make sure that USBUSARTIsTxTrfReady()==1
      *             before calling this function!
      * Example:
      * if(USBUSARTIsTxTrfReady())
@@ -691,13 +634,13 @@ void putsUSBUSART(char *data)
     /*
      * User should have checked that cdc_trf_state is in CDC_TX_READY state
      * before calling this function.
-     * As a safety precaution, this fuction checks the state one more time
+     * As a safety precaution, this function checks the state one more time
      * to make sure it does not override any pending transactions.
      *
      * Currently it just quits the routine without reporting any errors back
      * to the user.
      *
-     * Bottomline: User MUST make sure that USBUSARTIsTxTrfReady()==1
+     * Bottom line: User MUST make sure that USBUSARTIsTxTrfReady()==1
      *             before calling this function!
      * Example:
      * if(USBUSARTIsTxTrfReady())
@@ -788,13 +731,13 @@ void putrsUSBUSART(const const char *data)
     /*
      * User should have checked that cdc_trf_state is in CDC_TX_READY state
      * before calling this function.
-     * As a safety precaution, this fuction checks the state one more time
+     * As a safety precaution, this function checks the state one more time
      * to make sure it does not override any pending transactions.
      *
      * Currently it just quits the routine without reporting any errors back
      * to the user.
      *
-     * Bottomline: User MUST make sure that USBUSARTIsTxTrfReady()
+     * Bottom line: User MUST make sure that USBUSARTIsTxTrfReady()
      *             before calling this function!
      * Example:
      * if(USBUSARTIsTxTrfReady())
@@ -854,7 +797,7 @@ void putrsUSBUSART(const const char *data)
     This function is needed, in order to advance the internal software state 
     machine that takes care of sending multiple transactions worth of IN USB
     data to the host, associated with CDC serial data.  Failure to call 
-    CDCTxService() perioidcally will prevent data from being sent to the
+    CDCTxService() periodically will prevent data from being sent to the
     USB host, over the CDC serial data interface.
     
     Typical Usage:

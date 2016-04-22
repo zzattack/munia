@@ -1,51 +1,24 @@
-/******************************************************************************
+// DOM-IGNORE-BEGIN
+/*******************************************************************************
+Copyright 2015 Microchip Technology Inc. (www.microchip.com)
 
-  USB Host Human Interface Device Parser
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-Summary:
-    This is the Human Interface Device Class report parser file for a USB
-    Embedded Host device. This file should be used in a project with usb_host_hid.c
-    to provided the functional interface.
+    http://www.apache.org/licenses/LICENSE-2.0
 
-Acronyms/abbreviations used by this class:
-    * HID - Human Interface Device
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
-This file consists of HID parser. Report descriptor received from device is
-validated for proper format. If the report descriptor is not in proper format
-as mandated by USB forum the device is not allowed on the bus. Only after the
-report descriptor is validated, the information is populated in data structures.
-Interface functions provided in file 'usb_host_hid.c' can be
-used to understand the device capabilities. User of this code is advised to
-refer document "Device Class Definition for Human Interface Devices (HID)"
-available on website 'www.usb.org' for more details on content and format
-of report descriptor.
-
-FileName:        usb_host_hid_parser.c
-Dependencies:    None
-Processor:       PIC24/dsPIC30/dsPIC33/PIC32MX
-Compiler:        C30/C32
-Company:         Microchip Technology, Inc.
-
-Software License Agreement
-
-The software supplied herewith by Microchip Technology Incorporated
-(the �Company�) for its PICmicro� Microcontroller is intended and
-supplied to you, the Company�s customer, for use solely and
-exclusively on Microchip PICmicro Microcontroller products. The
-software is owned by the Company and/or its supplier, and is
-protected under applicable copyright laws. All rights are reserved.
-Any use in violation of the foregoing restrictions may subject the
-user to criminal sanctions under applicable laws, as well as to
-civil liability for the breach of the terms and conditions of this
-license.
-
-THIS SOFTWARE IS PROVIDED IN AN �AS IS� CONDITION. NO WARRANTIES,
-WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED
-TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. THE COMPANY SHALL NOT,
-IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL OR
-CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
+To request to license the code under the MLA license (www.microchip.com/mla_license), 
+please contact mla_licensing@microchip.com
 *******************************************************************************/
+//DOM-IGNORE-END
+
 #include "usb_config.h"
 
 #include <stdlib.h>

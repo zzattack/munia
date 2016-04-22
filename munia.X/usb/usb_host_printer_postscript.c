@@ -1,55 +1,25 @@
-/******************************************************************************
-    PostScript Printer Language Support
+// DOM-IGNORE-BEGIN
+/*******************************************************************************
+Copyright 2015 Microchip Technology Inc. (www.microchip.com)
 
-  Summary:
-    This file provides support for the PostScript printer language when using the
-    USB Embedded Host Printer Client Driver.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-  Description:
-    This file provides support for the PostScript printer language when using the
-    USB Embedded Host Printer Client Driver.
+    http://www.apache.org/licenses/LICENSE-2.0
 
-    In general, PostScript is recommended for use with the USB Embedded Host
-    printer class when printing to a full sheet printer.  Implementation of the
-    PostScript language across various printers is standard, ensuring uniform
-    output from printers produced by different manufacturers.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
-  Notes:
-    The PostScript coordinate origin is located at the bottom left corner of the
-    paper.  For consistency for the user, the coordinates are adjusted so the
-    origin is located at the top left corner.  This matches the coordinate
-    system use by the Microchip Graphics library.
-
+To request to license the code under the MLA license (www.microchip.com/mla_license), 
+please contact mla_licensing@microchip.com
 *******************************************************************************/
-//DOM-IGNORE-BEGIN
+//DOM-IGNORE-END
+
 /******************************************************************************
-
- FileName:        usb_host_printer_postscript.c
- Dependencies:    None
- Processor:       PIC24F/PIC32MX
- Compiler:        C30/C32
- Company:         Microchip Technology, Inc.
-
-Software License Agreement
-
-The software supplied herewith by Microchip Technology Incorporated
-(the �Company�) for its PICmicro� Microcontroller is intended and
-supplied to you, the Company�s customer, for use solely and
-exclusively on Microchip PICmicro Microcontroller products. The
-software is owned by the Company and/or its supplier, and is
-protected under applicable copyright laws. All rights are reserved.
-Any use in violation of the foregoing restrictions may subject the
-user to criminal sanctions under applicable laws, as well as to
-civil liability for the breach of the terms and conditions of this
-license.
-
-THIS SOFTWARE IS PROVIDED IN AN �AS IS� CONDITION. NO WARRANTIES,
-WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED
-TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. THE COMPANY SHALL NOT,
-IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL OR
-CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
-
 Change History:
   Rev         Description
   ----------  ----------------------------------------------------------

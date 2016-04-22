@@ -1,31 +1,23 @@
-/*********************************************************************
-  File Information:
-    FileName:        usb_function_msd_multi_sector.c
-    Dependencies:    See INCLUDES section below
-    Processor:       PIC18, PIC24, or PIC32
-    Compiler:        C18, C30, or C32
-    Company:         Microchip Technology, Inc.
+// DOM-IGNORE-BEGIN
+/*******************************************************************************
+Copyright 2015 Microchip Technology Inc. (www.microchip.com)
 
-    Software License Agreement
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-    The software supplied herewith by Microchip Technology Incorporated
-    (the "Company") for its PIC(r) Microcontroller is intended and
-    supplied to you, the Company's customer, for use solely and
-    exclusively on Microchip PICmicro Microcontroller products. The
-    software is owned by the Company and/or its supplier, and is
-    protected under applicable copyright laws. All rights are reserved.
-    Any use in violation of the foregoing restrictions may subject the
-    user to criminal sanctions under applicable laws, as well as to
-    civil liability for the breach of the terms and conditions of this
-    license.
+    http://www.apache.org/licenses/LICENSE-2.0
 
-    THIS SOFTWARE IS PROVIDED IN AN "AS IS" CONDITION. NO WARRANTIES,
-    WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED
-    TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-    PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. THE COMPANY SHALL NOT,
-    IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL OR
-    CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
-********************************************************************/
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+To request to license the code under the MLA license (www.microchip.com/mla_license), 
+please contact mla_licensing@microchip.com
+*******************************************************************************/
+//DOM-IGNORE-END
  
 /** I N C L U D E S **************************************************/
 #include <usb.h>
@@ -43,11 +35,11 @@
 #endif
 
 #if defined(USE_INTERNAL_FLASH)
-    #include "driver/fileio/internal_flash.h"
+    #include "internal_flash.h"
 #endif
 
 #if defined(USE_SD_INTERFACE_WITH_SPI)
-    #include "driver/fileio/sd_spi.h"
+    #include "sd_spi.h"
 #endif
 
 extern LUN_FUNCTIONS LUN[MAX_LUN + 1];

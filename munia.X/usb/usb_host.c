@@ -1,53 +1,23 @@
-/******************************************************************************
+// DOM-IGNORE-BEGIN
+/*******************************************************************************
+Copyright 2015 Microchip Technology Inc. (www.microchip.com)
 
-    USB Host Driver
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-This file provides the hardware interface for a USB Embedded Host application.
-Most applications will not make direct use of the functions in this file.
-Instead, one or more client driver files should also be included in the project
-to support the devices that will be attached to the host.  Application
-interface will be through the client drivers.
+    http://www.apache.org/licenses/LICENSE-2.0
 
-Note: USB interrupts are cleared by writing a "1" to the interrupt flag.  This
-means that read-modify-write instructions cannot be used to clear the flag.  A
-bit manipulation instruction, such as "U1OTGIRbits.T1MSECIF = 1;" will read the
-value of the U1OTGIR register, set the T1MSECIF bit in that value to "1", and
-then write that value back to U1OTGIR.  If U1OTGIR had any other flags set,
-those flags are written back as "1", which will clear those flags.  To avoid
-this issue, a constant value must be written to U1OTGIR where only the interrupt
-flag in question is set, such as "U1OTGIR = USB_INTERRUPT_T1MSECIF;", where
-USB_INTERRUPT_T1MSECIF equals 0x40.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
+To request to license the code under the MLA license (www.microchip.com/mla_license), 
+please contact mla_licensing@microchip.com
 *******************************************************************************/
-//DOM-IGNORE-BEGIN
-/******************************************************************************
-
- File Name:       usb_host.c
- Dependencies:    None
- Processor:       PIC24F/PIC32MX
- Compiler:        C30/C32
- Company:         Microchip Technology, Inc.
-
-Software License Agreement
-
-The software supplied herewith by Microchip Technology Incorporated
-(the �Company�) for its PICmicro� Microcontroller is intended and
-supplied to you, the Company�s customer, for use solely and
-exclusively on Microchip PICmicro Microcontroller products. The
-software is owned by the Company and/or its supplier, and is
-protected under applicable copyright laws. All rights are reserved.
-Any use in violation of the foregoing restrictions may subject the
-user to criminal sanctions under applicable laws, as well as to
-civil liability for the breach of the terms and conditions of this
-license.
-
-THIS SOFTWARE IS PROVIDED IN AN �AS IS� CONDITION. NO WARRANTIES,
-WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED
-TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. THE COMPANY SHALL NOT,
-IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL OR
-CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
-*******************************************************************************/
+//DOM-IGNORE-END
 
 #include <system.h>
 #include <system_config.h>
@@ -1894,7 +1864,16 @@ void USBHostTasks( void )
                         USB_FREE_AND_CLEAR( usbDeviceInfo.pConfigurationDescriptorList );
                         usbDeviceInfo.pConfigurationDescriptorList = (USB_CONFIGURATION *)pTemp;
                     }
-                    _USB_SetNextSubState();
+
+                    if(countConfigurations == 0)
+                    {
+                        _USB_SetErrorCode( USB_HOLDING_CLIENT_INIT_ERROR );
+                        _USB_SetHoldState();
+                    }
+                    else
+                    {
+                        _USB_SetNextSubState();
+                    }
                     break;
 
                 case SUBSTATE_GET_CONFIG_DESCRIPTOR_SIZE:
@@ -1909,10 +1888,7 @@ void USBHostTasks( void )
                             // Set up and send GET CONFIGURATION (n) DESCRIPTOR with a length of 8
                             pEP0Data[0] = USB_SETUP_DEVICE_TO_HOST | USB_SETUP_TYPE_STANDARD | USB_SETUP_RECIPIENT_DEVICE;
                             pEP0Data[1] = USB_REQUEST_GET_DESCRIPTOR;
-
-                            //MCHP: probably should get all of the configuration descriptors.
-                            pEP0Data[2] = 0;
-//                            pEP0Data[2] = countConfigurations-1;    // USB 2.0 - range is 0 - count-1
+                            pEP0Data[2] = countConfigurations-1;    // USB 2.0 - range is 0 - count-1
                             pEP0Data[3] = USB_DESCRIPTOR_CONFIGURATION;
                             pEP0Data[4] = 0;
                             pEP0Data[5] = 0;
@@ -1995,8 +1971,7 @@ void USBHostTasks( void )
                             // Set up and send GET CONFIGURATION (n) DESCRIPTOR.
                             pEP0Data[0] = USB_SETUP_DEVICE_TO_HOST | USB_SETUP_TYPE_STANDARD | USB_SETUP_RECIPIENT_DEVICE;
                             pEP0Data[1] = USB_REQUEST_GET_DESCRIPTOR;
-                            //MCHP: probably should get all of the configuration descriptors.
-                            pEP0Data[2] = 0;
+                            pEP0Data[2] = countConfigurations-1;
                             pEP0Data[3] = USB_DESCRIPTOR_CONFIGURATION;
                             pEP0Data[4] = 0;
                             pEP0Data[5] = 0;
@@ -2212,6 +2187,14 @@ void USBHostTasks( void )
 
                         default:
                             break;
+                    }
+                    break;
+
+                case SUBSTATE_APPLICATION_CONFIGURATION:
+                    if ( USB_HOST_APP_EVENT_HANDLER( USB_ROOT_HUB, EVENT_HOLD_BEFORE_CONFIGURATION,
+                            NULL, usbDeviceInfo.deviceAddress ) == false )
+                    {
+                        _USB_SetNextSubState();
                     }
                     break;
 
@@ -4676,7 +4659,10 @@ void _USB_NotifyAllDataClients( uint8_t address, USB_EVENT event, void *data, un
         default:
             for(i=0;i<NUM_CLIENT_DRIVER_ENTRIES;i++)
             {
-                usbClientDrvTable[i].DataEventHandler(address, event, data, size);
+                if ( usbClientDrvTable[i].DataEventHandler != NULL )
+                {
+                    usbClientDrvTable[i].DataEventHandler(address, event, data, size);
+                }
             }
             break;
     }

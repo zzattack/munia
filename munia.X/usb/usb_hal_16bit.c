@@ -1,89 +1,23 @@
-/******************************************************************************
+// DOM-IGNORE-BEGIN
+/*******************************************************************************
+Copyright 2015 Microchip Technology Inc. (www.microchip.com)
 
-    USB Hardware Abstraction Layer (HAL)
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-Summary:
-    This file abstracts the hardware interface.  The USB stack firmware can be
-    compiled to work on different USB microcontrollers, such as PIC18 and PIC24.
-    The USB related special function registers and bit names are generally very
-    similar between the device families, but small differences in naming exist.
+    http://www.apache.org/licenses/LICENSE-2.0
 
-Description:
-    This file abstracts the hardware interface.  The USB stack firmware can be
-    compiled to work on different USB microcontrollers, such as PIC18 and PIC24.
-    The USB related special function registers and bit names are generally very
-    similar between the device families, but small differences in naming exist.
-    
-    In order to make the same set of firmware work accross the device families,
-    when modifying SFR contents, a slightly abstracted name is used, which is
-    then "mapped" to the appropriate real name in the usb_hal_picxx.h header.
-    
-    Make sure to include the correct version of the usb_hal_picxx.h file for 
-    the microcontroller family which will be used.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
-    This file is located in the "\<Install Directory\>\\Microchip\\Include\\USB"
-    directory.
-    
-    When including this file in a new project, this file can either be
-    referenced from the directory in which it was installed or copied
-    directly into the user application folder. If the first method is
-    chosen to keep the file located in the folder in which it is installed
-    then include paths need to be added so that the library and the
-    application both know where to reference each others files. If the
-    application folder is located in the same folder as the Microchip
-    folder (like the current demo folders), then the following include
-    paths need to be added to the application's project:
-    
-    .
-
-    ..\\..\\Microchip\\Include
-        
-    If a different directory structure is used, modify the paths as
-    required. An example using absolute paths instead of relative paths
-    would be the following:
-    
-    C:\\Microchip Solutions\\Microchip\\Include
-    
-    C:\\Microchip Solutions\\My Demo Application 
-
-
+To request to license the code under the MLA license (www.microchip.com/mla_license), 
+please contact mla_licensing@microchip.com
 *******************************************************************************/
-//DOM-IGNORE-BEGIN
-/******************************************************************************
-
- File Description:
-
- This file defines the interface to the USB hardware abstraction layer.
-
- Filename:        usb_hal_16bit.c
- Dependancies:    none
- Processor:       PIC24 and dsPIC USB Microcontrollers
- Hardware:        PIC24 and dsPIC USB Microcontrollers
- Compiler:        Microchip XC16
- Company:         Microchip Technology, Inc.
-
- Software License Agreement:
-
- The software supplied herewith by Microchip Technology Incorporated
- (the "Company") for its PICmicro(R) Microcontroller is intended and
- supplied to you, the Company's customer, for use solely and
- exclusively on Microchip PICmicro Microcontroller products. The
- software is owned by the Company and/or its supplier, and is
- protected under applicable copyright laws. All rights are reserved.
- Any use in violation of the foregoing restrictions may subject the
- user to criminal sanctions under applicable laws, as well as to
- civil liability for the breach of the terms and conditions of this
- license.
-
- THIS SOFTWARE IS PROVIDED IN AN "AS IS" CONDITION. NO WARRANTIES,
- WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED
- TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
- PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. THE COMPANY SHALL NOT,
- IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL OR
- CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
-
- *************************************************************************/
-
+//DOM-IGNORE-END
 
 #ifndef __USB_HAL_16BIT_C
 #define __USB_HAL_16BIT_C

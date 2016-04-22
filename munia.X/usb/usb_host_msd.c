@@ -1,71 +1,23 @@
-/******************************************************************************
+// DOM-IGNORE-BEGIN
+/*******************************************************************************
+Copyright 2015 Microchip Technology Inc. (www.microchip.com)
 
-  USB Host Mass Storage Device Driver
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-This is the Mass Storage Class driver file for a USB Embedded Host device.
-This file should be used in a project with usb_host.c to provided the USB
-hardware interface.
+    http://www.apache.org/licenses/LICENSE-2.0
 
-Acronyms/abbreviations used by this class:
-    * LUN - Logical Unit Number
-    * CBW - Command Block Wrapper
-    * CSW - Command Status Wrapper
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
-To interface with usb_host.c, the routine USBHostMSDClientInitialize() should be
-specified as the Initialize() function, and USBHostMSDClientEventHandler() should
-be specified as the EventHandler() function in the usbClientDrvTable[] array
-declared in usb_config.h.
-
-This driver can be configured to use transfer events from usb_host.c.  Transfer
-events require more RAM and ROM than polling, but it cuts down or even
-eliminates the required polling of the various USBxxxTasks functions.  For this
-class, USBHostMSDTasks() is compiled out if transfer events from usb_host.c
-are used.  However, USBHostTasks() still must be called to provide attach,
-enumeration, and detach services.  If transfer events from usb_host.c
-are going to be used, USB_ENABLE_TRANSFER_EVENT should be defined.  If transfer
-status is going to be polled, USB_ENABLE_TRANSFER_EVENT should not be defined.
-
-This driver can also be configured to provide mass storage transfer events to
-the next layer. Generating these events requires a small amount of extra ROM,
-but no extra RAM.  The layer above this driver must be configured to receive
-and respond to the events.  If mass storage transfer events are going to be
-sent to the next layer, USB_MSD_ENABLE_TRANSFER_EVENT should be defined.  If
-mass storage transfer status is going to be polled,
-USB_MSD_ENABLE_TRANSFER_EVENT should not be defined.
-
-Since mass storage is performed with bulk transfers, USB_SUPPORT_BULK_TRANSFERS
-must be defined. For maximum throughput, it is recommended that
-ALLOW_MULTIPLE_BULK_TRANSACTIONS_PER_FRAME be defined.  For maximum
-compatibility with mass storage devices, it is recommended that
-ALLOW_MULTIPLE_NAKS_PER_FRAME not be defined.
-
-FileName:        usb_host_msd.c
-Dependencies:    None
-Processor:       PIC24/dsPIC30/dsPIC33/PIC32MX
-Compiler:        C30/C32
-Company:         Microchip Technology, Inc.
-
-Software License Agreement
-
-The software supplied herewith by Microchip Technology Incorporated
-(the �Company�) for its PICmicro� Microcontroller is intended and
-supplied to you, the Company�s customer, for use solely and
-exclusively on Microchip PICmicro Microcontroller products. The
-software is owned by the Company and/or its supplier, and is
-protected under applicable copyright laws. All rights are reserved.
-Any use in violation of the foregoing restrictions may subject the
-user to criminal sanctions under applicable laws, as well as to
-civil liability for the breach of the terms and conditions of this
-license.
-
-THIS SOFTWARE IS PROVIDED IN AN �AS IS� CONDITION. NO WARRANTIES,
-WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED
-TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. THE COMPANY SHALL NOT,
-IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL OR
-CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
-
+To request to license the code under the MLA license (www.microchip.com/mla_license), 
+please contact mla_licensing@microchip.com
 *******************************************************************************/
+//DOM-IGNORE-END
 
 
 #include <stdlib.h>

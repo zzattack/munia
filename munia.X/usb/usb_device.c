@@ -1,3 +1,24 @@
+// DOM-IGNORE-BEGIN
+/*******************************************************************************
+Copyright 2015 Microchip Technology Inc. (www.microchip.com)
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+To request to license the code under the MLA license (www.microchip.com/mla_license), 
+please contact mla_licensing@microchip.com
+*******************************************************************************/
+//DOM-IGNORE-END
+
 /*******************************************************************************
   USB Device Layer
 
@@ -15,32 +36,6 @@
    Provides basic USB device functionality, including enumeration and USB
    chapter 9 required behavior.
 *******************************************************************************/
-
-// DOM-IGNORE-BEGIN
-/*******************************************************************************
-Copyright (c) 2013 released Microchip Technology Inc.  All rights reserved.
-
-Microchip licenses to you the right to use, modify, copy and distribute
-Software only when embedded on a Microchip microcontroller or digital signal
-controller that is integrated into your product or third party product
-(pursuant to the sublicense terms in the accompanying license agreement).
-
-You should refer to the license agreement accompanying this Software for
-additional information regarding your rights and obligations.
-
-SOFTWARE AND DOCUMENTATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
-EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION, ANY WARRANTY OF
-MERCHANTABILITY, TITLE, NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE.
-IN NO EVENT SHALL MICROCHIP OR ITS LICENSORS BE LIABLE OR OBLIGATED UNDER
-CONTRACT, NEGLIGENCE, STRICT LIABILITY, CONTRIBUTION, BREACH OF WARRANTY, OR
-OTHER LEGAL EQUITABLE THEORY ANY DIRECT OR INDIRECT DAMAGES OR EXPENSES
-INCLUDING BUT NOT LIMITED TO ANY INCIDENTAL, SPECIAL, INDIRECT, PUNITIVE OR
-CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF PROCUREMENT OF
-SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
-(INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
-*******************************************************************************/
-// DOM-IGNORE-END
-
 
 // *****************************************************************************
 // *****************************************************************************
@@ -177,9 +172,6 @@ volatile uint8_t CtrlTrfData[USB_EP0_BUFF_SIZE] CTRL_TRF_DATA_ADDR_TAG;
 /********************************************************************
  * non-EP0 Buffer Space
  *******************************************************************/
-#if defined(USB_USE_HID)
-#endif
-
 #if defined(USB_USE_MSD)
     //Check if the MSD application specific USB endpoint buffer placement address 
     //macros have already been defined or not (ex: in a processor specific header)
@@ -306,6 +298,10 @@ void USBDeviceInit(void)
 
     USBDisableInterrupts();
 
+    //Make sure that if a GPIO output driver exists on VBUS, that it is 
+    //tri-stated to avoid potential contention with the host
+    USB_HAL_VBUSTristate();
+    
     // Clear all USB error flags
     USBClearInterruptRegister(U1EIR);  
        
@@ -625,7 +621,7 @@ void USBDeviceTasks(void)
             //We recently attached, make sure we are in a clean state
             #if defined(__dsPIC33E__) || defined(_PIC24E__)
                 U1IR = 0xFFEF;  //Preserve IDLEIF info, so we can detect suspend
-                                //during attach debounce interval
+                                //during attach de-bounce interval
             #else
                 USBClearInterruptRegister(U1IR);
             #endif
@@ -741,7 +737,7 @@ void USBDeviceTasks(void)
         #endif
 
         #if defined(USB_ENABLE_STATUS_STAGE_TIMEOUTS)
-            //Supporting this feature requires a 1ms timebase for keeping track of the timeout interval.
+            //Supporting this feature requires a 1ms time base for keeping track of the timeout interval.
             #if(USB_SPEED_OPTION == USB_LOW_SPEED)
                 #warning "Double click this message.  See inline code comments."
                 //The "USB_ENABLE_STATUS_STAGE_TIMEOUTS" feature is optional and is
@@ -941,7 +937,7 @@ void USBEnableEndpoint(uint8_t ep, uint8_t options)
     data over the USB port.  
 
     The USBTransferOnePacket() is intended for use with all application 
-    endpoints.  It is not used for sending or receiving applicaiton data 
+    endpoints.  It is not used for sending or receiving application data 
     through endpoint 0 by using control transfers.  Separate API 
     functions, such as USBEP0Receive(), USBEP0SendRAMPtr(), and
     USBEP0SendROMPtr() are provided for this purpose.
@@ -1100,7 +1096,7 @@ void USBStallEndpoint(uint8_t ep, uint8_t dir)
     {
         //For control endpoints (ex: EP0), we need to STALL both IN and OUT
         //endpoints.  EP0 OUT must also be prepared to receive the next SETUP 
-        //packet that will arrrive.
+        //packet that will arrive.
         pBDTEntryEP0OutNext->CNT = USB_EP0_BUFF_SIZE;
         pBDTEntryEP0OutNext->ADR = ConvertToPhysicalAddress(&SetupPkt);
         pBDTEntryEP0OutNext->STAT.Val = _DAT0|(_DTSEN & _DTS_CHECKING_ENABLED)|_BSTALL;
@@ -1204,7 +1200,7 @@ void USBCancelIO(uint8_t endpoint)
     Remarks:
         If the application firmware calls USBDeviceDetach(), it is strongly
         recommended that the firmware wait at least >= 80ms before calling
-        USBDeviceAttach().  If the firmeware performs a soft detach, and then
+        USBDeviceAttach().  If the firmware performs a soft detach, and then
         re-attaches too soon (ex: after a few micro seconds for instance), some
         hosts may interpret this as an unexpected "glitch" rather than as a
         physical removal/re-attachment of the USB device.  In this case the host
@@ -1213,10 +1209,10 @@ void USBCancelIO(uint8_t endpoint)
         detach/re-attach, it is recommended to make sure the device remains 
         detached long enough to mimic a real human controlled USB 
         unplug/re-attach event (ex: after calling USBDeviceDetach(), do not
-        call USBDeviceAttach() for at least 80+ms, preferrably longer.
+        call USBDeviceAttach() for at least 80+ms, preferably longer.
         
         Neither the USBDeviceDetach() or USBDeviceAttach() functions are blocking
-        or take long to execute.  It is the application firmware's 
+        or take long to execute.  It is the application firmwares 
         responsibility for adding the 80+ms delay, when using these API 
         functions.
         
@@ -1285,7 +1281,7 @@ void USBDeviceDetach(void)
          USBDeviceState = DETACHED_STATE;
 
          #ifdef  USB_SUPPORT_OTG    
-             //Disable D+ Pullup
+             //Disable D+ Pull-up
              U1OTGCONbits.DPPULUP = 0;
 
              //Disable HNP
@@ -1339,7 +1335,7 @@ void USBDeviceDetach(void)
     
     Summary:
         Checks if VBUS is present, and that the USB module is not already 
-        initalized, and if so, enables the USB module so as to signal device 
+        initialized, and if so, enables the USB module so as to signal device 
         attachment to the USB host.   
 
     Description:
@@ -1358,7 +1354,7 @@ void USBDeviceDetach(void)
         for a long time (ex: 100ms+) before calling this function to re-enable the module.
         If the device turns off the D+ (for full speed) or D- (for low speed) ~1.5k ohm
         pull up resistor, and then turns it back on very quickly, common hosts will sometimes 
-        reject this event, since no human could ever unplug and reattach a USB device in a 
+        reject this event, since no human could ever unplug and re-attach a USB device in a 
         microseconds (or nanoseconds) timescale.  The host could simply treat this as some kind 
         of glitch and ignore the event altogether.  
     Parameters:
@@ -1698,7 +1694,7 @@ static void USBCtrlEPServiceComplete(void)
 			 * 1. Prepare IN EP to transfer data to the host.  If however the data
 			 *    wasn't ready yet (ex: because the firmware needs to go and read it from
 			 *    some slow/currently unavailable resource, such as an external I2C EEPconst),
-			 *    Then the class request handler reponsible should call the USBDeferDataStage()
+			 *    Then the class request handler responsible should call the USBDeferDataStage()
 			 *    macro.  In this case, the firmware may wait up to 500ms, before it is required
 			 *    to transmit the first IN data packet.  Once the data is ready, and the firmware
 			 *    is ready to begin sending the data, it should then call the 
@@ -1725,7 +1721,7 @@ static void USBCtrlEPServiceComplete(void)
             //        option can take care of this for you.
             //    Note: For this type of control transfer, there is normally no harm in simply arming the
             //    status stage packet right now, even if the IN data is not ready yet.  This allows for
-            //    immediate early termination, without adding unecessary delay.  Therefore, it is generally not
+            //    immediate early termination, without adding unnecessary delay.  Therefore, it is generally not
             //    recommended for the USB class handler firmware to call USBDeferStatusStage(), for this 
             //    type of control transfer.  If the USB class handler firmware needs more time to fetch the IN
             //    data that needs to be sent to the host, it should instead use the USBDeferDataStage() function.
@@ -2103,7 +2099,7 @@ static void USBStdGetDscHandler(void)
                 break;
             case USB_DESCRIPTOR_STRING:
                 //USB_NUM_STRING_DESCRIPTORS was introduced as optional in release v2.3.  In v2.4 and
-                //  later it is now manditory.  This should be defined in usb_config.h and should
+                //  later it is now mandatory.  This should be defined in usb_config.h and should
                 //  indicate the number of string descriptors.
                 if(SetupPkt.bDscIndex == 3) // serial num
                 {
@@ -2236,7 +2232,7 @@ static void USBStdGetStatusHandler(void)
  * Side Effects:    
  *
  * Overview:        This function handles the event of a STALL 
- *                  occuring on the bus
+ *                  occurring on the bus
  *
  * Note:            None
  *******************************************************************/
@@ -2353,7 +2349,7 @@ static void USBWakeFromSuspend(void)
 
     #if defined(__18CXX) || defined(_PIC14E) || defined(__XC8)
         //To avoid improperly clocking the USB module, make sure the oscillator
-        //settings are consistant with USB operation before clearing the SUSPND bit.
+        //settings are consistent with USB operation before clearing the SUSPND bit.
         //Make sure the correct oscillator settings are selected in the 
         //"USB_WAKEUP_FROM_SUSPEND_HANDLER(EVENT_RESUME,0,0)" handler.
         U1CONbits.SUSPND = 0;   // Bring USB module out of power conserve
@@ -2371,7 +2367,7 @@ static void USBWakeFromSuspend(void)
     are required to synchronize the internal hardware state machine before
     the ACTIVIF bit can be cleared by firmware. Clearing the ACTVIF bit
     before the internal hardware is synchronized may not have an effect on
-    the value of ACTVIF. Additonally, if the USB module uses the clock from
+    the value of ACTVIF. Additionally, if the USB module uses the clock from
     the 96 MHz PLL source, then after clearing the SUSPND bit, the USB
     module may not be immediately operational while waiting for the 96 MHz
     PLL to lock.
@@ -2439,18 +2435,11 @@ static void USBCtrlEPService(void)
 		//If the current EP0 OUT buffer has a SETUP packet
         if(pBDTEntryEP0OutCurrent->STAT.PID == PID_SETUP)
         {
-            unsigned char setup_cnt;
-
 	        //The SETUP transaction data may have gone into the the CtrlTrfData 
 	        //buffer, or elsewhere, depending upon how the BDT was prepared
 	        //before the transaction.  Therefore, we should copy the data to the 
 	        //SetupPkt buffer so it can be processed correctly by USBCtrlTrfSetupHandler().		    
-            for(setup_cnt = 0; setup_cnt < 8u; setup_cnt++) //SETUP data packets always contain exactly 8 bytes.
-            {
-                *(uint8_t*)((uint8_t*)&SetupPkt + setup_cnt) = *(uint8_t*)ConvertToVirtualAddress(pBDTEntryEP0OutCurrent->ADR);
-                pBDTEntryEP0OutCurrent->ADR++;
-            }    
-            pBDTEntryEP0OutCurrent->ADR = ConvertToPhysicalAddress(&SetupPkt);
+            memcpy((uint8_t*)&SetupPkt, (uint8_t*)ConvertToVirtualAddress(pBDTEntryEP0OutCurrent->ADR), 8);
 
 			//Handle the control transfer (parse the 8-byte SETUP command and figure out what to do)
             USBCtrlTrfSetupHandler();
@@ -2627,7 +2616,7 @@ static void USBCtrlTrfOutHandler(void)
  * Overview:        This routine handles an IN transaction according to
  *                  which control transfer state is currently active.
  *
- * Note:            A Set Address Request must not change the acutal address
+ * Note:            A Set Address Request must not change the actual address
  *                  of the device until the completion of the control
  *                  transfer. The end of the control transfer for Set Address
  *                  Request is an IN transaction. Therefore it is necessary
@@ -3041,7 +3030,7 @@ static void USBStdFeatureReqHandler(void)
         In USB full speed applications, the application code does not need to (and should
         not) explicitly call this function, as the USBDeviceTasks() function will
         automatically call this function whenever a 1ms time interval has elapsed
-        (assuming the code is calling USBDeviceTasks() frequenctly enough in USB_POLLING
+        (assuming the code is calling USBDeviceTasks() frequently enough in USB_POLLING
         mode, or that USB interrupts aren't being masked for more than 1ms at a time
         in USB_INTERRUPT mode).
 
@@ -3076,7 +3065,7 @@ void USBIncrement1msInternalTimers(void)
     #endif
 
     //Increment timekeeping 1ms tick counters.  Useful for other APIs/code
-    //that needs a 1ms timebase that is active during USB non-suspended operation.
+    //that needs a 1ms time base that is active during USB non-suspended operation.
     USB1msTickCount++;
     if(USBIsBusSuspended() == false)
     {
@@ -3115,7 +3104,7 @@ void USBIncrement1msInternalTimers(void)
 
     Remarks:
         On 8-bit USB full speed devices, the internal counter is incremented on
-        every SOF packet deteceted.  Therefore, it will not increment during suspend
+        every SOF packet detected.  Therefore, it will not increment during suspend
         or when the USB cable is detached.  However, on 16-bit devices, the T1MSECIF
         hardware interrupt source is used to increment the internal counter.  Therefore,
         on 16-bit devices, the count continue to increment during USB suspend or

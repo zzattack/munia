@@ -1,43 +1,23 @@
-/******************************************************************************
+// DOM-IGNORE-BEGIN
+/*******************************************************************************
+Copyright 2015 Microchip Technology Inc. (www.microchip.com)
 
-    USB Host Driver Local Header
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-This file provides local definitions used by the hardware interface for a USB
-Host application.
+    http://www.apache.org/licenses/LICENSE-2.0
 
-* File Name:       usb_host_local.h
-* Dependencies:    None
-* Processor:       PIC24/dsPIC30/dsPIC33/PIC32MX
-* Compiler:        C30 v2.01/C32 v0.00.18
-* Company:         Microchip Technology, Inc.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
-Software License Agreement
-
-The software supplied herewith by Microchip Technology Incorporated
-(the �Company�) for its PICmicro� Microcontroller is intended and
-supplied to you, the Company�s customer, for use solely and
-exclusively on Microchip PICmicro Microcontroller products. The
-software is owned by the Company and/or its supplier, and is
-protected under applicable copyright laws. All rights are reserved.
-Any use in violation of the foregoing restrictions may subject the
-user to criminal sanctions under applicable laws, as well as to
-civil liability for the breach of the terms and conditions of this
-license.
-
-THIS SOFTWARE IS PROVIDED IN AN �AS IS� CONDITION. NO WARRANTIES,
-WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED
-TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. THE COMPANY SHALL NOT,
-IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL OR
-CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
-
-Change History:
-  Rev         Description
-  ----------  ----------------------------------------------------------
-  2.6a        Removed extraneous definition
-  2.7         No change
-  2.7a        Removed freez() macro
+To request to license the code under the MLA license (www.microchip.com/mla_license), 
+please contact mla_licensing@microchip.com
 *******************************************************************************/
+//DOM-IGNORE-END
 
 #ifndef _USB_HOST_LOCAL_
 #define _USB_HOST_LOCAL_
@@ -159,7 +139,9 @@ internal variables to support the device.
 #define SUBSUBSTATE_WAIT_FOR_SET_OTG_DONE               0x0002  //
 #define SUBSUBSTATE_SET_OTG_COMPLETE                    0x0003  //
 
-#define SUBSTATE_SET_CONFIGURATION                      0x0040  //
+#define SUBSTATE_APPLICATION_CONFIGURATION              0x0040  //
+
+#define SUBSTATE_SET_CONFIGURATION                      0x0050  //
 #define SUBSUBSTATE_SEND_SET_CONFIGURATION              0x0000  //
 #define SUBSUBSTATE_WAIT_FOR_SET_CONFIGURATION          0x0001  //
 #define SUBSUBSTATE_SET_CONFIGURATION_COMPLETE          0x0002  //

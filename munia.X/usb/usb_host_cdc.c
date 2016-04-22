@@ -1,68 +1,25 @@
-/******************************************************************************
+// DOM-IGNORE-BEGIN
+/*******************************************************************************
+Copyright 2015 Microchip Technology Inc. (www.microchip.com)
 
-  USB Host Communication Device Class(CDC) driver
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-This is the Communication device Class driver file for a USB Embedded Host device.
-This file should be used in a project with usb_host.c to provide the USB
-hardware interface.
+    http://www.apache.org/licenses/LICENSE-2.0
 
-Acronyms/abbreviations used by this class:
-    * CDC - Communication Device Class
-    * ACM - Abstract Control Module
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
-To interface with usb_host.c, the routine USBHostCDCInitialize() should be
-specified as the Initialize() function, and USBHostCDCEventHandler() should
-be specified as the EventHandler() function in the usbClientDrvTable[] array
-declared in usb_config.h.
+To request to license the code under the MLA license (www.microchip.com/mla_license), 
+please contact mla_licensing@microchip.com
+*******************************************************************************/
+//DOM-IGNORE-END
 
-This driver can be configured to use transfer events from usb_host.c.  Transfer
-events require more RAM and ROM than polling, but it cuts down or even
-eliminates the required polling of the various USBxxxTasks functions.  For this
-class, USBHostCDCTasks() is compiled out if transfer events from usb_host.c
-are used.  However, USBHostTasks() still must be called to provide attach,
-enumeration, and detach services.  If transfer events from usb_host.c
-are going to be used, USB_ENABLE_TRANSFER_EVENT should be defined.  If transfer
-status is going to be polled, USB_ENABLE_TRANSFER_EVENT should not be defined.
-CDC client layer transfer events are also enables once USB_ENABLE_TRANSFER_EVENT
-is defined. The application must define USB_HOST_APP_EVENT_HANDLER in file usb_config.h.
-All the CDC client layer event are called back using this function handler. This eliminates
-the need of polling for transfer status by the application, however handing of these events
-should be taken care by the application.
-
-Transfer of Data Class Interface can be performed with BULK transfers,
-hence USB_SUPPORT_BULK_TRANSFERS must be defined. Data Class Interface can also use
-ISOCHRONOUS transfers,however the CDC client is not tested for ISOCHRONOUS transfers.
-
-* FileName:        usb_host_cdc.c
-* Dependencies:    None
-* Processor:       PIC24/dsPIC30/dsPIC33/PIC32MX
-* Compiler:        C30 v2.01/C32 v0.00.18
-* Company:         Microchip Technology, Inc.
-
-Software License Agreement
-
-The software supplied herewith by Microchip Technology Incorporated
-(the �Company�) for its PICmicro� Microcontroller is intended and
-supplied to you, the Company�s customer, for use solely and
-exclusively on Microchip PICmicro Microcontroller products. The
-software is owned by the Company and/or its supplier, and is
-protected under applicable copyright laws. All rights are reserved.
-Any use in violation of the foregoing restrictions may subject the
-user to criminal sanctions under applicable laws, as well as to
-civil liability for the breach of the terms and conditions of this
-license.
-
-THIS SOFTWARE IS PROVIDED IN AN �AS IS� CONDITION. NO WARRANTIES,
-WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED
-TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. THE COMPANY SHALL NOT,
-IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL OR
-CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
-
-Author          Date    Comments
---------------------------------------------------------------------------------
-ADG          15-Sep-2008 First release
-********************************************************************************
+/*******************************************************************************
  Change History:
  Revision     Description
  v2.6         Removed state machine 'SUBSTATE_SET_CONTROL_LINE_STATE' from normal

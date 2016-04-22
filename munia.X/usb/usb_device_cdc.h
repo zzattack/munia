@@ -1,32 +1,26 @@
-//DOM-IGNORE-BEGIN
+// DOM-IGNORE-BEGIN
 /*******************************************************************************
-Software License Agreement
+Copyright 2015 Microchip Technology Inc. (www.microchip.com)
 
-The software supplied herewith by Microchip Technology Incorporated
-(the "Company") for its PICmicro(R) Microcontroller is intended and
-supplied to you, the Company's customer, for use solely and
-exclusively on Microchip PICmicro Microcontroller products. The
-software is owned by the Company and/or its supplier, and is
-protected under applicable copyright laws. All rights are reserved.
-Any use in violation of the foregoing restrictions may subject the
-user to criminal sanctions under applicable laws, as well as to
-civil liability for the breach of the terms and conditions of this
-license.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-THIS SOFTWARE IS PROVIDED IN AN "AS IS" CONDITION. NO WARRANTIES,
-WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED
-TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. THE COMPANY SHALL NOT,
-IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL OR
-CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
+    http://www.apache.org/licenses/LICENSE-2.0
 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+To request to license the code under the MLA license (www.microchip.com/mla_license), 
+please contact mla_licensing@microchip.com
 *******************************************************************************/
 //DOM-IGNORE-END
 
-//DOM-IGNORE-BEGIN
 #ifndef CDC_H
 #define CDC_H
-//DOM-IGNORE-END
 
 /** I N C L U D E S **********************************************************/
 #include "usb.h"
@@ -170,7 +164,7 @@ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
         None
         
     Parameters:
-        uint32_t baudRate - The desired baudrate
+        uint32_t baudRate - The desired baud rate
         
     Return Values:
         None
@@ -326,7 +320,7 @@ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
         None
         
     Parameters:
-        uint32_t baud - The desired baudrate
+        uint32_t baud - The desired baud rate
         uint8_t format - number of stop bits.  Available options are:
          * NUM_STOP_BITS_1 - 1 Stop bit
          * NUM_STOP_BITS_1_5 - 1.5 Stop bits
@@ -403,7 +397,7 @@ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
         void mUSBUSARTTxRam(uint8_t *pData, uint8_t len)
     
     Description:
-        Depricated in MCHPFSUSB v2.3.  This macro has been replaced by 
+        Deprecated in MCHPFSUSB v2.3.  This macro has been replaced by 
         USBUSARTIsTxTrfReady().
  *****************************************************************************/
 #define mUSBUSARTIsTxTrfReady()     USBUSARTIsTxTrfReady()
@@ -436,7 +430,7 @@ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
         The USB stack should have reached the CONFIGURED_STATE prior
         to calling this API function for the first time.
         
-    Paramters:
+    Parameters:
         pDdata  : Pointer to the starting location of data bytes
         len     : Number of bytes to be transferred
         
@@ -604,7 +598,7 @@ void CDCNotificationHandler(void);
     class. Input argument 'buffer' should point to a buffer area that is
     bigger or equal to the size specified by 'len'.
   Input:
-    event - the type of event that occured
+    event - the type of event that occurred
     pdata - pointer to the data that caused the event
     size - the size of the data that is pointed to by pdata
                                                                                    
@@ -664,12 +658,12 @@ uint8_t getsUSBUSART(uint8_t *buffer, uint8_t len);
 		
   Summary:
     putUSBUSART writes an array of data to the USB. Use this version, is
-    capable of transfering 0x00 (what is typically a NULL character in any of
+    capable of transferring 0x00 (what is typically a NULL character in any of
     the string transfer functions).
 
   Description:
     putUSBUSART writes an array of data to the USB. Use this version, is
-    capable of transfering 0x00 (what is typically a NULL character in any of
+    capable of transferring 0x00 (what is typically a NULL character in any of
     the string transfer functions).
     
     Typical Usage:
@@ -799,7 +793,7 @@ void putrsUSBUSART(const const char *data);
     This function is needed, in order to advance the internal software state 
     machine that takes care of sending multiple transactions worth of IN USB
     data to the host, associated with CDC serial data.  Failure to call 
-    CDCTxService() perioidcally will prevent data from being sent to the
+    CDCTxService() periodically will prevent data from being sent to the
     USB host, over the CDC serial data interface.
     
     Typical Usage:

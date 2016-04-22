@@ -1,85 +1,25 @@
-/******************************************************************************
+// DOM-IGNORE-BEGIN
+/*******************************************************************************
+Copyright 2015 Microchip Technology Inc. (www.microchip.com)
 
-  USB Host Printer Client Driver
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-  Summary:
-    This is the Printer client driver file for a USB Embedded Host device.
+    http://www.apache.org/licenses/LICENSE-2.0
 
-  Description:
-    This is the Printer client driver file for a USB Embedded Host device.
-    It allows an embedded application to utilize a USB printer to provide
-    printed output.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
-    USB printers utilize the USB Printer Class to communicate with a USB
-    Host.  This class defines the USB transfer type, the endpoint structure,
-    a device requests that can be performed.  The actual commands sent to
-    the printer, however, are dictated by the printer language used by the
-    particular printer.
-
-    Many different printer languages are utilized by the wide variety of
-    printers on the market.  Typically, low end printers receive printer-specific
-    binary data, utilizing the processing power of the USB Host to perform
-    all of the complex calculations required to translate text and graphics to
-    a simple binary representation.  This works well when a PC is the USB Host,
-    but it is not conducive to an embedded application with limited resources.
-
-    Many printers on the market use a command based printer language, relying
-    on the printer itself to interpret commands to produce the desired output.
-    Some languages are standardized across printers from a particular
-    manufacturer, and some are used across multiple manufacturer.  This method
-    lends itself better to embedded applications by allowing the printer to
-    take on some of the computational overhead.  Microchip provides support for
-    some printer languages, including PostScript and PCL 5.  Additional printer
-    language can be implemented.  Refer to the USB Embedded Host Printer Class
-    application notes for more details on implementing printer language support.
-
-
-  Remarks:
-    This driver should be used in a project with usb_host.c to provided the USB
-    Embedded Host and hardware interfaces, plus one or more language support
-    files.
-
-    To interface with USB Embedded Host layer, the routine USBHostPrinterInitialize()
-    should be specified as the Initialize() function, and
-    USBHostPrinterEventHandler() should be specified as the EventHandler()
-    function in the usbClientDrvTable[] array declared in usb_config.c.
-
-    This driver requires transfer events from usb_host.c, so
-    USB_ENABLE_TRANSFER_EVENT must be defined.
-
-    Since the printer class is performed with bulk transfers,
-    USB_SUPPORT_BULK_TRANSFERS must be defined.
-
+To request to license the code under the MLA license (www.microchip.com/mla_license), 
+please contact mla_licensing@microchip.com
 *******************************************************************************/
-//DOM-IGNORE-BEGIN
+//DOM-IGNORE-END
+
 /******************************************************************************
-
-FileName:        usb_host_printer.c
-Dependencies:    None
-Processor:       PIC24F/PIC32MX
-Compiler:        C30/C32
-Company:         Microchip Technology, Inc.
-
-Software License Agreement
-
-The software supplied herewith by Microchip Technology Incorporated
-(the �Company�) for its PICmicro� Microcontroller is intended and
-supplied to you, the Company�s customer, for use solely and
-exclusively on Microchip PICmicro Microcontroller products. The
-software is owned by the Company and/or its supplier, and is
-protected under applicable copyright laws. All rights are reserved.
-Any use in violation of the foregoing restrictions may subject the
-user to criminal sanctions under applicable laws, as well as to
-civil liability for the breach of the terms and conditions of this
-license.
-
-THIS SOFTWARE IS PROVIDED IN AN �AS IS� CONDITION. NO WARRANTIES,
-WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED
-TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. THE COMPANY SHALL NOT,
-IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL OR
-CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
-
  Change History:
   Rev           Description
   ----------    -----------
