@@ -12,7 +12,7 @@
 #define USB_MAX_NUM_INT     4   // Set this number to match the maximum interface number used in the descriptors for this firmware project
 #define USB_MAX_EP_NUMBER	5   // Set this number to match the maximum endpoint number used in the descriptors for this firmware project
 #define HID_NUM_OF_DSC 1
-#define USB_NUM_STRING_DESCRIPTORS 7
+#define USB_NUM_STRING_DESCRIPTORS 8
 
 #define USB_USER_DEVICE_DESCRIPTOR &device_dsc
 #define USB_USER_DEVICE_DESCRIPTOR_INCLUDE extern const USB_DEVICE_DESCRIPTOR device_dsc
@@ -61,7 +61,7 @@
 #define HID_INT_IN_SNES_SIZE    16
 #define HID_INT_IN_N64_SIZE     16
 #define HID_INT_IN_NGC_SIZE     16
-#define HID_INT_CFG_SIZE     16
+#define HID_INT_CFG_SIZE        16
 
 void usb_descriptors_check();
 
