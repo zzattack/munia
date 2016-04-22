@@ -172,7 +172,7 @@ namespace MUNIA {
 
 		private void tsmiCheckUpdates_Click(object sender, EventArgs e) {
 			statusStrip1.Visible = true;
-			PerformUpdateCheck();
+			PerformUpdateCheck(true);
 		}
 
 		private void UpdateStatus(string text, int progressBarValue) {
@@ -191,17 +191,23 @@ namespace MUNIA {
 			pbProgress.Value = progressBarValue;
 		}
 
-		private void PerformUpdateCheck() {
+		private void PerformUpdateCheck(bool msgBox = false) {
 			var uc = new UpdateChecker();
-			uc.AlreadyLatest += (o, e) => UpdateStatus("already latest version", 100);
+			uc.AlreadyLatest += (o, e) => {
+				if (msgBox) MessageBox.Show("You are already using the latest version available", "Already latest", MessageBoxButtons.OK, MessageBoxIcon.Information);
+				UpdateStatus("already latest version", 100);
+			};
 			uc.Connected += (o, e) => UpdateStatus("connected", 10);
 			uc.DownloadProgressChanged += (o, e) => { /* care, xml is small anyway */
 			};
-			uc.UpdateCheckFailed += (o, e) => UpdateStatus("update check failed", 100);
+			uc.UpdateCheckFailed += (o, e) => {
+				UpdateStatus("update check failed", 100);
+				if (msgBox) MessageBox.Show("Update check failed", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			};
 			uc.UpdateAvailable += (o, e) => {
 				UpdateStatus("update available", 100);
 
-				var dr = MessageBox.Show(string.Format("An update to version {0} released on {1} is available. Release notes: \r\n\r\n{2}\r\n\r\nUpdate now?", e.Version.ToString(), e.ReleaseDate.ToShortDateString(), e.ReleaseNotes), "Update available", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+				var dr = MessageBox.Show($"An update to version {e.Version.ToString()} released on {e.ReleaseDate.ToShortDateString()} is available. Release notes: \r\n\r\n{e.ReleaseNotes}\r\n\r\nUpdate now?", "Update available", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
 				if (dr == DialogResult.Yes)
 					DownloadAndUpdate(e.DownloadUrl);
 			};
