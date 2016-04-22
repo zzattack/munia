@@ -157,7 +157,7 @@ void USBCheckHIDRequest(void)
 {
     if(SetupPkt.Recipient != USB_SETUP_RECIPIENT_INTERFACE_BITFIELD) return;
     if(SetupPkt.bIntfID != HID_INTF_SNES && SetupPkt.bIntfID != HID_INTF_N64
-         && SetupPkt.bIntfID != HID_INTF_NGC && SetupPkt.bIntfID != HID_INTF_WII) return;
+         && SetupPkt.bIntfID != HID_INTF_NGC && SetupPkt.bIntfID != HID_INTF_CFG) return;
     
     /*
      * There are two standard requests that hid.c may support.
@@ -174,7 +174,8 @@ void USBCheckHIDRequest(void)
                     if (SetupPkt.bIntfID == HID_INTF_SNES)
                     {
                         USBEP0SendROMPtr(
-                            (const uint8_t*)&configDescriptor1 + 18, //18 is a magic number.  It is the offset from start of the configuration descriptor to the start of the HID descriptor.
+                            //18 is a magic number.  It is the offset from start of the configuration descriptor to the start of the HID descriptor.
+                            (const uint8_t*)&configDescriptor1 + 18,
                             sizeof(USB_HID_DSC)+3,
                             USB_EP0_INCLUDE_ZERO);
                     }
@@ -189,6 +190,13 @@ void USBCheckHIDRequest(void)
                     {
 						USBEP0SendROMPtr(
 							(const uint8_t*)&configDescriptor1 + 68, // ???
+							sizeof(USB_HID_DSC)+3,
+							USB_EP0_INCLUDE_ZERO);                                                
+                    }
+                    else if (SetupPkt.bIntfID == HID_INTF_CFG) 
+                    {
+						USBEP0SendROMPtr(
+							(const uint8_t*)&configDescriptor1 + 93, // ???
 							sizeof(USB_HID_DSC)+3,
 							USB_EP0_INCLUDE_ZERO);                                                
                     }

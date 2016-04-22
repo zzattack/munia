@@ -27,13 +27,13 @@ const uint8_t configDescriptor1[]={
     // Configuration Descriptor
     sizeof(USB_CONFIGURATION_DESCRIPTOR), // 9 Size of this descriptor in bytes
     USB_DESCRIPTOR_CONFIGURATION, // CONFIGURATION descriptor type
-    DESC_CONFIG_WORD(0x0054), // Total length of data for this cfg
+    DESC_CONFIG_WORD(0x0074), // Total length of data for this cfg
     USB_MAX_NUM_INT, // Number of interfaces in this cfg
     1, // Index value of this configuration
     0, // Configuration string index
     _DEFAULT, //| _SELF, // Attributes, see usb_device.h
     250, // Max power consumption (2X mA)
-							
+    
     // -------- Interface Descriptor 1: SNES -----------------------------------
     sizeof(USB_INTERFACE_DESCRIPTOR), // 9 Size of this descriptor in bytes
     USB_DESCRIPTOR_INTERFACE,    // INTERFACE descriptor type
@@ -122,7 +122,45 @@ const uint8_t configDescriptor1[]={
     _INTERRUPT,                             // Attributes
     DESC_CONFIG_WORD(HID_INT_IN_NGC_SIZE),  // size
     0x01,                                   // Interval
-    // -------------------------------------------------------------------------    
+    // -------------------------------------------------------------------------
+    
+    
+    // -------- Interface Descriptor 4: Config exchange-------------------------
+    sizeof(USB_INTERFACE_DESCRIPTOR), // Size of this descriptor in bytes
+    USB_DESCRIPTOR_INTERFACE,    // INTERFACE descriptor type
+    HID_INTF_CFG,                // Interface Number
+    0,                           // Alternate Setting Number
+    2,                           // Number of endpoints in this intf
+    HID_INTF,                    // Class code
+    0,                           // Subclass code
+    0,                           // Protocol code
+    0,                           // Interface string index
+
+    /* HID Class-Specific Descriptor */
+    0x09,//sizeof(USB_HID_DSC)+3,    // Size of this descriptor in bytes
+    DSC_HID,                    // HID descriptor type
+    0x11,0x01,                  // HID Spec Release Number in BCD format (1.11)
+    0x00,                       // Country Code (0x00 for Not supported)
+    HID_NUM_OF_DSC,             // Number of class descriptors, see usbcfg.h
+    DSC_RPT,                    // Report descriptor type
+    DESC_CONFIG_WORD(HID_RPT_CFG_SIZE), // sizeof(hid_rpt01),      // Size of the report descriptor
+
+    /* Endpoint Descriptor */
+    sizeof(USB_ENDPOINT_DESCRIPTOR), 
+    USB_DESCRIPTOR_ENDPOINT,    // Endpoint Descriptor
+    HID_EP_CFG_IN | _EP_IN,     // EndpointAddress
+    _INTERRUPT,                 // Attributes
+    DESC_CONFIG_WORD(HID_INT_CFG_SIZE),  // size
+    0x01,                       // Interval
+
+    /* Endpoint Descriptor */
+    sizeof(USB_ENDPOINT_DESCRIPTOR), 
+    USB_DESCRIPTOR_ENDPOINT,    // Endpoint Descriptor
+    HID_EP_CFG_OUT | _EP_OUT,   // EndpointAddress
+    _INTERRUPT,                 // Attributes
+    DESC_CONFIG_WORD(HID_INT_CFG_SIZE),  // size
+    0x01                        // Interval
+    
 };
 
 //Language code string descriptor
@@ -186,7 +224,7 @@ const uint8_t *const USB_SD_Ptr[]=
 
 
 void usb_descriptors_check() {
-#if DEBUG
+#if DEBUG || SIMUL
     int dds = sizeof(device_dsc);
     while (device_dsc.bLength != dds) {
         printf("device_dsc size should be %i", dds);
