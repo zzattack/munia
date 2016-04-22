@@ -34,20 +34,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="HidSharp, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HidSharp.1.5\lib\net35\HidSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <HintPath>..\packages\OpenTK.1.1.2225.0\lib\net20\OpenTK.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="OpenTK.GLControl, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <HintPath>..\packages\OpenTK.GLControl.1.1.1589.5942\lib\NET40\OpenTK.GLControl.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="SharpLibHid, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <HintPath>..\packages\SharpLibHid.1.3.1\lib\net20\SharpLibHid.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="SharpLibWin32, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <HintPath>..\packages\SharpLibWin32.0.0.7\lib\net20\SharpLibWin32.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -129,6 +125,9 @@
       <Project>{886a98c5-37c0-4e8b-885e-30c1d2f98b47}</Project>
       <Name>Svg</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="HID\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

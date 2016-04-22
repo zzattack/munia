@@ -53,7 +53,7 @@ namespace MUNIA {
 
 				// find input device
 				_inputDevice?.Dispose();
-				_inputDevice = MuniaController.ListDevices().FirstOrDefault(d => d.HidDevice.Product == DeviceName);
+				_inputDevice = MuniaController.ListDevices().FirstOrDefault(d => d.HidDevice.ProductName == DeviceName);
 				return _inputDevice == null ? LoadResult.NoController : LoadResult.Ok;
 			}
 			catch { return LoadResult.Fail; }
@@ -386,13 +386,7 @@ namespace MUNIA {
 			float maxY = points.Max(p => p.Y);
 			return RectangleF.FromLTRB(minX, minY, maxX, maxY);
 		}
-
-		public void WndProc(ref Message message) {
-			_inputDevice?.WndProc(ref message);
-		}
-
-		private void InputDeviceOnStateUpdated(object sender, EventArgs args) {
-		}
+		
 	}
 
 	public class ControllerItem {

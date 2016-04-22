@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows.Forms;
+using HidSharp;
 using MUNIA.Controllers;
-using SharpLib.Hid;
-using SharpLib.Win32;
 
 namespace MuniaInput {
     public abstract class MuniaController : IDisposable {
@@ -13,102 +14,75 @@ namespace MuniaInput {
         /// Can be used to register for WM_INPUT messages and parse them.
         /// For testing purposes it can also be used to solely register for WM_INPUT messages.
         /// </summary>
-        private Handler _handler;
 
-        public Device HidDevice;
+        public HidDevice HidDevice;
+		private HidStream _stream;
         public abstract List<int> Axes { get; }
         public abstract List<bool> Buttons { get; }
 
         public event EventHandler StateUpdated;
 
-        protected MuniaController(Device hidDevice) {
+        protected MuniaController(HidDevice hidDevice) {
             this.HidDevice = hidDevice;
         }
         public override string ToString() {
-            return HidDevice.Product;
+            return HidDevice.ProductName;
         }
         
         public static IEnumerable<MuniaController> ListDevices() {
-            RAWINPUTDEVICELIST[] ridList = null;
-            uint deviceCount = 0;
-            // first call to determine number of devices available
-            int res = Function.GetRawInputDeviceList(ridList, ref deviceCount, (uint)Marshal.SizeOf(typeof(RAWINPUTDEVICELIST)));
-            if (res != 0) yield break;
-            // allocate and fetch
-            ridList = new RAWINPUTDEVICELIST[deviceCount];
-            res = Function.GetRawInputDeviceList(ridList, ref deviceCount, (uint)Marshal.SizeOf(typeof(RAWINPUTDEVICELIST)));
-            if (res != deviceCount) yield break;
-
-            //For each our device add a node to our treeview
-            foreach (RAWINPUTDEVICELIST device in ridList) {
-                Device hidDevice;
-
-                // Try create our HID device.
-                try {
-                    hidDevice = new Device(device.hDevice);
+			var loader = new HidDeviceLoader();
+			
+	        //For each our device add a node to our treeview
+            foreach (var device in loader.GetDevices(0x04d8, 0x0058)) {
+                if (device.ProductName == "NinHID NGC") {
+                    yield return new NgcController(device);
                 }
-                catch {
-                    // Just skip that device then
-                    continue;
-                }
-                if (hidDevice.Product == "NinHID NGC") {
-                    yield return new NgcController(hidDevice);
-                }
-                else if (hidDevice.Product == "NinHID N64") {
-                    yield return new N64Controller(hidDevice);
-                }
-                else if (hidDevice.Product == "NinHID SNES") {
-                    yield return new SnesController(hidDevice);
-                }
-            }
+                else if (device.ProductName == "NinHID N64") {
+                    yield return new N64Controller(device);
+				}
+				else if (device.ProductName == "NinHID SNES") {
+					yield return new SnesController(device);
+				}
+			}
+		}
+		
+	    public static HidDevice GetConfigInterface() {
+			return null;
+		}
+
+
+		/// <summary>
+		/// Registers device for receiving inputs.
+		/// </summary>
+		/// <param name="wnd">Handle to window receiving WM_INPUT message for this device.
+		/// Window should override WndProc and give it to us.</param>
+		public void Activate(IntPtr wnd) {
+			_stream?.Dispose();
+			_stream = HidDevice.Open();
+			_stream.ReadTimeout = Timeout.Infinite;
+
+			byte[] buffer = new byte[HidDevice.MaxInputReportLength];
+			_stream.BeginRead(buffer, 0, buffer.Length, Callback, buffer);
+		}
+
+	    private void Callback(IAsyncResult ar) {
+			try {
+				int numBytes = _stream.EndRead(ar);
+				byte[] buffer = (byte[])ar.AsyncState;
+				if (numBytes > 0) {
+					Parse(buffer);
+					_stream.BeginRead(buffer, 0, buffer.Length, Callback, buffer);
+				}
+			}
+			catch (IOException) { }
+		}
+
+	    public void Dispose() {
+			_stream?.Dispose();
         }
-        
-        /// <summary>
-        /// Registers device for receiving inputs.
-        /// </summary>
-        /// <param name="wnd">Handle to window receiving WM_INPUT message for this device.
-        /// Window should override WndProc and give it to us.</param>
-        public void Activate(IntPtr wnd) {
-            // Register the input device to receive the commands from the
-            // remote device. See http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnwmt/html/remote_control.asp
-            // for the vendor defined usage page.
-            if (_handler != null) {
-                //First de-register
-                _handler.Dispose();
-                _handler = null;
-            }
-
-            RAWINPUTDEVICE rid = new RAWINPUTDEVICE {
-                usUsagePage = 1, // this.HidDevice.UsagePage,
-                usUsage = 4, // this.HidDevice.UsageCollection,
-                dwFlags = 0x00000100, // RIDEV_INPUTSINK - enables input receiving when the caller is not in foreground
-                hwndTarget = wnd
-            };
-
-            _handler = new Handler(new[] { rid });
-            if (!_handler.IsRegistered) {
-                Debug.WriteLine("Failed to register raw input devices: " + Marshal.GetLastWin32Error().ToString());
-            }
-
-            _handler.OnHidEvent += HandleHidEvent;
-        }
-
-        public void Dispose() {
-            _handler?.Dispose();
-            HidDevice.Dispose();
-        }
-
-        public void WndProc(ref Message message) {
-            _handler.ProcessInput(ref message);
-        }
-
-        private void HandleHidEvent(object sender, Event ev) {
-            if (Parse(ev))
-                StateUpdated?.Invoke(this, EventArgs.Empty);
-        }
-        protected abstract bool Parse(Event ev);
-
-
+		
+		protected abstract bool Parse(byte[] ev);
+		
         protected Dictionary<byte, byte> HatLookup = new Dictionary<byte, byte> {
             { HAT_SWITCH_NORTH, 8 },
             { HAT_SWITCH_NORTH_EAST, 9 },
