@@ -169,9 +169,41 @@ const uint8_t hid_rpt_ngc[] = {
     0xc0,                          // END_COLLECTION
 };
 
+
+#define REPORT_CFG_WRITE_ID 0x46
+#define REPORT_CFG_READ_ID  0x47
+#define REPORT_CFG_SIZE     0x20
+
+#define REPORT_SETTING_ID   0x48
+#define REPORT_SETTING_SIZE 0x20
+
+const uint8_t hid_rpt_cfg[] = {
+    0x06, 0x00, 0xFF,              // Usage Page = 0xFF00 (Vendor Defined Page 1)
+    0x09, 0x01,                    // USAGE (Vendor Usage 1)
+    0xa1, 0x01,                    // COLLECTION (Application)
+    0x15, 0x00,                    //     LOGICAL_MINIMUM (0)
+    0x26, 0xff, 0x00,              //     LOGICAL_MAXIMUM (255)
+
+    // get info command (firmware, serial, etc.)
+    0x85, REPORT_SETTING_ID,       //     REPORT_ID (72)
+    0x09, 0x04,                    //         USAGE (Vendor Usage 4)
+    0x95, REPORT_SETTING_SIZE,     //         REPORT_COUNT
+    0x29, REPORT_SETTING_SIZE,     //         USAGE_MAXIMUM
+    0x19, 0x01,                    //         USAGE_MINIMUM
+    0x75, 0x08,                    //         REPORT_SIZE (8)
+    0x81, 0x00,                    //         INPUT (Data,Ary,Abs)
+    // set info command
+    0x29, REPORT_SETTING_SIZE,     //         USAGE_MAXIMUM
+    0x19, 0x01,                    //         USAGE_MINIMUM
+    0x91, 0x00,                    //         OUTPUT (Data,Ary,Abs)
+
+    0xc0                           // END_COLLECTION    
+};
+
 #define HID_RPT_SNES_SIZE         sizeof(hid_rpt_snes)
 #define HID_RPT_N64_SIZE          sizeof(hid_rpt_n64)
 #define HID_RPT_NGC_SIZE          sizeof(hid_rpt_ngc)
+#define HID_RPT_CFG_SIZE          sizeof(hid_rpt_cfg)
 
 
 #define USB_ARRAYLEN(X) (sizeof(X)/sizeof(*X))
@@ -182,6 +214,7 @@ const uint8_t hid_rpt_ngc[] = {
 STATIC_SIZE_CHECK_EQUAL(sizeof(hid_rpt_snes), HID_RPT_SNES_SIZE);
 STATIC_SIZE_CHECK_EQUAL(sizeof(hid_rpt_n64), HID_RPT_N64_SIZE);
 STATIC_SIZE_CHECK_EQUAL(sizeof(hid_rpt_ngc), HID_RPT_NGC_SIZE);
+STATIC_SIZE_CHECK_EQUAL(sizeof(hid_rpt_cfg), HID_RPT_CFG_SIZE);
 
 
 #endif	/* REPORT_DESCRIPTORS_H */
