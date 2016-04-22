@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net;
 using System.Reflection;
 using System.Xml;
@@ -32,7 +33,8 @@ namespace MUNIA {
 						string releaseNotes = versionNode["release_notes"].InnerText;
 						string url = versionNode["url"].InnerText;
 
-						if (version > Assembly.GetExecutingAssembly().GetName().Version)
+						var myVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
+						if (version > Version.Parse(myVersion.FileVersion))
 							UpdateAvailable(this, new UpdateAvailableArgs {
 								DownloadUrl = url,
 								ReleaseDate = releaseDate,
