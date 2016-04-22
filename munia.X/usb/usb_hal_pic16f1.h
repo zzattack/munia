@@ -1,25 +1,21 @@
-//DOM-IGNORE-BEGIN
+// DOM-IGNORE-BEGIN
 /*******************************************************************************
-Software License Agreement
+Copyright 2015 Microchip Technology Inc. (www.microchip.com)
 
-The software supplied herewith by Microchip Technology Incorporated
-(the "Company") for its PICmicro(R) Microcontroller is intended and
-supplied to you, the Company's customer, for use solely and
-exclusively on Microchip PICmicro Microcontroller products. The
-software is owned by the Company and/or its supplier, and is
-protected under applicable copyright laws. All rights are reserved.
-Any use in violation of the foregoing restrictions may subject the
-user to criminal sanctions under applicable laws, as well as to
-civil liability for the breach of the terms and conditions of this
-license.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-THIS SOFTWARE IS PROVIDED IN AN "AS IS" CONDITION. NO WARRANTIES,
-WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED
-TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. THE COMPANY SHALL NOT,
-IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL OR
-CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
+    http://www.apache.org/licenses/LICENSE-2.0
 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+To request to license the code under the MLA license (www.microchip.com/mla_license), 
+please contact mla_licensing@microchip.com
 *******************************************************************************/
 //DOM-IGNORE-END
 
@@ -46,8 +42,10 @@ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 // Section: Constants
 // *****************************************************************************
 // *****************************************************************************
+#define USB_HAL_VBUSTristate()                 //No dedicated VBUS pin on these devices.
 
-//----- USBEnableEndpoint() input defintions ----------------------------------
+        
+//----- USBEnableEndpoint() input definitions ----------------------------------
 #define USB_HANDSHAKE_ENABLED   0x10
 #define USB_HANDSHAKE_DISABLED  0x00
 
@@ -62,7 +60,7 @@ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 
 #define USB_STALL_ENDPOINT      0x01
 
-//----- usb_config.h input defintions -----------------------------------------
+//----- usb_config.h input definitions -----------------------------------------
 #define USB_PULLUP_ENABLE 0x10
 #define USB_PULLUP_DISABLED 0x00
 
@@ -108,7 +106,7 @@ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 #define USBErrorIFReg UIR
 #define USBErrorIFBitNum 0xFD					//UERRIF bit position 1.  Note: This bit is read only and is cleared by clearing the enabled UEIR flags
 
-//----- Event call back defintions --------------------------------------------
+//----- Event call back definitions --------------------------------------------
 #if defined(USB_DISABLE_SOF_HANDLER)
     #define USB_SOF_INTERRUPT 0x00
 #else
@@ -182,7 +180,7 @@ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 #define U1STAT USTAT
 
 
-//----- Defintions for BDT address --------------------------------------------
+//----- Definitions for BDT address --------------------------------------------
 #define BDT_BASE_ADDR   0x2000
 #define BDT_BASE_ADDR_TAG @ BDT_BASE_ADDR
 #define BDT_ENTRY_SIZE 4
@@ -204,8 +202,8 @@ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 #define CTRL_TRF_SETUP_ADDR_TAG @ CTRL_TRF_SETUP_ADDR
 #define CTRL_TRF_DATA_ADDR_TAG  @ CTRL_TRF_DATA_ADDR
 
-//----- Depricated defintions - will be removed at some point of time----------
-//--------- Depricated in v2.2
+//----- Deprecated definitions - will be removed at some point of time----------
+//--------- Deprecated in v2.2
 #define _LS         0x00            // Use Low-Speed USB Mode
 #define _FS         0x04            // Use Full-Speed USB Mode
 #define _TRINT      0x00            // Use internal transceiver
@@ -304,7 +302,7 @@ typedef union _POINTER
 
     uint8_t* bRam;                         // Ram byte pointer: 2 bytes pointer pointing
                                         // to 1 byte of data
-    uint16_t* wRam;                         // Ram word poitner: 2 bytes poitner pointing
+    uint16_t* wRam;                         // Ram word pointer: 2 bytes pointer pointing
                                         // to 2 bytes of data
 
     const uint8_t* bRom;                     // Size depends on compiler setting

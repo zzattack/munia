@@ -1,3 +1,25 @@
+// DOM-IGNORE-BEGIN
+/*******************************************************************************
+Copyright 2015 Microchip Technology Inc. (www.microchip.com)
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+To request to license the code under the MLA license (www.microchip.com/mla_license), 
+please contact mla_licensing@microchip.com
+*******************************************************************************/
+//DOM-IGNORE-END
+
+
 /*******************************************************************************
  Module for Microchip USB Library
 
@@ -15,31 +37,6 @@
     Defines types associated with both the USB host and USB device stacks but
     not defined by the USB specification.
 *******************************************************************************/
-
-// DOM-IGNORE-BEGIN
-/*******************************************************************************
-Copyright (c) 2014 released Microchip Technology Inc.  All rights reserved.
-
-Microchip licenses to you the right to use, modify, copy and distribute
-Software only when embedded on a Microchip microcontroller or digital signal
-controller that is integrated into your product or third party product
-(pursuant to the sublicense terms in the accompanying license agreement).
-
-You should refer to the license agreement accompanying this Software for
-additional information regarding your rights and obligations.
-
-SOFTWARE AND DOCUMENTATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
-EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION, ANY WARRANTY OF
-MERCHANTABILITY, TITLE, NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE.
-IN NO EVENT SHALL MICROCHIP OR ITS LICENSORS BE LIABLE OR OBLIGATED UNDER
-CONTRACT, NEGLIGENCE, STRICT LIABILITY, CONTRIBUTION, BREACH OF WARRANTY, OR
-OTHER LEGAL EQUITABLE THEORY ANY DIRECT OR INDIRECT DAMAGES OR EXPENSES
-INCLUDING BUT NOT LIMITED TO ANY INCIDENTAL, SPECIAL, INDIRECT, PUNITIVE OR
-CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF PROCUREMENT OF
-SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
-(INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
-*******************************************************************************/
-//DOM-IGNORE-END
 
 //DOM-IGNORE-BEGIN
 #ifndef _USB_COMMON_H_
@@ -221,7 +218,7 @@ typedef enum
     // A USB hub has been attached.  Hub support is not currently available.
     EVENT_HUB_ATTACH,           
     
-    // A stall has occured.  This event is not used by the Host stack.
+    // A stall has occurred.  This event is not used by the Host stack.
     EVENT_STALL,                  
     
     // VBus SRP Pulse, (VBus > 2.0v),  Data: uint8_t Port Number (For future support)
@@ -327,6 +324,19 @@ typedef enum
     // per call to these functions.
     EVENT_1MS,
 
+    // In device mode, this event is thrown when we receive a Set Interface request from
+    // the host.  The stack will automatically handle the interface switch, but the app
+    // may need to know about the interface switch for performing tasks such as powering
+    // up/down audio hardware.
+    EVENT_ALT_INTERFACE,
+
+    // If the application layer must do things to the device before the device is 
+    // configured, they should be done at this point.  The application layer should
+    // return true to hold the USB state machine at this point, while any USB or other
+    // processing continues.  When the USB state machine can safely proceed, the application
+    // layer should return FALSE.
+    EVENT_HOLD_BEFORE_CONFIGURATION,
+
     // Class-defined event offsets start here:
     EVENT_GENERIC_BASE  = 400,      // Offset for Generic class events
 
@@ -356,7 +366,7 @@ typedef enum
 /* EVENT_TRANSFER Data
 
 This data structure is passed to the appropriate layer's
-USB_EVENT_HANDLER when an EVT_XFER event has occured, indicating
+USB_EVENT_HANDLER when an EVT_XFER event has occurred, indicating
 that a transfer has completed on the USB.  It provides the endpoint,
 direction, and actual size of the transfer.
  */
@@ -375,7 +385,7 @@ typedef struct _transfer_event_data
 
 This data structure is passed to the appropriate layer's
 USB_EVENT_HANDLER when an EVENT_VBUS_REQUEST_POWER or EVENT_VBUS_RELEASE_POWER
-event has occured, indicating that a change in Vbus power is being requested.
+event has occurred, indicating that a change in Vbus power is being requested.
 */
 
 typedef struct _vbus_power_data
@@ -436,8 +446,8 @@ stalled (ie. bit 0 = EP0, bit 1 = EP1, etc.)
         USBInitialize must have been called to initialize the USB SW
         Stack.
         
-    Paramters:
-        USB_EVENT event   - Identifies the bus event that occured
+    Parameters:
+        USB_EVENT event   - Identifies the bus event that occurred
         void *data        - Pointer to event-specific data
         unsigned int size - Size of the event-specific data
         

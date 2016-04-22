@@ -1,31 +1,23 @@
-/*********************************************************************
-  File Information:
-    FileName:        usb_device_msd.c
-    Dependencies:    See INCLUDES section below
-    Processor:       PIC18, PIC24, or PIC32
-    Compiler:        C18, C30, or C32
-    Company:         Microchip Technology, Inc.
+// DOM-IGNORE-BEGIN
+/*******************************************************************************
+Copyright 2015 Microchip Technology Inc. (www.microchip.com)
 
-    Software License Agreement
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-    The software supplied herewith by Microchip Technology Incorporated
-    (the "Company") for its PIC(r) Microcontroller is intended and
-    supplied to you, the Company's customer, for use solely and
-    exclusively on Microchip PICmicro Microcontroller products. The
-    software is owned by the Company and/or its supplier, and is
-    protected under applicable copyright laws. All rights are reserved.
-    Any use in violation of the foregoing restrictions may subject the
-    user to criminal sanctions under applicable laws, as well as to
-    civil liability for the breach of the terms and conditions of this
-    license.
+    http://www.apache.org/licenses/LICENSE-2.0
 
-    THIS SOFTWARE IS PROVIDED IN AN "AS IS" CONDITION. NO WARRANTIES,
-    WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED
-    TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-    PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. THE COMPANY SHALL NOT,
-    IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL OR
-    CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
-********************************************************************/
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+To request to license the code under the MLA license (www.microchip.com/mla_license), 
+please contact mla_licensing@microchip.com
+*******************************************************************************/
+//DOM-IGNORE-END
  
 /** I N C L U D E S **************************************************/
 #include "usb.h"
@@ -43,11 +35,11 @@
 #endif
 
 #if defined(USE_INTERNAL_FLASH)
-    #include "driver/fileio/internal_flash.h"
+    #include "internal_flash.h"
 #endif
 
 #if defined(USE_SD_INTERFACE_WITH_SPI)
-    #include "driver/fileio/sd_spi.h"
+    #include "sd_spi.h"
 #endif
 
 extern LUN_FUNCTIONS LUN[MAX_LUN + 1];
@@ -142,7 +134,7 @@ static void MSDComputeDeviceInAndResidue(uint16_t);
     The device should already be enumerated with a configuration that
     supports MSD before calling this function.
     
-  Paramters: None
+  Parameters: None
 
   Remarks:
     None                                                                                                          
@@ -249,7 +241,7 @@ void USBCheckMSDRequest(void)
             //bulk endpoint.  The MSD reset should re-initialize status
             //so as to prepare for a new CBW.  Any currently ongoing command
             //block should be aborted, but the STALL and DTS states need to be
-            //maintained (host will re-initialize these seperately using
+            //maintained (host will re-initialize these separately using
             //CLEAR_FEATURE, endpoint halt).
             MSD_State = MSD_WAIT;
             MSDCommandState = MSD_COMMAND_WAIT;
@@ -355,7 +347,7 @@ uint8_t MSDTasks(void)
     //Note: Both the USB stack code (usb_device.c) and this MSD handler code 
     //have the ability to modify the BDT values for the MSD bulk endpoints.  If the 
     //USB stack operates in USB_INTERRUPT mode (user option in usb_config.h), we
-    //should temporily disable USB interrupts, to avoid any possibility of both 
+    //should temporarily disable USB interrupts, to avoid any possibility of both 
     //the USB stack and this MSD handler from modifying the same BDT entry, or
     //MSD state machine variables (ex: in the case of MSD_RESET) at the same time.
     USBMaskInterrupts();
@@ -375,7 +367,7 @@ uint8_t MSDTasks(void)
                 //First copy the the received data to to the gblCBW structure, so
                 //that we keep track of the command, but free up the MSD OUT endpoint
                 //buffer for fulfilling whatever request may have been received.
-                //gblCBW = msd_cbw; //we are doing this, but below method can yeild smaller code size
+                //gblCBW = msd_cbw; //we are doing this, but below method can yield smaller code size
                 for(i = 0; i < MSD_CBW_SIZE; i++)
                 {
                     *((uint8_t*)&gblCBW.dCBWSignature + i) = *((uint8_t*)&msd_cbw.dCBWSignature + i);
@@ -540,13 +532,13 @@ uint8_t MSDTasks(void)
  		uint8_t MSDProcessCommand(void)
  		
  	Description:
- 		This funtion processes a command received through the MSD
+ 		This function processes a command received through the MSD
  		class driver
  		
  	PreCondition:
  		None
  		
- 	Paramters:
+ 	Parameters:
  		None
  		
  	Return Values:
@@ -624,7 +616,7 @@ uint8_t MSDProcessCommand(void)
  		
  	PreCondition:
  		The MSD function should have already been initialized (the media isn't
- 		required to be initalized however).  Additionally, a valid MSD Command 
+ 		required to be initialized however).  Additionally, a valid MSD Command 
  		Block Wrapper (CBW) should have been received and partially parsed 
  		prior to calling this function.
  		
@@ -699,13 +691,13 @@ void MSDProcessCommandMediaAbsent(void)
  		void MSDProcessCommandMediaPresent(void)
  		
  	Description:
- 		This funtion processes a command received through the MSD
+ 		This function processes a command received through the MSD
  		class driver
  		
  	PreCondition:
  		None
  		
- 	Paramters:
+ 	Parameters:
  		None
  	
  	Return Values:
@@ -986,7 +978,7 @@ void MSDProcessCommandMediaPresent(void)
  		been pre-loaded with the expected host and device data size values.
  		
  	Parameters:
- 		uint16_t DiExpected - Input: Firmware can specify an addional value that 
+ 		uint16_t DiExpected - Input: Firmware can specify an additional value that 
  		might be smaller than the TransferLength.Val value.  The function will
  		update TransferLength.Val with the smaller of the original value, or
  		DiExpected.
@@ -1003,7 +995,7 @@ static void MSDComputeDeviceInAndResidue(uint16_t DiExpected)
     //Error check number of bytes to send.  Check for Hi < Di
     if(gblCBW.dCBWDataTransferLength < DiExpected)
     {
-        //The host has requested less data than the entire reponse.  We
+        //The host has requested less data than the entire response.  We
         //send only the host requested quantity of bytes.
         msd_csw.dCSWDataResidue = 0;
         TransferLength.Val = gblCBW.dCBWDataTransferLength;
@@ -1025,7 +1017,7 @@ static void MSDComputeDeviceInAndResidue(uint16_t DiExpected)
  		uint8_t MSDReadHandler(void)
  		
  	Description:
- 		This funtion processes a read command received through 
+ 		This function processes a read command received through 
  		the MSD class driver
  		
  	PreCondition:
@@ -1175,7 +1167,7 @@ uint8_t MSDReadHandler(void)
  		uint8_t MSDWriteHandler(void)
  		
  	Description:
- 		This funtion processes a write command received through 
+ 		This function processes a write command received through 
  		the MSD class driver
  		
  	PreCondition:
@@ -1486,7 +1478,7 @@ uint8_t MSDCheckForErrorCases(uint32_t DeviceBytes)
         }      
     }    
 
-    //If we get to here, this implies some kind of error is occuring.  Do some
+    //If we get to here, this implies some kind of error is occurring.  Do some
     //checks to find out which error occurred, so we know how to handle it.
 
     //Check if the host is expecting to transfer more bytes than the device. (Hx > Dx)
@@ -1602,7 +1594,7 @@ void MSDErrorHandler(uint8_t ErrorCase)
     MSDReadState = MSD_READ10_WAIT;
     MSDWriteState = MSD_WRITE10_WAIT;
     //After the conventional 13 test cases failures, the host still expects a valid CSW packet
-    msd_csw.dCSWDataResidue = gblCBW.dCBWDataTransferLength; //Indicate the unconsumed/unsent data
+    msd_csw.dCSWDataResidue = gblCBW.dCBWDataTransferLength; //Indicate the un-consumed/unsent data
     msd_csw.bCSWStatus = MSD_CSW_COMMAND_FAILED;    //Gets changed later to phase error for errors that user phase error
     MSD_State = MSD_SEND_CSW;
 

@@ -1,3 +1,24 @@
+// DOM-IGNORE-BEGIN
+/*******************************************************************************
+Copyright 2015 Microchip Technology Inc. (www.microchip.com)
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+To request to license the code under the MLA license (www.microchip.com/mla_license), 
+please contact mla_licensing@microchip.com
+*******************************************************************************/
+//DOM-IGNORE-END
+
 /*******************************************************************************
  Module for Microchip USB Library
 
@@ -14,35 +35,8 @@
     Defines types and APIs associated with the USB device stack.
 *******************************************************************************/
 
-// DOM-IGNORE-BEGIN
-/*******************************************************************************
-Copyright (c) 2014 released Microchip Technology Inc.  All rights reserved.
-
-Microchip licenses to you the right to use, modify, copy and distribute
-Software only when embedded on a Microchip microcontroller or digital signal
-controller that is integrated into your product or third party product
-(pursuant to the sublicense terms in the accompanying license agreement).
-
-You should refer to the license agreement accompanying this Software for
-additional information regarding your rights and obligations.
-
-SOFTWARE AND DOCUMENTATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
-EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION, ANY WARRANTY OF
-MERCHANTABILITY, TITLE, NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE.
-IN NO EVENT SHALL MICROCHIP OR ITS LICENSORS BE LIABLE OR OBLIGATED UNDER
-CONTRACT, NEGLIGENCE, STRICT LIABILITY, CONTRIBUTION, BREACH OF WARRANTY, OR
-OTHER LEGAL EQUITABLE THEORY ANY DIRECT OR INDIRECT DAMAGES OR EXPENSES
-INCLUDING BUT NOT LIMITED TO ANY INCIDENTAL, SPECIAL, INDIRECT, PUNITIVE OR
-CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF PROCUREMENT OF
-SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
-(INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
-*******************************************************************************/
-//DOM-IGNORE-END
-
-//DOM-IGNORE-BEGIN
 #ifndef _USB_DEVICE_H
 #define _USB_DEVICE_H
-//DOM-IGNORE-END
 
 #include "usb_common.h"
 #include <stdint.h>
@@ -72,7 +66,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
  * USB 2.0 Spec Ref Table 9-4
  *******************************************************************/
 
-/* USB Device States as returned by USBGetDeviceState().  Only the defintions
+/* USB Device States as returned by USBGetDeviceState().  Only the defenitions
    for these states should be used.  The actual value for each state should
    not be relied upon as constant and may change based on the implementation. */
 typedef enum
@@ -106,7 +100,7 @@ typedef enum
     ADDRESS_STATE
     /*DOM-IGNORE-BEGIN*/    = 0x10                         /*DOM-IGNORE-END*/,
     /* Configured is the state where the device has been fully enumerated and is
-    operating on the bus.  The device is now allowed to excute its application
+    operating on the bus.  The device is now allowed to execute its application
     specific tasks.  It is also allowed to increase its current consumption to the
     value specified in the configuration descriptor of the current configuration.
     */
@@ -373,7 +367,7 @@ void USBEnableEndpoint(uint8_t ep, uint8_t options);
     data over the USB port.  
 
     The USBTransferOnePacket() is intended for use with all application 
-    endpoints.  It is not used for sending or receiving applicaiton data 
+    endpoints.  It is not used for sending or receiving application data 
     through endpoint 0 by using control transfers.  Separate API 
     functions, such as USBEP0Receive(), USBEP0SendRAMPtr(), and
     USBEP0SendROMPtr() are provided for this purpose.
@@ -531,7 +525,7 @@ void USBCancelIO(uint8_t endpoint);
     Remarks:
         If the application firmware calls USBDeviceDetach(), it is strongly
         recommended that the firmware wait at least >= 80ms before calling
-        USBDeviceAttach().  If the firmeware performs a soft detach, and then
+        USBDeviceAttach().  If the firmware performs a soft detach, and then
         re-attaches too soon (ex: after a few micro seconds for instance), some
         hosts may interpret this as an unexpected "glitch" rather than as a
         physical removal/re-attachment of the USB device.  In this case the host
@@ -540,10 +534,10 @@ void USBCancelIO(uint8_t endpoint);
         detach/re-attach, it is recommended to make sure the device remains 
         detached long enough to mimic a real human controlled USB 
         unplug/re-attach event (ex: after calling USBDeviceDetach(), do not
-        call USBDeviceAttach() for at least 80+ms, preferrably longer.
+        call USBDeviceAttach() for at least 80+ms, preferably longer.
         
         Neither the USBDeviceDetach() or USBDeviceAttach() functions are blocking
-        or take long to execute.  It is the application firmware's 
+        or take long to execute.  It is the application firmwares 
         responsibility for adding the 80+ms delay, when using these API 
         functions.
         
@@ -625,7 +619,7 @@ void USBDeviceDetach(void);
         for a long time (ex: 100ms+) before calling this function to re-enable the module.
         If the device turns off the D+ (for full speed) or D- (for low speed) ~1.5k ohm
         pull up resistor, and then turns it back on very quickly, common hosts will sometimes 
-        reject this event, since no human could ever unplug and reattach a USB device in a 
+        reject this event, since no human could ever unplug and re-attach a USB device in a 
         microseconds (or nanoseconds) timescale.  The host could simply treat this as some kind 
         of glitch and ignore the event altogether.  
     Parameters:
@@ -724,7 +718,7 @@ void USBCtrlEPAllowDataStage(void);
            pending control transfer.  Therefore, the USB stack will not STALL
            when it reaches the data stage of the control transfer, even if the
            firmware has not (yet) called the USBEP0Receive() API function.  
-           However, the application firware must still (eventually, once it is 
+           However, the application firmware must still (eventually, once it is 
            ready) call one of the aforementioned API function.
            
            Example Usage:
@@ -803,7 +797,7 @@ extern volatile bool USBDeferOUTDataStagePackets;
             USB host, through EP0 using control transfers.  Now assume that this
             application wishes to do something time consuming with this data (ex:
             transmit it to and save it to an external EEPconst device, connected
-            via SPI/I2C/etc.).  In this case, it would typically be desireable to
+            via SPI/I2C/etc.).  In this case, it would typically be desirable to
             defer allowing the USB status stage of the control transfer to complete,
             until after the data has been fully sent to the EEPconst device and saved.
             
@@ -924,7 +918,7 @@ bool USBOUTDataStageDeferred(void);
            pending control transfer.  Therefore, the USB stack will not STALL
            when it reaches the data stage of the control transfer, even if the
            firmware has not (yet) called the USBEP0SendRAMPtr() or 
-           USBEP0SendROMPtr() API function.  However, the application firware
+           USBEP0SendROMPtr() API function.  However, the application firmware
            must still (eventually, once it is ready) call one of the 
            aforementioned API functions.
            
@@ -1188,9 +1182,9 @@ USB_DEVICE_STATE USBGetDeviceState(void);
     currently suspended. When suspended, it will not be able to transfer data 
     over the bus.
     This function can be used by the application to skip over section of
-    code that do not need to exectute if the device is unable to send data
+    code that do not need to execute if the device is unable to send data
     over the bus.  This function can also be used to help determine when it is 
-    legal to perform USB remote wakeup signalling, for devices supporting this
+    legal to perform USB remote wakeup signaling, for devices supporting this
     feature.  
     
     Typical usage:
@@ -1368,7 +1362,11 @@ void USBSoftDetach(void);
   *************************************************************************/
 bool USBHandleBusy(USB_HANDLE handle);
 /*DOM-IGNORE-BEGIN*/
-#define USBHandleBusy(handle) (handle==0?0:((volatile BDT_ENTRY*)handle)->STAT.UOWN)
+#if defined(__XC8__)
+    #define USBHandleBusy(handle) ((handle != 0x0000) && ((*(volatile uint8_t*)handle & _USIE) != 0x00))
+#else
+    #define USBHandleBusy(handle) (handle==0?0:((volatile BDT_ENTRY*)handle)->STAT.UOWN)
+#endif
 /*DOM-IGNORE-END*/
 
 /********************************************************************
@@ -1450,7 +1448,7 @@ uint16_t USBHandleGetAddr(USB_HANDLE);
         ping pong buffering will be used on application endpoints.
     PreCondition:
         Will return NULL if the USB device has not yet been configured/the 
-        endpoint specified has not yet been initalized by USBEnableEndpoint().
+        endpoint specified has not yet been initialized by USBEnableEndpoint().
     Parameters:
         uint8_t ep_num - The endpoint number to get the handle for (valid
             values are 1-15,  0 is not a valid input value for this API)
@@ -1462,7 +1460,7 @@ uint16_t USBHandleGetAddr(USB_HANDLE);
             given ep_num and ep_dir
     Remarks:
         This API is useful for initializing USB_HANDLEs during initialization of
-        the application firmware.  It is also useful when ping-pong bufferring is
+        the application firmware.  It is also useful when ping-pong buffering is
         enabled, and the application firmware wishes to arm both the even and odd
         BDTs for an endpoint simultaneously.  In this case, the application 
         firmware for sending data to the host would typically be something like 
@@ -1548,7 +1546,7 @@ USB_HANDLE USBGetNextHandle(uint8_t ep_num, uint8_t ep_dir);
     PreCondition:
         None
         
-    Paramters:
+    Parameters:
         options - the various options that you want
                   when sending the control data. Options are:
                        USB_EP0_ROM
@@ -1644,12 +1642,12 @@ void USBEP0SendROMPtr(uint8_t* src, uint16_t size, uint8_t Options);
     None
   Input:
     dest -        address of where the incoming data will go (make sure that this
-                  address is directly accessable by the USB module for parts with
+                  address is directly accessible by the USB module for parts with
                   dedicated USB RAM this address must be in that space)
-    size -        the size of the data being received (is almost always going tobe
+    size -        the size of the data being received (is almost always going to be
                   presented by the preceeding setup packet SetupPkt.wLength)
     (*function) - a function that you want called once the data is received. If
-                  this is specificed as NULL then no function is called.
+                  this is specified as NULL then no function is called.
   Remarks:
     None                                                                    
   ***************************************************************************/
@@ -1774,7 +1772,7 @@ bool USB_APPLICATION_EVENT_HANDLER(uint8_t address, USB_EVENT event, void *pdata
         In USB full speed applications, the application code does not need to (and should
         not) explicitly call this function, as the USBDeviceTasks() function will
         automatically call this function whenever a 1ms time interval has elapsed
-        (assuming the code is calling USBDeviceTasks() frequenctly enough in USB_POLLING
+        (assuming the code is calling USBDeviceTasks() frequently enough in USB_POLLING
         mode, or that USB interrupts aren't being masked for more than 1ms at a time
         in USB_INTERRUPT mode).
 
@@ -1828,7 +1826,7 @@ void USBIncrement1msInternalTimers(void);
 
     Remarks:
         On 8-bit USB full speed devices, the internal counter is incremented on
-        every SOF packet deteceted.  Therefore, it will not increment during suspend
+        every SOF packet detected.  Therefore, it will not increment during suspend
         or when the USB cable is detached.  However, on 16-bit devices, the T1MSECIF
         hardware interrupt source is used to increment the internal counter.  Therefore,
         on 16-bit devices, the count continue to increment during USB suspend or
@@ -1911,7 +1909,7 @@ uint8_t USBGetTicksSinceSuspendEnd(void);
 
 /** Section: MACROS ******************************************************/
 
-/* The DESC_CONFIG_WORD() macro is implemented for convinence.  Since the
+/* The DESC_CONFIG_WORD() macro is implemented for convenience.  Since the
     configuration descriptor array is a uint8_t array, each entry needs to be a
     uint8_t in LSB format.  The DESC_CONFIG_WORD() macro breaks up a uint16_t into
     the appropriate uint8_t entries in LSB.
@@ -1925,16 +1923,16 @@ uint8_t USBGetTicksSinceSuspendEnd(void);
 */
 #define DESC_CONFIG_WORD(a) (a&0xFF),((a>>8)&0xFF)
 
-/* The DESC_CONFIG_uint32_t() macro is implemented for convinence.  Since the
+/* The DESC_CONFIG_uint32_t() macro is implemented for convenience.  Since the
     configuration descriptor array is a uint8_t array, each entry needs to be a
     uint8_t in LSB format.  The DESC_CONFIG_uint32_t() macro breaks up a uint32_t into
     the appropriate uint8_t entries in LSB.
 */
 #define DESC_CONFIG_uint32_t(a) (a&0xFF),((a>>8)&0xFF),((a>>16)&0xFF),((a>>24)&0xFF)
 
-/* The DESC_CONFIG_uint8_t() macro is implemented for convinence.  The
-    DESC_CONFIG_uint8_t() macro provides a consistant macro for use with a byte
-    when generating a configuratin descriptor when using either the 
+/* The DESC_CONFIG_uint8_t() macro is implemented for convenience.  The
+    DESC_CONFIG_uint8_t() macro provides a consistent macro for use with a byte
+    when generating a configuration descriptor when using either the 
     DESC_CONFIG_WORD() or DESC_CONFIG_uint32_t() macros.
 */
 #define DESC_CONFIG_uint8_t(a) (a)
@@ -1985,7 +1983,7 @@ typedef union
     } byte;
 } uint16_t_VAL;
 
-// Defintion of the PIPE structure
+// Definition of the PIPE structure
 //  This structure is used to keep track of data that is sent out
 //  of the stack automatically.
 typedef struct __attribute__ ((packed))

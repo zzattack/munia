@@ -1,25 +1,21 @@
-//DOM-IGNORE-BEGIN
+// DOM-IGNORE-BEGIN
 /*******************************************************************************
-Software License Agreement
+Copyright 2015 Microchip Technology Inc. (www.microchip.com)
 
-The software supplied herewith by Microchip Technology Incorporated
-(the "Company") for its PICmicro(R) Microcontroller is intended and
-supplied to you, the Company's customer, for use solely and
-exclusively on Microchip PICmicro Microcontroller products. The
-software is owned by the Company and/or its supplier, and is
-protected under applicable copyright laws. All rights are reserved.
-Any use in violation of the foregoing restrictions may subject the
-user to criminal sanctions under applicable laws, as well as to
-civil liability for the breach of the terms and conditions of this
-license.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-THIS SOFTWARE IS PROVIDED IN AN "AS IS" CONDITION. NO WARRANTIES,
-WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED
-TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. THE COMPANY SHALL NOT,
-IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL OR
-CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
+    http://www.apache.org/licenses/LICENSE-2.0
 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+To request to license the code under the MLA license (www.microchip.com/mla_license), 
+please contact mla_licensing@microchip.com
 *******************************************************************************/
 //DOM-IGNORE-END
 
@@ -40,7 +36,7 @@ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 /****** Constant definitions *************************************************/
 /*****************************************************************************/
 #define DEVICE_SPECIFIC_IEC_REGISTER_COUNT  9   //Number of IECx registers implemented in the microcontroller (varies from device to device, make sure this is set correctly for the intended CPU)
-
+#define USB_HAL_VBUSTristate()                  //No GPIO driver on VBUS on these devices.
 
 #if(USB_PING_PONG_MODE != USB_PING_PONG__FULL_PING_PONG)
     #error "Unsupported ping pong mode for this device"
@@ -193,8 +189,8 @@ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 #define CTRL_TRF_SETUP_ADDR_TAG
 #define CTRL_TRF_DATA_ADDR_TAG
 
-//----- Depricated defintions - will be removed at some point of time----------
-//--------- Depricated in v2.2
+//----- Deprecated definitions - will be removed at some point of time----------
+//--------- Deprecated in v2.2
 #define _LS                             0x00        // Use Low-Speed USB Mode
 #define _FS                             0x00        // Use Full-Speed USB Mode
 #define _TRINT                          0x00        // Use internal transceiver
@@ -291,7 +287,7 @@ typedef union _POINTER
 
     uint8_t* bRam;                         // Ram byte pointer: 2 bytes pointer pointing
                                         // to 1 byte of data
-    uint16_t* wRam;                         // Ram word poitner: 2 bytes poitner pointing
+    uint16_t* wRam;                         // Ram word pointer: 2 bytes pointer pointing
                                         // to 2 bytes of data
 
     const uint8_t* bRom;                     // Size depends on compiler setting
@@ -457,7 +453,7 @@ bool USBSleepOnSuspend(void);
         Clears all of the interrupts in the requested register
         
     Parameters:
-        register - the regsister that needs to be cleared.
+        register - the register that needs to be cleared.
         
     Return Values:
         None
@@ -534,8 +530,8 @@ Parameters:
     None
 
 Return Values:
-    true  - if it was legal to send remote wakeup signalling and the signalling was sent
-    false - if it was not legal to send remoate wakeup signalling (in this case, no signalling gets sent)
+    true  - if it was legal to send remote wakeup signaling and the signaling was sent
+    false - if it was not legal to send remote wakeup signaling (in this case, no signaling gets sent)
 
 Remarks:
     To successfully use remote wakeup in an application, the device must first
@@ -543,8 +539,8 @@ Remarks:
     bit in the attributes field of the USB configuration descriptor).  Additionally,
     the end user must allow/enable remote wakeup for the device.  Hosts are not
     obligated to always allow remote wakeup, and the end user can typically enable/disable this
-    feature for each device at their descretion.  Under Windows, devices supporting
-    remote wakeup will normally have an extra checkbox setting under the device
+    feature for each device at their discretion.  Under Windows, devices supporting
+    remote wakeup will normally have an extra check-box setting under the device
     manager properties pages for the device, which the user can change.
 
     Additionally, remote wakeup capability requires driver support, in the USB
@@ -560,14 +556,14 @@ Remarks:
     device, then the host will send notification to the device firmware letting it
     know that remote wakeup is legal.  The USBGetRemoteWakeupStatus() API function
     can be used to check if the host has allowed remote wakeup or not.  The application
-    firmware should not send remote wakeup signalling to the host, unless both
+    firmware should not send remote wakeup signaling to the host, unless both
     USBGetRemoteWakeupStatus() and USBIsBusSuspended() return true.  Attempting to
-    send the remote wakeup signalling to the host when it is not legal to do so
-    will nomrally not wake up the host, and will instead create a violation of
+    send the remote wakeup signaling to the host when it is not legal to do so
+    will normally not wake up the host, and will instead create a violation of
     the USB compliance criteria.  Additionally, devices should not send remote
-    wakeup signalling immediately upon entry into the suspended bus state.  Based on
+    wakeup signaling immediately upon entry into the suspended bus state.  Based on
     the USB specifications, the bus must be continuously idle for at least 5ms before
-    a device may send remote wakeup signalling.  After the signalling is sent, the
+    a device may send remote wakeup signaling.  After the signaling is sent, the
     device must become fully ready for normal USB communication/request
     processing within 10ms.
  *******************************************************************/
@@ -600,15 +596,15 @@ Parameters:
     that the read could not be performed (ex: if the comparators are currently off).
 
     Specify true, if you want this function to perform a forceful read operation.
-    In this case, this function will turn on the USB module and/or unsuspend it if
+    In this case, this function will turn on the USB module and/or un-suspend it if
     needed, in order to read the actual value.  The function will always return 0 or 1
     in this case.  However, the function may block for as much time as required to
     ensure that any necessary analog startup/settling/propagation times have
     elapsed, so as to get an accurate reading.  If invasive reads are allowed, and
-    this function turns on the USB module or unsuspends it, the module will remain
+    this function turns on the USB module or un-suspends it, the module will remain
     on and unsuspended subsequent to returning from this function.
     It is the caller's responsibility to turn the USB module off if
-    desired/appropropriate for the application (ex: because the returned value was
+    desired/appropriate for the application (ex: because the returned value was
     0, indicating VBUS is not currently powered, in which case the application may
     wish to shut things down for lower power consumption).
 

@@ -1,92 +1,31 @@
-/******************************************************************************
-    ESC/POS Printer Language Support
+// DOM-IGNORE-BEGIN
+/*******************************************************************************
+Copyright 2015 Microchip Technology Inc. (www.microchip.com)
 
-  Summary:
-    This file provides support for the ESC/POS printer language when using the
-    USB Embedded Host Printer Client Driver.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-  Description:
-    This file provides support for the ESC/POS printer language when using the
-    USB Embedded Host Printer Client Driver.
+    http://www.apache.org/licenses/LICENSE-2.0
 
-    The exact implementation of ESC/POS varies across manufacturers and even
-    across different models from the same manufacturer.  Some POS printers use
-    specialized Device ID strings (obtained with the GET DEVICE ID class-
-    specific request) to indicate the deviations from the strict ESC/POS
-    specification.  Also, many printers indicate a custom USB Peripheral Device
-    rather than the Printer Class, and therefore do not support the
-    GET DEVICE ID device request.  For example:
-    <code>
-    Printer          Tested VID/PID  Class    Device ID Substring
-    -------------------------------------------------------------
-    Bixolon SRP-270  0x0419/0x3C01   Printer  ESC
-    Epson TM-T88IV   0x04B8/0x0202   Custom   Not supported
-    Seiko DPU-V445   0x0619/0x0111   Printer  Not present
-    Seiko MPU-L465   0x0619/0x0109   Printer  SIIMPU
-    </code>
-    Therefore, dynamic language determination is not recommended for POS
-    printers.  Instead, create your application to target a either a single
-    printer model or a group of printer models with identical requirements,
-    and indicate specific VID, PID, and printer language via the USB
-    Configuration Tool, and test the application to ensure consistent behavior
-    across all supported printer models.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
-    The ESC/POS language support code provides several #defines that allow the
-    language support file to automatically configure itself for different
-    printer models.  These #defines can be set using the USB Configuration Tool
-    (USBConfig.exe or MPLAB VDI).  Note that they are determined at compile
-    time, not run time, so only one type of printer can be utilized by an
-    application.  Printer models other that the ones explicitly tested may
-    require other modifications to the language support code.
-
-  Notes:
-    Currently, only standard mode is supported.
-
-    The black and white bit image polarity is 0=white, 1=black, which is
-    reversed from the Microchip Graphics Library polarity.  This driver will
-    automatically convert the image data to the required format, as long as the
-    image data is located in ROM (USB_PRINTER_TRANSFER_FROM_ROM) or it is
-    copied from a RAM buffer (USB_PRINTER_TRANSFER_COPY_DATA).  If the data is
-    to be sent directly from its original RAM location, the data must already
-    be in the format required by the printer language.
-
+To request to license the code under the MLA license (www.microchip.com/mla_license), 
+please contact mla_licensing@microchip.com
 *******************************************************************************/
-//DOM-IGNORE-BEGIN
+//DOM-IGNORE-END
+
 /******************************************************************************
-
- FileName:        usb_host_printer_esc_pos.h
- Dependencies:    None
- Processor:       PIC24F/PIC32MX
- Compiler:        C30/C32
- Company:         Microchip Technology, Inc.
-
-Software License Agreement
-
-The software supplied herewith by Microchip Technology Incorporated
-(the �Company�) for its PICmicro� Microcontroller is intended and
-supplied to you, the Company�s customer, for use solely and
-exclusively on Microchip PICmicro Microcontroller products. The
-software is owned by the Company and/or its supplier, and is
-protected under applicable copyright laws. All rights are reserved.
-Any use in violation of the foregoing restrictions may subject the
-user to criminal sanctions under applicable laws, as well as to
-civil liability for the breach of the terms and conditions of this
-license.
-
-THIS SOFTWARE IS PROVIDED IN AN �AS IS� CONDITION. NO WARRANTIES,
-WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED
-TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. THE COMPANY SHALL NOT,
-IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL OR
-CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
-
 Change History:
   Rev         Description
   ----------  ----------------------------------------------------------
   2.6 - 2.7a   No change
 
 *******************************************************************************/
-//DOM-IGNORE-END
 
 
 #include <stdio.h>

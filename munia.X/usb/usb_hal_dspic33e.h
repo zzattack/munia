@@ -1,27 +1,24 @@
-//DOM-IGNORE-BEGIN
+// DOM-IGNORE-BEGIN
 /*******************************************************************************
-Software License Agreement
+Copyright 2015 Microchip Technology Inc. (www.microchip.com)
 
-The software supplied herewith by Microchip Technology Incorporated
-(the "Company") for its PICmicro(R) Microcontroller is intended and
-supplied to you, the Company's customer, for use solely and
-exclusively on Microchip PICmicro Microcontroller products. The
-software is owned by the Company and/or its supplier, and is
-protected under applicable copyright laws. All rights are reserved.
-Any use in violation of the foregoing restrictions may subject the
-user to criminal sanctions under applicable laws, as well as to
-civil liability for the breach of the terms and conditions of this
-license.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-THIS SOFTWARE IS PROVIDED IN AN "AS IS" CONDITION. NO WARRANTIES,
-WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED
-TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. THE COMPANY SHALL NOT,
-IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL OR
-CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
+    http://www.apache.org/licenses/LICENSE-2.0
 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+To request to license the code under the MLA license (www.microchip.com/mla_license), 
+please contact mla_licensing@microchip.com
 *******************************************************************************/
 //DOM-IGNORE-END
+
 
 #ifndef USB_HAL_DSPIC33E_H
 #define USB_HAL_DSPIC33E_H
@@ -40,7 +37,7 @@ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 /****** Constant definitions *************************************************/
 /*****************************************************************************/
 #define DEVICE_SPECIFIC_IEC_REGISTER_COUNT  9   //Number of IECx registers implemented in the microcontroller (varies from device to device, make sure this is set correctly for the intended CPU)
-
+#define USB_HAL_VBUSTristate()                  //No GPIO driver on VBUS on these devices.
 
 #if(USB_PING_PONG_MODE != USB_PING_PONG__FULL_PING_PONG)
     #error "Unsupported ping pong mode for this device"

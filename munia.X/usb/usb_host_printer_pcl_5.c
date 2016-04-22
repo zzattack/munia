@@ -1,86 +1,25 @@
-/******************************************************************************
-    PCL 5 Printer Language Support
+// DOM-IGNORE-BEGIN
+/*******************************************************************************
+Copyright 2015 Microchip Technology Inc. (www.microchip.com)
 
-  Summary:
-    This file provides support for the PCL 5 printer language when using the
-    USB Embedded Host Printer Client Driver.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-  Description:
-    This file provides support for the PCL 5 printer language when using the
-    USB Embedded Host Printer Client Driver.
+    http://www.apache.org/licenses/LICENSE-2.0
 
-    There are several versions of the PCL printer language.  This file is
-    targetted to support PCL 5.  Unfortunately, printer language support is not
-    always advertised correctly by the printer.  Some printers advertise only
-    PCL 6 support when they also support PCL 5.  Therefore, the default value
-    for the LANGUAGE_ID_STRING_PCL string used in the routine
-    USBHostPrinterLanguagePCL5IsSupported() is set such that the routine will
-    return true if any PCL language support is advertised.  It is highly
-    recommended to test the target application with the specific printer(s)
-    that will be utilized, and, if possible, populate the
-    usbPrinterSpecificLanguage[] array in usb_config.c via the configuration
-    tool to manually select the printer language and its functional support.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
-  Notes:
-    The PCL 5 coordinate origin is located at the top left corner of the paper.
-    The HP-GL/2 coordinate origin, however, is located at the bottom left corner
-    of the page.  For consistency for the user, HP-GL/2 coordinate system is
-    adjusted to match the PCL coordinate system.   This also matches the
-    coordinate system use by the Microchip Graphics library.
-
-    The black and white bit image polarity is 0=white, 1=black, which is
-    reversed from the Microchip Graphics Library polarity.  This driver will
-    automatically convert the image data to the required format, as long as the
-    image data is located in ROM (USB_PRINTER_TRANSFER_FROM_ROM) or it is
-    copied from a RAM buffer (USB_PRINTER_TRANSFER_COPY_DATA).  If the data is
-    to be sent directly from its original RAM location, the data must already
-    be in the format required by the printer language.
-
-    PCL 5 is not compatible with PCL 6; PCL 5 utilizes ASCII input, whereas
-    PCL 6 utilizes binary data.  However, some printers that advertise support
-    for only PCL 5 do support PCL 6.
-
-    PCL 3 printers utilize many of the PCL 5 commands.  The following
-    limitations exist with PCL 3:
-        * PCL 3 does not support vector graphics
-        * PCL 3 does not support image printing in landscape mode.  The
-            page print will fail.
-        * Items must be sent to the page in the order that they are to be
-            printed from top to bottom.  The printer cannot return to a
-            higher position on the page.
-        * PCL 3 does not support the USB_PRINTER_EJECT_PAGE command.  Use the
-            USB_PRINTER_JOB_STOP and USB_PRINTER_JOB_START commands instead.
-
+To request to license the code under the MLA license (www.microchip.com/mla_license), 
+please contact mla_licensing@microchip.com
 *******************************************************************************/
-//DOM-IGNORE-BEGIN
+//DOM-IGNORE-END
+
 /******************************************************************************
-
- FileName:        usb_host_printer_pcl_5.c
- Dependencies:    None
- Processor:       PIC24F/PIC32MX
- Compiler:        C30/C32
- Company:         Microchip Technology, Inc.
-
-Software License Agreement
-
-The software supplied herewith by Microchip Technology Incorporated
-(the �Company�) for its PICmicro� Microcontroller is intended and
-supplied to you, the Company�s customer, for use solely and
-exclusively on Microchip PICmicro Microcontroller products. The
-software is owned by the Company and/or its supplier, and is
-protected under applicable copyright laws. All rights are reserved.
-Any use in violation of the foregoing restrictions may subject the
-user to criminal sanctions under applicable laws, as well as to
-civil liability for the breach of the terms and conditions of this
-license.
-
-THIS SOFTWARE IS PROVIDED IN AN �AS IS� CONDITION. NO WARRANTIES,
-WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED
-TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. THE COMPANY SHALL NOT,
-IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL OR
-CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
-
 Change History:
   Rev         Description
   ----------  ----------------------------------------------------------

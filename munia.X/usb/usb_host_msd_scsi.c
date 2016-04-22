@@ -1,57 +1,23 @@
-/******************************************************************************
+// DOM-IGNORE-BEGIN
+/*******************************************************************************
+Copyright 2015 Microchip Technology Inc. (www.microchip.com)
 
-    USB Host Mass Storage Class SCSI Interface Driver
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-This file provides the interface between the file system and the USB Host Mass
-Storage class.  It translates the file system funtionality requirements to the
-appropriate SCSI commands, and sends the SCSI commands via the USB Mass
-Storage class.
+    http://www.apache.org/licenses/LICENSE-2.0
 
-The functions in this file are designed to interface the Microchip Memory Disk
-Drive File System library (see Application Note AN1045) to the USB Host Mass
-Storage Class, allowing a PIC application to utilize mass storage devices such
-as USB flash drives.  For ease of integration, this file contains macros to
-allow the File System code to reference the functions in this file.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
-Currently, the file system layer above this interface layer is limited to one
-LUN (Logical Unit Number) on a single mass storage device.  This layer accepts
-and stores the max LUN from the USB MSD layer, but all sector reads and writes
-are hard-coded to LUN 0, since the layer above does not specify a LUN in the
-sector read and write commands.  Also, to interface with the existing file
-system code, only one attached device is allowed.
-
-FileName:        usb_host_msd_scsi.c
-Dependencies:    Microchip Memory Disk Drive File System v1.01
-Processor:       PIC24/dsPIC30/dsPIC33/PIC32MX
-Compiler:        C30/C32
-Company:         Microchip Technology, Inc.
-
-Software License Agreement
-
-The software supplied herewith by Microchip Technology Incorporated
-(the �Company�) for its PICmicro� Microcontroller is intended and
-supplied to you, the Company�s customer, for use solely and
-exclusively on Microchip PICmicro Microcontroller products. The
-software is owned by the Company and/or its supplier, and is
-protected under applicable copyright laws. All rights are reserved.
-Any use in violation of the foregoing restrictions may subject the
-user to criminal sanctions under applicable laws, as well as to
-civil liability for the breach of the terms and conditions of this
-license.
-
-THIS SOFTWARE IS PROVIDED IN AN �AS IS� CONDITION. NO WARRANTIES,
-WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED
-TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. THE COMPANY SHALL NOT,
-IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL OR
-CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
-
-Change History:
-  Rev         Description
-  ----------  ----------------------------------------------------------
-  2.6 - 2.7a  No change
-
+To request to license the code under the MLA license (www.microchip.com/mla_license), 
+please contact mla_licensing@microchip.com
 *******************************************************************************/
+//DOM-IGNORE-END
 
 #include <stdlib.h>
 #include <string.h>

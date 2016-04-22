@@ -1,25 +1,21 @@
-//DOM-IGNORE-BEGIN
+// DOM-IGNORE-BEGIN
 /*******************************************************************************
-Software License Agreement
+Copyright 2015 Microchip Technology Inc. (www.microchip.com)
 
-The software supplied herewith by Microchip Technology Incorporated
-(the "Company") for its PICmicro(R) Microcontroller is intended and
-supplied to you, the Company's customer, for use solely and
-exclusively on Microchip PICmicro Microcontroller products. The
-software is owned by the Company and/or its supplier, and is
-protected under applicable copyright laws. All rights are reserved.
-Any use in violation of the foregoing restrictions may subject the
-user to criminal sanctions under applicable laws, as well as to
-civil liability for the breach of the terms and conditions of this
-license.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-THIS SOFTWARE IS PROVIDED IN AN "AS IS" CONDITION. NO WARRANTIES,
-WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED
-TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. THE COMPANY SHALL NOT,
-IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL OR
-CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
+    http://www.apache.org/licenses/LICENSE-2.0
 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+To request to license the code under the MLA license (www.microchip.com/mla_license), 
+please contact mla_licensing@microchip.com
 *******************************************************************************/
 //DOM-IGNORE-END
 
@@ -128,7 +124,7 @@ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 
 //MSDErrorHandler() definitions, see section 6.7 of BOT specifications revision 1.0
 //Note: We re-use values for some of the cases.  This is because the error handling
-//behavior is the same for some of the different test case numbes.
+//behavior is the same for some of the different test case numbers.
 #define MSD_ERROR_CASE_NO_ERROR         0x00
 #define MSD_ERROR_CASE_2                 0x01
 #define	MSD_ERROR_CASE_3                 0x01
@@ -441,12 +437,12 @@ typedef union __attribute__((packed)){
         uint8_t InformationB2;                    // device type or command specific (SPC-33.1.18)
         uint8_t InformationB3;                    // device type or command specific (SPC-33.1.18)
     	uint8_t AddSenseLen;                    // number of additional sense bytes that follow <=244
-    	USB_MSD_CMD_SPECIFIC_INFO CmdSpecificInfo;                // depends on command on which exception occured
+    	USB_MSD_CMD_SPECIFIC_INFO CmdSpecificInfo;                // depends on command on which exception occurred
     	uint8_t ASC;                            // additional sense code
     	uint8_t ASCQ;                            // additional sense code qualifier Section 4.5.2.1 SPC-3
     	uint8_t FRUC;                            // Field Replaceable Unit Code 4.5.2.5 SPC-3
 
-    	uint8_t SenseKeySpecific[3];            // msb is SKSV sense-key specific valied field set=> valid SKS
+    	uint8_t SenseKeySpecific[3];            // msb is SKSV sense-key specific valid field set=> valid SKS
                                             // 18-n additional sense bytes can be defined later
                                             // 18 Bytes Request Sense Fixed Format
     };
@@ -559,7 +555,7 @@ void USBMSDInit(void);
         needs to check if the last received CBW was valid, in order to know
         if the firmware should re-stall the endpoint following the clear halt.
         This is necessary to fully comply with the MSD BOT error case handling
-        related specifications, which dicate that the MSD device must 
+        related specifications, which dictate that the MSD device must 
         persistently STALL the bulk endpoints when a non-valid CBW is received.
         The host must issue an MSD reset command over EP0, prior to clear 
         endpoint halt, in order to clear the stall condition in this special 

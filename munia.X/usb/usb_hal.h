@@ -1,25 +1,21 @@
-//DOM-IGNORE-BEGIN
+// DOM-IGNORE-BEGIN
 /*******************************************************************************
-Software License Agreement
+Copyright 2015 Microchip Technology Inc. (www.microchip.com)
 
-The software supplied herewith by Microchip Technology Incorporated
-(the "Company") for its PICmicro(R) Microcontroller is intended and
-supplied to you, the Company's customer, for use solely and
-exclusively on Microchip PICmicro Microcontroller products. The
-software is owned by the Company and/or its supplier, and is
-protected under applicable copyright laws. All rights are reserved.
-Any use in violation of the foregoing restrictions may subject the
-user to criminal sanctions under applicable laws, as well as to
-civil liability for the breach of the terms and conditions of this
-license.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-THIS SOFTWARE IS PROVIDED IN AN "AS IS" CONDITION. NO WARRANTIES,
-WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED
-TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. THE COMPANY SHALL NOT,
-IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL OR
-CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
+    http://www.apache.org/licenses/LICENSE-2.0
 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+To request to license the code under the MLA license (www.microchip.com/mla_license), 
+please contact mla_licensing@microchip.com
 *******************************************************************************/
 //DOM-IGNORE-END
 
@@ -47,8 +43,6 @@ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 	#else
             #include "usb_hal_pic24f.h"
 	#endif
-#elif defined(__PIC32MM__)
-    #include "usb_hal_pic32mm.h"
 #else
     #error "Silicon Platform not defined"
 #endif
@@ -153,7 +147,7 @@ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
     Side Effect:
         The bus address has been set.
         
-    Remmarks:
+    Remarks:
         The address is assigned by the host and is received in
         a SET_ADDRESS setup request.
                   
@@ -301,7 +295,7 @@ unsigned long USBHALGetLastError( void );
         
     Description:
         This routine checks the USB for any events that may
-        have occured and handles them appropriately.  It may
+        have occurred and handles them appropriately.  It may
         be called directly to poll the USB and handle events
         or it may be called in response to an interrupt.
 
@@ -316,7 +310,7 @@ unsigned long USBHALGetLastError( void );
         None
         
     Side Effects:
-        Depend on the event that may have occured.
+        Depend on the event that may have occurred.
         
     Remarks:
         None
@@ -381,7 +375,7 @@ bool USBHALStallPipe( TRANSFER_FLAGS pipe );
     Parameters:
         pipe -  Uses the TRANSFER_FLAGS (see USBCommon.h) format to
                 identify the endpoint and direction making up the
-                pipe to unstall.
+                pipe to un-stall.
                 
     Return Values:
         true if able to stall the pipe, false if not.
@@ -409,7 +403,7 @@ bool USBHALUnstallPipe( TRANSFER_FLAGS pipe );
         USBHALGetStalledEndpoints
         
     Description:
-        This function returns a 16-bit bitmapped value with a
+        This function returns a 16-bit bit-mapped value with a
         bit set in the position of any endpoint that is stalled
         (i.e. if endpoint 0 is stalled then bit 0 is set, if
         endpoint 1 is stalled then bit 1 is set, etc.).     
@@ -462,7 +456,7 @@ uint16_t USBHALGetStalledEndpoints ( void );
         true if successful, false if not.
 
     Side Effects:
-        Transfer data for this pipe has been zero'd out.
+        Transfer data for this pipe has been zeroed out.
 
     Remarks:
         This routine ignores the normal HW protocol for ownership
@@ -482,7 +476,7 @@ bool USBHALFlushPipe( TRANSFER_FLAGS pipe );
     Description:
         This routine prepares to transfer data on the USB.
         If the system is in device mode, the actual transfer
-        will not occur until the host peforms an OUT request
+        will not occur until the host performs an OUT request
         to the given endpoint.  If the system is in host mode,
         the transfer will not start until the token has been
         sent on the bus.
@@ -505,7 +499,7 @@ bool USBHALFlushPipe( TRANSFER_FLAGS pipe );
                   7 6 5 4 3 2 1 0 - Description
                   | | | | \_____/
                   | | | |    +----- Endpoint Number
-                  | | | +---------- Short or zero-size pkt
+                  | | | +---------- Short or zero-size packet
                   | | +------------ Data Toggle 0/1
                   | +-------------- Force Data Toggle
                   +---------------- 1=Transmit/0=Receive
@@ -521,7 +515,7 @@ bool USBHALFlushPipe( TRANSFER_FLAGS pipe );
     Side Effects:
         The HAL has prepared to transfer the data on the USB.
 
-    Ramarks:
+    Remarks:
         The HAL will continue the data transfer, keeping track
         of the buffer address, data remaining, and ping-pong
         buffer details internally when USBHALHandleBusEvent is
@@ -550,7 +544,7 @@ bool USBHALTransferData ( TRANSFER_FLAGS    flags,
         USBHALInitialize has been called.
         
     Parameters:
-        ep_num - Number of endpoint to configur, Must be
+        ep_num - Number of endpoint to configure, Must be
                  (ep_num >=0) && (ep_num <= USB_DEV_HIGHEST_EP_NUMBER)
                   max_pkt_size Size of largest packet this enpoint can
                   transfer.
@@ -586,7 +580,7 @@ bool USBHALSetEpConfiguration ( uint8_t ep_num, uint16_t max_pkt_size, uint16_t 
     Precondition:
         The system has been initialized.
         
-    Paramters:
+    Parameters:
         flags -  Initialization flags
         
     Return Values:
