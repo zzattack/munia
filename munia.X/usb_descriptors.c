@@ -59,7 +59,7 @@ const uint8_t configDescriptor1[]={
     USB_DESCRIPTOR_ENDPOINT,                // Endpoint Descriptor
     HID_EP_SNES | _EP_IN,                   // EndpointAddress
     _INTERRUPT,                             // Attributes
-    DESC_CONFIG_WORD(64),                   // size
+    DESC_CONFIG_WORD(HID_INT_IN_SNES_SIZE), // size
     0x01,                                   // Interval
     // -------------------------------------------------------------------------
     
@@ -143,23 +143,23 @@ const uint8_t configDescriptor1[]={
     0x00,                       // Country Code (0x00 for Not supported)
     HID_NUM_OF_DSC,             // Number of class descriptors, see usbcfg.h
     DSC_RPT,                    // Report descriptor type
-    DESC_CONFIG_WORD(HID_RPT_CFG_SIZE), // sizeof(hid_rpt01),      // Size of the report descriptor
+    DESC_CONFIG_WORD(HID_RPT_CFG_SIZE), // Size of the report descriptor
 
     /* Endpoint Descriptor */
     sizeof(USB_ENDPOINT_DESCRIPTOR), 
     USB_DESCRIPTOR_ENDPOINT,    // Endpoint Descriptor
-    HID_EP_CFG_IN | _EP_IN,     // EndpointAddress
+    HID_EP_CFG | _EP_IN,        // EndpointAddress
     _INTERRUPT,                 // Attributes
     DESC_CONFIG_WORD(HID_INT_CFG_SIZE),  // size
-    0x01,                       // Interval
+    0x20,                       // Interval
 
     /* Endpoint Descriptor */
     sizeof(USB_ENDPOINT_DESCRIPTOR), 
     USB_DESCRIPTOR_ENDPOINT,    // Endpoint Descriptor
-    HID_EP_CFG_OUT | _EP_OUT,   // EndpointAddress
+    HID_EP_CFG | _EP_OUT,       // EndpointAddress
     _INTERRUPT,                 // Attributes
     DESC_CONFIG_WORD(HID_INT_CFG_SIZE),  // size
-    0x01                        // Interval
+    0x20                        // Interval
     
 };
 
@@ -170,15 +170,15 @@ sizeof(sd000),USB_DESCRIPTOR_STRING,
 }};
 
 //Manufacturer string descriptor
-const struct{uint8_t bLength;uint8_t bDscType;uint16_t string[12];}sd001={
+const struct{uint8_t bLength;uint8_t bDscType;uint16_t string[8];}sd001={
 sizeof(sd001),USB_DESCRIPTOR_STRING,
-{'z','z','a','t','t','a','c','k','.','o','r','g'
+{'m','u','n','i','a','.','i','o'
 }};
 
 //Product string descriptor
-const struct{uint8_t bLength;uint8_t bDscType;uint16_t string[21];}sd002={
+const struct{uint8_t bLength;uint8_t bDscType;uint16_t string[5];}sd002={
 sizeof(sd002),USB_DESCRIPTOR_STRING,
-{'N','i','n','t','e','n','d','o',' ','I','n','p','u','t',' ','d','e','v','i','c','e'
+{'M','U','N','I','A'
 }};
 
 //Product string descriptor
