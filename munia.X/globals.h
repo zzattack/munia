@@ -16,5 +16,10 @@ extern void apply_config();
 USB_HANDLE USBInHandleSNES = 0;
 USB_HANDLE USBInHandleN64 = 0;
 USB_HANDLE USBInHandleNGC = 0;
+USB_HANDLE USBOutHandleCfg = 0;
+USB_HANDLE USBInHandleCfg = 0;
+
+char usbOutBuffer[32] @ 0x512; // placed behind joydata_snes
+char usbInBuffer[32] @ 0x532;
 
 #endif	/* GLOBALS_H */
