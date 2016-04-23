@@ -13,6 +13,7 @@
 #include "menu.h"
 #include "buttonchecker.h"
 #include "memory.h"
+#include "report_descriptors.h"
 
 void init_random();
 void init_pll();
@@ -30,6 +31,8 @@ bool tick1khz = false;
 uint8_t timer100hz;
 uint16_t timer1000hz;
 uint8_t counter60hz = 0;
+
+void usb_tasks();
 
 void main() {
     // init_random();
@@ -52,21 +55,23 @@ void main() {
     bcInit();
     lcd_setup();
     
-    __delay_ms(10);
     load_config();
     apply_config();
     init_interrupts();    
     
 #ifdef DEBUG
     menu_enter();
+    U1Init(115200, true, true);
 #endif
     
 	while (1) {
-        ClrWdt();
+        ClrWdt();                
         USBDeviceTasks();
         
         LED_SNES_GREEN = USBDeviceState >= CONFIGURED_STATE;
+#ifndef DEBUG
         LED_SNES_ORANGE = !USBSuspendControl;
+#endif
         
         if (tick1khz) {
             tick1khz = false;
@@ -104,10 +109,11 @@ void main() {
         snes_tasks();
         n64_tasks();        
         ngc_tasks();
+        usb_tasks();
         pollNeeded = false;
     }
 }
-    
+
 void init_pll() {
 	OSCTUNE = 0x80; // 3X PLL ratio mode selected
 	OSCCON = 0x70;  // Switch to 16MHz HFINTOSC
@@ -256,5 +262,36 @@ void apply_config() {
     else {
         SWITCH3 = 1;
         IOCCbits.IOCC7 = 1; // enable IO7 on RC7 (snes latch)
+    }
+}
+
+void usb_tasks() {
+    // User Application USB tasks
+    if (USBDeviceState < CONFIGURED_STATE || USBSuspendControl == 1)
+        return;
+    
+    // Check if we have received an OUT data packet from the host, and nothing is left in buffer
+    if (!HIDRxHandleBusy(USBOutHandleCfg)) {
+        // We just received a packet of data from the USB host.
+        // Check the first byte of the packet to see what command the host
+        // application software wants us to fulfill.
+        dbgs("packet received on endpoint 4, report id=0x"); dbgsvalx(usbOutBuffer[0]); dbgs("\n");
+        
+        switch (usbOutBuffer[0]) {
+        case REPORT_CFG_READ_ID:
+            while (HIDTxHandleBusy(USBInHandleCfg)) {
+                dbgs("waiting more..\n");
+                USBDeviceTasks();
+                __delay_ms(10); __delay_ms(10); __delay_ms(10);
+            }
+            usbInBuffer[0] = REPORT_CFG_READ_ID;
+            usbInBuffer[1] = 1;
+            USBInHandleCfg = HIDTxPacket(HID_EP_CFG, usbInBuffer, REPORT_CFG_SIZE + 1);
+            dbgs("transmitted\n");
+            break;
+        }
+        
+        // re-arm
+        USBOutHandleCfg = HIDRxPacket(HID_EP_CFG, usbOutBuffer, sizeof (usbOutBuffer));
     }
 }

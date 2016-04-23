@@ -19,6 +19,7 @@
       <itemPath>buttonchecker.h</itemPath>
       <itemPath>circular_buffer.h</itemPath>
       <itemPath>memory.h</itemPath>
+      <itemPath>uarts.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -39,6 +40,8 @@
       <itemPath>circular_buffer.c</itemPath>
       <itemPath>gamepad.c</itemPath>
       <itemPath>memory.c</itemPath>
+      <itemPath>uarts.c</itemPath>
+      <itemPath>uarts_debug.c</itemPath>
     </logicalFolder>
     <logicalFolder name="f1" displayName="USB" projectFiles="true">
       <itemPath>usb/usb_device.c</itemPath>
@@ -66,7 +69,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>PICkit3PlatformTool</platformTool>
         <languageToolchain>XC8</languageToolchain>
-        <languageToolchainVersion>1.35</languageToolchainVersion>
+        <languageToolchainVersion>1.37</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <compileType>
@@ -217,6 +220,7 @@
         <property key="ToolFirmwareFilePath"
                   value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="true"/>
@@ -250,7 +254,7 @@
         <property key="programoptions.testmodeentrymethod" value="VPPFirst"/>
         <property key="programoptions.usehighvoltageonmclr" value="false"/>
         <property key="programoptions.uselvpprogramming" value="false"/>
-        <property key="voltagevalue" value="5.0"/>
+        <property key="voltagevalue" value="4.5"/>
       </PICkit3PlatformTool>
       <Simulator>
         <property key="codecoverage.enabled" value="Disable"/>
@@ -595,6 +599,7 @@
         <property key="ToolFirmwareFilePath"
                   value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="true"/>
