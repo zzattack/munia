@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <usb/usb.h>
 #include <usb/usb_device_hid.h>
+#include "globals.h"
 
 void USBCBSuspend() { }
 void USBCBWakeFromSuspend() { }
@@ -55,7 +56,10 @@ bool USER_USB_CALLBACK_EVENT_HANDLER(USB_EVENT event, void *pdata, uint16_t size
             // enable the HID endpoint
             USBEnableEndpoint(HID_EP_SNES, USB_IN_ENABLED | USB_HANDSHAKE_ENABLED | USB_DISALLOW_SETUP);
             USBEnableEndpoint(HID_EP_N64, USB_IN_ENABLED | USB_HANDSHAKE_ENABLED | USB_DISALLOW_SETUP);
-            USBEnableEndpoint(HID_EP_NGC, USB_IN_ENABLED | USB_HANDSHAKE_ENABLED | USB_DISALLOW_SETUP);        
+            USBEnableEndpoint(HID_EP_NGC, USB_IN_ENABLED | USB_HANDSHAKE_ENABLED | USB_DISALLOW_SETUP);
+            USBEnableEndpoint(HID_EP_CFG, USB_OUT_ENABLED | USB_IN_ENABLED | USB_HANDSHAKE_ENABLED | USB_DISALLOW_SETUP);
+            USBOutHandleCfg = HIDRxPacket(HID_EP_CFG, usbOutBuffer, sizeof (usbOutBuffer));
+
 			break;
         case EVENT_SET_DESCRIPTOR:
             USBCBStdSetDscHandler();

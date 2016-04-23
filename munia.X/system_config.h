@@ -10,7 +10,7 @@
 
 #define USB_EP0_BUFF_SIZE  16   // Valid Options: 8, 16, 32, or 64 bytes.
 #define USB_MAX_NUM_INT     4   // Set this number to match the maximum interface number used in the descriptors for this firmware project
-#define USB_MAX_EP_NUMBER	5   // Set this number to match the maximum endpoint number used in the descriptors for this firmware project
+#define USB_MAX_EP_NUMBER	4   // Set this number to match the maximum endpoint number used in the descriptors for this firmware project
 #define HID_NUM_OF_DSC 1
 #define USB_NUM_STRING_DESCRIPTORS 8
 
@@ -55,13 +55,12 @@
 #define HID_EP_SNES				1
 #define HID_EP_N64				2
 #define HID_EP_NGC				3
-#define HID_EP_CFG_IN			4
-#define HID_EP_CFG_OUT			5
+#define HID_EP_CFG              4
 
 #define HID_INT_IN_SNES_SIZE    16
 #define HID_INT_IN_N64_SIZE     16
 #define HID_INT_IN_NGC_SIZE     16
-#define HID_INT_CFG_SIZE        16
+#define HID_INT_CFG_SIZE        9 // one extra for report id
 
 void usb_descriptors_check();
 

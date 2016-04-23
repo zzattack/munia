@@ -12,6 +12,7 @@ const uint8_t hid_rpt_snes[] = {
     // dpad hat
     0x05, 0x01,                    //   USAGE_PAGE(Generic Desktop)
     0x09, 0x39,                    //   USAGE(Hat Switch)
+    0x15, 0x00,                    //   LOGICAL MINIMUM (0)
     0x25, 0x07,                    //   LOGICAL MAXIMUM (7)
     0x46, 0x3b, 0b01,              //   PHYSICAL MAXIMUM (315)
     0x65, 0x14,                    //   UNIT (English,Rot,Ang.Pos))
@@ -23,6 +24,7 @@ const uint8_t hid_rpt_snes[] = {
     0x05, 0x09,                    //   USAGE_PAGE (Button)
     0x19, 0x01,                    //   USAGE_MINIMUM (Button 1)
     0x29, 0x04,                    //   USAGE_MAXIMUM (Button 4)
+    0x15, 0x00,                    //   LOGICAL MINIMUM (0)
     0x25, 0x01,                    //   LOGICAL_MAXIMUM (1)
     0x95, 0x04,                    //   REPORT_COUNT (4)
     0x75, 0x01,                    //   REPORT_SIZE (1)
@@ -38,6 +40,7 @@ const uint8_t hid_rpt_snes[] = {
     0x05, 0x09,                    //   USAGE_PAGE (Button)
     0x19, 0x05,                    //   USAGE_MINIMUM (Button 5)
     0x29, 0x08,                    //   USAGE_MAXIMUM (Button 8)
+    0x15, 0x00,                    //   LOGICAL MINIMUM (0)
     0x25, 0x01,                    //   LOGICAL_MAXIMUM (1)
     0x95, 0x04,                    //   REPORT_COUNT (4)
     0x75, 0x01,                    //   REPORT_SIZE (1)
@@ -56,6 +59,7 @@ const uint8_t hid_rpt_n64[] = {
     // dpad hat
     0x05, 0x01,                    //   USAGE_PAGE(Generic Desktop)
     0x09, 0x39,                    //   USAGE(Hat Switch)
+    0x15, 0x00,                    //   LOGICAL MINIMUM (0)
     0x25, 0x07,                    //   LOGICAL MAXIMUM (7)
     0x46, 0x3b, 0b01,              //   PHYSICAL MAXIMUM (315)
     0x65, 0x14,                    //   UNIT (English,Rot,Ang.Pos))
@@ -78,6 +82,7 @@ const uint8_t hid_rpt_n64[] = {
     0x05, 0x09,                    //   USAGE_PAGE (Button)
     0x19, 0x09,                    //   USAGE_MINIMUM (Button 9)
     0x29, 0x0A,                    //   USAGE_MAXIMUM (Button 10)
+    0x15, 0x00,                    //   LOGICAL MINIMUM (0)
     0x25, 0x01,                    //   LOGICAL_MAXIMUM (1)
     0x95, 0x02,                    //   REPORT_COUNT (2)
     0x75, 0x01,                    //   REPORT_SIZE (1)
@@ -93,6 +98,7 @@ const uint8_t hid_rpt_n64[] = {
     0x05, 0x01,                    //   USAGE_PAGE (Generic Desktop)
     0x09, 0x30,                    //   USAGE (X)
     0x09, 0x31,                    //   USAGE (Y)
+    0x15, 0x00,                    //   LOGICAL MINIMUM (0)
     0x26, 0xff, 0x00,              //   LOGICAL_MAXIMUM (255)
     0x75, 0x08,                    //   REPORT_SIZE (8)
     0x95, 0x02,                    //   REPORT_COUNT (2)
@@ -111,6 +117,7 @@ const uint8_t hid_rpt_ngc[] = {
     0x05, 0x09,                    //   USAGE_PAGE (Button)
     0x19, 0x01,                    //   USAGE_MINIMUM (Button 1)
     0x29, 0x05,                    //   USAGE_MAXIMUM (Button 5)
+    0x15, 0x00,                    //   LOGICAL MINIMUM (0)
     0x25, 0x01,                    //   LOGICAL_MAXIMUM (1)
     0x95, 0x05,                    //   REPORT_COUNT (5)
     0x75, 0x01,                    //   REPORT_SIZE (1)
@@ -125,6 +132,7 @@ const uint8_t hid_rpt_ngc[] = {
     // hat
     0x05, 0x01,                    //   USAGE_PAGE(Generic Desktop)
     0x09, 0x39,                    //   USAGE(Hat Switch)
+    0x15, 0x00,                    //   LOGICAL MINIMUM (0)
     0x25, 0x07,                    //   LOGICAL MAXIMUM (7)
     0x46, 0x3b, 0b01,              //   PHYSICAL MAXIMUM (315)
     0x65, 0x14,                    //   UNIT (English,Rot,Ang.Pos))
@@ -142,6 +150,7 @@ const uint8_t hid_rpt_ngc[] = {
     0x81, 0x02,                    //   INPUT (Data,Var,Abs)
             
     0x09, 0x00,		               //   USAGE (Undefined)
+    0x15, 0x00,                    //   LOGICAL MINIMUM (0)
     0x25, 0x01,                    //   LOGICAL_MAXIMUM (1)
     0x95, 0x01,                    //   REPORT_COUNT (1)
     0x75, 0x01,                    //   REPORT_SIZE (1)
@@ -153,6 +162,7 @@ const uint8_t hid_rpt_ngc[] = {
     0x09, 0x31,                    //   USAGE (Y)
     0x09, 0x33,                    //   USAGE (Rx)
     0x09, 0x34,                    //   USAGE (Ry)
+    0x15, 0x00,                    //   LOGICAL MINIMUM (0)
     0x26, 0xff, 0x00,              //   LOGICAL_MAXIMUM (255)
     0x75, 0x08,                    //   REPORT_SIZE (8)
     0x95, 0x04,                    //   REPORT_COUNT (4)
@@ -161,6 +171,7 @@ const uint8_t hid_rpt_ngc[] = {
     // z = left trigger, rz = right trigger
     0x09, 0x32,                    //   USAGE (X)
     0x09, 0x35,                    //   USAGE (Rz)
+    0x15, 0x00,                    //   LOGICAL MINIMUM (0)
     0x26, 0xff, 0x00,              //   LOGICAL_MAXIMUM (255)
     0x75, 0x08,                    //   REPORT_SIZE (8)
     0x95, 0x02,                    //   REPORT_COUNT (2)
@@ -172,30 +183,39 @@ const uint8_t hid_rpt_ngc[] = {
 
 #define REPORT_CFG_WRITE_ID 0x46
 #define REPORT_CFG_READ_ID  0x47
-#define REPORT_CFG_SIZE     0x20
-
-#define REPORT_SETTING_ID   0x48
-#define REPORT_SETTING_SIZE 0x20
+#define REPORT_CFG_SIZE     0x08
 
 const uint8_t hid_rpt_cfg[] = {
     0x06, 0x00, 0xFF,              // Usage Page = 0xFF00 (Vendor Defined Page 1)
     0x09, 0x01,                    // USAGE (Vendor Usage 1)
     0xa1, 0x01,                    // COLLECTION (Application)
+    0x05, 0x01,                    //   USAGE_PAGE (Generic Desktop)
     0x15, 0x00,                    //     LOGICAL_MINIMUM (0)
     0x26, 0xff, 0x00,              //     LOGICAL_MAXIMUM (255)
 
-    // get info command (firmware, serial, etc.)
-    0x85, REPORT_SETTING_ID,       //     REPORT_ID (72)
-    0x09, 0x04,                    //         USAGE (Vendor Usage 4)
-    0x95, REPORT_SETTING_SIZE,     //         REPORT_COUNT
-    0x29, REPORT_SETTING_SIZE,     //         USAGE_MAXIMUM
+    // write config command
+    0x85, REPORT_CFG_WRITE_ID,     //     REPORT_ID (70)
+    0x09, 0x00,                    //         USAGE (Undefined)
+    0x95, REPORT_CFG_SIZE,         //         REPORT_COUNT
+    0x29, REPORT_CFG_SIZE,         //         USAGE_MAXIMUM
     0x19, 0x01,                    //         USAGE_MINIMUM
     0x75, 0x08,                    //         REPORT_SIZE (8)
-    0x81, 0x00,                    //         INPUT (Data,Ary,Abs)
-    // set info command
-    0x29, REPORT_SETTING_SIZE,     //         USAGE_MAXIMUM
-    0x19, 0x01,                    //         USAGE_MINIMUM
     0x91, 0x00,                    //         OUTPUT (Data,Ary,Abs)
+    0x29, REPORT_CFG_SIZE,         //         USAGE_MAXIMUM
+    0x19, 0x01,                    //         USAGE_MINIMUM
+    0x81, 0x00,                    //         INPUT (Data,Ary,Abs)
+
+    // read config command
+    0x85, REPORT_CFG_READ_ID,      //     REPORT_ID (71)
+    0x09, 0x00,                    //         USAGE (Undefined)
+    0x95, REPORT_CFG_SIZE,         //         REPORT_COUNT
+    0x29, REPORT_CFG_SIZE,         //         USAGE_MAXIMUM
+    0x19, 0x01,                    //         USAGE_MINIMUM
+    0x75, 0x08,                    //         REPORT_SIZE (8)
+    0x91, 0x00,                    //         OUTPUT (Data,Ary,Abs)
+    0x29, REPORT_CFG_SIZE,         //         USAGE_MAXIMUM
+    0x19, 0x01,                    //         USAGE_MINIMUM
+    0x81, 0x00,                    //         INPUT (Data,Ary,Abs)
 
     0xc0                           // END_COLLECTION    
 };
