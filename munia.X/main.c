@@ -96,10 +96,8 @@ void main() {
             
             menu_tasks();
         }
-        if (timer1000hz == 1000) {
+        if (timer1000hz == 1000)
             timer1000hz = 0;
-            LED_SNES_ORANGE = !LED_SNES_ORANGE;
-        }
         
         if (PIR2bits.TMR3IF) {
             WRITETIMER3(15536);
@@ -314,6 +312,11 @@ void usb_tasks() {
             cfg_write_report_t* report = (cfg_write_report_t*)usbOutBuffer;
             memcpy(&config, &report->config, sizeof(config_t));
             apply_config();
+            if (in_menu) {
+                memcpy(&config_edit, &config, sizeof(config_t));
+                memcpy(&config_backup, &config, sizeof(config_t));
+                menu_page(current_menu_page);
+            }
             
             // response
             usbInBuffer[0] = REPORT_CFG_WRITE_ID;
