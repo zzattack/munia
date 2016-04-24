@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -9,7 +10,7 @@ namespace MUNIA {
 			InitializeComponent();
 			Text = $"About {AssemblyTitle}";
 			lblProductName.Text = AssemblyProduct;
-			lblVersion.Text = $"Version {AssemblyVersion}";
+			lblVersion.Text = $"Version {ProgramVersion}";
 			lblCopyright.Text = AssemblyCopyright;
 			lblCompanyName.Text = AssemblyCompany;
 
@@ -21,8 +22,8 @@ namespace MUNIA {
 			tbDescription.InsertLink("twitter.com/ldutchjl", "http://twitter.com/ldutchjl");
 			tbDescription.SelectedText = "\r\nBootloader by Microchip";
 			tbDescription.SelectedText = "\r\n.NET bootloader interface modified ";
-			tbDescription.InsertLink("from", "https://github.com/jorticus/picloader");
-			tbDescription.SelectedText = "by jorticus";
+			tbDescription.InsertLink("from jorticus/picloader", "https://github.com/jorticus/picloader");
+
 			
 		}
 
@@ -41,9 +42,10 @@ namespace MUNIA {
 			}
 		}
 
-		public string AssemblyVersion {
+		public string ProgramVersion {
 			get {
-				return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+				var myVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
+				return myVersion.FileVersion;
 			}
 		}
 
