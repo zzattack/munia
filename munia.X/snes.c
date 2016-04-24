@@ -145,8 +145,8 @@ void snes_create_ngc_fake() {
     ngc_fake_packet.z = 0;
     ngc_fake_packet.l = joydata_snes_raw.l;
     ngc_fake_packet.r = joydata_snes_raw.r;
-    ngc_fake_packet.left_trig = joydata_snes_raw.l ? 127 : 0;
-    ngc_fake_packet.right_trig = joydata_snes_raw.r ? 127 : 0;
+    ngc_fake_packet.left_trig = joydata_snes_raw.l ? 200 : 0;
+    ngc_fake_packet.right_trig = joydata_snes_raw.r ? 200 : 0;
 
     if (!joydata_snes_raw.select) {
         ngc_fake_packet.joy_x = 128;
@@ -182,13 +182,12 @@ void snes_create_ngc_fake() {
         
         if (joydata_snes_raw.y) ngc_fake_packet.c_x -= 127;
         if (joydata_snes_raw.a) ngc_fake_packet.c_x += 127;
-        if (joydata_snes_raw.b) ngc_fake_packet.c_y += 127;
+        if (joydata_snes_raw.b) ngc_fake_packet.c_y -= 127;
         if (joydata_snes_raw.x) ngc_fake_packet.c_y += 127;
         
         ngc_fake_packet.a = false;
         ngc_fake_packet.b = false;
         ngc_fake_packet.x = false;
         ngc_fake_packet.y = false;
-    }
-                
+    }                
 }
