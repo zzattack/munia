@@ -31,7 +31,7 @@ namespace MUNIA {
 		private void btnAccept_Click(object sender, System.EventArgs e) {
 			if (rbSnesConsole.Checked) _settings.SNES = MuniaSettings.SnesMode.SNES_MODE_SNES;
 			else if (rbSnesNgc.Checked) _settings.SNES = MuniaSettings.SnesMode.SNES_MODE_NGC;
-			else _settings.SNES = MuniaSettings.SnesMode.SNES_MODE_NGC;
+			else _settings.SNES = MuniaSettings.SnesMode.SNES_MODE_PC;
 
 			if (rbN64Console.Checked) _settings.N64 = MuniaSettings.N64Mode.N64_MODE_N64;
 			else _settings.N64 = MuniaSettings.N64Mode.N64_MODE_PC;
