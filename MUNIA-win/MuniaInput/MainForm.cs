@@ -40,22 +40,7 @@ namespace MuniaInput {
                 textBox1.AppendText("\r\n");
             }
         }
-
-        /// <summary>
-        /// Hook in HID handler.
-        /// </summary>
-        /// <param name="message"></param>
-        protected override void WndProc(ref Message message) {
-            switch (message.Msg) {
-                case Const.WM_INPUT:
-                    // Returning zero means we processed that message
-                    message.Result = IntPtr.Zero;
-                    _activeController?.WndProc(ref message);
-                break;
-            }
-            base.WndProc(ref message);
-        }
-
+		
     }
 
 }
