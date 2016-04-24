@@ -47,6 +47,13 @@ namespace MuniaInput {
 		}
 		
 	    public static HidDevice GetConfigInterface() {
+			var loader = new HidDeviceLoader();
+			//For each our device add a node to our treeview
+			foreach (var device in loader.GetDevices(0x04d8, 0x0058)) {
+				if (device.ProductName == "NinHID CFG") {
+					return device;
+				}
+			}
 			return null;
 		}
 

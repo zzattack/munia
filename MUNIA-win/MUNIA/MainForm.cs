@@ -5,9 +5,12 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using HidSharp;
+using MuniaInput;
 using OpenTK.Graphics.OpenGL;
-using SharpLib.Win32;
 using SPAA05.Shared.USB;
 
 namespace MUNIA {
@@ -116,22 +119,7 @@ namespace MUNIA {
 				// Thread.Sleep((int)Math.Max(1000 / 60.0 - _stopwatch.Elapsed.TotalSeconds, 0));
 			}
 		}
-
-		/// <summary>
-		/// Hook in HID handler.
-		/// </summary>
-		/// <param name="message"></param>
-		protected override void WndProc(ref Message message) {
-			switch (message.Msg) {
-				case Const.WM_INPUT:
-					// Returning zero means we processed that message
-					message.Result = IntPtr.Zero;
-					_controller?.WndProc(ref message);
-					break;
-			}
-			base.WndProc(ref message);
-		}
-
+		
 		private void Render() {
 			glControl.MakeCurrent();
 			GL.ClearColor(Color.FromArgb(0, glControl.BackColor));
@@ -196,6 +184,7 @@ namespace MUNIA {
 			uc.AlreadyLatest += (o, e) => {
 				if (msgBox) MessageBox.Show("You are already using the latest version available", "Already latest", MessageBoxButtons.OK, MessageBoxIcon.Information);
 				UpdateStatus("already latest version", 100);
+				Task.Delay(2000).ContinueWith(task => Invoke((Action)delegate { pbProgress.Visible = false; }));
 			};
 			uc.Connected += (o, e) => UpdateStatus("connected", 10);
 			uc.DownloadProgressChanged += (o, e) => { /* care, xml is small anyway */
@@ -203,6 +192,7 @@ namespace MUNIA {
 			uc.UpdateCheckFailed += (o, e) => {
 				UpdateStatus("update check failed", 100);
 				if (msgBox) MessageBox.Show("Update check failed", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				Task.Delay(2000).ContinueWith(task => Invoke((Action)delegate { pbProgress.Visible = false; }));
 			};
 			uc.UpdateAvailable += (o, e) => {
 				UpdateStatus("update available", 100);
@@ -249,5 +239,36 @@ namespace MUNIA {
 		private void MainForm_FormClosing(object sender, FormClosingEventArgs e) {
 			Settings.Save();
 		}
+
+		private async void tsmiMuniaSettings_Click(object sender, EventArgs e) {
+			var dev = MuniaController.GetConfigInterface();
+			if (dev == null) {
+				MessageBox.Show("MUNIA config interface not found. This typically has one of two causes:\r\n\tMUNIA isn't plugged in\r\n\tInstalled firmware doesn't implement this feature yet. Upgrade using the instructions at http://munia.io/fw",
+					"Not possible", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				return;
+			}
+			HidStream stream;
+			if (dev.TryOpen(out stream)) {
+				try {
+					byte[] buff = new byte[9];
+					buff[0] = 0x47; // REPORT_CFG_READ_ID
+					stream.Write(buff, 0, 9);
+					stream.Read(buff, 0, 9);
+					var settings = new MuniaSettings();
+					if (settings.Parse(buff)) {
+						var dlg = new MuniaSettingsDialog(stream, settings);
+						dlg.ShowDialog();
+					}
+					else throw new InvalidOperationException("Invalid settings container received from MUNIA device");
+				}
+
+				catch (Exception exc) {
+					MessageBox.Show("An error occurred while retrieving information from the MUNIA device:\r\n\r\n" + exc,
+						"Unknown error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
+			}
+		}
+
 	}
+
 }

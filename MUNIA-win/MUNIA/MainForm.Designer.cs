@@ -27,11 +27,12 @@ namespace MUNIA {
         private void InitializeComponent() {
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.tsmiController = new System.Windows.Forms.ToolStripMenuItem();
-			this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.setWindowSizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.tsmiOptions = new System.Windows.Forms.ToolStripMenuItem();
+			this.tsmiSetWindowSize = new System.Windows.Forms.ToolStripMenuItem();
+			this.tsmiMuniaSettings = new System.Windows.Forms.ToolStripMenuItem();
+			this.tsmiHelp = new System.Windows.Forms.ToolStripMenuItem();
+			this.tsmiCheckUpdates = new System.Windows.Forms.ToolStripMenuItem();
+			this.tsmiAbout = new System.Windows.Forms.ToolStripMenuItem();
 			this.glControl = new OpenTK.GLControl();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			this.lblSkins = new System.Windows.Forms.ToolStripStatusLabel();
@@ -46,8 +47,8 @@ namespace MUNIA {
 			// 
 			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsmiController,
-            this.optionsToolStripMenuItem,
-            this.helpToolStripMenuItem});
+            this.tsmiOptions,
+            this.tsmiHelp});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
 			this.menuStrip1.Size = new System.Drawing.Size(577, 24);
@@ -61,43 +62,51 @@ namespace MUNIA {
 			this.tsmiController.Text = "&Select controller";
 			this.tsmiController.TextAlign = System.Drawing.ContentAlignment.TopCenter;
 			// 
-			// optionsToolStripMenuItem
+			// tsmiOptions
 			// 
-			this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.setWindowSizeToolStripMenuItem});
-			this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-			this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
-			this.optionsToolStripMenuItem.Text = "&Options";
+			this.tsmiOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsmiSetWindowSize,
+            this.tsmiMuniaSettings});
+			this.tsmiOptions.Name = "tsmiOptions";
+			this.tsmiOptions.Size = new System.Drawing.Size(61, 20);
+			this.tsmiOptions.Text = "&Options";
 			// 
-			// setWindowSizeToolStripMenuItem
+			// tsmiSetWindowSize
 			// 
-			this.setWindowSizeToolStripMenuItem.Name = "setWindowSizeToolStripMenuItem";
-			this.setWindowSizeToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-			this.setWindowSizeToolStripMenuItem.Text = "Set window size";
-			this.setWindowSizeToolStripMenuItem.Click += new System.EventHandler(this.setWindowSizeToolStripMenuItem_Click);
+			this.tsmiSetWindowSize.Name = "tsmiSetWindowSize";
+			this.tsmiSetWindowSize.Size = new System.Drawing.Size(157, 22);
+			this.tsmiSetWindowSize.Text = "Set window size";
+			this.tsmiSetWindowSize.Click += new System.EventHandler(this.setWindowSizeToolStripMenuItem_Click);
 			// 
-			// helpToolStripMenuItem
+			// tsmiMuniaSettings
 			// 
-			this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.checkForUpdatesToolStripMenuItem,
-            this.aboutToolStripMenuItem});
-			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-			this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-			this.helpToolStripMenuItem.Text = "&Help";
+			this.tsmiMuniaSettings.Name = "tsmiMuniaSettings";
+			this.tsmiMuniaSettings.Size = new System.Drawing.Size(157, 22);
+			this.tsmiMuniaSettings.Text = "&MUNIA settings";
+			this.tsmiMuniaSettings.Click += new System.EventHandler(this.tsmiMuniaSettings_Click);
 			// 
-			// checkForUpdatesToolStripMenuItem
+			// tsmiHelp
 			// 
-			this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
-			this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
-			this.checkForUpdatesToolStripMenuItem.Text = "&Check for updates";
-			this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.tsmiCheckUpdates_Click);
+			this.tsmiHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsmiCheckUpdates,
+            this.tsmiAbout});
+			this.tsmiHelp.Name = "tsmiHelp";
+			this.tsmiHelp.Size = new System.Drawing.Size(44, 20);
+			this.tsmiHelp.Text = "&Help";
 			// 
-			// aboutToolStripMenuItem
+			// tsmiCheckUpdates
 			// 
-			this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
-			this.aboutToolStripMenuItem.Text = "&About";
-			this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+			this.tsmiCheckUpdates.Name = "tsmiCheckUpdates";
+			this.tsmiCheckUpdates.Size = new System.Drawing.Size(170, 22);
+			this.tsmiCheckUpdates.Text = "&Check for updates";
+			this.tsmiCheckUpdates.Click += new System.EventHandler(this.tsmiCheckUpdates_Click);
+			// 
+			// tsmiAbout
+			// 
+			this.tsmiAbout.Name = "tsmiAbout";
+			this.tsmiAbout.Size = new System.Drawing.Size(170, 22);
+			this.tsmiAbout.Text = "&About";
+			this.tsmiAbout.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
 			// 
 			// glControl
 			// 
@@ -172,16 +181,17 @@ namespace MUNIA {
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem tsmiController;
         private GLControl glControl;
-		private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem setWindowSizeToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem checkForUpdatesToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem tsmiOptions;
+		private System.Windows.Forms.ToolStripMenuItem tsmiSetWindowSize;
+		private System.Windows.Forms.ToolStripMenuItem tsmiHelp;
+		private System.Windows.Forms.ToolStripMenuItem tsmiCheckUpdates;
+		private System.Windows.Forms.ToolStripMenuItem tsmiAbout;
 		private System.Windows.Forms.StatusStrip statusStrip1;
 		private System.Windows.Forms.ToolStripStatusLabel lblStatus;
 		private System.Windows.Forms.ToolStripStatusLabel lblFill;
 		private System.Windows.Forms.ToolStripProgressBar pbProgress;
 		private System.Windows.Forms.ToolStripStatusLabel lblSkins;
+		private System.Windows.Forms.ToolStripMenuItem tsmiMuniaSettings;
 	}
 }
 
