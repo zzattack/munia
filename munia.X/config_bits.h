@@ -1,4 +1,3 @@
-
 // PIC18F24K50 Configuration Bit Settings
 
 // 'C' source line config statements
@@ -48,7 +47,7 @@
 #pragma config XINST = OFF      // Extended Instruction Set Enable bit (Instruction set extension and Indexed Addressing mode disabled)
 
 // CONFIG5L
-#pragma config CP0 = OFF        // Block 0 Code Protect (Block 0 is not code-protected)
+#pragma config CP0 = ON         // Block 0 Code Protect (Block 0 is not code-protected)
 #pragma config CP1 = OFF        // Block 1 Code Protect (Block 1 is not code-protected)
 
 // CONFIG5H
@@ -60,8 +59,8 @@
 #pragma config WRT1 = OFF       // Block 1 Write Protect (Block 1 (2000-3FFFh) is not write-protected)
 
 // CONFIG6H
-#pragma config WRTC = OFF       // Configuration Registers Write Protect (Configuration registers (300000-3000FFh) are not write-protected)
-#pragma config WRTB = OFF       // Boot Block Write Protect (Boot block (0000-7FFh) is not write-protected)
+#pragma config WRTC = ON        // Configuration Registers Write Protect (Configuration registers (300000-3000FFh) are write-protected)
+#pragma config WRTB = ON        // Boot Block Write Protect (Boot block (0000-7FFh) is write-protected)
 #pragma config WRTD = OFF       // Data EEPROM Write Protect (Data EEPROM is not write-protected)
 
 // CONFIG7L
