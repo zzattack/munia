@@ -12,22 +12,23 @@ namespace MUNIA {
 		public int VersionMinor;
 		public int HardwareRevision;
 		public bool Parse(byte[] report) {
-			if (report[0] != 0x047 || report.Length != 9) return false;
-			VersionMajor = report[1] >> 4;
-			VersionMinor = report[1] & 0x0f;
-			HardwareRevision = report[2] & 0x0f;
-			SNES = (SnesMode)report[3];
-			N64 = (N64Mode)report[4];
-			NGC = (NGCMode)report[5];
+			if (report[0] != 0 || report[1] != 0x047 || report.Length != 9) return false;
+			VersionMajor = report[2] >> 4;
+			VersionMinor = report[2] & 0x0f;
+			HardwareRevision = report[3] & 0x0f;
+			SNES = (SnesMode)report[4];
+			N64 = (N64Mode)report[5];
+			NGC = (NGCMode)report[6];
 			return true;
 		}
 
 		public byte[] ToWriteReport() {
 			byte[] report = new byte[9];
-			report[0] = 0x46;
-			report[1] = (byte)SNES;
-			report[2] = (byte)N64;
-			report[3] = (byte)NGC;
+			report[0] = 0;
+			report[1] = 0x46;
+			report[2] = (byte)SNES;
+			report[3] = (byte)N64;
+			report[4] = (byte)NGC;
 			return report;
 		}
 	}
