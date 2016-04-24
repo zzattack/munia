@@ -14,6 +14,7 @@
 #include "buttonchecker.h"
 #include "memory.h"
 #include "report_descriptors.h"
+#include "uarts.h"
 
 void init_random();
 void init_pll();
@@ -265,30 +266,61 @@ void apply_config() {
     }
 }
 
+
+typedef struct {
+    uint8_t report_id;
+    
+    uint8_t fw_minor : 4;
+    uint8_t fw_major : 4;
+    
+    uint8_t hw_revision : 4;
+    uint8_t : 4;
+        
+    config_t config;
+} cfg_read_report_t;
+
+typedef struct {
+    uint8_t report_id;
+    config_t config;
+} cfg_write_report_t;
+
+
 void usb_tasks() {
     // User Application USB tasks
     if (USBDeviceState < CONFIGURED_STATE || USBSuspendControl == 1)
         return;
     
     // Check if we have received an OUT data packet from the host, and nothing is left in buffer
-    if (!HIDRxHandleBusy(USBOutHandleCfg)) {
+    if (!HIDRxHandleBusy(USBOutHandleCfg) && !HIDTxHandleBusy(USBInHandleCfg)) {
         // We just received a packet of data from the USB host.
         // Check the first byte of the packet to see what command the host
         // application software wants us to fulfill.
         dbgs("packet received on endpoint 4, report id=0x"); dbgsvalx(usbOutBuffer[0]); dbgs("\n");
         
-        switch (usbOutBuffer[0]) {
-        case REPORT_CFG_READ_ID:
-            while (HIDTxHandleBusy(USBInHandleCfg)) {
-                dbgs("waiting more..\n");
-                USBDeviceTasks();
-                __delay_ms(10); __delay_ms(10); __delay_ms(10);
-            }
-            usbInBuffer[0] = REPORT_CFG_READ_ID;
-            usbInBuffer[1] = 1;
+        if (usbOutBuffer[0] == REPORT_CFG_READ_ID) {
+            // format response
+            cfg_read_report_t* report = (cfg_read_report_t*)usbInBuffer;
+            report->report_id = REPORT_CFG_READ_ID;
+            report->fw_major = FW_MAJOR;
+            report->fw_minor = FW_MINOR;
+            report->hw_revision = HW_REVISION;
+            memcpy(&report->config, &config, sizeof(config_t));
+            memset(usbInBuffer + sizeof(cfg_read_report_t), 0, sizeof(usbInBuffer) - sizeof(cfg_read_report_t));
+            
             USBInHandleCfg = HIDTxPacket(HID_EP_CFG, usbInBuffer, REPORT_CFG_SIZE + 1);
-            dbgs("transmitted\n");
-            break;
+        }
+        else if (usbOutBuffer[0] == REPORT_CFG_WRITE_ID) {
+            // extract config
+            cfg_write_report_t* report = (cfg_write_report_t*)usbOutBuffer;
+            memcpy(&config, &report->config, sizeof(config_t));
+            apply_config();
+            
+            // response
+            usbInBuffer[0] = REPORT_CFG_WRITE_ID;
+            usbInBuffer[1] = 1; // signifies ok
+            memset(usbInBuffer + 2, 0, sizeof(usbInBuffer) - 2);
+            
+            USBInHandleCfg = HIDTxPacket(HID_EP_CFG, usbInBuffer, REPORT_CFG_SIZE + 1);
         }
         
         // re-arm
