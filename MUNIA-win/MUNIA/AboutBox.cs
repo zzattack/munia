@@ -8,17 +8,22 @@ namespace MUNIA {
 		public AboutBox() {
 			InitializeComponent();
 			Text = $"About {AssemblyTitle}";
-			labelProductName.Text = AssemblyProduct;
-			labelVersion.Text = $"Version {AssemblyVersion}";
-			labelCopyright.Text = AssemblyCopyright;
-			labelCompanyName.Text = AssemblyCompany;
+			lblProductName.Text = AssemblyProduct;
+			lblVersion.Text = $"Version {AssemblyVersion}";
+			lblCopyright.Text = AssemblyCopyright;
+			lblCompanyName.Text = AssemblyCompany;
 
-			textBoxDescription.SelectedText = "MUNIA input viewer\r\n\r\n";
-			textBoxDescription.InsertLink("munia.io", "http://munia.io");
-			textBoxDescription.SelectedText = "\r\n\r\nProgram by Frank Razenberg - ";
-			textBoxDescription.InsertLink("frank@zzattack.org", "mailto:frank@zzattack.org");
-			textBoxDescription.SelectedText = "\r\nSkins by dutchj - ";
-			textBoxDescription.InsertLink("twitter.com/ldutchjl", "http://twitter.com/ldutchjl");
+			tbDescription.SelectedText = "MUNIA input viewer\r\n\r\n";
+			tbDescription.InsertLink("munia.io", "http://munia.io");
+			tbDescription.SelectedText = "\r\n\r\nProgram by Frank Razenberg - ";
+			tbDescription.InsertLink("frank@zzattack.org", "mailto:frank@zzattack.org");
+			tbDescription.SelectedText = "\r\nSkins by dutchj - ";
+			tbDescription.InsertLink("twitter.com/ldutchjl", "http://twitter.com/ldutchjl");
+			tbDescription.SelectedText = "\r\nBootloader by Microchip";
+			tbDescription.SelectedText = "\r\n.NET bootloader interface modified ";
+			tbDescription.InsertLink("from", "https://github.com/jorticus/picloader");
+			tbDescription.SelectedText = "by jorticus";
+			
 		}
 
 		#region Assembly Attribute Accessors
@@ -87,7 +92,7 @@ namespace MUNIA {
 			Close();
 		}
 
-		private void textBoxDescription_LinkClicked(object sender, LinkClickedEventArgs e) {
+		private void DescriptionLinkClicked(object sender, LinkClickedEventArgs e) {
 			try {
 				System.Diagnostics.Process.Start(e.LinkText.IndexOf("#") > 0 ? e.LinkText.Substring(e.LinkText.IndexOf("#")+1) : e.LinkText);
 			}
