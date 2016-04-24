@@ -46,10 +46,10 @@ void menu_exit(bool save_settings) {
         save_config();
     }
     else {
-        config = config_backup;
+        memcpy(&config, &config_backup, sizeof(config_t));
     }
     
-     apply_config();
+    apply_config();
 }
 
 void menu_page(uint8_t page) {
