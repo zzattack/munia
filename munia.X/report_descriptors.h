@@ -181,9 +181,10 @@ const uint8_t hid_rpt_ngc[] = {
 };
 
 
-#define REPORT_CFG_WRITE_ID 0x46
-#define REPORT_CFG_READ_ID  0x47
-#define REPORT_CFG_SIZE     0x08
+#define CFG_CMD_WRITE 0x46
+#define CFG_CMD_READ  0x47
+#define CFG_CMD_ENTER_BL  0x48
+#define CFG_CMD_REPORT_SIZE 0x08
 
 const uint8_t hid_rpt_cfg[] = {
     0x06, 0x00, 0xFF,              // Usage Page = 0xFF00 (Vendor Defined Page 1)
@@ -194,28 +195,15 @@ const uint8_t hid_rpt_cfg[] = {
     0x26, 0xff, 0x00,              //     LOGICAL_MAXIMUM (255)
 
     // write config command
-    0x85, REPORT_CFG_WRITE_ID,     //     REPORT_ID (70)
-    0x09, 0x00,                    //         USAGE (Undefined)
-    0x95, REPORT_CFG_SIZE,         //         REPORT_COUNT
-    0x29, REPORT_CFG_SIZE,         //         USAGE_MAXIMUM
-    0x19, 0x01,                    //         USAGE_MINIMUM
-    0x75, 0x08,                    //         REPORT_SIZE (8)
-    0x91, 0x00,                    //         OUTPUT (Data,Ary,Abs)
-    0x29, REPORT_CFG_SIZE,         //         USAGE_MAXIMUM
-    0x19, 0x01,                    //         USAGE_MINIMUM
-    0x81, 0x00,                    //         INPUT (Data,Ary,Abs)
-
-    // read config command
-    0x85, REPORT_CFG_READ_ID,      //     REPORT_ID (71)
-    0x09, 0x00,                    //         USAGE (Undefined)
-    0x95, REPORT_CFG_SIZE,         //         REPORT_COUNT
-    0x29, REPORT_CFG_SIZE,         //         USAGE_MAXIMUM
-    0x19, 0x01,                    //         USAGE_MINIMUM
-    0x75, 0x08,                    //         REPORT_SIZE (8)
-    0x91, 0x00,                    //         OUTPUT (Data,Ary,Abs)
-    0x29, REPORT_CFG_SIZE,         //         USAGE_MAXIMUM
-    0x19, 0x01,                    //         USAGE_MINIMUM
-    0x81, 0x00,                    //         INPUT (Data,Ary,Abs)
+    0x09, 0x00,                    //     USAGE (Undefined)
+    0x95, CFG_CMD_REPORT_SIZE,     //     REPORT_COUNT
+    0x29, CFG_CMD_REPORT_SIZE,     //     USAGE_MAXIMUM
+    0x19, 0x01,                    //     USAGE_MINIMUM
+    0x75, 0x08,                    //     REPORT_SIZE (8)
+    0x91, 0x00,                    //     OUTPUT (Data,Ary,Abs)
+    0x29, CFG_CMD_REPORT_SIZE,     //     USAGE_MAXIMUM
+    0x19, 0x01,                    //     USAGE_MINIMUM
+    0x81, 0x00,                    //     INPUT (Data,Ary,Abs)
 
     0xc0                           // END_COLLECTION    
 };
