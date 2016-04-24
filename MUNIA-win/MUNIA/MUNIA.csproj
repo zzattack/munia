@@ -66,6 +66,7 @@
     <Compile Include="BootloaderForm.Designer.cs">
       <DependentUpon>BootloaderForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controllers\BufferedController.cs" />
     <Compile Include="GLGraphics.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -95,7 +96,7 @@
     <Compile Include="SubmitBug.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SvgController.cs" />
+    <Compile Include="Controllers\SvgController.cs" />
     <Compile Include="UpdateChecker.cs" />
     <Compile Include="UsbNotification.cs" />
     <Compile Include="Properties\VersionInfo.cs" />
@@ -111,6 +112,7 @@
     <EmbeddedResource Include="BootloaderForm.resx">
       <DependentUpon>BootloaderForm.cs</DependentUpon>
       <LastGenOutput>BootloaderForm1.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

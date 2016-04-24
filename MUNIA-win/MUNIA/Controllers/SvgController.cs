@@ -1,17 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
-using Svg;
-using System.Linq;
-using System;
-using System.Diagnostics;
-using System.Drawing.Drawing2D;
 using System.Globalization;
-using System.Windows.Forms;
+using System.Linq;
 using MuniaInput;
-using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using Svg;
 
-namespace MUNIA {
+namespace MUNIA.Controllers {
 	public class SvgController {
 		private SvgDocument _svgDocument;
 		private MuniaController _inputDevice;

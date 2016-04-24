@@ -128,7 +128,6 @@ left side of the device.
 2. Program device
 First load a firmware (hex) file you wish to flash, then press the program button.
 
-
 3. Exit bootloader mode
 Upon successfull completion of the programming step you may reset the device.
 Should the device not return to function after pressing this button, you may 

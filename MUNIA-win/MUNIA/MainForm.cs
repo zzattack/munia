@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using HidSharp;
 using MuniaInput;
+using MUNIA.Controllers;
 using OpenTK.Graphics.OpenGL;
 
 namespace MUNIA {
@@ -27,10 +28,9 @@ namespace MUNIA {
 
 		public MainForm(bool skipUpdateCheck) : this() {
 			glControl.Resize += OnResize;
-			UsbNotification.DeviceArrival += (sender, args) => { BuildMenu(); };
-			UsbNotification.DeviceRemovalComplete += (sender, args) => { BuildMenu(); };
+			UsbNotification.DeviceArrival += (sender, args) => BuildMenu();
+			UsbNotification.DeviceRemovalComplete += (sender, args) => BuildMenu();
 			_skipUpdateCheck = skipUpdateCheck;
-			Text += " - v" + Assembly.GetEntryAssembly().GetName().Version;
 		}
 
 		private void MainForm_Shown(object sender, EventArgs e) {
@@ -281,7 +281,6 @@ namespace MUNIA {
 
 		private void tsmiFirmware_Click(object sender, EventArgs e) {
 			var frm = new BootloaderForm {
-				Parent = this,
 				StartPosition = FormStartPosition.CenterParent
 			};
 			frm.ShowDialog(this);

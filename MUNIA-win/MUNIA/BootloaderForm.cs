@@ -38,6 +38,8 @@ namespace MUNIA {
 				imgBlStatus.ToolTipText = "MUNIA is currently in user mode.\r\nReboot it in bootloader mode to continue.";
 				lblHEX.Visible = imgHexStatus.Visible = pbFlash.Visible = lblProgress.Visible = false;
 				tsbEnterBootloader.Enabled = true;
+				tsbLoadHex.Enabled = false;
+				tsbReset.Enabled = false;
 				return;
 			}
 			else
@@ -149,7 +151,7 @@ namespace MUNIA {
 		}
 		
 		private void tsbReset_Click(object sender, EventArgs e) {
-			_blInterface.Reset();
+			_blInterface?.Reset();
 		}
 	}
 }

@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using MUNIA.Controllers;
 
 namespace MUNIA {
 	public static class SkinManager {
