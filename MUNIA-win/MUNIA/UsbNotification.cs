@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
-namespace SPAA05.Shared.USB {
-	using System.Windows.Forms;
+namespace MUNIA {
 
 	public static class UsbNotification {
 		private static readonly Guid GuidUsbDevices = new Guid("A5DCBF10-6530-11D2-901F-00C04FB951ED"); // USB devices
@@ -106,8 +106,7 @@ namespace SPAA05.Shared.USB {
 						var dev = (DEV_BROADCAST_DEVICEINTERFACE)Marshal.PtrToStructure(m.LParam, typeof(DEV_BROADCAST_DEVICEINTERFACE));
 						name = new string(dev.dbcc_name);
 					}
-					if (type == null) return;
-					if (name != null) name = name.Substring(0, name.IndexOf('\0'));
+					name = name?.Substring(0, name.IndexOf('\0'));
 
 					var args = new UsbNotificationEventArgs(type, name);
 					switch ((int)m.WParam) {
