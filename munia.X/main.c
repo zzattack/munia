@@ -65,6 +65,8 @@ void main() {
     U1Init(115200, true, true);
 #endif
     
+    dbgs("MUNIA Initialized\n");
+    
 	while (1) {
         ClrWdt();                
         USBDeviceTasks();
@@ -266,19 +268,16 @@ void apply_config() {
 
 
 typedef struct {
-    uint8_t report_id;
-    
+    uint8_t command_id;    
     uint8_t fw_minor : 4;
-    uint8_t fw_major : 4;
-    
+    uint8_t fw_major : 4;    
     uint8_t hw_revision : 4;
-    uint8_t : 4;
-        
+    uint8_t : 4;        
     config_t config;
 } cfg_read_report_t;
 
 typedef struct {
-    uint8_t report_id;
+    uint8_t command_id;
     config_t config;
 } cfg_write_report_t;
 
@@ -293,21 +292,21 @@ void usb_tasks() {
         // We just received a packet of data from the USB host.
         // Check the first byte of the packet to see what command the host
         // application software wants us to fulfill.
-        dbgs("packet received on endpoint 4, report id=0x"); dbgsvalx(usbOutBuffer[0]); dbgs("\n");
-        
-        if (usbOutBuffer[0] == REPORT_CFG_READ_ID) {
+        uint8_t cmd = usbOutBuffer[0];
+        if (cmd == CFG_CMD_READ) {
             // format response
             cfg_read_report_t* report = (cfg_read_report_t*)usbInBuffer;
-            report->report_id = REPORT_CFG_READ_ID;
+            report->command_id = CFG_CMD_READ;
             report->fw_major = FW_MAJOR;
             report->fw_minor = FW_MINOR;
             report->hw_revision = HW_REVISION;
-            memcpy(&report->config, &config, sizeof(config_t));
+
+            memcpy(&report->config, in_menu ? &config_edit : &config, sizeof(config_t));
             memset(usbInBuffer + sizeof(cfg_read_report_t), 0, sizeof(usbInBuffer) - sizeof(cfg_read_report_t));
             
-            USBInHandleCfg = HIDTxPacket(HID_EP_CFG, usbInBuffer, REPORT_CFG_SIZE + 1);
+            USBInHandleCfg = HIDTxPacket(HID_EP_CFG, usbInBuffer, CFG_CMD_REPORT_SIZE);
         }
-        else if (usbOutBuffer[0] == REPORT_CFG_WRITE_ID) {
+        else if (cmd == CFG_CMD_WRITE) {
             // extract config
             cfg_write_report_t* report = (cfg_write_report_t*)usbOutBuffer;
             memcpy(&config, &report->config, sizeof(config_t));
@@ -319,11 +318,16 @@ void usb_tasks() {
             }
             
             // response
-            usbInBuffer[0] = REPORT_CFG_WRITE_ID;
+            usbInBuffer[0] = CFG_CMD_WRITE;
             usbInBuffer[1] = 1; // signifies ok
             memset(usbInBuffer + 2, 0, sizeof(usbInBuffer) - 2);
             
-            USBInHandleCfg = HIDTxPacket(HID_EP_CFG, usbInBuffer, REPORT_CFG_SIZE + 1);
+            USBInHandleCfg = HIDTxPacket(HID_EP_CFG, usbInBuffer, CFG_CMD_REPORT_SIZE);
+        }
+        
+        else if (cmd == CFG_CMD_ENTER_BL) {
+            dbgs("jumping to bootloader\n");
+            asm("goto 0x001C");
         }
         
         // re-arm
