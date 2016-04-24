@@ -11,7 +11,6 @@ using System.Windows.Forms;
 using HidSharp;
 using MuniaInput;
 using OpenTK.Graphics.OpenGL;
-using SPAA05.Shared.USB;
 
 namespace MUNIA {
 	public partial class MainForm : Form {
@@ -27,9 +26,9 @@ namespace MUNIA {
 		}
 
 		public MainForm(bool skipUpdateCheck) : this() {
-			glControl.Resize += GlControl1OnResize;
-			UsbNotification.DeviceArrival += (sender, args) => { SkinManager.Load(); BuildMenu(); };
-			UsbNotification.DeviceRemovalComplete += (sender, args) => { SkinManager.Load(); BuildMenu(); };
+			glControl.Resize += OnResize;
+			UsbNotification.DeviceArrival += (sender, args) => { BuildMenu(); };
+			UsbNotification.DeviceRemovalComplete += (sender, args) => { BuildMenu(); };
 			_skipUpdateCheck = skipUpdateCheck;
 			Text += " - v" + Assembly.GetEntryAssembly().GetName().Version;
 		}
@@ -56,7 +55,7 @@ namespace MUNIA {
 		}
 
 		private void BuildMenu() {
-			int numOk = 0, numAvail = 0, numFail = 0;
+			int numOk = 0, numSkins = 0, numFail = 0;
 			tsmiController.DropDownItems.Clear();
 
 			foreach (var skin in SkinManager.Skins) {
@@ -66,7 +65,7 @@ namespace MUNIA {
 					goto nocontroller;
 				case SvgController.LoadResult.NoController:
 					nocontroller:
-					numAvail++;
+					numSkins++;
 					var tsmi = new ToolStripMenuItem($"{skin.Controller.SkinName} ({skin.Controller.DeviceName})");
 					tsmi.Enabled = skin.LoadResult == SvgController.LoadResult.Ok;
 					tsmi.Click += (sender, args) => ActivateSkin(skin);
@@ -78,10 +77,17 @@ namespace MUNIA {
 				}
 			}
 
-			string skinText = $"Loaded {numOk} skins ({numAvail} devices available)";
+			string skinText = $"Loaded {numSkins} skins ({numOk} devices available)";
 			if (numFail > 0)
 				skinText += $" ({numFail} failed to load)";
 			lblSkins.Text = skinText;
+
+			// if device wasn't available, but now it might be, then reevaluate the active skin
+			if (SkinManager.ActiveSkin == null) {
+				var activeSkin = SkinManager.Skins.FirstOrDefault(s => s.Controller.SvgPath == Settings.ActiveSkinPath);
+				if (activeSkin != null && activeSkin.LoadResult == SvgController.LoadResult.Ok)
+					ActivateSkin(activeSkin);
+			}
 		}
 
 		private void ActivateSkin(SkinEntry skin) {
@@ -137,7 +143,7 @@ namespace MUNIA {
 		}
 
 
-		private void GlControl1OnResize(object sender, EventArgs e) {
+		private void OnResize(object sender, EventArgs e) {
 			if (SkinManager.ActiveSkin != null) {
 				SkinManager.ActiveSkin.WindowSize = glControl.Size;
 				SkinManager.ActiveSkin.Controller?.Render(glControl.Width, glControl.Height);
@@ -146,7 +152,10 @@ namespace MUNIA {
 		}
 
 		private void setWindowSizeToolStripMenuItem_Click(object sender, EventArgs e) {
-			var frm = new WindowSizePicker(glControl.Size);
+			var frm = new WindowSizePicker(glControl.Size) {
+				Parent = this,
+				StartPosition = FormStartPosition.CenterParent
+			};
 			if (frm.ShowDialog() == DialogResult.OK) {
 				this.Size = frm.ChosenSize - glControl.Size + this.Size;
 			}
@@ -240,10 +249,10 @@ namespace MUNIA {
 			Settings.Save();
 		}
 
-		private async void tsmiMuniaSettings_Click(object sender, EventArgs e) {
+		private void tsmiMuniaSettings_Click(object sender, EventArgs e) {
 			var dev = MuniaController.GetConfigInterface();
 			if (dev == null) {
-				MessageBox.Show("MUNIA config interface not found. This typically has one of two causes:\r\n\tMUNIA isn't plugged in\r\n\tInstalled firmware doesn't implement this feature yet. Upgrade using the instructions at http://munia.io/fw",
+				MessageBox.Show("MUNIA config interface not found. This typically has one of three causes:\r\n  MUNIA isn't plugged in\r\n  MUNIA is currently in bootloader mode\r\n  Installed firmware doesn't implement this feature yet. Upgrade using the instructions at http://munia.io/fw",
 					"Not possible", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
@@ -251,13 +260,14 @@ namespace MUNIA {
 			if (dev.TryOpen(out stream)) {
 				try {
 					byte[] buff = new byte[9];
-					buff[0] = 0x47; // REPORT_CFG_READ_ID
+					buff[0] = 0;
+					buff[1] = 0x47;  // CFG_CMD_READ
 					stream.Write(buff, 0, 9);
 					stream.Read(buff, 0, 9);
 					var settings = new MuniaSettings();
 					if (settings.Parse(buff)) {
 						var dlg = new MuniaSettingsDialog(stream, settings);
-						dlg.ShowDialog();
+						dlg.ShowDialog(this);
 					}
 					else throw new InvalidOperationException("Invalid settings container received from MUNIA device");
 				}
@@ -269,6 +279,13 @@ namespace MUNIA {
 			}
 		}
 
+		private void tsmiFirmware_Click(object sender, EventArgs e) {
+			var frm = new BootloaderForm {
+				Parent = this,
+				StartPosition = FormStartPosition.CenterParent
+			};
+			frm.ShowDialog(this);
+		}
 	}
 
 }

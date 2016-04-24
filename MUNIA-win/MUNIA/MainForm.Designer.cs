@@ -30,6 +30,7 @@ namespace MUNIA {
 			this.tsmiOptions = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiSetWindowSize = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiMuniaSettings = new System.Windows.Forms.ToolStripMenuItem();
+			this.tsmiFirmware = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiHelp = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiCheckUpdates = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiAbout = new System.Windows.Forms.ToolStripMenuItem();
@@ -66,7 +67,8 @@ namespace MUNIA {
 			// 
 			this.tsmiOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsmiSetWindowSize,
-            this.tsmiMuniaSettings});
+            this.tsmiMuniaSettings,
+            this.tsmiFirmware});
 			this.tsmiOptions.Name = "tsmiOptions";
 			this.tsmiOptions.Size = new System.Drawing.Size(61, 20);
 			this.tsmiOptions.Text = "&Options";
@@ -74,16 +76,23 @@ namespace MUNIA {
 			// tsmiSetWindowSize
 			// 
 			this.tsmiSetWindowSize.Name = "tsmiSetWindowSize";
-			this.tsmiSetWindowSize.Size = new System.Drawing.Size(157, 22);
-			this.tsmiSetWindowSize.Text = "Set window size";
+			this.tsmiSetWindowSize.Size = new System.Drawing.Size(163, 22);
+			this.tsmiSetWindowSize.Text = "Set &window size";
 			this.tsmiSetWindowSize.Click += new System.EventHandler(this.setWindowSizeToolStripMenuItem_Click);
 			// 
 			// tsmiMuniaSettings
 			// 
 			this.tsmiMuniaSettings.Name = "tsmiMuniaSettings";
-			this.tsmiMuniaSettings.Size = new System.Drawing.Size(157, 22);
-			this.tsmiMuniaSettings.Text = "&MUNIA settings";
+			this.tsmiMuniaSettings.Size = new System.Drawing.Size(163, 22);
+			this.tsmiMuniaSettings.Text = "&MUNIA &config";
 			this.tsmiMuniaSettings.Click += new System.EventHandler(this.tsmiMuniaSettings_Click);
+			// 
+			// tsmiFirmware
+			// 
+			this.tsmiFirmware.Name = "tsmiFirmware";
+			this.tsmiFirmware.Size = new System.Drawing.Size(163, 22);
+			this.tsmiFirmware.Text = "MUNIA &firmware";
+			this.tsmiFirmware.Click += new System.EventHandler(this.tsmiFirmware_Click);
 			// 
 			// tsmiHelp
 			// 
@@ -140,7 +149,7 @@ namespace MUNIA {
 			// lblFill
 			// 
 			this.lblFill.Name = "lblFill";
-			this.lblFill.Size = new System.Drawing.Size(418, 17);
+			this.lblFill.Size = new System.Drawing.Size(387, 17);
 			this.lblFill.Spring = true;
 			// 
 			// lblStatus
@@ -192,6 +201,7 @@ namespace MUNIA {
 		private System.Windows.Forms.ToolStripProgressBar pbProgress;
 		private System.Windows.Forms.ToolStripStatusLabel lblSkins;
 		private System.Windows.Forms.ToolStripMenuItem tsmiMuniaSettings;
+		private System.Windows.Forms.ToolStripMenuItem tsmiFirmware;
 	}
 }
 
