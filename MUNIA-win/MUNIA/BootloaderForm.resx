@@ -141,15 +141,15 @@ alternatively unplug and replug the USB cable.</value>
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
         YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAIDSURBVDhPY8AF7JL3RrmWnVnoVnZ+mX3SngioMGHApbfM
-        UCT06BWFsnv/FSsegLF8yfV//E6bp0KV4AZcRkvdpZPOfjZve/y/cfuH/2uv/Pi/4drP//VbP/zXqLj+
-        j8touQ9UKSbgNFxoIpNx+Uvuyrf/Dz788//YE1S86My3/+JhBw9DlaMBs8V8krHH7oJs3X33N04cN/vu
-        X07dxTJQXQjA57i5t3DN2//rgE6ee/jtv6IpJ75FFC15mD356JdVF76BxUF43smv/7lNV0RDtUGAltcW
-        CZf6K9/mHP/yP6xsxQMehfhUBqlsYbCkWpGIvnfHGpDGBae/gbFa0PZusBwMmMXtLqxY9vifqkPVYgal
-        cn6oMAKo1PPF9x57PeHg5/8gbJd1YD1UhiGk8BgnQ3DN6XUy5qX9UDE4YNWcYygSfuiNkPeOZRbpO680
+        UCT06BWFsnv/FSsegLF8ybV//E6bp0KV4AZcRkvdpRPPfDZve/y/cfuH/2uv/Pi/4drP//VbP/zXqLj2
+        j8touQ9UKSbgNFxoIpNx+Uvuyrf/Dz788//YE1S86My3/+JhBw9DlaMBs8V8krHH7oJs3X33N04cO/vO
+        X07dxTJQXQjA57i5t3DN2//rgE6ec+jNv6IpJ75FFC15mDX56JdVF76BxUF43smv/7lNV0RDtUGAltcW
+        CZf6K9/mHP/yP6xsxQMehfhUBqlsYbCkWpGIvnfHGpDGBae/gbFa0PZusBwMmMXtLqxY+uifqkPVYgal
+        cn6oMAKo1PPF9x59PeHg5/8gbJd1YD1UhiGk8BgnQ3DN6XUy5qX9UDE4YNWcYygSfuiNkPeOZRbpO680
         bPvwH4Q9q87d5nPe3C0acfSqf8mBPgZ956ZCqB4MoOjcsjFs5vP/YbNe/i8AhhEIJy56/T9w+ov/Vvk7
-        nntEdOlBleIA8vUcyp4TdscvePU/YeFrOHYtP/aeVT7DEKqKAFCrF9FL3PIQZCsIO3ff/MupkhMKlSUO
-        sKkU+djW3/jn1Pf0v4R99wqoMGlA0nvuPp3cMz/ZVaqVoUKkAU6NxkBhh6nroFwygHE9F7NSkTOUBwUM
-        DADw3xzYbEWS8gAAAABJRU5ErkJggg==
+        nntEdOlBleIA8vUcyp4TdscvePU/YeFrOHYtP/aeVT7DEKqKAFCrF9FL3PIQZCsIO3Xf+MupkhMKlSUO
+        sKkU+djWX//n1Pf0v4R99wqoMGlA0nvuPp2c0z/ZVaqVoUKkAU6NxkBhh6nroFwygHE9F7NSkTOUBwUM
+        DADHeRzGmkzY4gAAAABJRU5ErkJggg==
 </value>
   </data>
   <data name="tsbLoadHex.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
@@ -157,14 +157,14 @@ alternatively unplug and replug the USB cable.</value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
         YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAH/SURBVDhPYyAGaE9Xd4AyiQMqHirsKqUK9upVir6KhTK6
         tlfM7hjM1QqBSuMHlrOM3H1uOj/3uG733/mq1X+HK+YQfNH8mbw/vwBUGXagV6ym6HnMcarjbsvZbpdt
-        9zifN/kENwCIzXYadECVYgcyhTKcUCYYyNvLc9heNN0P0mx33vigfKa8JlQKO8jLy1M1NjZmhXLBwOGy
-        +SG9mRoRUC52EBoaytzd3a345s2bvx8+fPj27NXroxcuXOpftGJRRMXsChWQmk2TpYNfHlZZ/uqQ2loY
-        Pr1KMYXhyUyVSd+PlT779+/f/z9//vx/+eb9/4dPX/6/+/AZED/9f+/hk/8vb095+/mk2r+f59X+o+Bz
+        9zifM/4ENwCIzXYadECVYgcyhTKcUCYYyNvLc9heNN0P0mx33vigfKa8JlQKO8jLy1M1NjZmhXLBwOGy
+        +SG9mRoRUC52EBoaytzd3a34+vXrvx8+fPj27NXroxcuXOpftGJRRMXsChWQmk2TpYNfHlZZ/uqQ2loY
+        Pr1KMYXhyUyVSd+PlT779+/f/z9//vx/+eb9/4dPX/6/+/AZED/9f+/hk/8vb095++mE2r+f59X+o+Bz
         ao8Y3s5RfvntTM//33/+/r/17sf/Czfu/r986+H/K7cf/9938tL/G1e2/P9xXuf/j3MqGPjdUaWVDC9n
         SF/7enXR/8+fH/w/eSr3/5MzCf/fXE77//ZK+v/HJwL+fz+rBsTKWPGmKRLpDI+niB36dm/n/x93sv9/
         O6NIEi5N4FVluNghsu77423/v55WAmJ5ovHH03KPwDGwt1pg9rcb+f+/nJQlCT/dK70AbMD6YqH2z6c1
-        /n8+IU0SXtElFAc2YEmtYMmn45L/ScGvD0j+TQ/hlAYbEGjPKbO8S6h6dY9wI7F4Vr1gGFgzAwMDABld
-        14xVEdJWAAAAAElFTkSuQmCC
+        /n8+IU0SXtElFAc2YEmtYMmn45L/ScGv9kv+TQ/hlAYbEGjPKbO8S6h6dY9wI7F4Vr1gGFgzAwMDAAa0
+        14Oa/YoAAAAAAElFTkSuQmCC
 </value>
   </data>
   <data name="tsbProgram.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
@@ -181,17 +181,17 @@ alternatively unplug and replug the USB cable.</value>
   <data name="tsbReset.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAJFSURBVDhPtdJfSJNRGAbwd2ZGdKcLslwFWeBAYgRBSVSW
-        tDKSphYGhqlIZuEam+Iam1JBf8gcqAWDpRGtCGP+wZk624ptumnb3KxFgqNpGUSBK13R9vSBB/TG7KJ+
-        N4eX53kvzvk++j/KHZX82oBrc40nuqXKPbeyqO8ZHTdls/TPeJdCTRtuzMSETb+wuxU4YAAUzwGBwveN
-        8s3FrLaESt/pOGXgI6nGq0keyKELo9dT6yZnTxqBGiuwSTYUpoO9aUmlblNSscfGthY5626g+lgym+ad
-        D2QI697NKgaAa06ADhm+6oZjSJfaw6zxFyR9sipTBI3DwF03YJwA1hd2+1jK3IqtJg3i2LSgIMCnzMfK
-        XWpHrMUH3PcC7UEgPsvQzhqcMnv+Pn0wItYFf4iap0OCKyFnvOy1kWRjIsrrbmx5C/RPAZZJ7nwP9HIn
-        7dDdZtucUqt2KgzYuNA0DrT6AfVLrlRu19IxiyihcFAvKHM60qvcwb0ae2SnzDZH+59I2DbRGqm90/sJ
-        eDAK3OPuKLzsilKhVUEX/Ymssgh4lKpdxYZ521SuMTN3Lz233Mw9VNHDz6AzTimLl7e91j979UUUK871
-        f6kfAuTcJ9uo9kWoxJ3BKvPEgymUPaBk04K1ijevElUTHVTiSBPIRr6XmICCDmBdtTdCJwZu0uG+XDrS
-        peKJu6fpaM8ptraEIk9mitwVznkKiNuAPdyvLLwDJGs+xCjH3MBay5BYtvJyOx/xy4dnkipGfibk9Tgo
-        q62Cpf8S0W+djiqneuj9GgAAAABJRU5ErkJggg==
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAJFSURBVDhPtdJfSFNhGAbwd2ZGdKeLsBwFWeDAQKKLkoos
+        cWUk+acwMJaKZBbO4bTWcEIFSWQKapGwNKIVYfgnNnVtbcU2Pc7OdForBEdTMoiiVroiz9OBfaA3Zhf1
+        u/l4eZ734vvOof+j1F0urfUPbTrPz2/W8HMrlZY+OmrOZOmfSS4GmzfUfRHkzb+wqx3YbwQ0zwCZxveN
+        8qyFrLaEct/JKK3/PekmqqnSn0XnRusSa6dmj3cCFxzARvVgiA70J8UV8+a4Qq+TbS1ymm+geiGeTRFn
+        /any2rezGhtwlQMow/i51SMgWeUKscZfyLaoq8xhNHmAWzzQOQmsLzD5WMpcF1aTHlFsWpDvl1LaQ+3O
+        GpfQ5gPujgBdASA63djFGqISV95eQyCccTvwI6VlJii7HOSi1a86ST2eQrmmprY3wNNpwD4lnu+AfvGk
+        7a032Lao2NE4HQKcYmieANrHgJoXYqnU1UhH7CkxBQMGWQnnTq7iA3v0rvCOCucc7XuUzbaJ1qhcPSMf
+        gHujwB3xjvJL3DwVODRUMRbLKotAQomNq9gQsVU3NG4V72UQl1vEh1Le/wg6xalYvLxt+rHZK8/nseKM
+        5VP9IFApfjJZzWiYivhUVolQDCRQpk3LpgVrNa9fxuomu6nInSRTD38vMgP53cC6am+Yjtmu0UFLDh16
+        opMoTDN0uPcEW1uC0puWUMmFsh4Dig5gt/gry28C8fppgbKsDay1jGz7FklOzwNpqedrXNnwz5jcXjel
+        d5Sx9F8i+g1pPiqOINo2JAAAAABJRU5ErkJggg==
 </value>
   </data>
   <metadata name="ofd.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">

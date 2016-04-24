@@ -107,6 +107,7 @@
 			this.ofd.DefaultExt = "*.hex";
 			this.ofd.FileName = "ofd";
 			this.ofd.Filter = "Hex files (*.hex)|*.hex|All files (*.*)|*";
+			this.ofd.RestoreDirectory = true;
 			// 
 			// statusStrip1
 			// 
@@ -160,7 +161,7 @@
 			// lblFill
 			// 
 			this.lblFill.Name = "lblFill";
-			this.lblFill.Size = new System.Drawing.Size(36, 17);
+			this.lblFill.Size = new System.Drawing.Size(22, 17);
 			this.lblFill.Spring = true;
 			// 
 			// lblProgress

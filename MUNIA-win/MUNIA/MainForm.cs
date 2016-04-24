@@ -151,9 +151,8 @@ namespace MUNIA {
 			GL.Viewport(0, 0, glControl.Width, glControl.Height);
 		}
 
-		private void setWindowSizeToolStripMenuItem_Click(object sender, EventArgs e) {
+		private void tsmiSetWindowSize_Click(object sender, EventArgs e) {
 			var frm = new WindowSizePicker(glControl.Size) {
-				Parent = this,
 				StartPosition = FormStartPosition.CenterParent
 			};
 			if (frm.ShowDialog() == DialogResult.OK) {
@@ -161,7 +160,7 @@ namespace MUNIA {
 			}
 		}
 
-		private void aboutToolStripMenuItem_Click(object sender, EventArgs e) {
+		private void tsmiAbout_Click(object sender, EventArgs e) {
 			new AboutBox().Show(this);
 		}
 

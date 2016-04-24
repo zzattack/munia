@@ -78,7 +78,7 @@ namespace MUNIA {
 			this.tsmiSetWindowSize.Name = "tsmiSetWindowSize";
 			this.tsmiSetWindowSize.Size = new System.Drawing.Size(163, 22);
 			this.tsmiSetWindowSize.Text = "Set &window size";
-			this.tsmiSetWindowSize.Click += new System.EventHandler(this.setWindowSizeToolStripMenuItem_Click);
+			this.tsmiSetWindowSize.Click += new System.EventHandler(this.tsmiSetWindowSize_Click);
 			// 
 			// tsmiMuniaSettings
 			// 
@@ -115,7 +115,7 @@ namespace MUNIA {
 			this.tsmiAbout.Name = "tsmiAbout";
 			this.tsmiAbout.Size = new System.Drawing.Size(170, 22);
 			this.tsmiAbout.Text = "&About";
-			this.tsmiAbout.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+			this.tsmiAbout.Click += new System.EventHandler(this.tsmiAbout_Click);
 			// 
 			// glControl
 			// 
