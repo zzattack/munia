@@ -5,6 +5,8 @@
 #include "globals.h"
 
 bool in_menu = false;
+uint8_t current_menu_page;
+
 enum __menu_pages {
     MENU_PAGE_NGC,
     MENU_PAGE_N64,
@@ -34,8 +36,11 @@ typedef struct {
 } config_t;
 config_t config;
 
+config_t config_edit, config_backup;
+
 void menu_enter();
 void menu_exit(bool save_settings);
+void menu_page(uint8_t page);
 void menu_tasks();
 
 #endif	/* MENU_H */

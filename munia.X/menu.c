@@ -10,8 +10,6 @@
 #define max(x, y) (((x) > (y)) ? (x) : (y))
 #define min(x, y) (((x) < (y)) ? (x) : (y))
 
-config_t config_edit, config_backup;
-uint8_t current_menu_page;
 uint8_t submenu_idx = 0;
 bool menu_leftalign = true;
 const uint8_t num_menu_pages = MENU_PAGE_COUNT;
@@ -19,8 +17,6 @@ uint8_t menu_next_press_delay;
 const char** menu_current_items;
 uint8_t submenu_count = 0;
 
-
-void menu_page(uint8_t page);
 void menu_press(uint8_t command);
 void menu_display_setting();
 
