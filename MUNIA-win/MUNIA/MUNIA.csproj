@@ -60,6 +60,12 @@
     <Compile Include="AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="BootloaderForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BootloaderForm.Designer.cs">
+      <DependentUpon>BootloaderForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="GLGraphics.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -102,6 +108,10 @@
     <EmbeddedResource Include="AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="BootloaderForm.resx">
+      <DependentUpon>BootloaderForm.cs</DependentUpon>
+      <LastGenOutput>BootloaderForm1.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -126,18 +136,24 @@
     </EmbeddedResource>
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
+    <None Include="Resources\notok.png" />
+    <None Include="Resources\ok.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MUNIA.Bootloader\MUNIA.Bootloader.csproj">
+      <Project>{3f548cb3-e781-45a0-8b36-cc4addc0a2a6}</Project>
+      <Name>MUNIA.Bootloader</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SVG#\Svg.csproj">
       <Project>{886a98c5-37c0-4e8b-885e-30c1d2f98b47}</Project>
       <Name>Svg</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="HID\" />
+    <None Include="Resources\warn.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
