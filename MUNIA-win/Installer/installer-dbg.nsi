@@ -5,8 +5,7 @@
 
 ; Retrieve version from exe
 !getdllversion "../MUNIA/bin/${CONFIG}/MUNIA.exe" expv_
-!define VERSION "${expv_1}.${expv_2}.${expv_3}"
-!define VERSIONFULL "${expv_1}.${expv_2}.${expv_3}.${expv_4}"
+!define VERSION "${expv_1}.${expv_2}.${expv_3}.${expv_4}"
 
 ; Define your application name
 !define APPNAME "MUNIA"
@@ -52,7 +51,7 @@ ShowInstDetails show
 
 ;--------------------------------
 ;Version Information
-  VIProductVersion ${VERSIONFULL}
+  VIProductVersion ${VERSION}
   VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "MUNIA Installer"
   VIAddVersionKey /LANG=${LANG_ENGLISH} "Comments" "By Frank Razenberg"
   VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" "munia.io"
