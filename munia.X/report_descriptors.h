@@ -236,6 +236,5 @@ STATIC_SIZE_CHECK_EQUAL(sizeof(hid_rpt_n64), HID_RPT_N64_SIZE);
 STATIC_SIZE_CHECK_EQUAL(sizeof(hid_rpt_ngc), HID_RPT_NGC_SIZE);
 STATIC_SIZE_CHECK_EQUAL(sizeof(hid_rpt_cfg), HID_RPT_CFG_SIZE);
 
-
 #endif	/* REPORT_DESCRIPTORS_H */
 

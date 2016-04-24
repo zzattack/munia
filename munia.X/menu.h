@@ -28,9 +28,9 @@ enum __n64_modes  { N64_MODE_N64,   N64_MODE_PC  };
 enum __ngc_modes  { NGC_MODE_NGC,   NGC_MODE_PC };
 
 typedef struct {
-    int8_t snes_mode;
-    int8_t n64_mode;
-    int8_t ngc_mode;
+    uint8_t snes_mode;
+    uint8_t n64_mode;
+    uint8_t ngc_mode;
 } config_t;
 config_t config;
 

@@ -4,6 +4,8 @@
 #include <xc.h>
 #include <stdint.h>
 
+#define HW_REVISION 2
+
 #define _XTAL_FREQ 48000000
 
 #define SNES_DAT PORTCbits.RC2
@@ -29,9 +31,7 @@
 #define LCD_PWM LATBbits.LATB5
 #define LCD_E LATAbits.LATA4
 
-#define HW 2 
-
-#if HW == 1
+#if HW_REVISION == 1
 #define SWITCH3 LATBbits.LATB2 // for ngc
 #define SWITCH2 LATBbits.LATB1 // for n64
 #define SWITCH1 LATBbits.LATB0 // for snes
@@ -39,7 +39,7 @@
 #define LCD_D5 LATAbits.LATA1
 #define LCD_D6 LATAbits.LATA2
 #define LCD_D7 LATAbits.LATA3
-#elif HW == 2
+#elif HW_REVISION == 2
 #define SWITCH1 LATBbits.LATB2 // for ngc
 #define SWITCH2 LATBbits.LATB1 // for n64
 #define SWITCH3 LATBbits.LATB0 // for snes

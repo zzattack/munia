@@ -4,6 +4,9 @@
 #include <stdint.h>
 #include <usb/usb_device.h>
 
+#define FW_MAJOR 1
+#define FW_MINOR 2
+
 #define USB_READY (USBDeviceState >= CONFIGURED_STATE && !USBSuspendControl)
 
 bool pollNeeded = false;
