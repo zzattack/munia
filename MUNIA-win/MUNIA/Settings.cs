@@ -23,7 +23,7 @@ namespace MUNIA {
 
 				Email = settings["Email"].InnerText;
 				var skinSettings = settings["Skins"];
-				ActiveSkinPath = skinSettings.Attributes["active"].Value;
+				ActiveSkinPath = skinSettings.Attributes["active"]?.Value;
 				foreach (XmlNode skin in skinSettings) {
 					string path = skin.Attributes["path"].Value;
 					string size = skin.Attributes["size"].Value;
@@ -45,7 +45,8 @@ namespace MUNIA {
 
 				xw.WriteElementString("Email", Email);
 				xw.WriteStartElement("Skins");
-				xw.WriteAttributeString("active", SkinManager.ActiveSkin.Controller.SvgPath);
+				if (SkinManager.ActiveSkin != null)
+					xw.WriteAttributeString("active", SkinManager.ActiveSkin.Controller.SvgPath);
 				foreach (var s in SkinManager.Skins) {
 					xw.WriteStartElement("Skin");
 					xw.WriteAttributeString("size", $"{s.WindowSize.Width}x{s.WindowSize.Height}");
