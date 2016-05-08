@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using MUNIA.Properties;
 
 namespace MUNIA {
 
@@ -162,8 +159,8 @@ namespace MUNIA {
 				data.Set("program_version", typeof(Program).Assembly.GetName().Version.ToString());
 				data.Set("exception", exc?.ToString() ?? "");
 				if (SkinManager.ActiveSkin != null) {
-					data.Set("skin_name", SkinManager.ActiveSkin.Controller.SkinName);
-					data.Set("skin_svg", File.ReadAllText(SkinManager.ActiveSkin.Controller.SvgPath));
+					data.Set("skin_name", SkinManager.ActiveSkin.Svg.SkinName);
+					data.Set("skin_svg", File.ReadAllText(SkinManager.ActiveSkin.Svg.Path));
 				}
 				data.Set("command_line", _cmdLine);
 				data.Set("email", email);

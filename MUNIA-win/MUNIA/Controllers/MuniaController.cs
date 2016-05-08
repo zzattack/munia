@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using HidSharp;
-using MUNIA.Controllers;
 
-namespace MuniaInput {
-    public abstract class MuniaController : IDisposable {
+namespace MUNIA.Controllers {
+    public abstract class MuniaController : IControllerState, IDisposable {
         /// <summary>
         /// Can be used to register for WM_INPUT messages and parse them.
         /// For testing purposes it can also be used to solely register for WM_INPUT messages.
@@ -14,12 +15,12 @@ namespace MuniaInput {
 
         public HidDevice HidDevice;
 		private HidStream _stream;
-        public abstract List<int> Axes { get; }
-        public abstract List<bool> Buttons { get; }
 
-        public event EventHandler StateUpdated;
+		public abstract List<int> Axes { get; }
+		public abstract List<bool> Buttons { get; }
+		public event EventHandler StateUpdated;
 
-        protected MuniaController(HidDevice hidDevice) {
+		protected MuniaController(HidDevice hidDevice) {
             this.HidDevice = hidDevice;
         }
         public override string ToString() {
@@ -42,25 +43,21 @@ namespace MuniaInput {
 				}
 			}
 		}
-		
-	    public static HidDevice GetConfigInterface() {
+		public static MuniaController GetByName(string deviceName) {
+			return ListDevices().FirstOrDefault(c => c.HidDevice.ProductName == deviceName);
+		}
+
+		public static HidDevice GetConfigInterface() {
 			var loader = new HidDeviceLoader();
 			//For each our device add a node to our treeview
-			foreach (var device in loader.GetDevices(0x04d8, 0x0058)) {
-				if (device.ProductName == "NinHID CFG") {
-					return device;
-				}
-			}
-			return null;
-		}
+		    return loader.GetDevices(0x04d8, 0x0058).FirstOrDefault(device => device.ProductName == "NinHID CFG");
+	    }
 
 
 		/// <summary>
 		/// Registers device for receiving inputs.
 		/// </summary>
-		/// <param name="wnd">Handle to window receiving WM_INPUT message for this device.
-		/// Window should override WndProc and give it to us.</param>
-		public void Activate(IntPtr wnd) {
+		public void Activate() {
 			_stream?.Dispose();
 			_stream = HidDevice.Open();
 			_stream.ReadTimeout = Timeout.Infinite;
@@ -69,7 +66,23 @@ namespace MuniaInput {
 			_stream.BeginRead(buffer, 0, buffer.Length, Callback, buffer);
 		}
 
-	    private void Callback(IAsyncResult ar) {
+		public void Deactivate() {
+			_stream?.Close();
+			_stream = null;
+		}
+		public bool IsActive => _stream != null && _stream.CanRead;
+		public bool IsAvailable() {
+			bool ret;
+			HidStream s;
+			ret = HidDevice.TryOpen(out s);
+			if (ret) {
+				ret = s.CanRead;
+				s.Close();
+			}
+			return ret;
+		}
+
+		private void Callback(IAsyncResult ar) {
 			try {
 				int numBytes = _stream.EndRead(ar);
 				byte[] buffer = (byte[])ar.AsyncState;
@@ -78,7 +91,10 @@ namespace MuniaInput {
 					_stream.BeginRead(buffer, 0, buffer.Length, Callback, buffer);
 				}
 			}
-			catch (IOException) { }
+			catch (IOException exc) {
+				Debug.WriteLine("IOException: " + exc.Message);
+				_stream = null;
+			}
 		}
 
 	    public void Dispose() {

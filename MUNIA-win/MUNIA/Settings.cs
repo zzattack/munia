@@ -46,11 +46,11 @@ namespace MUNIA {
 				xw.WriteElementString("Email", Email);
 				xw.WriteStartElement("Skins");
 				if (SkinManager.ActiveSkin != null)
-					xw.WriteAttributeString("active", SkinManager.ActiveSkin.Controller.SvgPath);
+					xw.WriteAttributeString("active", SkinManager.ActiveSkin.Svg.Path);
 				foreach (var s in SkinManager.Skins) {
 					xw.WriteStartElement("Skin");
 					xw.WriteAttributeString("size", $"{s.WindowSize.Width}x{s.WindowSize.Height}");
-					xw.WriteAttributeString("path", s.Controller.SvgPath);
+					xw.WriteAttributeString("path", s.Svg.Path);
 					xw.WriteEndElement();
 				}
 				xw.WriteEndElement(); // Skin

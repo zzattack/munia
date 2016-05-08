@@ -67,6 +67,7 @@
       <DependentUpon>BootloaderForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Controllers\BufferedController.cs" />
+    <Compile Include="Controllers\ControllerState.cs" />
     <Compile Include="GLGraphics.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>

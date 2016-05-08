@@ -1,9 +1,7 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 using HidSharp;
-using MuniaInput;
 using MUNIA.Bootloader;
 using MUNIA.Controllers;
 using MUNIA.Properties;

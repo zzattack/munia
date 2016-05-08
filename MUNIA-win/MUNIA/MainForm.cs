@@ -4,32 +4,29 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using HidSharp;
-using MuniaInput;
 using MUNIA.Controllers;
 using OpenTK.Graphics.OpenGL;
 
 namespace MUNIA {
 	public partial class MainForm : Form {
 		private readonly Stopwatch _stopwatch = new Stopwatch();
-		private SvgController _controller;
 		private double _timestamp;
 		private int _frames;
 		private readonly bool _skipUpdateCheck;
 		private int _fps;
-		
+
 		private MainForm() {
 			InitializeComponent();
 		}
 
 		public MainForm(bool skipUpdateCheck) : this() {
 			glControl.Resize += OnResize;
-			UsbNotification.DeviceArrival += (sender, args) => BuildMenu();
-			UsbNotification.DeviceRemovalComplete += (sender, args) => BuildMenu();
+			UsbNotification.DeviceArrival += (sender, args) => ScheduleBuildMenu();
+			UsbNotification.DeviceRemovalComplete += (sender, args) => ScheduleBuildMenu();
+			//UsbNotification.SetFilter(G)
 			_skipUpdateCheck = skipUpdateCheck;
 		}
 
@@ -38,14 +35,11 @@ namespace MUNIA {
 			SkinManager.Load();
 			// restore saved sizes
 			foreach (var kvp in Settings.SkinWindowSizes) {
-				var skin = SkinManager.Skins.FirstOrDefault(s => s.Controller.SvgPath == kvp.Key);
-				skin.WindowSize = kvp.Value;
+				var skin = SkinManager.Skins.FirstOrDefault(s => s.Svg.Path == kvp.Key);
+				if (skin != null) skin.WindowSize = kvp.Value;
 			}
 
 			BuildMenu();
-			var activeSkin = SkinManager.Skins.FirstOrDefault(s => s.Controller.SvgPath == Settings.ActiveSkinPath);
-			if (activeSkin != null && activeSkin.LoadResult == SvgController.LoadResult.Ok)
-				ActivateSkin(activeSkin);
 
 			Application.Idle += OnApplicationOnIdle;
 			if (!_skipUpdateCheck)
@@ -54,26 +48,43 @@ namespace MUNIA {
 				UpdateStatus("not checking for newer version", 100);
 		}
 
+		private Task _buildMenuTask;
+		private async void ScheduleBuildMenu() {
+			// buffers multiple BuildMenu calls
+			if (_buildMenuTask == null) {
+				_buildMenuTask = Task.Delay(300).ContinueWith(t => Invoke((Action)BuildMenu));
+				await _buildMenuTask;
+				_buildMenuTask = null;
+			}
+		}
+
 		private void BuildMenu() {
+			_buildMenuTask = null;
+			Debug.WriteLine("Building menu");
+
+			// update available controllers in skin manager
+			SkinManager.UpdateInputDevices();
+
 			int numOk = 0, numSkins = 0, numFail = 0;
 			tsmiController.DropDownItems.Clear();
 
 			foreach (var skin in SkinManager.Skins) {
-				switch (skin.LoadResult) {
-				case SvgController.LoadResult.Ok:
-					numOk++;
-					goto nocontroller;
-				case SvgController.LoadResult.NoController:
-					nocontroller:
+				if (skin.Svg.LoadResult == SvgController.SvgLoadResult.Fail)
+					numFail++;
+				else {
 					numSkins++;
-					var tsmi = new ToolStripMenuItem($"{skin.Controller.SkinName} ({skin.Controller.DeviceName})");
-					tsmi.Enabled = skin.LoadResult == SvgController.LoadResult.Ok;
+
+					var tsmi = new ToolStripMenuItem($"{skin.Svg.SkinName} ({skin.Svg.DeviceName})");
+
+					if (skin.Controller != null && skin.Controller.IsAvailable()) {
+						numOk++;
+						tsmi.Enabled = true;
+					}
+					else
+						tsmi.Enabled = false;
+
 					tsmi.Click += (sender, args) => ActivateSkin(skin);
 					tsmiController.DropDownItems.Add(tsmi);
-					break;
-				case SvgController.LoadResult.Fail:
-					numFail++;
-					break;
 				}
 			}
 
@@ -83,23 +94,38 @@ namespace MUNIA {
 			lblSkins.Text = skinText;
 
 			// if device wasn't available, but now it might be, then reevaluate the active skin
-			if (SkinManager.ActiveSkin == null) {
-				var activeSkin = SkinManager.Skins.FirstOrDefault(s => s.Controller.SvgPath == Settings.ActiveSkinPath);
-				if (activeSkin != null && activeSkin.LoadResult == SvgController.LoadResult.Ok)
-					ActivateSkin(activeSkin);
+			var s = SkinManager.ActiveSkin;
+			if (s == null) {
+				// no skin selected right now, but previous session might have
+				var lastUsed = SkinManager.Skins.Where(e=>e.Svg != null && e.Svg.LoadResult == SvgController.SvgLoadResult.SvgOk)
+					.FirstOrDefault(e => e.Svg.Path == Settings.ActiveSkinPath);
+				if (lastUsed != null)
+					ActivateSkin(lastUsed);
 			}
+
+			// if controller wasn't available but skin was selected, then try to activate it
+			else if (s.Controller != null && !s.Controller.IsActive)
+				ActivateSkin(SkinManager.ActiveSkin);
 		}
 
-		private void ActivateSkin(SkinEntry skin) {
+
+		private void ActivateSkin(Skin skin) {
+			if (skin.Svg.LoadResult != SvgController.SvgLoadResult.SvgOk) return;
+			if (skin.Controller == null) return;
+
+			// deactive possibly loaded skin
+			SkinManager.ActiveSkin?.Controller?.Deactivate();
+
+			skin.Controller.Activate();
+
 			SkinManager.ActiveSkin = skin;
-			this._controller = skin.Controller;
 			// find desired window size
 			if (skin.WindowSize != Size.Empty)
 				this.Size = skin.WindowSize - glControl.Size + this.Size;
 			else
 				skin.WindowSize = glControl.Size;
-			this._controller?.Render(glControl.Width, glControl.Height);
-			this._controller?.Activate(Handle);
+
+			SkinManager.ActiveSkin.Svg.Render(glControl.Width, glControl.Height);
 		}
 
 		private void glControl_Load(object sender, EventArgs e) {
@@ -137,7 +163,9 @@ namespace MUNIA {
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.LoadIdentity();
 			GL.Ortho(0, glControl.Width, glControl.Height, 0, 0.0, 4.0);
-			_controller?.Render();
+
+			SkinManager.ActiveSkin?.Svg?.UpdateState(SkinManager.ActiveSkin?.Controller);
+			SkinManager.ActiveSkin?.Svg?.Render();
 
 			glControl.SwapBuffers();
 		}
@@ -146,7 +174,7 @@ namespace MUNIA {
 		private void OnResize(object sender, EventArgs e) {
 			if (SkinManager.ActiveSkin != null) {
 				SkinManager.ActiveSkin.WindowSize = glControl.Size;
-				SkinManager.ActiveSkin.Controller?.Render(glControl.Width, glControl.Height);
+				SkinManager.ActiveSkin.Svg?.Render(glControl.Width, glControl.Height);
 			}
 			GL.Viewport(0, 0, glControl.Width, glControl.Height);
 		}

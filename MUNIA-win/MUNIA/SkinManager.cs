@@ -6,25 +6,36 @@ using MUNIA.Controllers;
 
 namespace MUNIA {
 	public static class SkinManager {
-		public static readonly HashSet<SkinEntry> Skins = new HashSet<SkinEntry>();
-		public static SkinEntry ActiveSkin { get; set; }
+		public static readonly HashSet<Skin> Skins = new HashSet<Skin>();
+		public static Skin ActiveSkin { get; set; }
 
-		public static IEnumerable<SkinEntry> Load() {
+		public static IEnumerable<Skin> Load() {
 			foreach (string svgPath in Directory.GetFiles("./skins", "*.svg")) {
-				var controller = new SvgController();
-				var loadResult = controller.Load(svgPath);
-				var entry = Skins.FirstOrDefault(s => s.Controller.SvgPath == svgPath) ?? new SkinEntry();
-				entry.Controller = controller;
-				entry.LoadResult = loadResult;
-				Skins.Add(entry);
+				var svg = new SvgController();
+				svg.LoadSvg(svgPath);
+				var entry = Skins.FirstOrDefault(s => s.Svg.Path == svgPath) ?? new Skin();
+				entry.Svg = svg;
+				if (!Skins.Contains(entry))
+					Skins.Add(entry);
 			}
+
 			return Skins;
 		}
+
+		public static void UpdateInputDevices() {
+			// update loadresult on existing skins
+			foreach (var skin in Skins) {
+				if (skin.Svg.LoadResult >= SvgController.SvgLoadResult.SvgOk) {
+					skin.Controller = MuniaController.GetByName(skin.Svg.DeviceName);
+				}
+			}
+		}
+
 	}
 
-	public class SkinEntry {
+	public class Skin {
+		public SvgController Svg;
+		public MuniaController Controller;
 		public Size WindowSize;
-		public SvgController Controller;
-		public SvgController.LoadResult LoadResult;
 	}
 }

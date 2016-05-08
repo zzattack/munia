@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using HidSharp;
 
-namespace MuniaInput {
+namespace MUNIA.Controllers {
     public class N64Controller : MuniaController {
         private readonly List<bool> _buttons;
         private readonly List<int> _axes;

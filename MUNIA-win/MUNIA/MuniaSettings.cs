@@ -1,5 +1,3 @@
-using OpenTK.Graphics.OpenGL;
-
 namespace MUNIA {
 	public class MuniaSettings {
 		public enum SnesMode { SNES_MODE_SNES, SNES_MODE_PC, SNES_MODE_NGC };

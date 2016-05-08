@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using MuniaInput;
 using OpenTK.Graphics.OpenGL;
 using Svg;
 
 namespace MUNIA.Controllers {
 	public class SvgController {
 		private SvgDocument _svgDocument;
-		private MuniaController _inputDevice;
 
 		public string DeviceName { get; set; }
 		public string SkinName { get; set; }
@@ -19,16 +17,17 @@ namespace MUNIA.Controllers {
 		public List<Trigger> Triggers = new List<Trigger>();
 		private SizeF _dimensions;
 		public int BaseTexture { get; set; }
-		public string SvgPath { get; set; }
+		public string Path { get; set; }
+		public SvgLoadResult LoadResult { get; private set; }
+		IControllerState _state;
 
-		public enum LoadResult {
-			Ok,
-			NoController,
-			Fail
+		public enum SvgLoadResult {
+			Fail,
+			SvgOk,
 		}
-		public LoadResult Load(string svgPath) {
+		public void LoadSvg(string svgPath) {
 			try {
-				SvgPath = svgPath;
+				Path = svgPath;
 				_svgDocument = SvgDocument.Open(svgPath);
 				_dimensions = _svgDocument.GetDimensions();
 
@@ -46,17 +45,9 @@ namespace MUNIA.Controllers {
 
 				// load button/stick/trigger mapping from svg
 				RecursiveGetElements(_svgDocument);
-
-				// find input device
-				_inputDevice?.Dispose();
-				_inputDevice = MuniaController.ListDevices().FirstOrDefault(d => d.HidDevice.ProductName == DeviceName);
-				return _inputDevice == null ? LoadResult.NoController : LoadResult.Ok;
+				LoadResult = !string.IsNullOrEmpty(DeviceName) ? SvgLoadResult.SvgOk : SvgLoadResult.Fail;
 			}
-			catch { return LoadResult.Fail; }
-		}
-
-		public void Activate(IntPtr wnd) {
-			_inputDevice?.Activate(wnd);
+			catch { LoadResult = SvgLoadResult.Fail; }
 		}
 
 		private void RecursiveGetElements(SvgElement e) {
@@ -112,6 +103,9 @@ namespace MUNIA.Controllers {
 			}
 		}
 
+		public void UpdateState(IControllerState state) {
+			_state = state;
+		}
 		public void Render(int width, int height) {
 			if (_svgDocument == null || width == 0 || height == 0) return;
 			if (_svgDocument.Height != height || _svgDocument.Width != width) {
@@ -150,7 +144,7 @@ namespace MUNIA.Controllers {
 		}
 		private void RenderButton(int i) {
 			var btn = Buttons[i];
-			bool pressed = _inputDevice != null && _inputDevice.Buttons[i];
+			bool pressed = _state != null && _state.Buttons[i];
 			if (pressed && btn.Pressed != null) {
 				GL.BindTexture(TextureTarget.Texture2D, btn.PressedTexture);
 				RenderTexture(btn.PressedBounds);
@@ -164,9 +158,9 @@ namespace MUNIA.Controllers {
 			var stick = Sticks[i];
 			var r = stick.Bounds;
 			float x, y;
-			if (_inputDevice != null) {
-				x = _inputDevice.Axes[stick.HorizontalAxis];
-				y = _inputDevice.Axes[stick.VerticalAxis];
+			if (_state != null) {
+				x = _state.Axes[stick.HorizontalAxis];
+				y = _state.Axes[stick.VerticalAxis];
 			}
 			else {
 				x = y = 0f;
@@ -184,7 +178,7 @@ namespace MUNIA.Controllers {
 		private void RenderTrigger(int i) {
 			var trigger = Triggers[i];
 			var r = trigger.Bounds;
-			float o = _inputDevice?.Axes[trigger.Axis] ?? 0f;
+			float o = _state?.Axes[trigger.Axis] ?? 0f;
 
 			SizeF img = GetCorrectedDimensions(new SizeF(_svgDocument.Width, _svgDocument.Height));
 			o *= img.Height / _dimensions.Height * trigger.OffsetScale;
@@ -382,7 +376,7 @@ namespace MUNIA.Controllers {
 			float maxY = points.Max(p => p.Y);
 			return RectangleF.FromLTRB(minX, minY, maxX, maxY);
 		}
-		
+
 	}
 
 	public class ControllerItem {
