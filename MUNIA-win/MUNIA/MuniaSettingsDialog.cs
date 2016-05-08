@@ -3,7 +3,7 @@ using HidSharp;
 
 namespace MUNIA {
 	public partial class MuniaSettingsDialog : Form {
-		private HidStream _hidStream;
+		private readonly HidStream _hidStream;
 		private readonly MuniaSettings _settings;
 
 		public MuniaSettingsDialog() {
@@ -26,6 +26,8 @@ namespace MUNIA {
 
 			tbFirmware.Text = $"{settings.VersionMajor}.{settings.VersionMinor}";
 			tbHardware.Text = "rev" + settings.HardwareRevision;
+			tbMCUId.Text = "0x" + settings.DeviceID.ToString("x4");
+			tbMCURevision.Text = settings.HardwareRevision.ToString();
 		}
 
 		private void btnAccept_Click(object sender, System.EventArgs e) {

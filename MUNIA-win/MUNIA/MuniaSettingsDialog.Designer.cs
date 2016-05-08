@@ -23,84 +23,141 @@
 		/// the contents of this method with the code editor.
 		/// </summary>
 		private void InitializeComponent() {
-			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.gbMunia = new System.Windows.Forms.GroupBox();
+			this.tbMCURevision = new System.Windows.Forms.TextBox();
+			this.label1 = new System.Windows.Forms.Label();
+			this.tbMCUId = new System.Windows.Forms.TextBox();
+			this.lblMicrocontroller = new System.Windows.Forms.Label();
 			this.tbHardware = new System.Windows.Forms.TextBox();
+			this.label2 = new System.Windows.Forms.Label();
 			this.tbFirmware = new System.Windows.Forms.TextBox();
-			this.panel3 = new System.Windows.Forms.Panel();
+			this.pnlNGC = new System.Windows.Forms.Panel();
 			this.rbNgcPC = new System.Windows.Forms.RadioButton();
-			this.label5 = new System.Windows.Forms.Label();
+			this.lblNGCMode = new System.Windows.Forms.Label();
 			this.rbNgcConsole = new System.Windows.Forms.RadioButton();
-			this.panel2 = new System.Windows.Forms.Panel();
+			this.pnlN64 = new System.Windows.Forms.Panel();
 			this.rbN64PC = new System.Windows.Forms.RadioButton();
-			this.label4 = new System.Windows.Forms.Label();
+			this.lblN64Mode = new System.Windows.Forms.Label();
 			this.rbN64Console = new System.Windows.Forms.RadioButton();
-			this.panel1 = new System.Windows.Forms.Panel();
-			this.label3 = new System.Windows.Forms.Label();
+			this.pnlSNES = new System.Windows.Forms.Panel();
+			this.lblSNESMode = new System.Windows.Forms.Label();
 			this.rbSnesPC = new System.Windows.Forms.RadioButton();
 			this.rbSnesConsole = new System.Windows.Forms.RadioButton();
 			this.rbSnesNgc = new System.Windows.Forms.RadioButton();
-			this.label2 = new System.Windows.Forms.Label();
-			this.label1 = new System.Windows.Forms.Label();
+			this.lblFirmwareVersion = new System.Windows.Forms.Label();
 			this.btnAccept = new System.Windows.Forms.Button();
 			this.btnCancel = new System.Windows.Forms.Button();
-			this.groupBox1.SuspendLayout();
-			this.panel3.SuspendLayout();
-			this.panel2.SuspendLayout();
-			this.panel1.SuspendLayout();
+			this.gbMunia.SuspendLayout();
+			this.pnlNGC.SuspendLayout();
+			this.pnlN64.SuspendLayout();
+			this.pnlSNES.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// groupBox1
+			// gbMunia
 			// 
-			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			this.gbMunia.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.groupBox1.Controls.Add(this.tbHardware);
-			this.groupBox1.Controls.Add(this.tbFirmware);
-			this.groupBox1.Controls.Add(this.panel3);
-			this.groupBox1.Controls.Add(this.panel2);
-			this.groupBox1.Controls.Add(this.panel1);
-			this.groupBox1.Controls.Add(this.label2);
-			this.groupBox1.Controls.Add(this.label1);
-			this.groupBox1.Location = new System.Drawing.Point(12, 12);
-			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(311, 185);
-			this.groupBox1.TabIndex = 0;
-			this.groupBox1.TabStop = false;
-			this.groupBox1.Text = "MUNIA Info";
+			this.gbMunia.Controls.Add(this.tbMCURevision);
+			this.gbMunia.Controls.Add(this.label1);
+			this.gbMunia.Controls.Add(this.tbMCUId);
+			this.gbMunia.Controls.Add(this.lblMicrocontroller);
+			this.gbMunia.Controls.Add(this.tbHardware);
+			this.gbMunia.Controls.Add(this.label2);
+			this.gbMunia.Controls.Add(this.tbFirmware);
+			this.gbMunia.Controls.Add(this.pnlNGC);
+			this.gbMunia.Controls.Add(this.pnlN64);
+			this.gbMunia.Controls.Add(this.pnlSNES);
+			this.gbMunia.Controls.Add(this.lblFirmwareVersion);
+			this.gbMunia.Location = new System.Drawing.Point(12, 12);
+			this.gbMunia.Name = "gbMunia";
+			this.gbMunia.Size = new System.Drawing.Size(311, 185);
+			this.gbMunia.TabIndex = 0;
+			this.gbMunia.TabStop = false;
+			this.gbMunia.Text = "MUNIA Info";
+			// 
+			// tbMCURevision
+			// 
+			this.tbMCURevision.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbMCURevision.Enabled = false;
+			this.tbMCURevision.Location = new System.Drawing.Point(242, 45);
+			this.tbMCURevision.Name = "tbMCURevision";
+			this.tbMCURevision.ReadOnly = true;
+			this.tbMCURevision.Size = new System.Drawing.Size(50, 20);
+			this.tbMCURevision.TabIndex = 10;
+			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.Location = new System.Drawing.Point(171, 48);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(59, 13);
+			this.label1.TabIndex = 9;
+			this.label1.Text = "µC revision";
+			// 
+			// tbMCUId
+			// 
+			this.tbMCUId.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbMCUId.Enabled = false;
+			this.tbMCUId.Location = new System.Drawing.Point(113, 45);
+			this.tbMCUId.Name = "tbMCUId";
+			this.tbMCUId.ReadOnly = true;
+			this.tbMCUId.Size = new System.Drawing.Size(49, 20);
+			this.tbMCUId.TabIndex = 8;
+			// 
+			// lblMicrocontroller
+			// 
+			this.lblMicrocontroller.AutoSize = true;
+			this.lblMicrocontroller.Location = new System.Drawing.Point(21, 48);
+			this.lblMicrocontroller.Name = "lblMicrocontroller";
+			this.lblMicrocontroller.Size = new System.Drawing.Size(76, 13);
+			this.lblMicrocontroller.TabIndex = 7;
+			this.lblMicrocontroller.Text = "Microcontroller";
 			// 
 			// tbHardware
 			// 
 			this.tbHardware.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.tbHardware.Enabled = false;
-			this.tbHardware.Location = new System.Drawing.Point(126, 46);
+			this.tbHardware.Location = new System.Drawing.Point(242, 23);
 			this.tbHardware.Name = "tbHardware";
 			this.tbHardware.ReadOnly = true;
-			this.tbHardware.Size = new System.Drawing.Size(58, 20);
+			this.tbHardware.Size = new System.Drawing.Size(50, 20);
 			this.tbHardware.TabIndex = 3;
+			// 
+			// label2
+			// 
+			this.label2.AutoSize = true;
+			this.label2.Location = new System.Drawing.Point(171, 26);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(65, 13);
+			this.label2.TabIndex = 2;
+			this.label2.Text = "HW revision";
 			// 
 			// tbFirmware
 			// 
 			this.tbFirmware.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.tbFirmware.Enabled = false;
-			this.tbFirmware.Location = new System.Drawing.Point(126, 23);
+			this.tbFirmware.Location = new System.Drawing.Point(113, 23);
 			this.tbFirmware.Name = "tbFirmware";
 			this.tbFirmware.ReadOnly = true;
-			this.tbFirmware.Size = new System.Drawing.Size(58, 20);
+			this.tbFirmware.Size = new System.Drawing.Size(49, 20);
 			this.tbFirmware.TabIndex = 1;
 			// 
-			// panel3
+			// pnlNGC
 			// 
-			this.panel3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			this.pnlNGC.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.panel3.Controls.Add(this.rbNgcPC);
-			this.panel3.Controls.Add(this.label5);
-			this.panel3.Controls.Add(this.rbNgcConsole);
-			this.panel3.Location = new System.Drawing.Point(19, 144);
-			this.panel3.Name = "panel3";
-			this.panel3.Size = new System.Drawing.Size(281, 31);
-			this.panel3.TabIndex = 6;
+			this.pnlNGC.Controls.Add(this.rbNgcPC);
+			this.pnlNGC.Controls.Add(this.lblNGCMode);
+			this.pnlNGC.Controls.Add(this.rbNgcConsole);
+			this.pnlNGC.Location = new System.Drawing.Point(19, 144);
+			this.pnlNGC.Name = "pnlNGC";
+			this.pnlNGC.Size = new System.Drawing.Size(281, 31);
+			this.pnlNGC.TabIndex = 6;
 			// 
 			// rbNgcPC
 			// 
@@ -113,14 +170,14 @@
 			this.rbNgcPC.Text = "PC";
 			this.rbNgcPC.UseVisualStyleBackColor = true;
 			// 
-			// label5
+			// lblNGCMode
 			// 
-			this.label5.AutoSize = true;
-			this.label5.Location = new System.Drawing.Point(8, 9);
-			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(59, 13);
-			this.label5.TabIndex = 0;
-			this.label5.Text = "NGC mode";
+			this.lblNGCMode.AutoSize = true;
+			this.lblNGCMode.Location = new System.Drawing.Point(8, 9);
+			this.lblNGCMode.Name = "lblNGCMode";
+			this.lblNGCMode.Size = new System.Drawing.Size(59, 13);
+			this.lblNGCMode.TabIndex = 0;
+			this.lblNGCMode.Text = "NGC mode";
 			// 
 			// rbNgcConsole
 			// 
@@ -133,17 +190,17 @@
 			this.rbNgcConsole.Text = "Console";
 			this.rbNgcConsole.UseVisualStyleBackColor = true;
 			// 
-			// panel2
+			// pnlN64
 			// 
-			this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			this.pnlN64.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.panel2.Controls.Add(this.rbN64PC);
-			this.panel2.Controls.Add(this.label4);
-			this.panel2.Controls.Add(this.rbN64Console);
-			this.panel2.Location = new System.Drawing.Point(19, 107);
-			this.panel2.Name = "panel2";
-			this.panel2.Size = new System.Drawing.Size(281, 31);
-			this.panel2.TabIndex = 5;
+			this.pnlN64.Controls.Add(this.rbN64PC);
+			this.pnlN64.Controls.Add(this.lblN64Mode);
+			this.pnlN64.Controls.Add(this.rbN64Console);
+			this.pnlN64.Location = new System.Drawing.Point(19, 107);
+			this.pnlN64.Name = "pnlN64";
+			this.pnlN64.Size = new System.Drawing.Size(281, 31);
+			this.pnlN64.TabIndex = 5;
 			// 
 			// rbN64PC
 			// 
@@ -156,14 +213,14 @@
 			this.rbN64PC.Text = "PC";
 			this.rbN64PC.UseVisualStyleBackColor = true;
 			// 
-			// label4
+			// lblN64Mode
 			// 
-			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(8, 9);
-			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(56, 13);
-			this.label4.TabIndex = 0;
-			this.label4.Text = "N64 mode";
+			this.lblN64Mode.AutoSize = true;
+			this.lblN64Mode.Location = new System.Drawing.Point(8, 9);
+			this.lblN64Mode.Name = "lblN64Mode";
+			this.lblN64Mode.Size = new System.Drawing.Size(56, 13);
+			this.lblN64Mode.TabIndex = 0;
+			this.lblN64Mode.Text = "N64 mode";
 			// 
 			// rbN64Console
 			// 
@@ -176,27 +233,27 @@
 			this.rbN64Console.Text = "Console";
 			this.rbN64Console.UseVisualStyleBackColor = true;
 			// 
-			// panel1
+			// pnlSNES
 			// 
-			this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			this.pnlSNES.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.panel1.Controls.Add(this.label3);
-			this.panel1.Controls.Add(this.rbSnesPC);
-			this.panel1.Controls.Add(this.rbSnesConsole);
-			this.panel1.Controls.Add(this.rbSnesNgc);
-			this.panel1.Location = new System.Drawing.Point(19, 70);
-			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(281, 31);
-			this.panel1.TabIndex = 4;
+			this.pnlSNES.Controls.Add(this.lblSNESMode);
+			this.pnlSNES.Controls.Add(this.rbSnesPC);
+			this.pnlSNES.Controls.Add(this.rbSnesConsole);
+			this.pnlSNES.Controls.Add(this.rbSnesNgc);
+			this.pnlSNES.Location = new System.Drawing.Point(19, 70);
+			this.pnlSNES.Name = "pnlSNES";
+			this.pnlSNES.Size = new System.Drawing.Size(281, 31);
+			this.pnlSNES.TabIndex = 4;
 			// 
-			// label3
+			// lblSNESMode
 			// 
-			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(8, 9);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(65, 13);
-			this.label3.TabIndex = 0;
-			this.label3.Text = "SNES mode";
+			this.lblSNESMode.AutoSize = true;
+			this.lblSNESMode.Location = new System.Drawing.Point(8, 9);
+			this.lblSNESMode.Name = "lblSNESMode";
+			this.lblSNESMode.Size = new System.Drawing.Size(65, 13);
+			this.lblSNESMode.TabIndex = 0;
+			this.lblSNESMode.Text = "SNES mode";
 			// 
 			// rbSnesPC
 			// 
@@ -231,23 +288,14 @@
 			this.rbSnesNgc.Text = "NGC";
 			this.rbSnesNgc.UseVisualStyleBackColor = true;
 			// 
-			// label2
+			// lblFirmwareVersion
 			// 
-			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(21, 49);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(92, 13);
-			this.label2.TabIndex = 2;
-			this.label2.Text = "Hardware revision";
-			// 
-			// label1
-			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(21, 26);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(86, 13);
-			this.label1.TabIndex = 0;
-			this.label1.Text = "Firmware version";
+			this.lblFirmwareVersion.AutoSize = true;
+			this.lblFirmwareVersion.Location = new System.Drawing.Point(21, 26);
+			this.lblFirmwareVersion.Name = "lblFirmwareVersion";
+			this.lblFirmwareVersion.Size = new System.Drawing.Size(86, 13);
+			this.lblFirmwareVersion.TabIndex = 0;
+			this.lblFirmwareVersion.Text = "Firmware version";
 			// 
 			// btnAccept
 			// 
@@ -279,44 +327,48 @@
 			this.ClientSize = new System.Drawing.Size(335, 245);
 			this.Controls.Add(this.btnCancel);
 			this.Controls.Add(this.btnAccept);
-			this.Controls.Add(this.groupBox1);
+			this.Controls.Add(this.gbMunia);
 			this.MaximizeBox = false;
 			this.MinimumSize = new System.Drawing.Size(337, 251);
 			this.Name = "MuniaSettingsDialog";
 			this.Text = "MUNIA Device Configuration";
-			this.groupBox1.ResumeLayout(false);
-			this.groupBox1.PerformLayout();
-			this.panel3.ResumeLayout(false);
-			this.panel3.PerformLayout();
-			this.panel2.ResumeLayout(false);
-			this.panel2.PerformLayout();
-			this.panel1.ResumeLayout(false);
-			this.panel1.PerformLayout();
+			this.gbMunia.ResumeLayout(false);
+			this.gbMunia.PerformLayout();
+			this.pnlNGC.ResumeLayout(false);
+			this.pnlNGC.PerformLayout();
+			this.pnlN64.ResumeLayout(false);
+			this.pnlN64.PerformLayout();
+			this.pnlSNES.ResumeLayout(false);
+			this.pnlSNES.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
 
 		#endregion
 
-		private System.Windows.Forms.GroupBox groupBox1;
+		private System.Windows.Forms.GroupBox gbMunia;
 		private System.Windows.Forms.TextBox tbHardware;
 		private System.Windows.Forms.TextBox tbFirmware;
-		private System.Windows.Forms.Panel panel3;
-		private System.Windows.Forms.Panel panel2;
-		private System.Windows.Forms.Panel panel1;
+		private System.Windows.Forms.Panel pnlNGC;
+		private System.Windows.Forms.Panel pnlN64;
+		private System.Windows.Forms.Panel pnlSNES;
 		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.Label lblFirmwareVersion;
 		private System.Windows.Forms.RadioButton rbNgcPC;
-		private System.Windows.Forms.Label label5;
+		private System.Windows.Forms.Label lblNGCMode;
 		private System.Windows.Forms.RadioButton rbNgcConsole;
 		private System.Windows.Forms.RadioButton rbN64PC;
-		private System.Windows.Forms.Label label4;
+		private System.Windows.Forms.Label lblN64Mode;
 		private System.Windows.Forms.RadioButton rbN64Console;
-		private System.Windows.Forms.Label label3;
+		private System.Windows.Forms.Label lblSNESMode;
 		private System.Windows.Forms.RadioButton rbSnesPC;
 		private System.Windows.Forms.RadioButton rbSnesConsole;
 		private System.Windows.Forms.RadioButton rbSnesNgc;
 		private System.Windows.Forms.Button btnAccept;
 		private System.Windows.Forms.Button btnCancel;
+		private System.Windows.Forms.TextBox tbMCUId;
+		private System.Windows.Forms.Label lblMicrocontroller;
+		private System.Windows.Forms.TextBox tbMCURevision;
+		private System.Windows.Forms.Label label1;
 	}
 }

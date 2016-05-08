@@ -11,6 +11,8 @@ namespace MUNIA {
 		public int VersionMajor;
 		public int VersionMinor;
 		public int HardwareRevision;
+		public ushort DeviceID;
+		public byte PICRevision;
 		public bool Parse(byte[] report) {
 			if (report[0] != 0 || report[1] != 0x047 || report.Length != 9) return false;
 			VersionMajor = report[2] >> 4;
@@ -19,6 +21,9 @@ namespace MUNIA {
 			SNES = (SnesMode)report[4];
 			N64 = (N64Mode)report[5];
 			NGC = (NGCMode)report[6];
+			DeviceID = (ushort)((report[7] << 8) | report[8]);
+			PICRevision = (byte)(DeviceID & 0x0F);
+			DeviceID &= 0xFFF0;
 			return true;
 		}
 
