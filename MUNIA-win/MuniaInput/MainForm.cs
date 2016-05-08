@@ -5,6 +5,7 @@ using System.Linq;
 using System.Resources;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using MUNIA.Controllers;
 using SharpLib.Hid;
 using SharpLib.Win32;
 
@@ -26,7 +27,7 @@ namespace MuniaInput {
 
         private void Register(MuniaController c) {
             _activeController = c;
-            c.Activate(this.Handle);
+            c.Activate();
             c.StateUpdated += ControllerStateUpdated;
         }
 
