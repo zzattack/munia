@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using HidSharp;
 using MuniaInput;
 using MUNIA.Bootloader;
+using MUNIA.Controllers;
 using MUNIA.Properties;
 
 namespace MUNIA {
@@ -36,10 +37,9 @@ namespace MUNIA {
 				imgBlStatus.Image = Properties.Resources.warn;
 				lblStatus.Text = "Status: user";
 				imgBlStatus.ToolTipText = "MUNIA is currently in user mode.\r\nReboot it in bootloader mode to continue.";
-				lblHEX.Visible = imgHexStatus.Visible = pbFlash.Visible = lblProgress.Visible = false;
 				tsbEnterBootloader.Enabled = true;
-				tsbLoadHex.Enabled = false;
-				tsbReset.Enabled = false;
+				lblHEX.Visible = imgHexStatus.Visible = pbFlash.Visible = lblProgress.Visible = false;
+				tsbLoadHex.Enabled = tsbProgram.Enabled = tsbReset.Enabled = false;
 				return;
 			}
 			else
@@ -59,8 +59,10 @@ namespace MUNIA {
 			if (_blDevice == null) {
 				_blDevice = _loader.GetDeviceOrDefault(VID, PID_BL);
 				blDeviceOk = _blDevice != null && _blDevice.TryOpen(out s);
-				if (blDeviceOk) s.Dispose();
-				_blInterface = new HidBootloader(_blDevice);
+				if (blDeviceOk) {
+					s.Dispose();
+					_blInterface = new HidBootloader(_blDevice);
+				}
 			}
 
 			if (blDeviceOk) {
@@ -73,6 +75,7 @@ namespace MUNIA {
 				lblStatus.Text = "Status: not found";
 				lblStatus.ToolTipText = "MUNIA is currently not plugged in or malfunctioning.";
 				lblHEX.Visible = imgHexStatus.Visible = pbFlash.Visible = lblProgress.Visible = false;
+				tsbLoadHex.Enabled = tsbProgram.Enabled = tsbReset.Enabled = false;
 				return;
 			}
 
