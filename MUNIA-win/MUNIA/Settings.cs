@@ -14,6 +14,7 @@ namespace MUNIA {
 		public static Dictionary<string, Size> SkinWindowSizes = new Dictionary<string, Size>();
 		public static string Email { get; set; } = "nobody@nothing.net";
 		public static string ActiveSkinPath { get; set; }
+		public static Color BackgroundColor { get; set; } = Color.Gray;
 
 		public static void Load() {
 			try {
@@ -21,7 +22,9 @@ namespace MUNIA {
 				xdoc.Load(settingsFile);
 				XmlElement settings = xdoc["settings"] ?? xdoc["root"];
 
-				Email = settings["Email"].InnerText;
+				if (settings["Email"] != null) Email = settings["Email"].InnerText;
+				if (settings["BackgroundColor"] != null) BackgroundColor = Color.FromArgb(int.Parse(settings["BackgroundColor"].InnerText));
+
 				var skinSettings = settings["Skins"];
 				ActiveSkinPath = skinSettings.Attributes["active"]?.Value;
 				foreach (XmlNode skin in skinSettings) {
@@ -43,7 +46,9 @@ namespace MUNIA {
 				xw.WriteStartDocument();
 				xw.WriteStartElement("settings");
 
+				xw.WriteElementString("BackgroundColor", BackgroundColor.ToArgb().ToString());
 				xw.WriteElementString("Email", Email);
+
 				xw.WriteStartElement("Skins");
 				if (SkinManager.ActiveSkin != null)
 					xw.WriteAttributeString("active", SkinManager.ActiveSkin.Svg.Path);

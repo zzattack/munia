@@ -154,7 +154,7 @@ namespace MUNIA {
 		
 		private void Render() {
 			glControl.MakeCurrent();
-			GL.ClearColor(Color.FromArgb(0, glControl.BackColor));
+			GL.ClearColor(Color.FromArgb(0, Settings.BackgroundColor));
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
 			GL.MatrixMode(MatrixMode.Modelview);
@@ -311,6 +311,14 @@ namespace MUNIA {
 				StartPosition = FormStartPosition.CenterParent
 			};
 			frm.ShowDialog(this);
+		}
+
+		private void glControl_MouseClick(object sender, MouseEventArgs e) {
+			if (e.Button == MouseButtons.Right) {
+				var dlg = new ColorDialog();
+				if (dlg.ShowDialog() == DialogResult.OK)
+					Settings.BackgroundColor = dlg.Color;
+			}
 		}
 	}
 

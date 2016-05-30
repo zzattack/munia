@@ -119,7 +119,6 @@ namespace MUNIA {
 			// 
 			// glControl
 			// 
-			this.glControl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
 			this.glControl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.glControl.Location = new System.Drawing.Point(0, 24);
 			this.glControl.Name = "glControl";
@@ -127,6 +126,7 @@ namespace MUNIA {
 			this.glControl.TabIndex = 0;
 			this.glControl.VSync = false;
 			this.glControl.Load += new System.EventHandler(this.glControl_Load);
+			this.glControl.MouseClick += new System.Windows.Forms.MouseEventHandler(this.glControl_MouseClick);
 			// 
 			// statusStrip1
 			// 
@@ -149,7 +149,7 @@ namespace MUNIA {
 			// lblFill
 			// 
 			this.lblFill.Name = "lblFill";
-			this.lblFill.Size = new System.Drawing.Size(387, 17);
+			this.lblFill.Size = new System.Drawing.Size(418, 17);
 			this.lblFill.Spring = true;
 			// 
 			// lblStatus
