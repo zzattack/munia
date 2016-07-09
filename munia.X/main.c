@@ -274,6 +274,14 @@ typedef struct {
     uint8_t hw_revision : 4;
     uint8_t : 4;        
     config_t config;
+    union {
+        struct {
+            uint8_t devid1;
+            uint8_t revision : 5;
+            uint8_t devid2 : 3;
+        };
+        uint16_t device_id;
+    };
 } cfg_read_report_t;
 
 typedef struct {
@@ -301,8 +309,16 @@ void usb_tasks() {
             report->fw_minor = FW_MINOR;
             report->hw_revision = HW_REVISION;
 
+            uint8_t* r = &report->devid1;
+            TBLPTR = 0x3FFFFF;
+            asm("tblrd*-");
+            *r++ = TABLAT;
+            asm("tblrd*");
+            *r = TABLAT;
+            TBLPTRU = 0;
+
             memcpy(&report->config, in_menu ? &config_edit : &config, sizeof(config_t));
-            memset(usbInBuffer + sizeof(cfg_read_report_t), 0, sizeof(usbInBuffer) - sizeof(cfg_read_report_t));
+            memset(usbInBuffer + sizeof(cfg_read_report_t), 0, sizeof(usbInBuffer) - sizeof(cfg_read_report_t));            
             
             USBInHandleCfg = HIDTxPacket(HID_EP_CFG, usbInBuffer, CFG_CMD_REPORT_SIZE);
         }
@@ -310,6 +326,7 @@ void usb_tasks() {
             // extract config
             cfg_write_report_t* report = (cfg_write_report_t*)usbOutBuffer;
             memcpy(&config, &report->config, sizeof(config_t));
+            save_config();
             apply_config();
             if (in_menu) {
                 memcpy(&config_edit, &config, sizeof(config_t));
