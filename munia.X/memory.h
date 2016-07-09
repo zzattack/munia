@@ -246,7 +246,7 @@ void FLASH_EraseBlock(uint32_t baseAddr);
     DATAEE_WriteByte(dataeeAddr, dataeeData);
     </code>
 */
-void DATAEE_WriteByte(uint8_t bAdd, uint8_t bData);
+void DATAEE_WriteByte(uint16_t bAdd, uint8_t bData);
 
 /**
   @Summary
