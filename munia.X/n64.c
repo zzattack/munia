@@ -11,8 +11,8 @@ void n64_tasks() {
     if (config.n64_mode == N64_MODE_PC && pollNeeded && (in_menu || USB_READY)) {
         di();
         USBDeviceTasks();
-        n64_poll();
         sample_w = sample_buff + 8;
+        n64_poll();
         // waste some more instructions before sampling
         // TMR0 = 255-30; TMR0IF=0; while (!TMR0IF);
         n64_sample();
