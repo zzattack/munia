@@ -24,7 +24,6 @@
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
                    projectFiles="true">
-      <itemPath>rm18lf24k50_g.lkr</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
@@ -112,7 +111,7 @@
       </makeCustomizationType>
       <HI-TECH-COMP>
         <property key="asmlist" value="true"/>
-        <property key="define-macros" value="BOOTLOADER_INCLUDED"/>
+        <property key="define-macros" value=""/>
         <property key="extra-include-directories" value=".;.\USB"/>
         <property key="identifier-length" value="100"/>
         <property key="operation-mode" value="pro"/>
@@ -126,6 +125,7 @@
         <property key="optimization-level" value="9"/>
         <property key="optimization-set" value="default"/>
         <property key="optimization-speed" value="false"/>
+        <property key="optimization-stable-enable" value="false"/>
         <property key="preprocess-assembler" value="true"/>
         <property key="undefine-macros" value=""/>
         <property key="use-cci" value="false"/>
@@ -145,7 +145,7 @@
         <property key="backup-reset-condition-flags" value="false"/>
         <property key="calibrate-oscillator" value="false"/>
         <property key="calibrate-oscillator-value" value=""/>
-        <property key="clear-bss" value="false"/>
+        <property key="clear-bss" value="true"/>
         <property key="code-model-external" value="wordwrite"/>
         <property key="code-model-rom" value="-0-FFF,-1006-1007,-1016-1017"/>
         <property key="create-html-files" value="false"/>
@@ -221,6 +221,7 @@
         <property key="ToolFirmwareFilePath"
                   value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="true"/>
@@ -254,7 +255,7 @@
         <property key="programoptions.testmodeentrymethod" value="VPPFirst"/>
         <property key="programoptions.usehighvoltageonmclr" value="false"/>
         <property key="programoptions.uselvpprogramming" value="false"/>
-        <property key="voltagevalue" value="4.5"/>
+        <property key="voltagevalue" value="5.0"/>
       </PICkit3PlatformTool>
       <Simulator>
         <property key="codecoverage.enabled" value="Disable"/>
@@ -458,7 +459,7 @@
     <conf name="debug" type="2">
       <toolsSet>
         <developmentServer>localhost</developmentServer>
-        <targetDevice>PIC18F25K50</targetDevice>
+        <targetDevice>PIC18F24K50</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
         <platformTool>PICkit3PlatformTool</platformTool>
@@ -474,6 +475,21 @@
         <archiverTool>
         </archiverTool>
         <loading>
+          <makeArtifact PL="../../../../../../microchip/mla/v2015_08_10/apps/usb/device/bootloaders/firmware/pic18_non_j/MPLAB.X"
+                        CT="1"
+                        CN="PIC18F24K50_XC8"
+                        AC="true"
+                        BL="true"
+                        WD="../../../../../../microchip/mla/v2015_08_10/apps/usb/device/bootloaders/firmware/pic18_non_j/MPLAB.X"
+                        BC="${MAKE}  -f Makefile CONF=PIC18F24K50_XC8"
+                        DBC="${MAKE}  -f Makefile CONF=PIC18F24K50_XC8 TYPE_IMAGE=DEBUG_RUN"
+                        CC="rm -rf &quot;build/PIC18F24K50_XC8&quot; &quot;dist/PIC18F24K50_XC8&quot;"
+                        OP="dist/PIC18F24K50_XC8/production/MPLAB.X.production.hex"
+                        DOP="dist/PIC18F24K50_XC8/debug/MPLAB.X.debug.elf"
+                        FL="dist/PIC18F24K50_XC8/production/MPLAB.X.production.hex"
+                        PD="dist/PIC18F24K50_XC8/production/MPLAB.X.production.elf"
+                        DD="dist/PIC18F24K50_XC8/debug/MPLAB.X.debug.elf">
+          </makeArtifact>
           <useAlternateLoadableFile>false</useAlternateLoadableFile>
           <parseOnProdLoad>true</parseOnProdLoad>
           <alternateLoadableFile></alternateLoadableFile>
@@ -504,17 +520,18 @@
         <property key="optimization-level" value="9"/>
         <property key="optimization-set" value="default"/>
         <property key="optimization-speed" value="false"/>
+        <property key="optimization-stable-enable" value="false"/>
         <property key="preprocess-assembler" value="true"/>
         <property key="undefine-macros" value=""/>
         <property key="use-cci" value="false"/>
         <property key="use-iar" value="false"/>
         <property key="verbose" value="false"/>
         <property key="warning-level" value="0"/>
-        <property key="what-to-do" value="ignore"/>
+        <property key="what-to-do" value="require"/>
       </HI-TECH-COMP>
       <HI-TECH-LINK>
         <property key="additional-options-checksum" value=""/>
-        <property key="additional-options-code-offset" value=""/>
+        <property key="additional-options-code-offset" value="0x1000"/>
         <property key="additional-options-command-line" value=""/>
         <property key="additional-options-errata" value=""/>
         <property key="additional-options-extend-address" value="false"/>
@@ -525,7 +542,7 @@
         <property key="calibrate-oscillator-value" value=""/>
         <property key="clear-bss" value="true"/>
         <property key="code-model-external" value="wordwrite"/>
-        <property key="code-model-rom" value=""/>
+        <property key="code-model-rom" value="default,-0-FFF,-1006-1007,-1016-1017"/>
         <property key="create-html-files" value="false"/>
         <property key="data-model-ram" value=""/>
         <property key="data-model-size-of-double" value="24"/>
@@ -545,7 +562,7 @@
         <property key="initialize-data" value="true"/>
         <property key="keep-generated-startup.as" value="false"/>
         <property key="link-in-c-library" value="true"/>
-        <property key="link-in-peripheral-library" value="true"/>
+        <property key="link-in-peripheral-library" value="false"/>
         <property key="managed-stack" value="false"/>
         <property key="opt-xc8-linker-file" value="false"/>
         <property key="opt-xc8-linker-link_startup" value="false"/>
@@ -599,6 +616,7 @@
         <property key="ToolFirmwareFilePath"
                   value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="true"/>
@@ -884,6 +902,7 @@
         <property key="optimization-level" value="9"/>
         <property key="optimization-set" value="default"/>
         <property key="optimization-speed" value="false"/>
+        <property key="optimization-stable-enable" value="false"/>
         <property key="preprocess-assembler" value="true"/>
         <property key="undefine-macros" value=""/>
         <property key="use-cci" value="false"/>
@@ -1063,6 +1082,10 @@
                   value="report"/>
         <property key="warningmessagebreakoptions.W0015_CORE_INVALID_ALT_WREG_SET"
                   value="report"/>
+        <property key="warningmessagebreakoptions.W0051_INSTRUCTION_DIV_NOT_ENOUGH_REPEAT"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W0052_INSTRUCTION_DIV_TOO_MANY_REPEAT"
+                  value="report"/>
         <property key="warningmessagebreakoptions.W0101_SIM_UPDATE_FAILED"
                   value="report"/>
         <property key="warningmessagebreakoptions.W0102_SIM_PERIPH_MISSING"
@@ -1132,6 +1155,11 @@
                   value="report"/>
         <property key="warningmessagebreakoptions.W0230_ADC_TRIGSEL_NOT_SUPPORTED"
                   value="report"/>
+        <property key="warningmessagebreakoptions.W0231_ADC_NOT_WARMED" value="report"/>
+        <property key="warningmessagebreakoptions.W0232_ADC_CALIBRATION_ABORTED"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W0233_ADC_CORE_POWERED_EARLY"
+                  value="report"/>
         <property key="warningmessagebreakoptions.W0400_PWM_PWM_FASTER_THAN_FOSC"
                   value="report"/>
         <property key="warningmessagebreakoptions.W0700_CLC_GENERAL_WARNING"
@@ -1155,6 +1183,8 @@
         <property key="warningmessagebreakoptions.W1405_DMA_IRQ_DIR_MISMATCH"
                   value="report"/>
         <property key="warningmessagebreakoptions.W1600_PPS_INVALID_MAP" value="report"/>
+        <property key="warningmessagebreakoptions.W1601_PPS_INVALID_PIN_DESCRIPTION"
+                  value="report"/>
         <property key="warningmessagebreakoptions.W2001_INPUTCAPTURE_TMR3_UNAVAILABLE"
                   value="report"/>
         <property key="warningmessagebreakoptions.W2002_INPUTCAPTURE_CAPTURE_EMPTY"
@@ -1193,6 +1223,10 @@
         <property key="warningmessagebreakoptions.W9602_COMP_DAC_SOURCE_UNAVAILABLE"
                   value="report"/>
         <property key="warningmessagebreakoptions.W9603_COMP_CVREF_SOURCE_UNAVAILABLE"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W9604_COMP_SLOPE_SOURCE_UNAVAILABLE"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W9605_COMP_PRG_SOURCE_UNAVAILABLE"
                   value="report"/>
         <property key="warningmessagebreakoptions.W9801_FVR_INVALID_MODE_SELECTION"
                   value="report"/>
