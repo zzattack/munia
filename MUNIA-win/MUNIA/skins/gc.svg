@@ -34,12 +34,12 @@
      id="namedview3773"
      showgrid="false"
      inkscape:zoom="0.24596774"
-     inkscape:cx="2525.6713"
-     inkscape:cy="1472.7074"
+     inkscape:cx="1053.2354"
+     inkscape:cy="1263.5298"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="Controller"
+     inkscape:current-layer="Sticks"
      showguides="true"
      fit-margin-top="50"
      fit-margin-left="50"
@@ -455,7 +455,7 @@
          rx="248.07381"
          ry="238.42455"
          id="ellipse3475"
-         style="fill:#eeeeee;stroke:#a4a4a4;stroke-width:16.94153214;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" /><ellipse
+         style="fill:#eeeeee;stroke:#6a6a6a;stroke-width:16.94153214;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" /><ellipse
          cx="2053.6677"
          cy="1141.4341"
          rx="211.16457"
@@ -484,8 +484,8 @@
          cy="1976"
          r="144"
          id="circle3526"
-         style="fill:#ffc900;fill-opacity:1;stroke:#caa000;stroke-width:16;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" /><ellipse
-         style="fill:none;fill-opacity:1;stroke:#eba400;stroke-width:22.8156929;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         style="fill:#f5ba00;fill-opacity:1;stroke:#c98b00;stroke-width:16;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" /><ellipse
+         style="fill:none;fill-opacity:1;stroke:#ad7800;stroke-width:22.8156929;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          id="path4902"
          cx="3840.7258"
          cy="1971.5422"
