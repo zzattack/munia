@@ -7,7 +7,7 @@ using System.Threading;
 using HidSharp;
 
 namespace MUNIA.Controllers {
-    public abstract class MuniaController : IControllerState, IDisposable {
+    public abstract class MuniaController : IController, IDisposable {
         /// <summary>
         /// Can be used to register for WM_INPUT messages and parse them.
         /// For testing purposes it can also be used to solely register for WM_INPUT messages.
@@ -15,8 +15,10 @@ namespace MUNIA.Controllers {
 
         public HidDevice HidDevice;
 		private HidStream _stream;
+		public string DevicePath => HidDevice.DevicePath;
+		public string Name => HidDevice.ProductName;
 
-		public abstract List<int> Axes { get; }
+	    public abstract List<int> Axes { get; }
 		public abstract List<bool> Buttons { get; }
 		public event EventHandler StateUpdated;
 
@@ -68,21 +70,20 @@ namespace MUNIA.Controllers {
 
 		public void Deactivate() {
 			_stream?.Close();
-			_stream = null;
 		}
 		public bool IsActive => _stream != null && _stream.CanRead;
-		public bool IsAvailable() {
-			bool ret;
-			HidStream s;
-			ret = HidDevice.TryOpen(out s);
-			if (ret) {
+		public bool IsAvailable { 
+			get {
+				HidStream s;
+				var ret = HidDevice.TryOpen(out s);
+				if (!ret) return false;
 				ret = s.CanRead;
 				s.Close();
+				return ret;
 			}
-			return ret;
 		}
-
-		private void Callback(IAsyncResult ar) {
+		
+	    private void Callback(IAsyncResult ar) {
 			try {
 				int numBytes = _stream.EndRead(ar);
 				byte[] buffer = (byte[])ar.AsyncState;
@@ -95,6 +96,7 @@ namespace MUNIA.Controllers {
 				Debug.WriteLine("IOException: " + exc.Message);
 				_stream = null;
 			}
+			catch (NullReferenceException) { }
 		}
 
 	    public void Dispose() {

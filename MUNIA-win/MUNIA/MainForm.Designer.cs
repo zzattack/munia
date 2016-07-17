@@ -26,7 +26,7 @@ namespace MUNIA {
         /// </summary>
         private void InitializeComponent() {
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-			this.tsmiController = new System.Windows.Forms.ToolStripMenuItem();
+			this.tsmiControllers = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiOptions = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiSetWindowSize = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiMuniaSettings = new System.Windows.Forms.ToolStripMenuItem();
@@ -47,7 +47,7 @@ namespace MUNIA {
 			// menuStrip1
 			// 
 			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiController,
+            this.tsmiControllers,
             this.tsmiOptions,
             this.tsmiHelp});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
@@ -56,12 +56,11 @@ namespace MUNIA {
 			this.menuStrip1.TabIndex = 1;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
-			// tsmiController
+			// tsmiControllers
 			// 
-			this.tsmiController.Name = "tsmiController";
-			this.tsmiController.Size = new System.Drawing.Size(104, 20);
-			this.tsmiController.Text = "&Select controller";
-			this.tsmiController.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+			this.tsmiControllers.Name = "tsmiControllers";
+			this.tsmiControllers.Size = new System.Drawing.Size(104, 20);
+			this.tsmiControllers.Text = "&Select controller";
 			// 
 			// tsmiOptions
 			// 
@@ -119,6 +118,7 @@ namespace MUNIA {
 			// 
 			// glControl
 			// 
+			this.glControl.BackColor = System.Drawing.Color.Black;
 			this.glControl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.glControl.Location = new System.Drawing.Point(0, 24);
 			this.glControl.Name = "glControl";
@@ -188,7 +188,7 @@ namespace MUNIA {
 
         #endregion
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem tsmiController;
+        private System.Windows.Forms.ToolStripMenuItem tsmiControllers;
         private GLControl glControl;
 		private System.Windows.Forms.ToolStripMenuItem tsmiOptions;
 		private System.Windows.Forms.ToolStripMenuItem tsmiSetWindowSize;

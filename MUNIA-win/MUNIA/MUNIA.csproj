@@ -66,8 +66,12 @@
     <Compile Include="BootloaderForm.Designer.cs">
       <DependentUpon>BootloaderForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Bootloader\ExtensionMethods.cs" />
+    <Compile Include="Bootloader\HidBootloader.cs" />
+    <Compile Include="Bootloader\IntelHexReader.cs" />
+    <Compile Include="Controllers\ArduinoController.cs" />
     <Compile Include="Controllers\BufferedController.cs" />
-    <Compile Include="Controllers\ControllerState.cs" />
+    <Compile Include="Controllers\IController.cs" />
     <Compile Include="GLGraphics.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -93,11 +97,12 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Settings.cs" />
-    <Compile Include="SkinManager.cs" />
+    <Compile Include="ConfigManager.cs" />
+    <Compile Include="Skins\Skin.cs" />
+    <Compile Include="Skins\SvgSkin.cs" />
     <Compile Include="SubmitBug.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Controllers\SvgController.cs" />
     <Compile Include="UpdateChecker.cs" />
     <Compile Include="UsbNotification.cs" />
     <Compile Include="Properties\VersionInfo.cs" />
@@ -146,10 +151,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MUNIA.Bootloader\MUNIA.Bootloader.csproj">
-      <Project>{3f548cb3-e781-45a0-8b36-cc4addc0a2a6}</Project>
-      <Name>MUNIA.Bootloader</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SVG#\Svg.csproj">
       <Project>{886a98c5-37c0-4e8b-885e-30c1d2f98b47}</Project>
       <Name>Svg</Name>
@@ -157,6 +158,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\warn.png" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Skins\gc.svg" />
+    <Content Include="Skins\n64.svg" />
+    <Content Include="Skins\snes-light-blue.svg" />
+    <Content Include="Skins\snes-light-green.svg" />
+    <Content Include="Skins\snes-light-red.svg" />
+    <Content Include="Skins\snes.svg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -3,36 +3,27 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using MUNIA.Controllers;
 using OpenTK.Graphics.OpenGL;
 using Svg;
 
-namespace MUNIA.Controllers {
-	public class SvgController {
+namespace MUNIA.Skins {
+	public class SvgSkin : Skin {
 		private SvgDocument _svgDocument;
-
-		public string DeviceName { get; set; }
-		public string SkinName { get; set; }
 		public List<Button> Buttons = new List<Button>();
 		public List<Stick> Sticks = new List<Stick>();
 		public List<Trigger> Triggers = new List<Trigger>();
 		private SizeF _dimensions;
-		public int BaseTexture { get; set; }
-		public string Path { get; set; }
-		public SvgLoadResult LoadResult { get; private set; }
-		IControllerState _state;
+		private int _baseTexture;
 
-		public enum SvgLoadResult {
-			Fail,
-			SvgOk,
-		}
-		public void LoadSvg(string svgPath) {
+		public void Load(string svgPath) {
 			try {
 				Path = svgPath;
 				_svgDocument = SvgDocument.Open(svgPath);
 				_dimensions = _svgDocument.GetDimensions();
 
 				// cleanup
-				DeviceName = string.Empty;
+				ControllerName = string.Empty;
 				Buttons.ForEach(b => {
 					if (b.PressedTexture != -1) GL.DeleteTexture(b.PressedTexture);
 					if (b.Texture != -1) GL.DeleteTexture(b.Texture);
@@ -45,15 +36,15 @@ namespace MUNIA.Controllers {
 
 				// load button/stick/trigger mapping from svg
 				RecursiveGetElements(_svgDocument);
-				LoadResult = !string.IsNullOrEmpty(DeviceName) ? SvgLoadResult.SvgOk : SvgLoadResult.Fail;
+				LoadResult = !string.IsNullOrEmpty(ControllerName) ? SkinLoadResult.Ok : SkinLoadResult.Fail;
 			}
-			catch { LoadResult = SvgLoadResult.Fail; }
+			catch { LoadResult = SkinLoadResult.Fail; }
 		}
 
 		private void RecursiveGetElements(SvgElement e) {
 			foreach (var c in e.Children) {
 				if (c.ElementName == "info") {
-					DeviceName = c.CustomAttributes["device-name"];
+					ControllerName = c.CustomAttributes["device-name"];
 					SkinName = c.CustomAttributes["skin-name"];
 				}
 
@@ -103,10 +94,7 @@ namespace MUNIA.Controllers {
 			}
 		}
 
-		public void UpdateState(IControllerState state) {
-			_state = state;
-		}
-		public void Render(int width, int height) {
+		public override void Render(int width, int height) {
 			if (_svgDocument == null || width == 0 || height == 0) return;
 			if (_svgDocument.Height != height || _svgDocument.Width != width) {
 				RenderBase(width, height);
@@ -128,7 +116,7 @@ namespace MUNIA.Controllers {
 			foreach (var ci in all.Where(x => x.Item1.Z < 0))
 				RenderItem(ci.Item1, ci.Item2);
 
-			GL.BindTexture(TextureTarget.Texture2D, BaseTexture);
+			GL.BindTexture(TextureTarget.Texture2D, _baseTexture);
 			RenderTexture(0, _svgDocument.Width, 0, _svgDocument.Height);
 
 			foreach (var ci in all.Where(x => x.Item1.Z >= 0))
@@ -144,7 +132,7 @@ namespace MUNIA.Controllers {
 		}
 		private void RenderButton(int i) {
 			var btn = Buttons[i];
-			bool pressed = _state != null && _state.Buttons[i];
+			bool pressed = State != null && State.Buttons[i];
 			if (pressed && btn.Pressed != null) {
 				GL.BindTexture(TextureTarget.Texture2D, btn.PressedTexture);
 				RenderTexture(btn.PressedBounds);
@@ -158,9 +146,9 @@ namespace MUNIA.Controllers {
 			var stick = Sticks[i];
 			var r = stick.Bounds;
 			float x, y;
-			if (_state != null) {
-				x = _state.Axes[stick.HorizontalAxis];
-				y = _state.Axes[stick.VerticalAxis];
+			if (State != null) {
+				x = State.Axes[stick.HorizontalAxis];
+				y = State.Axes[stick.VerticalAxis];
 			}
 			else {
 				x = y = 0f;
@@ -178,7 +166,7 @@ namespace MUNIA.Controllers {
 		private void RenderTrigger(int i) {
 			var trigger = Triggers[i];
 			var r = trigger.Bounds;
-			float o = _state?.Axes[trigger.Axis] ?? 0f;
+			float o = State?.Axes[trigger.Axis] ?? 0f;
 
 			SizeF img = GetCorrectedDimensions(new SizeF(_svgDocument.Width, _svgDocument.Height));
 			o *= img.Height / _dimensions.Height * trigger.OffsetScale;
@@ -206,7 +194,7 @@ namespace MUNIA.Controllers {
 			}
 
 			var baseImg = _svgDocument.Draw();
-			BaseTexture = GLGraphics.CreateTexture(baseImg);
+			_baseTexture = GLGraphics.CreateTexture(baseImg);
 
 			// System.IO.Directory.CreateDirectory(SkinName);
 			// baseImg.Save(SkinName + "/base_texture.png");
@@ -378,6 +366,7 @@ namespace MUNIA.Controllers {
 		}
 
 	}
+
 
 	public class ControllerItem {
 		public SvgVisualElement Element;

@@ -158,9 +158,8 @@ namespace MUNIA {
 				var data = new NameValueCollection();
 				data.Set("program_version", typeof(Program).Assembly.GetName().Version.ToString());
 				data.Set("exception", exc?.ToString() ?? "");
-				if (SkinManager.ActiveSkin != null) {
-					data.Set("skin_name", SkinManager.ActiveSkin.Svg.SkinName);
-					data.Set("skin_svg", File.ReadAllText(SkinManager.ActiveSkin.Svg.Path));
+				if (ConfigManager.ActiveConfig!= null) {
+					data.Set("config_name", ConfigManager.ActiveConfig.Skin.SkinName);
 				}
 				data.Set("command_line", _cmdLine);
 				data.Set("email", email);

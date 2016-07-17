@@ -23,8 +23,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{904E8F
 		.build\MSBuild.Community.Tasks.targets = .build\MSBuild.Community.Tasks.targets
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MUNIA.Bootloader", "MUNIA.Bootloader\MUNIA.Bootloader.csproj", "{3F548CB3-E781-45A0-8B36-CC4ADDC0A2A6}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,10 +41,6 @@ Global
 		{5288D75E-C006-417B-AF05-D50125F9D06B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5288D75E-C006-417B-AF05-D50125F9D06B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5288D75E-C006-417B-AF05-D50125F9D06B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3F548CB3-E781-45A0-8B36-CC4ADDC0A2A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3F548CB3-E781-45A0-8B36-CC4ADDC0A2A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3F548CB3-E781-45A0-8B36-CC4ADDC0A2A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3F548CB3-E781-45A0-8B36-CC4ADDC0A2A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

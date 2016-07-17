@@ -13,23 +13,24 @@ namespace MUNIA {
 
 		public static Dictionary<string, Size> SkinWindowSizes = new Dictionary<string, Size>();
 		public static string Email { get; set; } = "nobody@nothing.net";
-		public static string ActiveSkinPath { get; set; }
+		public static string ActiveConfigPath { get; set; }
 		public static Color BackgroundColor { get; set; } = Color.Gray;
 
 		public static void Load() {
 			try {
 				XmlDocument xdoc = new XmlDocument();
 				xdoc.Load(settingsFile);
-				XmlElement settings = xdoc["settings"] ?? xdoc["root"];
+				XmlElement xroot = xdoc["settings"] ?? xdoc["root"];
 
-				if (settings["Email"] != null) Email = settings["Email"].InnerText;
-				if (settings["BackgroundColor"] != null) BackgroundColor = Color.FromArgb(int.Parse(settings["BackgroundColor"].InnerText));
+				if (xroot["Email"] != null) Email = xroot["Email"].InnerText;
+				if (xroot["BackgroundColor"] != null) BackgroundColor = Color.FromArgb(int.Parse(xroot["BackgroundColor"].InnerText));
 
-				var skinSettings = settings["Skins"];
-				ActiveSkinPath = skinSettings.Attributes["active"]?.Value;
-				foreach (XmlNode skin in skinSettings) {
-					string path = skin.Attributes["path"].Value;
-					string size = skin.Attributes["size"].Value;
+				var configs = xroot["Configs"];
+				ActiveConfigPath = configs.Attributes["active"]?.Value;
+				foreach (XmlNode cfg in configs) {
+					string path = cfg.Attributes["skin_path"].Value;
+					string size = cfg.Attributes["window_size"].Value;
+					string devPath = cfg.Attributes["dev_path"].Value;
 					Size s = new Size(int.Parse(size.Substring(0, size.IndexOf("x"))), int.Parse(size.Substring(size.IndexOf("x") + 1)));
 					SkinWindowSizes[path] = s;
 				}
@@ -49,16 +50,13 @@ namespace MUNIA {
 				xw.WriteElementString("BackgroundColor", BackgroundColor.ToArgb().ToString());
 				xw.WriteElementString("Email", Email);
 
-				xw.WriteStartElement("Skins");
-				if (SkinManager.ActiveSkin != null)
-					xw.WriteAttributeString("active", SkinManager.ActiveSkin.Svg.Path);
-				foreach (var s in SkinManager.Skins) {
-					xw.WriteStartElement("Skin");
-					xw.WriteAttributeString("size", $"{s.WindowSize.Width}x{s.WindowSize.Height}");
-					xw.WriteAttributeString("path", s.Svg.Path);
+				if (ConfigManager.ActiveConfig != null) { 
+					xw.WriteStartElement("ActiveConfig");
+					xw.WriteAttributeString("skin_path", ConfigManager.ActiveConfig.Skin?.Path ?? "");
+					xw.WriteAttributeString("dev_path", ConfigManager.ActiveConfig.Controller?.DevicePath ?? "");
 					xw.WriteEndElement();
 				}
-				xw.WriteEndElement(); // Skin
+				// todo save windowsizes per skin
 
 				xw.WriteEndElement(); // settings
 				xw.WriteEndDocument();
