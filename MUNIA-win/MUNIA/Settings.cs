@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
@@ -11,9 +12,7 @@ namespace MUNIA {
 		private static readonly string settingsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MUNIA");
 		private static readonly string settingsFile = Path.Combine(settingsDir, "munia_settings.xml");
 
-		public static Dictionary<string, Size> SkinWindowSizes = new Dictionary<string, Size>();
 		public static string Email { get; set; } = "nobody@nothing.net";
-		public static string ActiveConfigPath { get; set; }
 		public static Color BackgroundColor { get; set; } = Color.Gray;
 
 		public static void Load() {
@@ -25,14 +24,26 @@ namespace MUNIA {
 				if (xroot["Email"] != null) Email = xroot["Email"].InnerText;
 				if (xroot["BackgroundColor"] != null) BackgroundColor = Color.FromArgb(int.Parse(xroot["BackgroundColor"].InnerText));
 
-				var configs = xroot["Configs"];
-				ActiveConfigPath = configs.Attributes["active"]?.Value;
-				foreach (XmlNode cfg in configs) {
-					string path = cfg.Attributes["skin_path"].Value;
-					string size = cfg.Attributes["window_size"].Value;
-					string devPath = cfg.Attributes["dev_path"].Value;
-					Size s = new Size(int.Parse(size.Substring(0, size.IndexOf("x"))), int.Parse(size.Substring(size.IndexOf("x") + 1)));
-					SkinWindowSizes[path] = s;
+				if (xroot["active_skin"] != null)
+					ConfigManager.ActiveSkin = ConfigManager.Skins
+						.FirstOrDefault(s => s.Path == xroot["active_skin"].InnerText);
+
+				if (xroot["active_dev_path"] != null)
+					ConfigManager.SetActiveController(ConfigManager.Controllers
+						.FirstOrDefault(s => s.DevicePath == xroot["active_dev_path"].InnerText));
+
+				foreach (XmlNode skinCfg in xroot["skin_settings"].ChildNodes) {
+					string path = skinCfg.Attributes["skin_path"].Value;
+
+					var wsz = skinCfg.Attributes["window_size"];
+					if (wsz != null) {
+						string size = wsz.Value;
+						Size sz = new Size(int.Parse(size.Substring(0, size.IndexOf("x"))), int.Parse(size.Substring(size.IndexOf("x") + 1)));
+						var skin = ConfigManager.Skins.FirstOrDefault(s => s.Path == path);
+						if (skin != null)
+							ConfigManager.WindowSizes[skin] = sz;
+					}
+
 				}
 			}
 			catch { }
@@ -50,13 +61,20 @@ namespace MUNIA {
 				xw.WriteElementString("BackgroundColor", BackgroundColor.ToArgb().ToString());
 				xw.WriteElementString("Email", Email);
 
-				if (ConfigManager.ActiveConfig != null) { 
-					xw.WriteStartElement("ActiveConfig");
-					xw.WriteAttributeString("skin_path", ConfigManager.ActiveConfig.Skin?.Path ?? "");
-					xw.WriteAttributeString("dev_path", ConfigManager.ActiveConfig.Controller?.DevicePath ?? "");
+				xw.WriteElementString("active_skin", ConfigManager.ActiveSkin?.Path ?? "");
+				xw.WriteElementString("active_dev_path", ConfigManager.GetActiveController()?.DevicePath ?? "");
+
+				xw.WriteStartElement("skin_settings");
+				foreach (var skin in ConfigManager.Skins) {
+					xw.WriteStartElement("skin");
+					xw.WriteAttributeString("skin_path", skin.Path);
+					if (ConfigManager.WindowSizes.ContainsKey(skin)) {
+						var sz = ConfigManager.WindowSizes[skin];
+						xw.WriteAttributeString("window_size", $"{sz.Width}x{sz.Height}");
+					}
 					xw.WriteEndElement();
 				}
-				// todo save windowsizes per skin
+				xw.WriteEndElement();
 
 				xw.WriteEndElement(); // settings
 				xw.WriteEndDocument();

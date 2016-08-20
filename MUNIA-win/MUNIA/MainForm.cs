@@ -32,15 +32,12 @@ namespace MUNIA {
 		}
 
 		private void MainForm_Shown(object sender, EventArgs e) {
-			Settings.Load();
 			ConfigManager.LoadSkins();
-			// restore saved sizes
-			foreach (var kvp in Settings.SkinWindowSizes) {
-				var skin = ConfigManager.Configs.FirstOrDefault(s => s.Skin.Path == kvp.Key);
-				if (skin != null) skin.WindowSize = kvp.Value;
-			}
+			ConfigManager.LoadControllers();
+			Settings.Load();
 
 			BuildMenu();
+			ActivateConfig(ConfigManager.GetActiveController(), ConfigManager.ActiveSkin);
 
 			Application.Idle += OnApplicationOnIdle;
 			if (!_skipUpdateCheck)
@@ -62,9 +59,6 @@ namespace MUNIA {
 		private void BuildMenu() {
 			_buildMenuTask = null;
 			Debug.WriteLine("Building menu");
-
-			// update available controllers in config/skin manager
-			ConfigManager.UpdateInputDevices();
 
 			int numOk = 0, numSkins = 0, numFail = 0;
 			tsmiControllers.DropDownItems.Clear();
@@ -92,40 +86,30 @@ namespace MUNIA {
 				skinText += $" ({numFail} failed to load)";
 			lblSkins.Text = skinText;
 
-			// if device wasn't available, but now it might be, then reevaluate the active skin
-			var ac = ConfigManager.ActiveConfig;
-			if (ac == null) {
-				// no skin selected right now, but previous session might have
-				var lastUsed = ConfigManager.Configs.Where(e => e.Skin != null && e.Skin.LoadResult == SkinLoadResult.Ok)
-					.FirstOrDefault(e => e.Skin.Path == Settings.ActiveConfigPath);
-				if (lastUsed != null)
-					ActivateConfig(lastUsed.Controller, lastUsed.Skin);
-			}
-
+			// todo shit
+			// ifdevice wasn't available, but now it might be, then reevaluate the active skin
+			// no skin selected right now, but previous session might have
 			// if controller wasn't available but skin was selected, then try to activate it
-			else if (ac.Controller != null && !ac.Controller.IsActive)
-				ActivateConfig(ac.Controller, ac.Skin);
 		}
 
 		private void ActivateConfig(IController ctrlr, Skin skin) {
 			if (skin.LoadResult != SkinLoadResult.Ok) return;
 			if (ctrlr == null) return;
 
-			// deactive possibly loaded skin
-			ConfigManager.ActiveConfig?.Controller?.Deactivate();
-
+			ConfigManager.GetActiveController()?.Deactivate();
 			ctrlr.Activate();
 
-			ConfigManager.ActiveConfig = new Config {
-				Skin = skin,
-				Controller = ctrlr,
-			};
+			ConfigManager.SetActiveController(ctrlr);
+			ConfigManager.ActiveSkin = skin;
 
 			// find desired window size
-			/*if (cfg.WindowSize != Size.Empty)
-				this.Size = cfg.WindowSize - glControl.Size + this.Size;
-			else
-				cfg.WindowSize = glControl.Size;*/
+			if (ConfigManager.WindowSizes.ContainsKey(skin)) {
+				var wsz = ConfigManager.WindowSizes[skin];
+				if (wsz != Size.Empty)
+					this.Size = wsz - glControl.Size + this.Size;
+				else
+					ConfigManager.WindowSizes[skin] = glControl.Size;
+			}
 
 			skin.Render(glControl.Width, glControl.Height);
 		}
@@ -166,17 +150,17 @@ namespace MUNIA {
 			GL.LoadIdentity();
 			GL.Ortho(0, glControl.Width, glControl.Height, 0, 0.0, 4.0);
 
-			ConfigManager.ActiveConfig?.Skin?.UpdateState(ConfigManager.ActiveConfig?.Controller);
-			ConfigManager.ActiveConfig?.Skin?.Render(glControl.Width, glControl.Height);
+			ConfigManager.ActiveSkin?.UpdateState(ConfigManager.GetActiveController());
+			ConfigManager.ActiveSkin?.Render(glControl.Width, glControl.Height);
 
 			glControl.SwapBuffers();
 		}
 
 
 		private void OnResize(object sender, EventArgs e) {
-			if (ConfigManager.ActiveConfig != null) {
-				ConfigManager.ActiveConfig.WindowSize = glControl.Size;
-				ConfigManager.ActiveConfig.Skin?.Render(glControl.Width, glControl.Height);
+			if (ConfigManager.ActiveSkin != null) {
+				ConfigManager.WindowSizes[ConfigManager.ActiveSkin] = glControl.Size;
+				ConfigManager.ActiveSkin?.Render(glControl.Width, glControl.Height);
 			}
 			GL.Viewport(0, 0, glControl.Width, glControl.Height);
 		}
