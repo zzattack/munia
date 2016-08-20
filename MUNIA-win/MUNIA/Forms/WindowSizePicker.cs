@@ -36,11 +36,14 @@ namespace MUNIA.Forms {
 					string sceneName = src.name;
 					var scene = collection.Scenes.FirstOrDefault(s => s.Name == sceneName);
 					if (scene == null) continue;
-					dynamic item = src.settings.items[0];
-					scene.Source.Add(new Source() {
-						Name = item.name,
-						Size = new Size((int)item.bounds.x, (int)item.bounds.y)
-					});
+
+					JArray items = src.settings.items;
+					foreach (dynamic item in items) {
+						scene.Source.Add(new Source {
+							Name = item.name,
+							Size = new Size((int) item.bounds.x, (int) item.bounds.y)
+						});
+					}
 				}
 				_sceneCollections.Add(collection);
 			}
