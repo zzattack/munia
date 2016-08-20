@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using HidSharp;
 using MUNIA.Controllers;
+using MUNIA.Forms;
 using MUNIA.Skins;
 using OpenTK.Graphics.OpenGL;
 
@@ -305,6 +306,10 @@ namespace MUNIA {
 				if (dlg.ShowDialog() == DialogResult.OK)
 					Settings.BackgroundColor = dlg.Color;
 			}
+		}
+
+		private void tsmiSetLagCompensation(object sender, EventArgs e) {
+
 		}
 	}
 

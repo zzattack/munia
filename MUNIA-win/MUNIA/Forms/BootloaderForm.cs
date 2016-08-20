@@ -6,7 +6,7 @@ using MUNIA.Bootloader;
 using MUNIA.Controllers;
 using MUNIA.Properties;
 
-namespace MUNIA {
+namespace MUNIA.Forms {
 	public partial class BootloaderForm : Form {
 		private readonly HidDeviceLoader _loader = new HidDeviceLoader();
 		private HidDevice _blDevice;

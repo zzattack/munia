@@ -1,7 +1,7 @@
 ﻿using System.Windows.Forms;
 using HidSharp;
 
-namespace MUNIA {
+namespace MUNIA.Forms {
 	public partial class MuniaSettingsDialog : Form {
 		private readonly HidStream _hidStream;
 		private readonly MuniaSettings _settings;

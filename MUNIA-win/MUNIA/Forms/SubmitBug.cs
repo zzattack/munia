@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace MUNIA {
+namespace MUNIA.Forms {
 	public class SubmitBug : Form {
 		private string _email;
 		public string Email {

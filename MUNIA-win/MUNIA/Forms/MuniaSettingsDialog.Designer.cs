@@ -1,4 +1,4 @@
-﻿namespace MUNIA {
+﻿namespace MUNIA.Forms {
 	partial class MuniaSettingsDialog {
 		/// <summary>
 		/// Required designer variable.

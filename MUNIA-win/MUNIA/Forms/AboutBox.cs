@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace MUNIA {
+namespace MUNIA.Forms {
 	partial class AboutBox : Form {
 		public AboutBox() {
 			InitializeComponent();

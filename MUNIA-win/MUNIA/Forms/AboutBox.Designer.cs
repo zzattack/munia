@@ -1,6 +1,4 @@
-﻿using System.Windows.Forms;
-
-namespace MUNIA {
+﻿namespace MUNIA.Forms {
 	partial class AboutBox {
 		/// <summary>
 		/// Required designer variable.

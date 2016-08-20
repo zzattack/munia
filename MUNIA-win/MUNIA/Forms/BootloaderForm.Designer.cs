@@ -1,4 +1,4 @@
-﻿namespace MUNIA {
+﻿namespace MUNIA.Forms {
 	partial class BootloaderForm {
 		/// <summary>
 		/// Required designer variable.

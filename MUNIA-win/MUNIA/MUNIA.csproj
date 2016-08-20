@@ -38,6 +38,11 @@
       <HintPath>..\packages\HidSharp.1.5\lib\net35\HidSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <HintPath>..\packages\OpenTK.1.1.2225.0\lib\net20\OpenTK.dll</HintPath>
       <Private>True</Private>
@@ -54,16 +59,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AboutBox.cs">
+    <Compile Include="Forms\AboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AboutBox.Designer.cs">
+    <Compile Include="Forms\AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="BootloaderForm.cs">
+    <Compile Include="Forms\BootloaderForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="BootloaderForm.Designer.cs">
+    <Compile Include="Forms\BootloaderForm.Designer.cs">
       <DependentUpon>BootloaderForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Bootloader\ExtensionMethods.cs" />
@@ -83,10 +88,10 @@
     <Compile Include="Controllers\N64Controller.cs" />
     <Compile Include="Controllers\NgcController.cs" />
     <Compile Include="MuniaSettings.cs" />
-    <Compile Include="MuniaSettingsDialog.cs">
+    <Compile Include="Forms\MuniaSettingsDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MuniaSettingsDialog.Designer.cs">
+    <Compile Include="Forms\MuniaSettingsDialog.Designer.cs">
       <DependentUpon>MuniaSettingsDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Option.cs" />
@@ -100,22 +105,22 @@
     <Compile Include="ConfigManager.cs" />
     <Compile Include="Skins\Skin.cs" />
     <Compile Include="Skins\SvgSkin.cs" />
-    <Compile Include="SubmitBug.cs">
+    <Compile Include="Forms\SubmitBug.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UpdateChecker.cs" />
     <Compile Include="UsbNotification.cs" />
     <Compile Include="Properties\VersionInfo.cs" />
-    <Compile Include="WindowSizePicker.cs">
+    <Compile Include="Forms\WindowSizePicker.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="WindowSizePicker.Designer.cs">
+    <Compile Include="Forms\WindowSizePicker.Designer.cs">
       <DependentUpon>WindowSizePicker.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="AboutBox.resx">
+    <EmbeddedResource Include="Forms\AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="BootloaderForm.resx">
+    <EmbeddedResource Include="Forms\BootloaderForm.resx">
       <DependentUpon>BootloaderForm.cs</DependentUpon>
       <LastGenOutput>BootloaderForm1.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
@@ -123,7 +128,7 @@
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MuniaSettingsDialog.resx">
+    <EmbeddedResource Include="Forms\MuniaSettingsDialog.resx">
       <DependentUpon>MuniaSettingsDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -136,10 +141,10 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="SubmitBug.resx">
+    <EmbeddedResource Include="Forms\SubmitBug.resx">
       <DependentUpon>SubmitBug.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="WindowSizePicker.resx">
+    <EmbeddedResource Include="Forms\WindowSizePicker.resx">
       <DependentUpon>WindowSizePicker.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="OpenTK.dll.config" />
