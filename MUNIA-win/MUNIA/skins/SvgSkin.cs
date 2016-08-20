@@ -194,7 +194,7 @@ namespace MUNIA.Skins {
 			}
 
 			var baseImg = _svgDocument.Draw();
-			_baseTexture = GLGraphics.CreateTexture(baseImg);
+			_baseTexture = TextureHelper.CreateTexture(baseImg);
 
 			// System.IO.Directory.CreateDirectory(SkinName);
 			// baseImg.Save(SkinName + "/base_texture.png");
@@ -249,7 +249,7 @@ namespace MUNIA.Skins {
 				_svgDocument.Draw(work);
 				// work.Clone(boundsScaled, work.PixelFormat).Save(SkinName + "/" + e.ID + ".png");
 
-				ret = GLGraphics.CreateTexture(work.Clone(boundsScaled, work.PixelFormat));
+				ret = TextureHelper.CreateTexture(work.Clone(boundsScaled, work.PixelFormat));
 				using (Graphics g = Graphics.FromImage(work))
 					g.Clear(Color.Transparent);
 

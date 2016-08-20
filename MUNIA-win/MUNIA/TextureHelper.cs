@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 
 namespace MUNIA {
-    public static class GLGraphics {
+    public static class TextureHelper {
 
         public static int CreateTexture(Bitmap bmp) {
             GL.Enable(EnableCap.Texture2D);
