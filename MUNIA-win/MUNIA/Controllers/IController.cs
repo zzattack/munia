@@ -3,9 +3,7 @@ using System.Collections.Generic;
 
 namespace MUNIA.Controllers {
 	public interface IController {
-		List<int> Axes { get; }
-		List<bool> Buttons { get; }
-
+		ControllerState GetState();
 		event EventHandler StateUpdated;
 
 		bool IsActive { get; }

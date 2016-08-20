@@ -4,12 +4,16 @@ using System.IO.Ports;
 
 namespace MUNIA.Controllers {
 	public abstract class ArduinoController : IController {
-		public List<int> Axes { get; }
-		public List<bool> Buttons { get; }
+
+		private List<int> Axes { get; }
+		private List<bool> Buttons { get; }
 		public bool IsActive { get; set; }
 		public bool IsAvailable { get; }
 		public string DevicePath { get; set; }
 		public string Name { get; set; }
+
+		public ControllerState GetState() => new ControllerState(Axes, Buttons);
+		
 		public event EventHandler StateUpdated;
 		public SerialPort Port;
 		public void Activate() {

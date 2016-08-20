@@ -19,7 +19,7 @@ namespace MUNIA {
 				_delay = value;
 				if (_delay != TimeSpan.Zero) {
 					_bufferedActiveController?.Deactivate();
-					_bufferedActiveController = new BufferedController(_activeController) {Delay = value};
+					_bufferedActiveController = new BufferedController(_activeController) { Delay = value };
 				}
 			}
 		}
@@ -30,9 +30,8 @@ namespace MUNIA {
 		public static void SetActiveController(IController value) {
 			// deactive old controller
 			_activeController?.Deactivate();
-			_bufferedActiveController?.Deactivate();
-
 			_activeController = value;
+			_activeController.Activate();
 			if (Delay != TimeSpan.Zero)
 				_bufferedActiveController = new BufferedController(value) { Delay = Delay };
 		}
@@ -67,6 +66,5 @@ namespace MUNIA {
 
 
 	}
-	
 
 }

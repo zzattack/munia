@@ -18,9 +18,11 @@ namespace MUNIA.Controllers {
 		public string DevicePath => HidDevice.DevicePath;
 		public string Name => HidDevice.ProductName;
 
-	    public abstract List<int> Axes { get; }
-		public abstract List<bool> Buttons { get; }
-		public event EventHandler StateUpdated;
+	    protected abstract List<int> Axes { get; }
+		protected abstract List<bool> Buttons { get; }
+	    public ControllerState GetState() => new ControllerState(Axes, Buttons);
+
+	    public event EventHandler StateUpdated;
 
 		protected MuniaController(HidDevice hidDevice) {
             this.HidDevice = hidDevice;
@@ -31,8 +33,6 @@ namespace MUNIA.Controllers {
         
         public static IEnumerable<MuniaController> ListDevices() {
 			var loader = new HidDeviceLoader();
-			
-	        //For each our device add a node to our treeview
             foreach (var device in loader.GetDevices(0x04d8, 0x0058)) {
                 if (device.ProductName == "NinHID NGC") {
                     yield return new NgcController(device);
@@ -51,7 +51,7 @@ namespace MUNIA.Controllers {
 
 		public static HidDevice GetConfigInterface() {
 			var loader = new HidDeviceLoader();
-			//For each our device add a node to our treeview
+			// todo: use foreach/window instead of firstordefault
 		    return loader.GetDevices(0x04d8, 0x0058).FirstOrDefault(device => device.ProductName == "NinHID CFG");
 	    }
 
@@ -85,16 +85,17 @@ namespace MUNIA.Controllers {
 		
 	    private void Callback(IAsyncResult ar) {
 			try {
+				if (_stream == null) return;
 				int numBytes = _stream.EndRead(ar);
 				byte[] buffer = (byte[])ar.AsyncState;
 				if (numBytes > 0) {
-					Parse(buffer);
+					if (Parse(buffer))
+						StateUpdated?.Invoke(this, EventArgs.Empty);
 					_stream.BeginRead(buffer, 0, buffer.Length, Callback, buffer);
 				}
 			}
 			catch (IOException exc) {
 				Debug.WriteLine("IOException: " + exc.Message);
-				_stream = null;
 			}
 			catch (NullReferenceException) { }
 		}

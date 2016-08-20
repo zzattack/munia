@@ -13,8 +13,8 @@ namespace MUNIA.Controllers {
             for (int i = 0; i < 6; i++) _axes.Add(0);
         }
 
-        public override List<int> Axes => _axes;
-        public override List<bool> Buttons => _buttons;
+        protected override List<int> Axes => _axes;
+        protected override List<bool> Buttons => _buttons;
         protected override bool Parse(byte[] ev) {
             // 0 0 0 START Y X B A
             _buttons[0] = (ev[1] & 0x10) != 0;

@@ -9,8 +9,8 @@ namespace MUNIA.Controllers {
             for (int i = 0; i < 12; i++) _buttons.Add(false);
         }
 
-        public override List<int> Axes => new List<int>();
-        public override List<bool> Buttons => _buttons;
+        protected override List<int> Axes => new List<int>();
+        protected override List<bool> Buttons => _buttons;
 
         protected override bool Parse(byte[] ev) {
             // B Y SEL START

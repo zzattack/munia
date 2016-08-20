@@ -12,7 +12,7 @@ namespace MUNIA.Skins {
 		public abstract void Render(int width, int height);
 
 		public void UpdateState(IController controller) {
-			State = new ControllerState(TimeSpan.Zero, controller);
+			State = controller.GetState();
 		}
 		protected ControllerState State;
 	}
