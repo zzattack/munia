@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace MUNIA.Controllers {
 	public interface IController {
@@ -10,6 +9,7 @@ namespace MUNIA.Controllers {
 		bool IsAvailable { get; }
 		string DevicePath { get; }
 		string Name { get; }
+		ControllerType Type { get; }
 
 		void Activate();
 		void Deactivate();

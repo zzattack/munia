@@ -11,6 +11,7 @@ namespace MUNIA.Controllers {
 		public bool IsAvailable { get; }
 		public string DevicePath { get; set; }
 		public string Name { get; set; }
+		public abstract ControllerType Type { get; }
 
 		public ControllerState GetState() => new ControllerState(Axes, Buttons);
 		
@@ -31,7 +32,13 @@ namespace MUNIA.Controllers {
 		}
 	}
 
-	public class ArduinoSnesController : ArduinoController { }
-	public class ArduinoN64Controller : ArduinoController { }
-	public class ArduinoNGCController : ArduinoController { }
+	public class ArduinoSnesController : ArduinoController {
+		public override ControllerType Type => ControllerType.SNES;
+	}
+	public class ArduinoN64Controller : ArduinoController {
+		public override ControllerType Type => ControllerType.N64;
+	}
+	public class ArduinoNgcController : ArduinoController {
+		public override ControllerType Type => ControllerType.NGC;
+	}
 }

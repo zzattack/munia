@@ -17,6 +17,7 @@ namespace MUNIA.Controllers {
 		private HidStream _stream;
 		public string DevicePath => HidDevice.DevicePath;
 		public string Name => HidDevice.ProductName;
+	    public abstract ControllerType Type { get; }
 
 	    protected abstract List<int> Axes { get; }
 		protected abstract List<bool> Buttons { get; }

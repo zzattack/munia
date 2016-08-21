@@ -36,8 +36,6 @@ namespace MUNIA {
 			ConfigManager.LoadSkins();
 			ConfigManager.LoadControllers();
 			ConfigManager.Load();
-			ConfigManager.SetActiveController(ConfigManager.GetActiveController());
-
 			BuildMenu();
 
 			
@@ -68,12 +66,12 @@ namespace MUNIA {
 			foreach (var ctrlr in ConfigManager.Controllers) {
 				var tsmiController = new ToolStripMenuItem(ctrlr.Name);
 
-				foreach (var skin in ConfigManager.Skins.Where(s => s.ControllerName == ctrlr.Name)) {
+				foreach (var skin in ConfigManager.Skins.Where(s => s.Controllers.Contains(ctrlr.Type))) {
 					if (skin.LoadResult == SkinLoadResult.Fail)
 						numFail++;
 					else
 						numSkins++;
-					var tsmiSkin = new ToolStripMenuItem($"{skin.SkinName}");
+					var tsmiSkin = new ToolStripMenuItem($"{skin.Name}");
 					numOk++;
 					tsmiSkin.Enabled = true;
 					tsmiSkin.Click += (sender, args) => ActivateConfig(ctrlr, skin);

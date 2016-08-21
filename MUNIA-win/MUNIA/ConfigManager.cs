@@ -30,7 +30,7 @@ namespace MUNIA {
 			get { return _delay; }
 			set {
 				_delay = value;
-				if (_delay != TimeSpan.Zero) {
+				if (_delay != TimeSpan.Zero && _activeController != null) {
 					if (_bufferedActiveController == null) _bufferedActiveController = new BufferedController(_activeController, Delay);
 					else _bufferedActiveController.Delay = _delay;
 				}
@@ -41,9 +41,11 @@ namespace MUNIA {
 			// deactive old controller
 			_activeController?.Deactivate();
 			_activeController = value;
-			_activeController.Activate();
-			if (Delay != TimeSpan.Zero)
-				_bufferedActiveController = new BufferedController(value, Delay);
+			if (_activeController != null) {
+				_activeController.Activate();
+				if (Delay != TimeSpan.Zero)
+					_bufferedActiveController = new BufferedController(value, Delay);
+			}
 		}
 
 		public static IController GetActiveController() {
@@ -99,7 +101,7 @@ namespace MUNIA {
 				}
 
 				if (xroot["active_dev_path"] != null)
-					_activeController = Controllers.FirstOrDefault(c => c.DevicePath == xroot["active_dev_path"].InnerText);
+					SetActiveController(Controllers.FirstOrDefault(c => c.DevicePath == xroot["active_dev_path"].InnerText));
 			}
 			catch { }
 		}

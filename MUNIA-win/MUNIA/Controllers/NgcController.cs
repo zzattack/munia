@@ -15,6 +15,7 @@ namespace MUNIA.Controllers {
 
         protected override List<int> Axes => _axes;
         protected override List<bool> Buttons => _buttons;
+	    public override ControllerType Type => ControllerType.NGC;
         protected override bool Parse(byte[] ev) {
             // 0 0 0 START Y X B A
             _buttons[0] = (ev[1] & 0x10) != 0;

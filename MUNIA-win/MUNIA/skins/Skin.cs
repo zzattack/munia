@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using MUNIA.Controllers;
 
 namespace MUNIA.Skins {
@@ -23,12 +22,4 @@ namespace MUNIA.Skins {
 		Fail,
 		Ok,
 	}
-
-	public enum ControllerType {
-		SNES,
-		N64,
-		NGC,
-		Unknown
-	}
-
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using MUNIA.Skins;
 
 namespace MUNIA.Controllers {
 	public class BufferedController : IController {
