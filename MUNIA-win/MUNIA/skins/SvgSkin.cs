@@ -23,7 +23,6 @@ namespace MUNIA.Skins {
 				_dimensions = _svgDocument.GetDimensions();
 
 				// cleanup
-				ControllerName = string.Empty;
 				Buttons.ForEach(b => {
 					if (b.PressedTexture != -1) GL.DeleteTexture(b.PressedTexture);
 					if (b.Texture != -1) GL.DeleteTexture(b.Texture);
@@ -36,7 +35,7 @@ namespace MUNIA.Skins {
 
 				// load button/stick/trigger mapping from svg
 				RecursiveGetElements(_svgDocument);
-				LoadResult = !string.IsNullOrEmpty(ControllerName) ? SkinLoadResult.Ok : SkinLoadResult.Fail;
+				LoadResult = Controllers.Any() ? SkinLoadResult.Ok : SkinLoadResult.Fail;
 			}
 			catch { LoadResult = SkinLoadResult.Fail; }
 		}
@@ -44,8 +43,22 @@ namespace MUNIA.Skins {
 		private void RecursiveGetElements(SvgElement e) {
 			foreach (var c in e.Children) {
 				if (c.ElementName == "info") {
-					ControllerName = c.CustomAttributes["device-name"];
-					SkinName = c.CustomAttributes["skin-name"];
+					if (c.CustomAttributes.ContainsKey("device-name")) {
+						string devName = c.CustomAttributes["device-name"];
+						// match on name for compatibility reasons
+						if (devName == "NinHID SNES") Controllers.Add(ControllerType.SNES);
+						else if (devName == "NinHID N64") Controllers.Add(ControllerType.N64);
+						else if (devName == "NinHID NGC") Controllers.Add(ControllerType.NGC);
+					}
+
+					if (c.CustomAttributes.ContainsKey("device-type")) {
+						string devType = c.CustomAttributes["device-type"];
+						ControllerType type;
+						if (Enum.TryParse(devType, true, out type))
+							Controllers.Add(type);
+					}
+
+					Name = c.CustomAttributes["skin-name"];
 				}
 
 				if (c.ContainsAttribute("button-id")) {
@@ -196,8 +209,8 @@ namespace MUNIA.Skins {
 			var baseImg = _svgDocument.Draw();
 			_baseTexture = TextureHelper.CreateTexture(baseImg);
 
-			// System.IO.Directory.CreateDirectory(SkinName);
-			// baseImg.Save(SkinName + "/base_texture.png");
+			// System.IO.Directory.CreateDirectory(Name);
+			// baseImg.Save(Name + "/base_texture.png");
 
 			// hide everything
 			SetVisibleRecursive(_svgDocument, false);
@@ -247,7 +260,7 @@ namespace MUNIA.Skins {
 				SetVisibleRecursive(e, true);
 
 				_svgDocument.Draw(work);
-				// work.Clone(boundsScaled, work.PixelFormat).Save(SkinName + "/" + e.ID + ".png");
+				// work.Clone(boundsScaled, work.PixelFormat).Save(Name + "/" + e.ID + ".png");
 
 				ret = TextureHelper.CreateTexture(work.Clone(boundsScaled, work.PixelFormat));
 				using (Graphics g = Graphics.FromImage(work))

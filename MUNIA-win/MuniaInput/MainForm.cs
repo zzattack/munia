@@ -17,7 +17,6 @@ namespace MuniaInput {
 
         public MainForm() {
             InitializeComponent();
-
             comboBox1.Items.AddRange(MuniaController.ListDevices().ToArray());
         }
 
@@ -35,9 +34,9 @@ namespace MuniaInput {
             if (InvokeRequired) Invoke((Action<object, EventArgs>)ControllerStateUpdated, sender, args);
             else {
                 textBox1.AppendText("Buttons: ");
-                textBox1.AppendText(string.Join("", _activeController.Buttons.Select(x => x ? "Y" : "N")));
+                textBox1.AppendText(string.Join("", _activeController.GetState().Buttons.Select(x => x ? "Y" : "N")));
                 textBox1.AppendText("\r\nAxes:");
-                textBox1.AppendText(string.Join("  ", _activeController.Axes));
+                textBox1.AppendText(string.Join("  ", _activeController.GetState().Axes));
                 textBox1.AppendText("\r\n");
             }
         }
