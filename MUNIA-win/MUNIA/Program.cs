@@ -88,7 +88,7 @@ namespace MUNIA {
 			}
 			catch (Exception exc) {
 				AskBugReport(exc);
-				Settings.Save();
+				ConfigManager.Save();
 			}
 		}
 
@@ -138,12 +138,12 @@ namespace MUNIA {
 				return;
 
 			AskBugReport(e.ExceptionObject as Exception);
-			Settings.Save();
+			ConfigManager.Save();
 		}
 
 		private static void AskBugReport(Exception exc) {
 			var form = new SubmitBug();
-			form.Email = Settings.Email;
+			form.Email = ConfigManager.Email;
 			if (form.ShowDialog() == DialogResult.OK) {
 				//if (!string.IsNullOrWhiteSpace(form.Email))
 				//	Settings.Default.email = form.Email;

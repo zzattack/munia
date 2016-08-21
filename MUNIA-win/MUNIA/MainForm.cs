@@ -35,11 +35,12 @@ namespace MUNIA {
 		private void MainForm_Shown(object sender, EventArgs e) {
 			ConfigManager.LoadSkins();
 			ConfigManager.LoadControllers();
-			Settings.Load();
+			ConfigManager.Load();
+			ConfigManager.SetActiveController(ConfigManager.GetActiveController());
 
 			BuildMenu();
-			ActivateConfig(ConfigManager.GetActiveController(), ConfigManager.ActiveSkin);
 
+			
 			Application.Idle += OnApplicationOnIdle;
 			if (!_skipUpdateCheck)
 				PerformUpdateCheck();
@@ -96,12 +97,9 @@ namespace MUNIA {
 		private void ActivateConfig(IController ctrlr, Skin skin) {
 			if (skin.LoadResult != SkinLoadResult.Ok) return;
 			if (ctrlr == null) return;
-
-			ConfigManager.GetActiveController()?.Deactivate();
-			ctrlr.Activate();
-
-			ConfigManager.SetActiveController(ctrlr);
+			
 			ConfigManager.ActiveSkin = skin;
+			ConfigManager.SetActiveController(ctrlr);
 
 			// find desired window size
 			if (ConfigManager.WindowSizes.ContainsKey(skin)) {
@@ -141,7 +139,7 @@ namespace MUNIA {
 
 		private void Render() {
 			glControl.MakeCurrent();
-			GL.ClearColor(Color.FromArgb(0, Settings.BackgroundColor));
+			GL.ClearColor(Color.FromArgb(0, ConfigManager.BackgroundColor));
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
 			GL.MatrixMode(MatrixMode.Modelview);
@@ -260,7 +258,7 @@ namespace MUNIA {
 		#endregion
 
 		private void MainForm_FormClosing(object sender, FormClosingEventArgs e) {
-			Settings.Save();
+			ConfigManager.Save();
 		}
 
 		private void tsmiMuniaSettings_Click(object sender, EventArgs e) {
@@ -299,18 +297,23 @@ namespace MUNIA {
 			};
 			frm.ShowDialog(this);
 		}
+		private void tsmiSetLagCompensation(object sender, EventArgs e) {
+			var frm = new DelayValuePicker(ConfigManager.Delay) {
+				StartPosition = FormStartPosition.CenterParent
+			};
+			if (frm.ShowDialog() == DialogResult.OK) {
+				ConfigManager.Delay = frm.ChosenDelay;
+			}
+		}
 
 		private void glControl_MouseClick(object sender, MouseEventArgs e) {
 			if (e.Button == MouseButtons.Right) {
 				var dlg = new ColorDialog();
 				if (dlg.ShowDialog() == DialogResult.OK)
-					Settings.BackgroundColor = dlg.Color;
+					ConfigManager.BackgroundColor = dlg.Color;
 			}
 		}
 
-		private void tsmiSetLagCompensation(object sender, EventArgs e) {
-
-		}
 	}
 
 }

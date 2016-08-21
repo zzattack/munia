@@ -10,12 +10,12 @@ namespace MUNIA.Controllers {
 		private TimeSpan _delay;
 		public string Name { get; }
 		
-		public BufferedController(IController real) {
+		public BufferedController(IController real, TimeSpan delay) {
 			_real = real;
 			_real.StateUpdated += RealOnStateUpdated;
+			Delay = delay;
 		}
-
-
+		
 		public TimeSpan Delay {
 			get { return _delay; }
 			set {
@@ -25,7 +25,6 @@ namespace MUNIA.Controllers {
 				}
 			}
 		}
-		
 
 		private void RealOnStateUpdated(object sender, EventArgs eventArgs) {
 			var state = _real.GetState();

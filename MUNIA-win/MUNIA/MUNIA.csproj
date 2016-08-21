@@ -78,6 +78,12 @@
     <Compile Include="Controllers\BufferedController.cs" />
     <Compile Include="Controllers\IController.cs" />
     <Compile Include="CircularBuffer.cs" />
+    <Compile Include="Forms\DelayValuePicker.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DelayValuePicker.Designer.cs">
+      <DependentUpon>DelayValuePicker.cs</DependentUpon>
+    </Compile>
     <Compile Include="TextureHelper.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -102,7 +108,6 @@
     <Compile Include="RichTextBoxEx.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Settings.cs" />
     <Compile Include="ConfigManager.cs" />
     <Compile Include="Skins\Skin.cs" />
     <Compile Include="Skins\SvgSkin.cs" />
@@ -125,6 +130,9 @@
       <DependentUpon>BootloaderForm.cs</DependentUpon>
       <LastGenOutput>BootloaderForm1.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DelayValuePicker.resx">
+      <DependentUpon>DelayValuePicker.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
