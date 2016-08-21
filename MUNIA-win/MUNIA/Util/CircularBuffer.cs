@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace MUNIA {
+namespace MUNIA.Util {
 	// taken from http://geekswithblogs.net/blackrob/archive/2014/09/01/circular-buffer-in-c.aspx
 	public class CircularBuffer<T> : IEnumerable<T> {
 		private T[] _buffer;
@@ -17,7 +17,6 @@ namespace MUNIA {
 		}
 
 		public int Count { get; private set; }
-
 		public int Capacity {
 			get { return _buffer.Length; }
 			set {

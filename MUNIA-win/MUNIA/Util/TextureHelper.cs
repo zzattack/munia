@@ -1,8 +1,9 @@
-﻿using OpenTK.Graphics.OpenGL;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Imaging;
+using OpenTK.Graphics.OpenGL;
+using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
-namespace MUNIA {
+namespace MUNIA.Util {
     public static class TextureHelper {
 
         public static int CreateTexture(Bitmap bmp) {
@@ -13,7 +14,7 @@ namespace MUNIA {
             GL.BindTexture(TextureTarget.Texture2D, texture);
 
             var data = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height),
-                ImageLockMode.ReadWrite, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+                ImageLockMode.ReadWrite, PixelFormat.Format32bppPArgb);
 
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, data.Width, data.Height, 0,
                 OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0);
@@ -36,5 +37,21 @@ namespace MUNIA {
 			GL.Disable(EnableCap.Texture2D);
             return texture;
         }
+		
+		public static void RenderTexture(RectangleF r) {
+			RenderTexture(r.Left, r.Right, r.Top, r.Bottom);
+		}
+	    public static void RenderTexture(float l, float r, float t, float b) {
+		    GL.Begin(PrimitiveType.Quads);
+		    GL.TexCoord2(0, 0);
+		    GL.Vertex2(l, t);
+		    GL.TexCoord2(1, 0);
+		    GL.Vertex2(r, t);
+		    GL.TexCoord2(1, 1);
+		    GL.Vertex2(r, b);
+		    GL.TexCoord2(0, 1);
+		    GL.Vertex2(l, b);
+		    GL.End();
+	    }
     }
 }

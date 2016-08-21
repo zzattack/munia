@@ -146,7 +146,7 @@ using System.Linq;
 using NDesk.Options;
 #endif
 
-namespace MUNIA {
+namespace MUNIA.Util {
 		internal static class StringCoda {
 
 			public static IEnumerable<string> WrappedLines(string self, params int[] widths) {

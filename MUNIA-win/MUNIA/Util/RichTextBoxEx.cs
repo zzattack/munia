@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace MUNIA {
+namespace MUNIA.Util {
 	public class RichTextBoxEx : RichTextBox {
 		#region Interop-Defines
 		[StructLayout(LayoutKind.Sequential)]
