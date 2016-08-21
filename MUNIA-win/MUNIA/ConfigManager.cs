@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 using MUNIA.Controllers;
+using MUNIA.Forms;
 using MUNIA.Skins;
 
 namespace MUNIA {
@@ -16,6 +17,7 @@ namespace MUNIA {
 		public static string Email { get; set; } = "nobody@nothing.net";
 		public static Color BackgroundColor { get; set; } = Color.Gray;
 		public static Dictionary<Skin, Size> WindowSizes { get; } = new Dictionary<Skin, Size>();
+		public static readonly ArduinoMapping ArduinoMapping = new ArduinoMapping();
 
 		private static TimeSpan _delay;
 		private static IController _activeController;
@@ -82,12 +84,18 @@ namespace MUNIA {
 				xdoc.Load(SettingsFile);
 				XmlElement xroot = xdoc["settings"] ?? xdoc["root"];
 				
+				// first load the simplest properties
 				if (xroot["Email"] != null) Email = xroot["Email"].InnerText;
 				if (xroot["BackgroundColor"] != null) BackgroundColor = Color.FromArgb(int.Parse(xroot["BackgroundColor"].InnerText));
 				if (xroot["Delay"] != null) Delay = TimeSpan.FromMilliseconds(int.Parse(xroot["Delay"].InnerText));
+
+
+				// then load all skins as they have no dependencies
+				LoadSkins();
+
+				// now we can load the skin-specific settings
 				if (xroot["active_skin"] != null)
 					ActiveSkin = Skins.FirstOrDefault(s => s.Path == xroot["active_skin"].InnerText);
-
 				foreach (XmlNode skinCfg in xroot["skin_settings"].ChildNodes) {
 					string path = skinCfg.Attributes["skin_path"].Value;
 
@@ -100,6 +108,17 @@ namespace MUNIA {
 					}
 				}
 
+				// load arduino map, then controllers
+				var arduinoMap = xroot["arduino_mapping"];
+				if (arduinoMap != null) {
+					foreach (XmlNode e in arduinoMap.ChildNodes) {
+						ArduinoMapping[e.Attributes["port"].Value] = 
+							(ControllerType)Enum.Parse(typeof(ControllerType), e.Attributes["type"].Value, true);
+					}
+				}
+				LoadControllers();
+
+				// finally we can determine the active controller
 				if (xroot["active_dev_path"] != null)
 					SetActiveController(Controllers.FirstOrDefault(c => c.DevicePath == xroot["active_dev_path"].InnerText));
 			}
@@ -121,7 +140,7 @@ namespace MUNIA {
 
 				xw.WriteElementString("active_skin", ActiveSkin?.Path ?? "");
 				xw.WriteElementString("active_dev_path", GetActiveController()?.DevicePath ?? "");
-
+				
 				xw.WriteStartElement("skin_settings");
 				foreach (var skin in Skins) {
 					xw.WriteStartElement("skin");
@@ -130,6 +149,15 @@ namespace MUNIA {
 						var sz = WindowSizes[skin];
 						xw.WriteAttributeString("window_size", $"{sz.Width}x{sz.Height}");
 					}
+					xw.WriteEndElement();
+				}
+				xw.WriteEndElement();
+				
+				xw.WriteStartElement("arduino_mapping");
+				foreach (var mapEntry in ArduinoMapping) {
+					xw.WriteStartElement("map");
+					xw.WriteAttributeString("port", mapEntry.Key);
+					xw.WriteAttributeString("type", mapEntry.Value.ToString());
 					xw.WriteEndElement();
 				}
 				xw.WriteEndElement();
