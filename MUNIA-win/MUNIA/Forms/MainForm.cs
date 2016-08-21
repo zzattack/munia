@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using HidSharp;
 using MUNIA.Controllers;
-using MUNIA.Forms;
+using MUNIA.Interop;
 using MUNIA.Skins;
 using OpenTK.Graphics.OpenGL;
 
-namespace MUNIA {
+namespace MUNIA.Forms {
 	public partial class MainForm : Form {
 		private readonly Stopwatch _stopwatch = new Stopwatch();
 		private double _timestamp;
@@ -33,11 +33,8 @@ namespace MUNIA {
 		}
 
 		private void MainForm_Shown(object sender, EventArgs e) {
-			ConfigManager.LoadSkins();
-			ConfigManager.LoadControllers();
 			ConfigManager.Load();
 			BuildMenu();
-
 			
 			Application.Idle += OnApplicationOnIdle;
 			if (!_skipUpdateCheck)
@@ -203,7 +200,9 @@ namespace MUNIA {
 			uc.AlreadyLatest += (o, e) => {
 				if (msgBox) MessageBox.Show("You are already using the latest version available", "Already latest", MessageBoxButtons.OK, MessageBoxIcon.Information);
 				UpdateStatus("already latest version", 100);
-				Task.Delay(2000).ContinueWith(task => Invoke((Action)delegate { pbProgress.Visible = false; }));
+				Task.Delay(2000).ContinueWith(task => {
+					if (InvokeRequired && IsHandleCreated) Invoke((Action) delegate { pbProgress.Visible = false; });
+				});
 			};
 			uc.Connected += (o, e) => UpdateStatus("connected", 10);
 			uc.DownloadProgressChanged += (o, e) => { /* care, xml is small anyway */
@@ -295,7 +294,19 @@ namespace MUNIA {
 			};
 			frm.ShowDialog(this);
 		}
-		private void tsmiSetLagCompensation(object sender, EventArgs e) {
+
+		private void tsmiMapArduinoDevicesClick(object sender, EventArgs args) {
+			var frm = new ArduinoMapperForm(ConfigManager.ArduinoMapping) {
+				StartPosition = FormStartPosition.CenterParent
+			};
+			if (frm.ShowDialog() == DialogResult.OK) {
+				foreach (var e in frm.Mapping)
+					ConfigManager.ArduinoMapping[e.Key] = e.Value;
+				BuildMenu();
+			}
+		}
+
+		private void tsmiSetLagCompensation(object sender, EventArgs args) {
 			var frm = new DelayValuePicker(ConfigManager.Delay) {
 				StartPosition = FormStartPosition.CenterParent
 			};
@@ -304,8 +315,8 @@ namespace MUNIA {
 			}
 		}
 
-		private void glControl_MouseClick(object sender, MouseEventArgs e) {
-			if (e.Button == MouseButtons.Right) {
+		private void glControl_MouseClick(object sender, MouseEventArgs args) {
+			if (args.Button == MouseButtons.Right) {
 				var dlg = new ColorDialog();
 				if (dlg.ShowDialog() == DialogResult.OK)
 					ConfigManager.BackgroundColor = dlg.Color;

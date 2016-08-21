@@ -55,15 +55,25 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\ArduinoN64.cs" />
+    <Compile Include="Controllers\ArduinoNgc.cs" />
+    <Compile Include="Controllers\ArduinoSnes.cs" />
     <Compile Include="Forms\AboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ArduinoMapperForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ArduinoMapperForm.Designer.cs">
+      <DependentUpon>ArduinoMapperForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\BootloaderForm.cs">
       <SubType>Form</SubType>
@@ -85,16 +95,18 @@
       <DependentUpon>DelayValuePicker.cs</DependentUpon>
     </Compile>
     <Compile Include="Controllers\ControllerType.cs" />
+    <Compile Include="Interop\SerialPortInfo.cs" />
+    <Compile Include="Interop\SetupApi.cs" />
     <Compile Include="TextureHelper.cs" />
-    <Compile Include="MainForm.cs">
+    <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm.Designer.cs">
+    <Compile Include="Forms\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Controllers\MuniaController.cs" />
-    <Compile Include="Controllers\N64Controller.cs" />
-    <Compile Include="Controllers\NgcController.cs" />
+    <Compile Include="Controllers\MuniaN64.cs" />
+    <Compile Include="Controllers\MuniaNgc.cs" />
     <Compile Include="MuniaSettings.cs" />
     <Compile Include="Forms\MuniaSettingsDialog.cs">
       <SubType>Form</SubType>
@@ -105,7 +117,7 @@
     <Compile Include="Option.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Controllers\SnesController.cs" />
+    <Compile Include="Controllers\MuniaSnes.cs" />
     <Compile Include="RichTextBoxEx.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -116,7 +128,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UpdateChecker.cs" />
-    <Compile Include="UsbNotification.cs" />
+    <Compile Include="Interop\UsbNotification.cs" />
     <Compile Include="Properties\VersionInfo.cs" />
     <Compile Include="Forms\WindowSizePicker.cs">
       <SubType>Form</SubType>
@@ -127,6 +139,9 @@
     <EmbeddedResource Include="Forms\AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ArduinoMapperForm.resx">
+      <DependentUpon>ArduinoMapperForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\BootloaderForm.resx">
       <DependentUpon>BootloaderForm.cs</DependentUpon>
       <LastGenOutput>BootloaderForm1.Designer.cs</LastGenOutput>
@@ -135,7 +150,7 @@
     <EmbeddedResource Include="Forms\DelayValuePicker.resx">
       <DependentUpon>DelayValuePicker.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainForm.resx">
+    <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MuniaSettingsDialog.resx">

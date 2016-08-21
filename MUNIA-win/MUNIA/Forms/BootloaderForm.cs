@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using HidSharp;
 using MUNIA.Bootloader;
 using MUNIA.Controllers;
+using MUNIA.Interop;
 using MUNIA.Properties;
 
 namespace MUNIA.Forms {

@@ -1,6 +1,6 @@
 ﻿using OpenTK;
 
-namespace MUNIA {
+namespace MUNIA.Forms {
     partial class MainForm {
         /// <summary>
         /// Required designer variable.
@@ -41,6 +41,7 @@ namespace MUNIA {
 			this.lblFill = new System.Windows.Forms.ToolStripStatusLabel();
 			this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
 			this.pbProgress = new System.Windows.Forms.ToolStripProgressBar();
+			this.mapArduinoDevicesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.statusStrip1.SuspendLayout();
 			this.SuspendLayout();
@@ -69,7 +70,8 @@ namespace MUNIA {
             this.tsmiSetWindowSize,
             this.tsmiMuniaSettings,
             this.tsmiFirmware,
-            this.setCaptureLagCompensationToolStripMenuItem});
+            this.setCaptureLagCompensationToolStripMenuItem,
+            this.mapArduinoDevicesToolStripMenuItem});
 			this.tsmiOptions.Name = "tsmiOptions";
 			this.tsmiOptions.Size = new System.Drawing.Size(61, 20);
 			this.tsmiOptions.Text = "&Options";
@@ -173,6 +175,13 @@ namespace MUNIA {
 			this.pbProgress.Size = new System.Drawing.Size(100, 16);
 			this.pbProgress.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
 			// 
+			// mapArduinoDevicesToolStripMenuItem
+			// 
+			this.mapArduinoDevicesToolStripMenuItem.Name = "mapArduinoDevicesToolStripMenuItem";
+			this.mapArduinoDevicesToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+			this.mapArduinoDevicesToolStripMenuItem.Text = "Map arduino devices";
+			this.mapArduinoDevicesToolStripMenuItem.Click += new System.EventHandler(this.tsmiMapArduinoDevicesClick);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -212,6 +221,7 @@ namespace MUNIA {
 		private System.Windows.Forms.ToolStripMenuItem tsmiMuniaSettings;
 		private System.Windows.Forms.ToolStripMenuItem tsmiFirmware;
 		private System.Windows.Forms.ToolStripMenuItem setCaptureLagCompensationToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem mapArduinoDevicesToolStripMenuItem;
 	}
 }
 
