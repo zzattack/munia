@@ -22,7 +22,7 @@ namespace MUNIA.Controllers {
 			set {
 				if (_delay != value) {
 					_delay = value;
-					_q = new CircularBuffer<TimedControllerState>(Math.Min(10, (int)_delay.TotalMilliseconds / 10));
+					_q = new CircularBuffer<TimedControllerState>(Math.Max(10, (int)_delay.TotalMilliseconds / 10));
 				}
 			}
 		}
@@ -57,13 +57,8 @@ namespace MUNIA.Controllers {
 		public bool IsAvailable => _real.IsAvailable;
 		public string DevicePath => _real.DevicePath;
 		public ControllerType Type => _real.Type;
-
-		public void Activate() {
-			_real.Activate();
-		}
-		public void Deactivate() {
-			_real.Deactivate();
-		}
+		public bool Activate() { return _real.Activate(); }
+		public void Deactivate() { _real.Deactivate(); }
 
 		public event EventHandler StateUpdated;
 		protected virtual void OnStateUpdated() { StateUpdated?.Invoke(this, EventArgs.Empty); }

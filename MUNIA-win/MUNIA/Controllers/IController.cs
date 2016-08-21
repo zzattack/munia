@@ -11,7 +11,7 @@ namespace MUNIA.Controllers {
 		string Name { get; }
 		ControllerType Type { get; }
 
-		void Activate();
+		bool Activate();
 		void Deactivate();
 	}
 	

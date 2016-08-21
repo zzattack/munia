@@ -36,13 +36,13 @@ namespace MUNIA.Controllers {
 			var loader = new HidDeviceLoader();
             foreach (var device in loader.GetDevices(0x04d8, 0x0058)) {
                 if (device.ProductName == "NinHID NGC") {
-                    yield return new NgcController(device);
+                    yield return new MuniaNgc(device);
                 }
                 else if (device.ProductName == "NinHID N64") {
-                    yield return new N64Controller(device);
+                    yield return new MuniaN64(device);
 				}
 				else if (device.ProductName == "NinHID SNES") {
-					yield return new SnesController(device);
+					yield return new MuniaSnes(device);
 				}
 			}
 		}
@@ -57,19 +57,25 @@ namespace MUNIA.Controllers {
 	    }
 
 
-		/// <summary>
-		/// Registers device for receiving inputs.
-		/// </summary>
-		public void Activate() {
-			_stream?.Dispose();
-			_stream = HidDevice.Open();
-			_stream.ReadTimeout = Timeout.Infinite;
+	    /// <summary>
+	    /// Registers device for receiving inputs.
+	    /// </summary>
+	    public bool Activate() {
+		    try {
+			    _stream?.Dispose();
+			    _stream = HidDevice.Open();
+			    _stream.ReadTimeout = Timeout.Infinite;
 
-			byte[] buffer = new byte[HidDevice.MaxInputReportLength];
-			_stream.BeginRead(buffer, 0, buffer.Length, Callback, buffer);
-		}
+			    byte[] buffer = new byte[HidDevice.MaxInputReportLength];
+			    _stream.BeginRead(buffer, 0, buffer.Length, Callback, buffer);
+			    return true;
+		    }
+		    catch {
+			    return false;
+		    }
+	    }
 
-		public void Deactivate() {
+	    public void Deactivate() {
 			_stream?.Close();
 		}
 		public bool IsActive => _stream != null && _stream.CanRead;
