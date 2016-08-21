@@ -2,11 +2,11 @@
 using HidSharp;
 
 namespace MUNIA.Controllers {
-    public class N64Controller : MuniaController {
+    public class MuniaN64 : MuniaController {
         private readonly List<bool> _buttons;
         private readonly List<int> _axes;
 
-        public N64Controller(HidDevice hidDevice) : base(hidDevice) {
+        public MuniaN64(HidDevice hidDevice) : base(hidDevice) {
             _buttons = new List<bool>();
             for (int i = 0; i < 14; i++) _buttons.Add(false);
             _axes = new List<int>();

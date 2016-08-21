@@ -2,10 +2,10 @@
 using HidSharp;
 
 namespace MUNIA.Controllers {
-	public class SnesController : MuniaController {
+	public class MuniaSnes : MuniaController {
 		private readonly List<bool> _buttons = new List<bool>(12);
 
-		public SnesController(HidDevice hidDevice) : base(hidDevice) {
+		public MuniaSnes(HidDevice hidDevice) : base(hidDevice) {
 			for (int i = 0; i < 12; i++) _buttons.Add(false);
 		}
 

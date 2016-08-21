@@ -2,14 +2,12 @@
 using HidSharp;
 
 namespace MUNIA.Controllers {
-    public class NgcController : MuniaController {
-        private readonly List<bool> _buttons;
-        private readonly List<int> _axes;
+    public class MuniaNgc : MuniaController {
+        private readonly List<bool> _buttons = new List<bool>();
+        private readonly List<int> _axes = new List<int>();
 
-        public NgcController(HidDevice hidDevice) : base(hidDevice) {
-            _buttons = new List<bool>();
+        public MuniaNgc(HidDevice hidDevice) : base(hidDevice) {
             for (int i = 0; i < 12; i++) _buttons.Add(false);
-            _axes = new List<int>();
             for (int i = 0; i < 6; i++) _axes.Add(0);
         }
 
