@@ -1,44 +1,109 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO.Ports;
+using System.Linq;
+using MUNIA.Interop;
 
 namespace MUNIA.Controllers {
 	public abstract class ArduinoController : IController {
+		protected ArduinoController(SerialPortInfo port) {
+			PortInfo = port;
+			Port = new SerialPort(port.Name, 115200);
+			Port.DataReceived += OnDataReceived;
+		}
 
-		private List<int> Axes { get; }
-		private List<bool> Buttons { get; }
+		protected List<int> Axes { get; } = new List<int>();
+		protected List<bool> Buttons { get; } = new List<bool>();
 		public bool IsActive { get; set; }
 		public bool IsAvailable { get; }
-		public string DevicePath { get; set; }
-		public string Name { get; set; }
+		public string DevicePath => PortInfo.Name;
+
+		public string Name => "Arduino " + Type;
 		public abstract ControllerType Type { get; }
+		public SerialPortInfo PortInfo { get; set; }
+		protected SerialPort Port;
 
 		public ControllerState GetState() => new ControllerState(Axes, Buttons);
-		
-		public event EventHandler StateUpdated;
-		public SerialPort Port;
-		public void Activate() {
-			// port open
+
+		public bool Activate() {
+			try {
+				Port?.Open();
+				return true;
+			}
+			catch {
+				return false;
+			}
 		}
 
 		public void Deactivate() {
-			// port close
+			Port?.Close();
 		}
+
+		private void OnDataReceived(object sender, SerialDataReceivedEventArgs args) {
+			byte[] buff = new byte[512];
+			while (Port.BytesToRead > 0) {
+				int br = Port.Read(buff, 0, 512);
+				AddToBuffer(buff, 0, br);
+			}
+		}
+
+		private readonly List<byte> _buffer = new List<byte>();
+		private void AddToBuffer(byte[] buff, int offset, int count) {
+			for (int i = offset; i < offset + count; i++) {
+				byte b = buff[i];
+				if (b == '\n') {
+					if (Parse(_buffer))
+						OnStateUpdated();
+					_buffer.Clear();
+				}
+				else _buffer.Add(b);
+			}
+		}
+
+		public List<byte> Repack(List<byte> data) {
+			// repack data bytes
+			// can't believe the firmware is implemented like this... but oh well
+			List<byte> packet = new List<byte>();
+			
+			byte x = 0x80, y = 0;
+			foreach (byte b in _buffer) {
+				if (b == '1') y |= x;
+				x >>= 1;
+				if (x == 0) {
+					packet.Add(y);
+					x = 0x80;
+					y = 0;
+				}
+			}
+			return packet;
+		}
+		protected abstract bool Parse(List<byte> buffer);
+		public event EventHandler StateUpdated;
+		protected virtual void OnStateUpdated() { StateUpdated?.Invoke(this, EventArgs.Empty); }
 	}
+
 
 	public class ArduinoControllerManager {
 		public static List<ArduinoController> ListDevices() {
-			return new List<ArduinoController>();
+			var ret = new List<ArduinoController>();
+			var ports = SerialPortInfo.GetPorts();
+			foreach (var entry in ConfigManager.ArduinoMapping) {
+				var port = ports.FirstOrDefault(p => p.Name == entry.Key && p.IsConnected);
+				if (port != null) {
+					switch (entry.Value) {
+					case ControllerType.SNES:
+						ret.Add(new ArduinoSnes(port));
+						break;
+					case ControllerType.N64:
+						ret.Add(new ArduinoN64(port));
+						break;
+					case ControllerType.NGC:
+						ret.Add(new ArduinoNgc(port));
+						break;
+					}
+				}
+			}
+			return ret;
 		}
-	}
-
-	public class ArduinoSnesController : ArduinoController {
-		public override ControllerType Type => ControllerType.SNES;
-	}
-	public class ArduinoN64Controller : ArduinoController {
-		public override ControllerType Type => ControllerType.N64;
-	}
-	public class ArduinoNgcController : ArduinoController {
-		public override ControllerType Type => ControllerType.NGC;
 	}
 }
