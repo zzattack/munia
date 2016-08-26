@@ -61,7 +61,12 @@ namespace MUNIA {
 				Skins.Add(svg);
 			}
 			foreach (string padpyghtDir in Directory.GetDirectories("./skins")) {
-				// todo
+				foreach (string iniPath in Directory.GetFiles(padpyghtDir, "*.ini")) {
+					var pp = new PadpyghtSkin();
+					pp.Load(iniPath);
+					if (pp.LoadResult == SkinLoadResult.Ok)
+						Skins.Add(pp);
+				}
 			}
 		}
 
