@@ -47,7 +47,10 @@ namespace MUNIA.Forms {
 		private async void ScheduleBuildMenu() {
 			// buffers multiple BuildMenu calls
 			if (_buildMenuTask == null) {
-				_buildMenuTask = Task.Delay(300).ContinueWith(t => Invoke((Action)BuildMenu));
+				_buildMenuTask = Task.Delay(300).ContinueWith(t => Invoke((Action)delegate {
+					ConfigManager.LoadControllers();
+					BuildMenu();
+				}));
 				await _buildMenuTask;
 				_buildMenuTask = null;
 			}
@@ -302,6 +305,7 @@ namespace MUNIA.Forms {
 			if (frm.ShowDialog() == DialogResult.OK) {
 				foreach (var e in frm.Mapping)
 					ConfigManager.ArduinoMapping[e.Key] = e.Value;
+				ConfigManager.LoadControllers();
 				BuildMenu();
 			}
 		}
