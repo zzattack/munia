@@ -18,10 +18,11 @@ namespace MUNIA.Controllers {
 		public string DevicePath => HidDevice.DevicePath;
 		public string Name => HidDevice.ProductName;
 	    public abstract ControllerType Type { get; }
-
-	    protected abstract List<int> Axes { get; }
-		protected abstract List<bool> Buttons { get; }
-	    public ControllerState GetState() => new ControllerState(Axes, Buttons);
+		
+        protected readonly List<bool> _buttons = new List<bool>();
+        protected readonly List<int> _axes = new List<int>();
+        protected readonly List<Hat> _hats = new List<Hat>();
+	    public ControllerState GetState() => new ControllerState(_axes, _buttons, _hats);
 
 	    public event EventHandler StateUpdated;
 
@@ -113,27 +114,5 @@ namespace MUNIA.Controllers {
 		
 		protected abstract bool Parse(byte[] ev);
 		
-        protected Dictionary<byte, byte> HatLookup = new Dictionary<byte, byte> {
-            { HAT_SWITCH_NORTH, 8 },
-            { HAT_SWITCH_NORTH_EAST, 9 },
-            { HAT_SWITCH_EAST, 1 },
-            { HAT_SWITCH_SOUTH_EAST, 5 },
-            { HAT_SWITCH_SOUTH, 4 },
-            { HAT_SWITCH_SOUTH_WEST, 6 },
-            { HAT_SWITCH_WEST, 2 },
-            { HAT_SWITCH_NORTH_WEST, 10 },
-            { HAT_SWITCH_NULL, 0 },
-        };
-
-        private const byte HAT_SWITCH_NORTH = 0x0;
-        private const byte HAT_SWITCH_NORTH_EAST = 0x1;
-        private const byte HAT_SWITCH_EAST = 0x2;
-        private const byte HAT_SWITCH_SOUTH_EAST = 0x3;
-        private const byte HAT_SWITCH_SOUTH = 0x4;
-        private const byte HAT_SWITCH_SOUTH_WEST = 0x5;
-        private const byte HAT_SWITCH_WEST = 0x6;
-        private const byte HAT_SWITCH_NORTH_WEST = 0x7;
-        private const byte HAT_SWITCH_NULL = 0x8;
-
     }
 }

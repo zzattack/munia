@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using MUNIA.Interop;
+using MUNIA.Util;
 
 namespace MUNIA.Controllers {
 	public class ArduinoSnes : ArduinoController {
 		public ArduinoSnes(SerialPortInfo port) : base(port) {
-			for (int i = 0; i < 12; i++) Buttons.Add(false);
+			_buttons.EnsureSize(12);
+			_hats.EnsureSize(1);
 		}
 
 		public override ControllerType Type => ControllerType.SNES;
@@ -14,24 +16,32 @@ namespace MUNIA.Controllers {
 
 			// B Y SEL START
 			int i = 0, mask = 0x80;
-			Buttons[i] = (packet[0] & mask) != 0; mask >>= 1; i++;
-			Buttons[i] = (packet[0] & mask) != 0; mask >>= 1; i++;
-			Buttons[i] = (packet[0] & mask) != 0; mask >>= 1; i++;
-			Buttons[i] = (packet[0] & mask) != 0; mask >>= 1; i++;
+			_buttons[i] = (packet[0] & mask) != 0; mask >>= 1; i++;
+			_buttons[i] = (packet[0] & mask) != 0; mask >>= 1; i++;
+			_buttons[i] = (packet[0] & mask) != 0; mask >>= 1; i++;
+			_buttons[i] = (packet[0] & mask) != 0; mask >>= 1; i++;
 
 			// A X L R
 			mask = 0x80;
-			Buttons[i] = (packet[1] & mask) != 0; mask >>= 1; i++;
-			Buttons[i] = (packet[1] & mask) != 0; mask >>= 1; i++;
-			Buttons[i] = (packet[1] & mask) != 0; mask >>= 1; i++;
-			Buttons[i] = (packet[1] & mask) != 0; mask >>= 1; i++;
+			_buttons[i] = (packet[1] & mask) != 0; mask >>= 1; i++;
+			_buttons[i] = (packet[1] & mask) != 0; mask >>= 1; i++;
+			_buttons[i] = (packet[1] & mask) != 0; mask >>= 1; i++;
+			_buttons[i] = (packet[1] & mask) != 0; mask >>= 1; i++;
 
-			byte hat = (byte)(packet[0] & 0x0F);
-			// UP DOWN LEFT RIGHT
-			Buttons[i] = (hat & mask) != 0; mask >>= 1; i++;
-			Buttons[i] = (hat & mask) != 0; mask >>= 1; i++;
-			Buttons[i] = (hat & mask) != 0; mask >>= 1; i++;
-			Buttons[i] = (hat & mask) != 0;
+			byte bhat = (byte)(packet[0] & 0x0F);
+			Hat hat = Hat.None;
+			// inverted order UP DOWN LEFT RIGHT
+			if ((bhat & 0x01) != 0) hat |= Hat.Right;
+			if ((bhat & 0x02) != 0) hat |= Hat.Left;
+			if ((bhat & 0x04) != 0) hat |= Hat.Down;
+			if ((bhat & 0x08) != 0) hat |= Hat.Up;
+			_hats[0] = hat;
+
+	        _buttons[i++] = hat.HasFlag(Hat.Up);
+            _buttons[i++] = hat.HasFlag(Hat.Down);
+            _buttons[i++] = hat.HasFlag(Hat.Left);
+            _buttons[i++] = hat.HasFlag(Hat.Right);
+
 			return true;
 		}
 	}

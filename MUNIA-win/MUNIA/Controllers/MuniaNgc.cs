@@ -1,18 +1,15 @@
 ﻿using System.Collections.Generic;
 using HidSharp;
+using MUNIA.Util;
 
 namespace MUNIA.Controllers {
     public class MuniaNgc : MuniaController {
-        private readonly List<bool> _buttons = new List<bool>();
-        private readonly List<int> _axes = new List<int>();
-
         public MuniaNgc(HidDevice hidDevice) : base(hidDevice) {
-            for (int i = 0; i < 12; i++) _buttons.Add(false);
-            for (int i = 0; i < 6; i++) _axes.Add(0);
+			_buttons.EnsureSize(12);
+			_axes.EnsureSize(6);
+			_hats.EnsureSize(1);
         }
-
-        protected override List<int> Axes => _axes;
-        protected override List<bool> Buttons => _buttons;
+		
 	    public override ControllerType Type => ControllerType.NGC;
         protected override bool Parse(byte[] ev) {
             // 0 0 0 START Y X B A
@@ -28,12 +25,14 @@ namespace MUNIA.Controllers {
             _buttons[7] = (ev[2] & 0x10) != 0;
 
             // HAT, convert first
-            byte hat = HatLookup[(byte)(ev[2] & 0x0F)];
+            Hat hat = ControllerState.HatLookup[(byte)(ev[2] & 0x0F)];
+			_hats[0] = hat;
+
             // UP DOWN LEFT RIGHT
-            _buttons[8] = (hat & 0x08) != 0;
-            _buttons[9] = (hat & 0x04) != 0;
-            _buttons[10] = (hat & 0x02) != 0;
-            _buttons[11] = (hat & 0x01) != 0;
+	        _buttons[8] = hat.HasFlag(Hat.Up);
+            _buttons[9] = hat.HasFlag(Hat.Down);
+            _buttons[10] = hat.HasFlag(Hat.Left);
+            _buttons[11] = hat.HasFlag(Hat.Right);
 
             _axes[0] = ev[3] - 128;
             _axes[1] = ev[4] - 128;

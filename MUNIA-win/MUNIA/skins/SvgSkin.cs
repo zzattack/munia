@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using MUNIA.Controllers;
+using MUNIA.Util;
 using OpenTK.Graphics.OpenGL;
 using Svg;
 
@@ -65,7 +66,7 @@ namespace MUNIA.Skins {
 					var b = c as SvgVisualElement;
 					int id = int.Parse(c.CustomAttributes["button-id"]);
 					bool pressed = c.CustomAttributes["button-state"] == "pressed";
-					Buttons.EnsureSize(id);
+					Buttons.EnsureSize(id+1);
 
 					if (c.ContainsAttribute("z-index"))
 						Buttons[id].Z = int.Parse(c.CustomAttributes["z-index"]);
@@ -79,7 +80,7 @@ namespace MUNIA.Skins {
 				else if (c.ContainsAttribute("stick-id")) {
 					var s = c as SvgVisualElement;
 					int id = int.Parse(c.CustomAttributes["stick-id"]);
-					Sticks.EnsureSize(id);
+					Sticks.EnsureSize(id+1);
 					Sticks[id].Element = s;
 					Sticks[id].HorizontalAxis = int.Parse(c.CustomAttributes["axis-h"]);
 					Sticks[id].VerticalAxis = int.Parse(c.CustomAttributes["axis-v"]);
@@ -94,7 +95,7 @@ namespace MUNIA.Skins {
 				else if (c.ContainsAttribute("trigger-id")) {
 					var t = c as SvgVisualElement;
 					int id = int.Parse(c.CustomAttributes["trigger-id"]);
-					Triggers.EnsureSize(id);
+					Triggers.EnsureSize(id+1);
 					Triggers[id].Element = t;
 					Triggers[id].Axis = int.Parse(c.CustomAttributes["trigger-axis"]);
 					Triggers[id].OffsetScale = float.Parse(c.CustomAttributes["offset-scale"], CultureInfo.InvariantCulture);
@@ -130,11 +131,11 @@ namespace MUNIA.Skins {
 				RenderItem(ci.Item1, ci.Item2);
 
 			GL.BindTexture(TextureTarget.Texture2D, _baseTexture);
-			RenderTexture(0, _svgDocument.Width, 0, _svgDocument.Height);
+			TextureHelper.RenderTexture(0, _svgDocument.Width, 0, _svgDocument.Height);
 
 			foreach (var ci in all.Where(x => x.Item1.Z >= 0))
 				RenderItem(ci.Item1, ci.Item2);
-			
+
 			GL.Disable(EnableCap.Blend);
 		}
 
@@ -148,11 +149,11 @@ namespace MUNIA.Skins {
 			bool pressed = State != null && State.Buttons[i];
 			if (pressed && btn.Pressed != null) {
 				GL.BindTexture(TextureTarget.Texture2D, btn.PressedTexture);
-				RenderTexture(btn.PressedBounds);
+				TextureHelper.RenderTexture(btn.PressedBounds);
 			}
 			else if (!pressed && btn.Element != null) {
 				GL.BindTexture(TextureTarget.Texture2D, btn.Texture);
-				RenderTexture(btn.Bounds);
+				TextureHelper.RenderTexture(btn.Bounds);
 			}
 		}
 		private void RenderStick(int i) {
@@ -173,9 +174,9 @@ namespace MUNIA.Skins {
 			r.Offset(new PointF(x, y));
 
 			GL.BindTexture(TextureTarget.Texture2D, stick.Texture);
-			RenderTexture(r);
+			TextureHelper.RenderTexture(r);
 		}
-		
+
 		private void RenderTrigger(int i) {
 			var trigger = Triggers[i];
 			var r = trigger.Bounds;
@@ -186,7 +187,7 @@ namespace MUNIA.Skins {
 
 			r.Offset(new PointF(0, o));
 			GL.BindTexture(TextureTarget.Texture2D, trigger.Texture);
-			RenderTexture(r);
+			TextureHelper.RenderTexture(r);
 		}
 
 		private void RenderBase(int width, int height) {
@@ -286,24 +287,7 @@ namespace MUNIA.Skins {
 			if (e.Parent != null)
 				SetVisibleToRoot(e.Parent, visible);
 		}
-
-		private void RenderTexture(RectangleF r) {
-			RenderTexture(r.Left, r.Right, r.Top, r.Bottom);
-		}
-
-		private static void RenderTexture(float l, float r, float t, float b) {
-			GL.Begin(PrimitiveType.Quads);
-			GL.TexCoord2(0, 0);
-			GL.Vertex2(l, t);
-			GL.TexCoord2(1, 0);
-			GL.Vertex2(r, t);
-			GL.TexCoord2(1, 1);
-			GL.Vertex2(r, b);
-			GL.TexCoord2(0, 1);
-			GL.Vertex2(l, b);
-			GL.End();
-		}
-
+		
 		private PointF Project(PointF p, SizeF dim) {
 			float svgAR = _dimensions.Width / _dimensions.Height;
 			float imgAR = dim.Width / dim.Height;
@@ -378,34 +362,25 @@ namespace MUNIA.Skins {
 			return RectangleF.FromLTRB(minX, minY, maxX, maxY);
 		}
 
-	}
-
-
-	public class ControllerItem {
-		public SvgVisualElement Element;
-		public RectangleF Bounds;
-		public int Z;
-		public int Texture = -1;
-	}
-	public class Button : ControllerItem {
-		public SvgVisualElement Pressed;
-		public int PressedTexture = -1;
-		public RectangleF PressedBounds;
-	}
-	public class Stick : ControllerItem {
-		public float OffsetScale;
-		public int HorizontalAxis;
-		public int VerticalAxis;
-	}
-	public class Trigger : ControllerItem {
-		public float OffsetScale;
-		public int Axis;
-	}
-
-	static class ExtensionMethods {
-		public static void EnsureSize<T>(this List<T> list, int count) {
-			while (list.Count <= count) list.Add(Activator.CreateInstance<T>());
+		public class ControllerItem {
+			public SvgVisualElement Element;
+			public RectangleF Bounds;
+			public int Z;
+			public int Texture = -1;
+		}
+		public class Button : ControllerItem {
+			public SvgVisualElement Pressed;
+			public int PressedTexture = -1;
+			public RectangleF PressedBounds;
+		}
+		public class Stick : ControllerItem {
+			public float OffsetScale;
+			public int HorizontalAxis;
+			public int VerticalAxis;
+		}
+		public class Trigger : ControllerItem {
+			public float OffsetScale;
+			public int Axis;
 		}
 	}
-
 }
