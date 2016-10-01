@@ -26,7 +26,11 @@
 #pragma config nLPBOR = OFF     // Low-Power Brown-out Reset (Low-Power Brown-out Reset disabled)
 
 // CONFIG2H
+#ifdef DEBUG
+#pragma config WDTEN = OFF      // Watchdog Timer Enable bits (WDT enabled in hardware (SWDTEN ignored))
+#else
 #pragma config WDTEN = ON       // Watchdog Timer Enable bits (WDT enabled in hardware (SWDTEN ignored))
+#endif
 #pragma config WDTPS = 8192       // Watchdog Timer Postscaler (1:16)
 
 // CONFIG3H
@@ -35,10 +39,11 @@
 #pragma config T3CMX = RB5      // Timer3 Clock Input MUX bit (T3CKI function is on RB5)
 #pragma config SDOMX = RB3      // SDO Output MUX bit (SDO function is on RB3)
 
-#ifdef IsDebug
-#pragma config MCLRE = ON      // Master Clear Reset Pin Enable (RE3 input pin enabled; external MCLR disabled)
+// CONFIG2H
+#ifdef DEBUG
+#pragma config MCLRE = ON
 #else
-#pragma config MCLRE = OFF      // Master Clear Reset Pin Enable (RE3 input pin enabled; external MCLR disabled)
+#pragma config MCLRE = OFF
 #endif
 
 // CONFIG4L
@@ -47,7 +52,6 @@
 #pragma config XINST = OFF      // Extended Instruction Set Enable bit (Instruction set extension and Indexed Addressing mode disabled)
 
 // CONFIG5L
-#pragma config CP0 = ON         // Block 0 Code Protect (Block 0 is not code-protected)
 #pragma config CP1 = OFF        // Block 1 Code Protect (Block 1 is not code-protected)
 
 // CONFIG5H
@@ -58,9 +62,18 @@
 #pragma config WRT0 = OFF       // Block 0 Write Protect (Block 0 (0800-1FFFh) is not write-protected)
 #pragma config WRT1 = OFF       // Block 1 Write Protect (Block 1 (2000-3FFFh) is not write-protected)
 
+
+#ifdef DEBUG
+#pragma config CP0 = OFF        // Block 0 Code Protect (Block 0 is not code-protected)
+#pragma config WRTC = OFF       // Configuration Registers Write Protect (Configuration registers (300000-3000FFh) are write-protected)
+#pragma config WRTB = OFF       // Boot Block Write Protect (Boot block (0000-7FFh) is write-protected)
 // CONFIG6H
+#else
+#pragma config CP0 = ON         // Block 0 Code Protect (Block 0 is not code-protected)
 #pragma config WRTC = ON        // Configuration Registers Write Protect (Configuration registers (300000-3000FFh) are write-protected)
 #pragma config WRTB = ON        // Boot Block Write Protect (Boot block (0000-7FFh) is write-protected)
+
+#endif
 #pragma config WRTD = OFF       // Data EEPROM Write Protect (Data EEPROM is not write-protected)
 
 // CONFIG7L
