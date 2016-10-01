@@ -1,4 +1,6 @@
-﻿namespace MUNIA.Forms {
+﻿using MUNIA.Util;
+
+namespace MUNIA.Forms {
 	partial class AboutBox {
 		/// <summary>
 		/// Required designer variable.
@@ -29,7 +31,7 @@
 			this.lblVersion = new System.Windows.Forms.Label();
 			this.lblCopyright = new System.Windows.Forms.Label();
 			this.lblCompanyName = new System.Windows.Forms.Label();
-			this.tbDescription = new MUNIA.RichTextBoxEx();
+			this.tbDescription = new RichTextBoxEx();
 			this.okButton = new System.Windows.Forms.Button();
 			this.tableLayoutPanel.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).BeginInit();
