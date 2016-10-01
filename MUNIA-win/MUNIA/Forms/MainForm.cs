@@ -14,7 +14,6 @@ using OpenTK.Graphics.OpenGL;
 
 namespace MUNIA.Forms {
 	public partial class MainForm : Form {
-		private readonly Stopwatch _stopwatch = new Stopwatch();
 		private double _timestamp;
 		private int _frames;
 		private readonly bool _skipUpdateCheck;
@@ -26,6 +25,7 @@ namespace MUNIA.Forms {
 
 		public MainForm(bool skipUpdateCheck) : this() {
 			glControl.Resize += OnResize;
+			glControl.Paint += (sender, args) => Render();
 			UsbNotification.DeviceArrival += (sender, args) => ScheduleBuildMenu();
 			UsbNotification.DeviceRemovalComplete += (sender, args) => ScheduleBuildMenu();
 			//UsbNotification.SetFilter(G)
@@ -109,6 +109,7 @@ namespace MUNIA.Forms {
 			}
 
 			skin.Render(glControl.Width, glControl.Height);
+			Render();
 		}
 
 		private void glControl_Load(object sender, EventArgs e) {
@@ -118,21 +119,13 @@ namespace MUNIA.Forms {
 
 		private void OnApplicationOnIdle(object s, EventArgs a) {
 			while (glControl.IsIdle) {
-				_stopwatch.Restart();
-				Render();
-				_frames++;
-
-				// Every second, update the frames_per_second count
-				double now = _stopwatch.Elapsed.TotalSeconds;
-				if (now - _timestamp >= 1.0) {
-					_fps = _frames;
-					_frames = 0;
-					_timestamp = now;
-				}
-
-				_stopwatch.Stop();
-				// Thread.Sleep((int)Math.Max(1000 / 60.0 - _stopwatch.Elapsed.TotalSeconds, 0));
+				if (Update()) Render();
 			}
+		}
+
+		private bool Update() {
+			if (ConfigManager.ActiveSkin == null) return false;
+			return ConfigManager.ActiveSkin.UpdateState(ConfigManager.GetActiveController());
 		}
 
 		private void Render() {
@@ -147,9 +140,7 @@ namespace MUNIA.Forms {
 			GL.LoadIdentity();
 			GL.Ortho(0, glControl.Width, glControl.Height, 0, 0.0, 4.0);
 
-			ConfigManager.ActiveSkin?.UpdateState(ConfigManager.GetActiveController());
 			ConfigManager.ActiveSkin?.Render(glControl.Width, glControl.Height);
-
 			glControl.SwapBuffers();
 		}
 

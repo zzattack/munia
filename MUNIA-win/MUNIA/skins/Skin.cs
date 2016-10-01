@@ -11,8 +11,10 @@ namespace MUNIA.Skins {
 
 		public abstract void Render(int width, int height);
 
-		public void UpdateState(IController controller) {
+		public bool UpdateState(IController controller) {
+			var oldState = State;
 			State = controller?.GetState();
+			return !Equals(oldState, State);
 		}
 		protected ControllerState State;
 	}
