@@ -9,16 +9,16 @@ namespace MUNIA.Controllers {
 		private readonly IController _real;
 		private readonly Stopwatch _sw = Stopwatch.StartNew();
 		private CircularBuffer<TimedControllerState> _q;
+		private ObjectPool<TimedControllerState> _pool;
 		private TimeSpan _delay;
 		private TimedControllerState _lastState;
-		private ControllerState _state;
+		private ControllerState _taskDelayedState;
+		private ControllerState _realState;
+		private bool _realStateUpdated;
 
-		public enum DelayMethod {
-			Queue,
-			Task
-		}
+		public enum DelayMethod { Queue, Task }
 
-		public DelayMethod Method { get; set; }
+		public DelayMethod Method { get; set; } = DelayMethod.Queue; // queue is more efficient, task is more simple
 
 		public BufferedController(IController real, TimeSpan delay) {
 			_real = real;
@@ -31,57 +31,58 @@ namespace MUNIA.Controllers {
 			set {
 				if (_delay != value) {
 					_delay = value;
-					_q = new CircularBuffer<TimedControllerState>(Math.Max(10, (int)_delay.TotalMilliseconds / 10));
+					_q = new CircularBuffer<TimedControllerState>(Math.Max(10, (int)_delay.TotalMilliseconds / 3));
+					_pool = new ObjectPool<TimedControllerState>(_q.Capacity);
 				}
 			}
 		}
-		
 
-		private TimedControllerState realState;
-		private bool realStateUpdated;
+
 
 		private void RealOnStateUpdated(object sender, EventArgs eventArgs) {
 			var newState = _real.GetState();
 			if (Method == DelayMethod.Task) {
 				Task.Delay(Delay).ContinueWith(t => {
-					_state = newState;
+					_taskDelayedState = newState;
 					OnStateUpdated();
 				});
 			}
-			else {
-				var rts = new TimedControllerState(_sw.Elapsed, newState.Axes, newState.Buttons, newState.Hats);
-				realStateUpdated = true;
-				realState = rts;
-				Debug.WriteLine("Packet #{0} enqueued @ {1}", rts.PacketNum, rts.Time.TotalMilliseconds);
+			else if (_pool != null) {
+				_realStateUpdated = true;
+				_realState = newState;
+				// Debug.WriteLine("Packet #{0} enqueued @ {1}", rts.PacketNum, rts.Time.TotalMilliseconds);
 			}
 		}
 
 		public ControllerState GetState() {
 			// see if new real state came in since last check
-			if (realStateUpdated) {
-				_q.Enqueue(realState);
-				realStateUpdated = false;
+			if (_realStateUpdated) {
+				var rts = _pool.Get();
+				rts.SetState(_sw.Elapsed, _realState.Axes, _realState.Buttons, _realState.Hats);
+				_q.Enqueue(rts);
+				_realStateUpdated = false;
 			}
 
-			if (Method == DelayMethod.Task) return _state;
-			else if (_q.Count == 0) return null;
+			if (Method == DelayMethod.Task) return _taskDelayedState;
+			else if (_q.Count == 0) return _lastState;
 
-			// find the first enqueued state that's older than delay
-			for (int i = _q.Count - 1; i >= 0; i--) {
-				if (_sw.Elapsed - _q[i].Time >= Delay) {
-					var ret = _q[i];
-					if (ret != _lastState) {
-						_lastState = ret;
-						// var elapsed = _sw.Elapsed;
-						// Debug.WriteLine("Packet #{0} dequeued @ {1}, margin {2}ms", ret.PacketNum, elapsed.TotalMilliseconds, (elapsed - ret.Time - Delay).TotalMilliseconds);
-						// found the state, everything older is useless
-						for (; i > 0; i--) _q.Dequeue();
-						OnStateUpdated();
-					}
-					return ret;
-				}
+
+			// find the first enqueued state that's not older than delay,
+			// then the previous is our candidate
+			TimedControllerState ret = _q.Peek();
+			while (_q.Count > 0 &&  (_sw.Elapsed - _q.Peek().Time) >= Delay) {
+				ret = _q.Dequeue();
+				_pool.Return(ret);
 			}
-			return null; // this can happen up to Delay time after the first input arrived
+			
+			if (ret != null && !ReferenceEquals(ret, _lastState) && (_sw.Elapsed - ret.Time) >= Delay) {
+				// Debug.WriteLine("Packet dequeued @ {0}, margin {1}ms",_sw.Elapsed.TotalMilliseconds, (_sw.Elapsed - ret.Time - Delay).TotalMilliseconds);
+				_lastState = ret;
+				// found the state, everything older is useless
+				OnStateUpdated();
+			}
+
+			return _lastState; // this can happen up to Delay time after the first input arrived*/
 		}
 
 		public string Name => _real.Name;
@@ -98,14 +99,55 @@ namespace MUNIA.Controllers {
 	}
 
 	public class TimedControllerState : ControllerState {
-		public TimeSpan Time { get; }
+		public TimeSpan Time { get; private set; }
+		public TimedControllerState() : base(new List<int>(), new List<bool>(), new List<Hat>()) { }
+
 		public TimedControllerState(TimeSpan t, List<int> axes, List<bool> buttons, List<Hat> hats) : base(axes, buttons, hats) {
 			Time = t;
 		}
 
-		internal static uint Counter = 0;
-		internal readonly uint PacketNum = Counter++;
 		internal bool Used = false;
+
+		public void SetState(TimeSpan elapsed, List<int> axes, List<bool> buttons, List<Hat> hats) {
+			Time = elapsed;
+			Axes.EnsureSize(axes.Count);
+			Buttons.EnsureSize(buttons.Count);
+			Hats.EnsureSize(hats.Count);
+
+			for (int i = 0; i < axes.Count; i++) Axes[i] = axes[i];
+			for (int i = 0; i < buttons.Count; i++) Buttons[i] = buttons[i];
+			for (int i = 0; i < hats.Count; i++) Hats[i] = hats[i];
+			Used = false;
+		}
+	}
+
+	public class ObjectPool<T> {
+		private CircularBuffer<T> _availables;
+		private CircularBuffer<T> _backup;
+		public ObjectPool(int capacity) { Initialize(capacity); }
+
+		public void Initialize(int capacity) {
+			_availables = new CircularBuffer<T>(capacity);
+			_backup = new CircularBuffer<T>(capacity);
+			for (int i = 0; i < capacity; i++) _backup.Enqueue(Activator.CreateInstance<T>());
+			Reclaim();
+		}
+
+		public void Reclaim() {
+			_availables.Clear();
+			foreach (var item in _backup)
+				_availables.Enqueue(item);
+		}
+
+		public T Get() {
+			if (_availables.Count == 0) {
+				Reclaim();
+				Debug.WriteLine("Everything is given out, reclaiming. Perhaps raise capacity!");
+			}
+			return _availables.Dequeue();
+		}
+		public void Return(T item) { _availables.Enqueue(item); }
+
 	}
 
 }

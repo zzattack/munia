@@ -59,7 +59,11 @@ namespace MUNIA.Util {
 			--Count;
 			return dequeued;
 		}
-
+		
+		public T Peek() {
+			if (Count == 0) return default(T);
+			else return _buffer[_tail];
+		}
 		public void Clear() {
 			_head = Capacity - 1;
 			_tail = 0;
@@ -123,5 +127,6 @@ namespace MUNIA.Util {
 		IEnumerator IEnumerable.GetEnumerator() {
 			return GetEnumerator();
 		}
+
 	}
 }
