@@ -21,8 +21,9 @@ namespace MUNIA {
 			wc.OpenReadCompleted += (sender, args) => Connected(this, Empty);
 			wc.DownloadProgressChanged += (sender, args) => DownloadProgressChanged(this, args);
 			wc.DownloadStringCompleted += (sender, args) => {
-				if (args.Cancelled || args.Error != null)
-					UpdateCheckFailed(this, Empty);
+				if (args.Cancelled || args.Error != null) {
+					UpdateCheckFailed?.Invoke(this, Empty);
+				}
 				else {
 					try {
 						XmlDocument xd = new XmlDocument();
@@ -35,17 +36,17 @@ namespace MUNIA {
 
 						var myVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
 						if (version > Version.Parse(myVersion.FileVersion))
-							UpdateAvailable(this, new UpdateAvailableArgs {
+							UpdateAvailable?.Invoke(this, new UpdateAvailableArgs {
 								DownloadUrl = url,
 								ReleaseDate = releaseDate,
 								ReleaseNotes = releaseNotes,
 								Version = version,
 							});
 						else
-							AlreadyLatest(this, Empty);
+							AlreadyLatest?.Invoke(this, Empty);
 					}
 					catch {
-						UpdateCheckFailed(this, Empty);
+						UpdateCheckFailed?.Invoke(this, Empty);
 					}
 				}
 			};
