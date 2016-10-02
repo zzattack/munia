@@ -59,37 +59,39 @@ const uint8_t hat_lookup_ngc[16] = {
 
 void ngc_tasks() {
     if (config.ngc_mode == NGC_MODE_PC && pollNeeded && (in_menu || USB_READY)) {
+        USBDeviceTasks();
         di();
-        USBDeviceTasks();
         ngc_poll();
-        sample_w = sample_buff + 25;
         // waste some more instructions before sampling
-        TMR0 = 255-25; TMR0IF=0; while (!TMR0IF);
+        _delay(40);
+        asm("lfsr 0, _sample_buff+25"); // setup FSR0
         ngc_sample();
-        USBDeviceTasks();
+        asm("movff FSR0L, _sample_w+0"); // update sample_w
+        asm("movff FSR0H, _sample_w+1");
         ei();
+        USBDeviceTasks();
     }
 
-    if (ngc_test_packet) {
-        ngc_test_packet = false;
+    if (packets.ngc_test) {
+        packets.ngc_test = false;
         ngc_handle_packet();
     }
     
-    if (ngc_packet_available) {
+    if (packets.ngc_avail) {
         // see if this packet is equal to the last transmitted 
         // one, and if so, discard it
         if (memcmp(&joydata_ngc, &joydata_ngc_last, sizeof(ngc_packet_t)) == 0) 
-            ngc_packet_available = false;
+            packets.ngc_avail = false;
     }
     
-    if (ngc_packet_available && !in_menu) {
+    if (packets.ngc_avail && !in_menu) {
         if (USB_READY && !HIDTxHandleBusy(USBInHandleNGC)) {
             // hid tx
             USBInHandleNGC = HIDTxPacket(HID_EP_NGC, (uint8_t*)&joydata_ngc, sizeof(ngc_packet_t));
             // save last packet
             memcpy(&joydata_ngc_last, &joydata_ngc, sizeof(ngc_packet_t));
         }
-        ngc_packet_available = false;
+        packets.ngc_avail = false;
     }
 }
 
@@ -105,62 +107,10 @@ void ngc_poll() {
     LOW(); LOW(); LOW(); LOW(); LOW(); LOW(); LOW(); LOW(); 
     
     // stop bit, 2 us
-    CLR(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); 
-    Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop();
-    
+    CLR(); 
+    _delay(22);
     SET();// back set to open collector input with pull up
     LATC |= portc_mask; // reset pull up
-}
-
-void ngc_sample() {
-    // latency from interrupt to calling this should be about 12 cycles
-    *sample_w = PORTC; // sample happens exactly 24 instructions after loop entry
-    //LATA &= 0b11111110;
-    sample_w++;
-    
-    TMR0 = 255 - 60; // 1.5 bit wait
-    INTCONbits.TMR0IF = 0;
-    while (!NGC_DAT && !INTCONbits.TMR0IF);
-    TMR0 = 255 - 60; // 1.5 bit wait
-
-loop:
-    if (INTCONbits.TMR0IF) { // timeout - no bit received
-        uint8_t idx = sample_w - sample_buff;
-        if (config.snes_mode == SNES_MODE_NGC) {            
-            if (idx == 9 && (sample_buff[1] & 1) == 0 && (sample_buff[7] & 1) == 0) {
-                // tell wii we're here
-                ngc_outbuf_idx = 24;
-                ngc_outbuf = ngc_id_packet;
-                ngc_fakeout();
-            }
-            else if (idx == 9) {
-                ngc_outbuf_idx = 80;
-                ngc_outbuf = ngc_init_packet;
-                ngc_fakeout();
-            }
-            else if (idx == 25) {
-                ngc_outbuf_idx = 64;
-                ngc_outbuf = ngc_fake_buffer;
-                ngc_fakeout();
-                WRITETIMER3(40000); // request next poll cycle asap
-            }
-        }
-        else
-            ngc_test_packet = true;
-        return;
-    }
-    if (NGC_DAT) goto loop;
-
-    // waste some time (aligned with scope)
-    Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop();
-
-    *sample_w = PORTC; // sample happens exactly 24 instructions after loop entry
-    sample_w++;
-    
-    while (!NGC_DAT);
-    TMR0 = 255 - 60; // 1.5 bit wait
-    INTCONbits.TMR0IF = 0;
-    goto loop;
 }
 
 void ngc_fakeout() {
@@ -174,23 +124,21 @@ void ngc_fakeout() {
         if (!*r) {
             // low
             r++; ngc_outbuf_idx--; Nop();
-            Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop();
-            Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop();
+            _delay(24);
             SET(); // use stopwatch to verify this happens 3µs after CLR())
         }
         else {
-            Nop(); Nop(); Nop();
+            _delay(3);
             SET(); // use stopwatch to verify this happens 3µs after CLR()
-            r++; ngc_outbuf_idx--; Nop();
-            Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop();
-            Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop();
+            r++; ngc_outbuf_idx--;
+            _delay(22);
         }
-        Nop(); Nop(); Nop(); Nop();
+        _delay(4);
     }
         
     // stop bit, 2 us
-    CLR(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); 
-    Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop();
+    CLR(); 
+    _delay(22);
     SET();// back set to open collector input with pull up
     LATC |= portc_mask; // reset pull up    
 }
@@ -198,8 +146,9 @@ void ngc_fakeout() {
 void ngc_handle_packet() {
     // translate samples in sample_buff to joydata_ngc
 	uint8_t idx = sample_w - sample_buff;
+    // dbgs("ngc packet len: "); dbgsval(idx); dbgs("\n");
     
-	if (idx == 90 && !HIDTxHandleBusy(USBInHandleNGC)) {
+	if (idx == 90 && !HIDTxHandleBusy(USBInHandleNGC)) {        
 		uint8_t* w = (uint8_t*)&joydata_ngc;
         
 		// bit 0 is not sampled, then 0-23 are request, 24 is stop bit, 25-88 is data
@@ -207,7 +156,8 @@ void ngc_handle_packet() {
 		for (uint8_t i = 0; i < sizeof(ngc_packet_t); i++) {
             uint8_t x = 0;
             for (uint8_t m = 0x80; m; m >>= 1) {
-                if (*r++ & 0b00000001)
+                // dbgs("*r = "); dbgsval(*r); dbgs("\n");
+                if (*r++ >= 0x07) // threshold is 7 samples high
                    x |= m;
             }            
             *w++ = x;
@@ -218,7 +168,7 @@ void ngc_handle_packet() {
         joydata_ngc.c_y = -joydata_ngc.c_y;
         joydata_ngc.hat = hat_lookup_ngc[joydata_ngc.hat];
         
-        ngc_packet_available = true;
+        packets.ngc_avail = true;
 	}
 }
 
