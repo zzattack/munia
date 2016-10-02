@@ -36,13 +36,11 @@ typedef struct {
 } n64_packet_t;
 
 n64_packet_t joydata_n64 @ 0x508; // (0x500 + sizeof(ngc_packet_t));
-bool n64_test_packet = false;
-
 void n64_tasks();
 void n64_fake();
 void n64_real(); 
 void n64_poll();
-void n64_sample();
+extern void n64_sample() @ 0x3c00;
 void n64_handle_packet();
 
 #endif	/* N64_H */

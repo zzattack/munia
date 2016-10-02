@@ -4,37 +4,41 @@
 #include <usb/usb_device_hid.h>
 #include "gamepad.h"
 #include "menu.h"
+#include "uarts.h"
 
 n64_packet_t joydata_n64_last;
 
 void n64_tasks() {
     if (config.n64_mode == N64_MODE_PC && pollNeeded && (in_menu || USB_READY)) {
-        di();
         USBDeviceTasks();
-        sample_w = sample_buff + 8;
+        di();
         n64_poll();
         // waste some more instructions before sampling
-        // TMR0 = 255-30; TMR0IF=0; while (!TMR0IF);
+        _delay(4);
+        asm("lfsr 0, _sample_buff+8"); // setup FSR0
         n64_sample();
-        USBDeviceTasks();
+        asm("movff FSR0L, _sample_w+0"); // update sample_w
+        asm("movff FSR0H, _sample_w+1");
         ei();
+        USBDeviceTasks();
     }
-    if (n64_test_packet) {
-        n64_test_packet = false;
+    
+    if (packets.n64_test) {
+        packets.n64_test = false;
         n64_handle_packet();
     }
     
-    if (n64_packet_available) {
+    if (packets.n64_avail) {
         // see if this packet is equal to the last transmitted 
         // one, and if so, discard it
         if (memcmp(&joydata_n64, &joydata_n64_last, sizeof(n64_packet_t)) == 0) 
-            n64_packet_available = false;
+            packets.n64_avail = false;
     }
     
-    if (n64_packet_available && !in_menu && USB_READY && !HIDTxHandleBusy(USBInHandleN64)) {
+    if (packets.n64_avail && !in_menu && USB_READY && !HIDTxHandleBusy(USBInHandleN64)) {
         // hid tx
         USBInHandleN64 = HIDTxPacket(HID_EP_N64, (uint8_t*)&joydata_n64, sizeof(n64_packet_t));
-        n64_packet_available = false;
+        packets.n64_avail = false;
         // save last packet
         memcpy(&joydata_n64_last, &joydata_n64, sizeof(n64_packet_t));
     }
@@ -56,48 +60,18 @@ void n64_poll() {
     LATC |= portc_mask; // reset pull up
 }
 
-void n64_sample() {
-    // latency from interrupt to calling this should be about 12 cycles
-    *sample_w = PORTC; // sample happens exactly 24 instructions after loop entry
-    //LATA &= 0b11111110;
-    sample_w++;
-    
-    TMR0 = 255 - 60; // 1.5 bit wait
-    INTCONbits.TMR0IF = 0;
-    while (!N64_DAT && !INTCONbits.TMR0IF);
-    TMR0 = 255 - 60; // 1.5 bit wait
-
-loop:
-    if (INTCONbits.TMR0IF) { // timeout - no bit received
-        n64_test_packet = true;
-        //LATA |= 0b00000001;
-        return;
-    }
-    if (N64_DAT) goto loop;
-
-    // waste some time (aligned with scope)
-    Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop();
-
-    *sample_w = PORTC; // sample happens exactly 24 instructions after loop entry
-    //LATA ^= 0b00000001;
-    sample_w++;
-    
-    while (!N64_DAT);
-    TMR0 = 255 - 60; // 1.5 bit wait
-    INTCONbits.TMR0IF = 0;
-    goto loop;
-}
-
 void n64_handle_packet() {
 	uint8_t idx = sample_w - sample_buff;
+    dbgs("n64 packet len: "); dbgsval(idx); dbgs("\n");
 	if (idx == 42) {
 		uint8_t* r = sample_buff;
+        *r = *r & 0b00000010 ? 10 : 0; // first byte is single sample, so convert to threshold
         
         if (config.n64_mode == N64_MODE_N64) {
             // see if this is a 'command 1' request from the console
             uint8_t cmd = 0;
             for (uint8_t m = 0x80; m; m >>= 1) {
-                if (*r++ & 0b00000010)
+                if (*r++ >= 7)
                     cmd |= m;
             }
             // if not controller data, it's possibly identification 
@@ -108,12 +82,12 @@ void n64_handle_packet() {
         else
             r += 9; // skip header+stopbit
         
-		// bits 0-23 are request, 24 is stop bit, 25-88 is data
+		// bits 0-9 are request, 10 is stop bit, 11-42 is data
 		uint8_t* w = (uint8_t*)&joydata_n64;
 		for (uint8_t i = 0; i < sizeof(n64_packet_t); i++) {
             uint8_t x = 0;
             for (uint8_t m = 0x80; m; m >>= 1) {
-                if (*r++ & 0b00000010)
+                if (*r++ >= 7)
                    x |= m;
             }            
             *w++ = x;
@@ -125,6 +99,6 @@ void n64_handle_packet() {
         // when l and r are pressed, the start button bit seems to shift to unused1
         joydata_n64.start |= joydata_n64.__unused1 & joydata_n64.l & joydata_n64.r;
         
-		n64_packet_available = true;
+		packets.n64_avail = true;
 	}
 }
