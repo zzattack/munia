@@ -57,6 +57,10 @@ namespace MUNIA.Controllers {
 		    return loader.GetDevices(0x04d8, 0x0058).FirstOrDefault(device => device.ProductName == "NinHID CFG");
 	    }
 
+	    class StreamAndBuffer {
+		    public byte[] buffer;
+		    public Stream stream;
+	    }
 
 	    /// <summary>
 	    /// Registers device for receiving inputs.
@@ -68,7 +72,9 @@ namespace MUNIA.Controllers {
 			    _stream.ReadTimeout = Timeout.Infinite;
 
 			    byte[] buffer = new byte[HidDevice.MaxInputReportLength];
-			    _stream.BeginRead(buffer, 0, buffer.Length, Callback, buffer);
+			    var sb = new StreamAndBuffer {buffer = buffer, stream = _stream};
+
+			    _stream.BeginRead(buffer, 0, buffer.Length, Callback, sb);
 			    return true;
 		    }
 		    catch {
@@ -77,8 +83,9 @@ namespace MUNIA.Controllers {
 	    }
 
 	    public void Deactivate() {
-			_stream?.Close();
-		}
+			_stream?.Dispose();
+		    _stream = null;
+	    }
 		public bool IsActive => _stream != null && _stream.CanRead;
 		public bool IsAvailable { 
 			get {
@@ -92,18 +99,19 @@ namespace MUNIA.Controllers {
 		}
 		
 	    private void Callback(IAsyncResult ar) {
+			var sb = (StreamAndBuffer)ar.AsyncState;
 			try {
-				if (_stream == null) return;
-				int numBytes = _stream.EndRead(ar);
-				byte[] buffer = (byte[])ar.AsyncState;
+				int numBytes = sb.stream.EndRead(ar);
 				if (numBytes > 0) {
-					if (Parse(buffer))
+					if (Parse(sb.buffer))
 						StateUpdated?.Invoke(this, EventArgs.Empty);
-					_stream.BeginRead(buffer, 0, buffer.Length, Callback, buffer);
+					sb.stream.BeginRead(sb.buffer, 0, sb.buffer.Length, Callback, sb);
 				}
 			}
 			catch (IOException exc) {
 				Debug.WriteLine("IOException: " + exc.Message);
+				sb.stream.Dispose();
+				_stream = null;
 			}
 			catch (NullReferenceException) { }
 		}
