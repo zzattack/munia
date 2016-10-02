@@ -34,7 +34,7 @@ typedef struct {
     uint8_t n64_mode;
     uint8_t ngc_mode;
 } config_t;
-config_t config;
+volatile config_t config @ 0x003;
 
 config_t config_edit, config_backup;
 

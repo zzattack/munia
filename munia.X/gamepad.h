@@ -34,10 +34,22 @@ const uint8_t hat_lookup_n64_snes[16] = {
     HAT_SWITCH_NULL, // 0b1111, // 3 at once
 };
 
+typedef struct {
+    uint8_t ngc_test : 1;
+    uint8_t n64_test : 1;
+    uint8_t snes_test : 1;
+    uint8_t ngc_avail : 1;
+    uint8_t n64_avail : 1;
+    uint8_t snes_avail : 1;
+    uint8_t ngc_fake_avail : 1;
+} packet_state_t;
 
-uint8_t sample_buff[128] @ 0x700 = {0}; // reserved memory where samples may be written
-uint8_t* sample_w = sample_buff;
-uint8_t portc_mask;
+volatile uint8_t bit_count @ 0x002;
+volatile packet_state_t packets @ 0x006;
+volatile uint8_t sample_buff[256] @ 0x700 = {0}; // reserved memory where samples may be written
+volatile uint8_t portc_mask @ 0x007;
+volatile uint8_t* fsr_backup @ 0x008;
+volatile uint8_t* sample_w @ 0x010;
 
 #define CLR() TRISC &= ~portc_mask; // NEVER CALL THIS WHEN CORRESPONDING LATC IS HIGH! WE SHOULD NOT DRIVE THIS LINE
 #define SET() TRISC |= portc_mask;

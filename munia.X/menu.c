@@ -109,7 +109,7 @@ void menu_tasks() {
         menu_next_press_delay--; 
         return; 
     }
-    if (snes_packet_available) {
+    if (packets.snes_avail) {
         if (joydata_snes.dpad == HAT_SWITCH_WEST) menu_press(mc_left);
         else if (joydata_snes.dpad == HAT_SWITCH_EAST) menu_press(mc_right);
         if (joydata_snes.l) menu_press(mc_prev_page);
@@ -117,9 +117,9 @@ void menu_tasks() {
         else if (joydata_snes.start) menu_press(mc_exit);
         else if (joydata_snes.a) menu_press(mc_confirm);
         else if (joydata_snes.b) menu_press(mc_cancel);
-        snes_packet_available = false;
+        packets.snes_avail = false;
     }
-    if (n64_packet_available) {
+    if (packets.n64_avail) {
         if (joydata_n64.dpad == HAT_SWITCH_WEST) menu_press(mc_left);
         else if (joydata_n64.dpad == HAT_SWITCH_EAST) menu_press(mc_right);
         if (joydata_n64.l) menu_press(mc_prev_page);
@@ -127,9 +127,9 @@ void menu_tasks() {
         else if (joydata_n64.start) menu_press(mc_exit);
         else if (joydata_n64.a) menu_press(mc_confirm);
         else if (joydata_n64.b) menu_press(mc_cancel);
-        n64_packet_available = false;
+        packets.n64_avail = false;
     }
-    else if (ngc_packet_available) {
+    else if (packets.ngc_avail) {
         if (joydata_ngc.hat == HAT_SWITCH_WEST) menu_press(mc_left);
         else if (joydata_ngc.hat == HAT_SWITCH_EAST) menu_press(mc_right);
         if (joydata_ngc.l) menu_press(mc_prev_page);
@@ -137,7 +137,7 @@ void menu_tasks() {
         else if (joydata_ngc.start) menu_press(mc_exit);
         else if (joydata_ngc.a) menu_press(mc_confirm);
         else if (joydata_ngc.b) menu_press(mc_cancel);
-        ngc_packet_available = false;
+        packets.ngc_avail = false;
     }
 }
 
