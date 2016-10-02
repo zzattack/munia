@@ -26,16 +26,17 @@ namespace MUNIA.Forms {
 		public MainForm(bool skipUpdateCheck) : this() {
 			glControl.Resize += OnResize;
 			glControl.Paint += (sender, args) => Render();
-			UsbNotification.DeviceArrival += (sender, args) => ScheduleBuildMenu();
-			UsbNotification.DeviceRemovalComplete += (sender, args) => ScheduleBuildMenu();
+			UsbNotification.DeviceArrival += OnDeviceArrival;
+			UsbNotification.DeviceRemovalComplete += OnDeviceRemoval;
 			//UsbNotification.SetFilter(G)
 			_skipUpdateCheck = skipUpdateCheck;
 		}
-
+		
 		private void MainForm_Shown(object sender, EventArgs e) {
 			ConfigManager.Load();
 			BuildMenu();
-			
+			ActivateConfig(ConfigManager.GetActiveController(), ConfigManager.ActiveSkin);
+
 			Application.Idle += OnApplicationOnIdle;
 			if (!_skipUpdateCheck)
 				PerformUpdateCheck();
@@ -85,11 +86,6 @@ namespace MUNIA.Forms {
 			if (numFail > 0)
 				skinText += $" ({numFail} failed to load)";
 			lblSkins.Text = skinText;
-
-			// todo shit
-			// ifdevice wasn't available, but now it might be, then reevaluate the active skin
-			// no skin selected right now, but previous session might have
-			// if controller wasn't available but skin was selected, then try to activate it
 		}
 
 		private void ActivateConfig(IController ctrlr, Skin skin) {
@@ -164,6 +160,19 @@ namespace MUNIA.Forms {
 
 		private void tsmiAbout_Click(object sender, EventArgs e) {
 			new AboutBox().Show(this);
+		}
+		
+		private void OnDeviceArrival(object sender, UsbNotificationEventArgs args) {
+			ScheduleBuildMenu();
+			// see if this was our active controller and we can reactivate it
+			var ac = ConfigManager.GetActiveController();
+			if (string.Compare(ac?.DevicePath, args.Name, StringComparison.OrdinalIgnoreCase) == 0) {
+				ac?.Activate();
+			}
+		}
+
+		private void OnDeviceRemoval(object sender, UsbNotificationEventArgs args) {
+			ScheduleBuildMenu();
 		}
 
 		#region update checking/performing
