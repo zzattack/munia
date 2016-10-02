@@ -42,6 +42,7 @@
       <itemPath>memory.c</itemPath>
       <itemPath>uarts.c</itemPath>
       <itemPath>uarts_debug.c</itemPath>
+      <itemPath>isr_remap_dbg.asm</itemPath>
     </logicalFolder>
     <logicalFolder name="f1" displayName="USB" projectFiles="true">
       <itemPath>usb/usb_device.c</itemPath>
@@ -69,7 +70,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>PICkit3PlatformTool</platformTool>
         <languageToolchain>XC8</languageToolchain>
-        <languageToolchainVersion>1.37</languageToolchainVersion>
+        <languageToolchainVersion>1.38</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <compileType>
@@ -95,8 +96,23 @@
                         PD="dist/PIC18F24K50_XC8/production/MPLAB.X.production.elf"
                         DD="dist/PIC18F24K50_XC8/debug/MPLAB.X.debug.elf">
           </makeArtifact>
+          <makeArtifact PL="../MUNIA-asm.X"
+                        CT="1"
+                        CN="default"
+                        AC="true"
+                        BL="true"
+                        WD="../MUNIA-asm.X"
+                        BC="${MAKE}  -f Makefile CONF=default"
+                        DBC="${MAKE}  -f Makefile CONF=default TYPE_IMAGE=DEBUG_RUN"
+                        CC="rm -rf &quot;build/default&quot; &quot;dist/default&quot;"
+                        OP="dist/default/production/MUNIA-asm.X.production.hex"
+                        DOP="dist/default/debug/MUNIA-asm.X.debug.cof"
+                        FL="dist/default/production/MUNIA-asm.X.production.hex"
+                        PD="dist/default/production/MUNIA-asm.X.production.cof"
+                        DD="dist/default/debug/MUNIA-asm.X.debug.cof">
+          </makeArtifact>
           <useAlternateLoadableFile>false</useAlternateLoadableFile>
-          <parseOnProdLoad>true</parseOnProdLoad>
+          <parseOnProdLoad>false</parseOnProdLoad>
           <alternateLoadableFile></alternateLoadableFile>
         </loading>
       </compileType>
@@ -147,10 +163,10 @@
         <property key="calibrate-oscillator-value" value=""/>
         <property key="clear-bss" value="true"/>
         <property key="code-model-external" value="wordwrite"/>
-        <property key="code-model-rom" value="-0-FFF,-1006-1007,-1016-1017"/>
+        <property key="code-model-rom" value="-0-FFF,-1006-1007,-1008-100A,-3a00-ffff"/>
         <property key="create-html-files" value="false"/>
         <property key="data-model-ram" value=""/>
-        <property key="data-model-size-of-double" value="24"/>
+        <property key="data-model-size-of-double" value="32"/>
         <property key="data-model-size-of-float" value="24"/>
         <property key="display-class-usage" value="false"/>
         <property key="display-hex-usage" value="false"/>
@@ -231,6 +247,11 @@
         <property key="memories.eeprom" value="true"/>
         <property key="memories.flashdata" value="true"/>
         <property key="memories.id" value="true"/>
+        <property key="memories.instruction.ram" value="true"/>
+        <property key="memories.instruction.ram.end"
+                  value="${memories.instruction.ram.end.value}"/>
+        <property key="memories.instruction.ram.start"
+                  value="${memories.instruction.ram.start.value}"/>
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.end" value="0x1fff"/>
         <property key="memories.programmemory.partition2" value="true"/>
@@ -455,16 +476,18 @@
         <property key="stack-size-main" value="auto"/>
         <property key="stack-type" value="compiled"/>
       </XC8-config-global>
+      <item path="isr_remap_dbg.asm" ex="true" overriding="false">
+      </item>
     </conf>
     <conf name="debug" type="2">
       <toolsSet>
         <developmentServer>localhost</developmentServer>
-        <targetDevice>PIC18F24K50</targetDevice>
+        <targetDevice>PIC18F25K50</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
         <platformTool>PICkit3PlatformTool</platformTool>
         <languageToolchain>XC8</languageToolchain>
-        <languageToolchainVersion>1.37</languageToolchainVersion>
+        <languageToolchainVersion>1.38</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <compileType>
@@ -475,20 +498,20 @@
         <archiverTool>
         </archiverTool>
         <loading>
-          <makeArtifact PL="../../../../../../microchip/mla/v2015_08_10/apps/usb/device/bootloaders/firmware/pic18_non_j/MPLAB.X"
+          <makeArtifact PL="../MUNIA-asm.X"
                         CT="1"
-                        CN="PIC18F24K50_XC8"
+                        CN="default"
                         AC="true"
                         BL="true"
-                        WD="../../../../../../microchip/mla/v2015_08_10/apps/usb/device/bootloaders/firmware/pic18_non_j/MPLAB.X"
-                        BC="${MAKE}  -f Makefile CONF=PIC18F24K50_XC8"
-                        DBC="${MAKE}  -f Makefile CONF=PIC18F24K50_XC8 TYPE_IMAGE=DEBUG_RUN"
-                        CC="rm -rf &quot;build/PIC18F24K50_XC8&quot; &quot;dist/PIC18F24K50_XC8&quot;"
-                        OP="dist/PIC18F24K50_XC8/production/MPLAB.X.production.hex"
-                        DOP="dist/PIC18F24K50_XC8/debug/MPLAB.X.debug.elf"
-                        FL="dist/PIC18F24K50_XC8/production/MPLAB.X.production.hex"
-                        PD="dist/PIC18F24K50_XC8/production/MPLAB.X.production.elf"
-                        DD="dist/PIC18F24K50_XC8/debug/MPLAB.X.debug.elf">
+                        WD="../MUNIA-asm.X"
+                        BC="${MAKE}  -f Makefile CONF=default"
+                        DBC="${MAKE}  -f Makefile CONF=default TYPE_IMAGE=DEBUG_RUN"
+                        CC="rm -rf &quot;build/default&quot; &quot;dist/default&quot;"
+                        OP="dist/default/production/MUNIA-asm.X.production.hex"
+                        DOP="dist/default/debug/MUNIA-asm.X.debug.cof"
+                        FL="dist/default/production/MUNIA-asm.X.production.hex"
+                        PD="dist/default/production/MUNIA-asm.X.production.cof"
+                        DD="dist/default/debug/MUNIA-asm.X.debug.cof">
           </makeArtifact>
           <useAlternateLoadableFile>false</useAlternateLoadableFile>
           <parseOnProdLoad>true</parseOnProdLoad>
@@ -531,7 +554,7 @@
       </HI-TECH-COMP>
       <HI-TECH-LINK>
         <property key="additional-options-checksum" value=""/>
-        <property key="additional-options-code-offset" value="0x1000"/>
+        <property key="additional-options-code-offset" value=""/>
         <property key="additional-options-command-line" value=""/>
         <property key="additional-options-errata" value=""/>
         <property key="additional-options-extend-address" value="false"/>
@@ -542,7 +565,7 @@
         <property key="calibrate-oscillator-value" value=""/>
         <property key="clear-bss" value="true"/>
         <property key="code-model-external" value="wordwrite"/>
-        <property key="code-model-rom" value="default,-0-FFF,-1006-1007,-1016-1017"/>
+        <property key="code-model-rom" value="default,-1008-100a,-3a00-3fff"/>
         <property key="create-html-files" value="false"/>
         <property key="data-model-ram" value=""/>
         <property key="data-model-size-of-double" value="24"/>
@@ -626,6 +649,11 @@
         <property key="memories.eeprom" value="true"/>
         <property key="memories.flashdata" value="true"/>
         <property key="memories.id" value="true"/>
+        <property key="memories.instruction.ram" value="true"/>
+        <property key="memories.instruction.ram.end"
+                  value="${memories.instruction.ram.end.value}"/>
+        <property key="memories.instruction.ram.start"
+                  value="${memories.instruction.ram.start.value}"/>
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.end" value="0x3fff"/>
         <property key="memories.programmemory.partition2" value="true"/>
@@ -861,7 +889,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>Simulator</platformTool>
         <languageToolchain>XC8</languageToolchain>
-        <languageToolchainVersion>1.37</languageToolchainVersion>
+        <languageToolchainVersion>1.38</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <compileType>
@@ -1002,7 +1030,6 @@
         <property key="oscillator.frequencyunit" value="Mega"/>
         <property key="oscillator.rcfrequency" value="250"/>
         <property key="oscillator.rcfrequencyunit" value="Kilo"/>
-        <property key="performancedata.show" value="false"/>
         <property key="periphADC1.altscl" value="false"/>
         <property key="periphADC1.minTacq" value="5"/>
         <property key="periphADC1.tacqunits" value="microseconds"/>
@@ -1082,6 +1109,33 @@
                   value="report"/>
         <property key="warningmessagebreakoptions.W0015_CORE_INVALID_ALT_WREG_SET"
                   value="report"/>
+        <property key="warningmessagebreakoptions.W0016_CORE_STACK_ERROR"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W0017_CORE_ODD_RAMWORDACCESS"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W0018_CORE_UNIMPLEMENTED_RAMACCESS"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W0019_CORE_UNIMPLEMENTED_PROMACCESS"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W0020_CORE_ACCESS_NOTIN_X_SPACE"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W0021_CORE_ACCESS_NOTIN_Y_SPACE"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W0022_CORE_XMODEND_LESS_XMODSRT"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W0023_CORE_YMODEND_LESS_YMODSRT"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W0024_CORE_BITREV_MOD_IS_ZERO"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W0025_CORE_HARD_TRAP" value="report"/>
+        <property key="warningmessagebreakoptions.W0026_CORE_UNIMPLEMENTED_MEMORYACCESS"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W0027_CORE_UNIMPLEMENTED_EDSACCESS"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W0031_BSLIM_INSUFFICIENT_BOOT_SEGMENT"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W0032_BSLIM_LIMITS_EXCEEDS_PROG_MEMORY"
+                  value="report"/>
         <property key="warningmessagebreakoptions.W0051_INSTRUCTION_DIV_NOT_ENOUGH_REPEAT"
                   value="report"/>
         <property key="warningmessagebreakoptions.W0052_INSTRUCTION_DIV_TOO_MANY_REPEAT"
@@ -1097,6 +1151,10 @@
         <property key="warningmessagebreakoptions.W0105_SIM_INVALID_FIELD"
                   value="report"/>
         <property key="warningmessagebreakoptions.W0106_SIM_PERIPH_PARTIAL_SUPPORT"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W0107_SIM_NOT_SUPPORTED"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W0108_SIM_RESERVED_SETTING"
                   value="report"/>
         <property key="warningmessagebreakoptions.W0201_ADC_NO_STIMULUS_FILE"
                   value="report"/>
@@ -1160,6 +1218,24 @@
                   value="report"/>
         <property key="warningmessagebreakoptions.W0233_ADC_CORE_POWERED_EARLY"
                   value="report"/>
+        <property key="warningmessagebreakoptions.W0234_ADC_ALREADY_CALIBRATING"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W0235_ADC_CAL_TYPE_CHANGED"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W0236_ADC_CAL_INVALIDATED"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W0237_ADC_UNKNOWN_DATASHEET"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W0238_ADC_INVALID_SFR_FIELD_VALUE"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W0239_ADC_UNSUPPORTED_INPUT"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W0240_ADC_NOT_CALIBRATED"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W0241_ADC_FRACTIONAL_NOT_ALLOWED"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W0242_ADC_BG_INT_BEFORE_PWR"
+                  value="report"/>
         <property key="warningmessagebreakoptions.W0400_PWM_PWM_FASTER_THAN_FOSC"
                   value="report"/>
         <property key="warningmessagebreakoptions.W0700_CLC_GENERAL_WARNING"
@@ -1198,6 +1274,12 @@
         <property key="warningmessagebreakoptions.W2502_OUTPUTCOMPARE_BAD_SYNC_SOURCE"
                   value="report"/>
         <property key="warningmessagebreakoptions.W2503_OUTPUTCOMPARE_BAD_TRIGGER_SOURCE"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W7001_SMT_CLK_SELECTION_NOT_SUPPORT"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W7002_SMT_SIG_SELECTION_NOT_SUPPORT"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W7003_SMT_WIN_SELECTION_NOT_SUPPORT"
                   value="report"/>
         <property key="warningmessagebreakoptions.W9001_TMR_GATE_AND_EXTCLOCK_ENABLED"
                   value="report"/>
@@ -1252,6 +1334,8 @@
         <property key="stack-size-main" value="auto"/>
         <property key="stack-type" value="compiled"/>
       </XC8-config-global>
+      <item path="isr_remap_dbg.asm" ex="true" overriding="false">
+      </item>
     </conf>
   </confs>
 </configurationDescriptor>
