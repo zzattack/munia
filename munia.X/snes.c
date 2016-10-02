@@ -5,40 +5,28 @@
 #include <usb/usb_device_hid.h>
 
 snes_packet_t joydata_snes_last;
-bool snes_test_packet = false;
 void snes_create_ngc_fake();
 
 void snes_tasks() {
-    static uint8_t snes_block = 0;
-    
-	if (in_menu || config.snes_mode == SNES_MODE_NGC || (config.snes_mode == SNES_MODE_PC && USB_READY)) {
-        di();        
-        USBDeviceTasks();
-        
+    if (pollNeeded && (in_menu || config.snes_mode == SNES_MODE_NGC || (config.snes_mode == SNES_MODE_PC && USB_READY))) {
+        USBDeviceTasks();        
         // if latch is low without us driving it low, then there's a console attached!
         // in this case we should never drive the lines, this is dangerous!
-        if (SNES_LATCH == 0) {
-            // block snes lines for 2 seconds
-            snes_block = 120; // 120 frames
-        }
-        else {
-            snes_poll();
-        }
-        
-        USBDeviceTasks();
+        di();        
+        snes_poll();
     }
     
-    if (snes_test_packet) {
-        snes_test_packet = false;
+    if (packets.snes_test) {
+        packets.snes_test = false;
         snes_handle_packet();
     }
     ei();
     
-    if (snes_packet_available && !in_menu) {        
+    if (packets.snes_avail && !in_menu) {        
         if (config.snes_mode == SNES_MODE_NGC) {
             snes_create_ngc_fake();
             ngc_fake_unpack();
-            ngc_fake_packet_available = true;
+            packets.ngc_fake_avail = true;
         }
         
         // send packet over USB if usb connected and packet doesnt equal last one
@@ -48,7 +36,7 @@ void snes_tasks() {
             memcpy(&joydata_snes_last, &joydata_snes, sizeof(snes_packet_t));            
         }
         
-        snes_packet_available = false; // now consumed    
+        packets.snes_avail = false; // now consumed    
     }
 }
 
@@ -63,7 +51,7 @@ void snes_poll() {
     __delay_us(12);
     SNES_LATCH = 0;    
     
-    // 6 ms after the fall of the data latch pulse, the CPU sends out 16 data clock pulses on
+    // 6 µs after the fall of the data latch pulse, the CPU sends out 16 data clock pulses on
     // pin 2. These are 50% duty cycle with 12us per full cycle.
     __delay_us(6);
     for (uint8_t i = 0; i < 16; i++) {
@@ -76,7 +64,7 @@ void snes_poll() {
     
     SNES_CLK_TRIS = 1;
     SNES_LATCH_TRIS = 1;
-    snes_test_packet = true;
+    packets.snes_test = true;
 }
 
 void snes_handle_packet() {
@@ -98,34 +86,9 @@ void snes_handle_packet() {
         joydata_snes_raw = joydata_snes;
         joydata_snes.dpad = hat_lookup_n64_snes[joydata_snes.dpad];
 
-        snes_packet_available = true;
+        packets.snes_avail = true;
 	}
 	sample_w = sample_buff;
-}
-
-void snes_sample() { 
-    // called in interrupt: watches the SNES_CLK for 16 pulses
-    // The controllers serially shift the latched button states out SNES_DAT on every rising edge
-    // and the CPU samples the data on every falling edge.
-    uint8_t i = 16;
-    TMR0 = 150;
-    TMR0IF = 0;
-    
-    while (SNES_LATCH) {
-        if (TMR0IF) return;
-    }
-    TMR0 = 150;
-    TMR0IF = 0;
-    while (i && !TMR0IF && !SNES_LATCH) {
-        while (SNES_CLK && !TMR0IF); 
-        *sample_w = PORTC;
-        sample_w++;
-        i--;
-        TMR0 = 255-100; TMR0IF = 0;
-        while (!SNES_CLK && !TMR0IF);
-        TMR0 = 255-100; TMR0IF = 0;
-    }
-    snes_test_packet = !i;
 }
 
 void snes_create_ngc_fake() {
