@@ -11,10 +11,7 @@ void snes_create_ngc_fake();
 void snes_tasks() {
     static uint8_t snes_block = 0;
     
-    // don't toggle the port is console is attached
-    if (pollNeeded && snes_block > 0) snes_block--;
-    
-    else if (pollNeeded && (in_menu || (config.snes_mode == SNES_MODE_NGC || (config.snes_mode == SNES_MODE_PC && USB_READY)))) {
+	if (in_menu || config.snes_mode == SNES_MODE_NGC || (config.snes_mode == SNES_MODE_PC && USB_READY)) {
         di();        
         USBDeviceTasks();
         
