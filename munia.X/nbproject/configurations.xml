@@ -20,6 +20,7 @@
       <itemPath>circular_buffer.h</itemPath>
       <itemPath>memory.h</itemPath>
       <itemPath>uarts.h</itemPath>
+      <itemPath>usb_requests.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -43,6 +44,7 @@
       <itemPath>uarts.c</itemPath>
       <itemPath>uarts_debug.c</itemPath>
       <itemPath>isr_remap_dbg.asm</itemPath>
+      <itemPath>usb_requests.c</itemPath>
     </logicalFolder>
     <logicalFolder name="f1" displayName="USB" projectFiles="true">
       <itemPath>usb/usb_device.c</itemPath>
@@ -237,7 +239,6 @@
         <property key="ToolFirmwareFilePath"
                   value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
-        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="true"/>
@@ -477,6 +478,12 @@
         <property key="stack-type" value="compiled"/>
       </XC8-config-global>
       <item path="isr_remap_dbg.asm" ex="true" overriding="false">
+        <HI-TECH-COMP>
+        </HI-TECH-COMP>
+        <HI-TECH-LINK>
+        </HI-TECH-LINK>
+        <XC8-config-global>
+        </XC8-config-global>
       </item>
     </conf>
     <conf name="debug" type="2">
@@ -639,7 +646,6 @@
         <property key="ToolFirmwareFilePath"
                   value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
-        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="true"/>
@@ -1335,6 +1341,12 @@
         <property key="stack-type" value="compiled"/>
       </XC8-config-global>
       <item path="isr_remap_dbg.asm" ex="true" overriding="false">
+        <HI-TECH-COMP>
+        </HI-TECH-COMP>
+        <HI-TECH-LINK>
+        </HI-TECH-LINK>
+        <XC8-config-global>
+        </XC8-config-global>
       </item>
     </conf>
   </confs>
