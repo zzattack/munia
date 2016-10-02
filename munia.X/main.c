@@ -14,6 +14,7 @@
 #include "buttonchecker.h"
 #include "memory.h"
 #include "report_descriptors.h"
+#include "usb_requests.h"
 #include "uarts.h"
 
 void init_random();
@@ -35,7 +36,7 @@ uint8_t counter60hz = 0;
 void usb_tasks();
 
 void main() {
-    // init_random();
+    init_random();
     init_io();
     
     LED_SNES_GREEN = 0;
@@ -78,6 +79,8 @@ void main() {
             tick1khz = false;
             timer100hz++;
             timer1000hz++;
+            if (timer1000hz == 1000) timer1000hz = 0;
+            
             lcd_process();
 
             if (timer100hz == 10) {
@@ -96,8 +99,6 @@ void main() {
             
             menu_tasks();
         }
-        if (timer1000hz == 1000)
-            timer1000hz = 0;
         
         if (PIR2bits.TMR3IF) {
             WRITETIMER3(15536);
@@ -163,25 +164,24 @@ void init_timers() {
 
 void init_random() {
     // setup adc
-    /* todo
-    TRISAbits.TRISA1    = 0b1;  // set pin as input
-    ANCON0bits.ANSEL1   = 0b1;  // set pin as analog
-    ADCON1bits.VCFG     = 0b00; // set v+ reference to Vdd
-    ADCON1bits.VNCFG    = 0b0;  // set v- reference to GND
-    ADCON1bits.CHSN     = 0b000;// set negative input to GND
+    ADCON1bits.PVCFG    = 0b00; // set v+ reference to Vdd
+    ADCON1bits.NVCFG    = 0b0;  // set v- reference to GND
     ADCON2bits.ADFM     = 0b1;  // right justify the output
     ADCON2bits.ACQT     = 0b110;// 16 TAD
     ADCON2bits.ADCS     = 0b101;// use Fosc/16 for clock source
     ADCON0bits.ADON     = 0b1;  // turn on the ADC
-    */
+
     // generate random serial, seeded with xor of 16 readings of ADC
-    unsigned int seed = 0x3F07; // poly
-    ADCON0bits.CHS = 3; // select analog input channel
-    for (int i = 0; i < 16; i++) {
+    // (Performing a conversion on unimplemented channels will return random values.)
+    unsigned int seed = 0x3F07 ^ TMR0; // poly
+    ADCON0bits.CHS = 0b11011; // select analog input channel 27 (unimplemented))
+    
+    for (int i = 0; i < 8; i++) {
         ADCON0bits.GO = 0b1; // start the conversion
         while(ADCON0bits.DONE); // wait for the conversion to finish
         seed ^= (ADRESH << 8) | ADRESL;  // return the result
     }
+    ADCON0bits.ADON     = 0;  // turn off the ADC
     srand(seed); // seed with conversion result
 }
 
@@ -210,13 +210,13 @@ void low_priority interrupt isr_low() {
 void load_config() {
     uint8_t* w = (uint8_t*)&config;
     for (uint8_t i = 0; i < sizeof(config); i++)
-        *w++ = DATAEE_ReadByte(i);
+        *w++ = ee_read(i);
 }
 
 void save_config() {
     uint8_t* r = (uint8_t*)&config;
     for (uint8_t i = 0; i < sizeof(config); i++)
-        DATAEE_WriteByte(i, *r++);
+        ee_write(i, *r++);
 }
 
 void apply_config() {    
@@ -249,91 +249,5 @@ void apply_config() {
     else {
         SWITCH3 = 1;
         IOCCbits.IOCC7 = 1; // enable IO7 on RC7 (snes latch)
-    }
-}
-
-
-typedef struct {
-    uint8_t command_id;    
-    uint8_t fw_minor : 4;
-    uint8_t fw_major : 4;    
-    uint8_t hw_revision : 4;
-    uint8_t : 4;        
-    config_t config;
-    union {
-        struct {
-            uint8_t devid1;
-            uint8_t revision : 5;
-            uint8_t devid2 : 3;
-        };
-        uint16_t device_id;
-    };
-} cfg_read_report_t;
-
-typedef struct {
-    uint8_t command_id;
-    config_t config;
-} cfg_write_report_t;
-
-
-void usb_tasks() {
-    // User Application USB tasks
-    if (USBDeviceState < CONFIGURED_STATE || USBSuspendControl == 1)
-        return;
-    
-    // Check if we have received an OUT data packet from the host, and nothing is left in buffer
-    if (!HIDRxHandleBusy(USBOutHandleCfg) && !HIDTxHandleBusy(USBInHandleCfg)) {
-        // We just received a packet of data from the USB host.
-        // Check the first byte of the packet to see what command the host
-        // application software wants us to fulfill.
-        uint8_t cmd = usbOutBuffer[0];
-        if (cmd == CFG_CMD_READ) {
-            // format response
-            cfg_read_report_t* report = (cfg_read_report_t*)usbInBuffer;
-            report->command_id = CFG_CMD_READ;
-            report->fw_major = FW_MAJOR;
-            report->fw_minor = FW_MINOR;
-            report->hw_revision = HW_REVISION;
-
-            uint8_t* r = &report->devid1;
-            TBLPTR = 0x3FFFFF;
-            asm("tblrd*-");
-            *r++ = TABLAT;
-            asm("tblrd*");
-            *r = TABLAT;
-            TBLPTRU = 0;
-
-            memcpy(&report->config, in_menu ? &config_edit : &config, sizeof(config_t));
-            memset(usbInBuffer + sizeof(cfg_read_report_t), 0, sizeof(usbInBuffer) - sizeof(cfg_read_report_t));            
-            
-            USBInHandleCfg = HIDTxPacket(HID_EP_CFG, usbInBuffer, CFG_CMD_REPORT_SIZE);
-        }
-        else if (cmd == CFG_CMD_WRITE) {
-            // extract config
-            cfg_write_report_t* report = (cfg_write_report_t*)usbOutBuffer;
-            memcpy(&config, &report->config, sizeof(config_t));
-            save_config();
-            apply_config();
-            if (in_menu) {
-                memcpy(&config_edit, &config, sizeof(config_t));
-                memcpy(&config_backup, &config, sizeof(config_t));
-                menu_page(current_menu_page);
-            }
-            
-            // response
-            usbInBuffer[0] = CFG_CMD_WRITE;
-            usbInBuffer[1] = 1; // signifies ok
-            memset(usbInBuffer + 2, 0, sizeof(usbInBuffer) - 2);
-            
-            USBInHandleCfg = HIDTxPacket(HID_EP_CFG, usbInBuffer, CFG_CMD_REPORT_SIZE);
-        }
-        
-        else if (cmd == CFG_CMD_ENTER_BL) {
-            dbgs("jumping to bootloader\n");
-            asm("goto 0x001C");
-        }
-        
-        // re-arm
-        USBOutHandleCfg = HIDRxPacket(HID_EP_CFG, usbOutBuffer, sizeof (usbOutBuffer));
     }
 }
