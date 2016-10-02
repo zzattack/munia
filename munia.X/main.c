@@ -22,7 +22,6 @@ void init_io();
 void init_timers();
 void init_interrupts();
 void low_priority interrupt isr_low();
-void high_priority interrupt isr_high();
 
 void load_config();
 void apply_config();
@@ -61,8 +60,7 @@ void main() {
     init_interrupts();    
     
 #ifdef DEBUG
-    menu_enter();
-    U1Init(115200, true, true);
+    U1Init(115200, false, true);
 #endif
     
     dbgs("MUNIA Initialized\n");
@@ -209,24 +207,12 @@ void low_priority interrupt isr_low() {
     tick1khz = 1;
 }
 
-void high_priority interrupt isr_high() {
-    if (INTCONbits.IOCIF) {
-        sample_w = sample_buff; // 3 instructions
-        // see who went low
-        uint8_t mask = ~PORTC & IOCC;
-        if (mask & 0b00000010) n64_sample();
-        if (mask & 0b00000001) ngc_sample();
-        if (PORTC & IOCC & 0b10000000) snes_sample();
-    }
-    INTCONbits.IOCIF = 0;
-}
-
-
 void load_config() {
     uint8_t* w = (uint8_t*)&config;
     for (uint8_t i = 0; i < sizeof(config); i++)
         *w++ = DATAEE_ReadByte(i);
-    }
+}
+
 void save_config() {
     uint8_t* r = (uint8_t*)&config;
     for (uint8_t i = 0; i < sizeof(config); i++)
@@ -256,7 +242,7 @@ void apply_config() {
         IOCCbits.IOCC1 = 1; // enable IOC on RC1 (n64)
     }
     
-    if (config.snes_mode == SNES_MODE_PC) {
+    if (config.snes_mode == SNES_MODE_PC || config.snes_mode == SNES_MODE_NGC) {
         SWITCH3 = 0;
         IOCCbits.IOCC7 = 0; // disable IOC on RC7 (snes latch)
     }
