@@ -41,7 +41,7 @@ void snes_tasks();
 void snes_fake();
 void snes_real();
 void snes_poll();
-void snes_sample();
+extern void snes_sample() @ 0x3e00;
 void snes_handle_packet();
 
 #endif	/* SNES_H */
