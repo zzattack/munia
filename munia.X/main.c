@@ -16,6 +16,7 @@
 #include "report_descriptors.h"
 #include "usb_requests.h"
 #include "uarts.h"
+#include "fakeout.h"
 
 void init_random();
 void init_pll();
@@ -39,18 +40,20 @@ void main() {
     init_random();
     init_io();
     
+#ifdef DEBUG
+    U1Init(115200, false, true);
+#endif
+    
     LED_SNES_GREEN = 0;
     LED_SNES_ORANGE = 0;
     LED_GC_ORANGE = 0;
     LED_GC_GREEN = 0;    
     LCD_PWM = 0;
     lcd_backLightValue = 0;
-#ifndef SIMUL    
-    init_pll(); // disable on simulator!
-#endif
-    
+    init_pll();
+        
     init_timers();
-    usb_descriptors_check();
+    // usb_descriptors_check();
 	USBDeviceInit();
     USBDeviceAttach();
     bcInit();
@@ -60,11 +63,14 @@ void main() {
     apply_config();
     init_interrupts();    
     
-#ifdef DEBUG
-    U1Init(115200, false, true);
-#endif
-    
     dbgs("MUNIA Initialized\n");
+    
+#ifdef DEBUG
+    config.ngc_mode = NGC_MODE_N64;
+    config.n64_mode = N64_MODE_N64;
+    config.snes_mode = SNES_MODE_SNES;
+    apply_config();
+#endif
     
 	while (1) {
         ClrWdt();                
@@ -115,10 +121,13 @@ void main() {
 }
 
 void init_pll() {
+
 	OSCTUNE = 0x80; // 3X PLL ratio mode selected
 	OSCCON = 0x70;  // Switch to 16MHz HFINTOSC
 	OSCCON2 = 0x10; // Enable PLL, SOSC, PRI OSC drivers turned off
+#ifndef SIMUL    
 	while (!OSCCON2bits.PLLRDY); // Wait for PLL lock
+#endif
 	ACTCON = 0x90;  // Enable active clock tuning for USB operation
 }
 
@@ -154,7 +163,13 @@ void init_timers() {
     T1CONbits.TMR1ON = 1; // start
     WRITETIMER1(53536);
     
-    // Timer3 Registers Prescaler= 4 - TMR1 Preset = 15536 - Freq = 60.00 Hz - Period = 0.016667 seconds
+    // Timer 2 counts during n64/ngc sampling
+    T2CONbits.T2OUTPS = 0b0000; // 1:1 Postscaler
+    T2CONbits.TMR2ON = true;
+    T2CONbits.T2CKPS = 0b00; // Prescaler is 1
+    
+    
+    // Timer3 Registers Prescaler= 4 - TMR3 Preset = 15536 - Freq = 60.00 Hz - Period = 0.016667 seconds
     T3CONbits.TMR3CS = 0b00; // clock source is instruction clock (FOSC/4)
     T3CONbits.T3CKPS = 0b10; // 1:1 prescaler
     PIE2bits.TMR3IE = 0; // Disable interrupt
@@ -220,7 +235,7 @@ void save_config() {
 }
 
 void apply_config() {    
-    if (config.ngc_mode == NGC_MODE_PC) {
+    if (config.ngc_mode == NGC_MODE_PC || config.ngc_mode == NGC_MODE_N64) {
         SWITCH1 = 0;
         IOCCbits.IOCC0 = 0; // disable IOC on RC0 (ngc)
     }
