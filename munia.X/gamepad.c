@@ -13,3 +13,12 @@ void LOW() {
     SET(); 
     _delay(8);
 }
+
+uint8_t pack_byte(int8_t* r) {
+    uint8_t x = 0;
+    for (uint8_t m = 0x80; m; m >>= 1) {
+        if (*r++ >= 0)
+           x |= m;
+    }            
+    return x;
+}

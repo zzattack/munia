@@ -5,10 +5,17 @@
 #include "gamepad.h"
 #include "menu.h"
 #include "uarts.h"
+#include "fakeout.h"
 
-n64_packet_t joydata_n64_last;
+n64_packet_t joydata_n64_last; // last non-fake packet sent over usb
 
 void n64_tasks() {
+    if (packets.n64_test) {
+        if (config.ngc_mode & 2) n64_fakeout_test();
+        else n64_handle_packet();
+        packets.n64_test = false;
+    }
+    
     if (config.n64_mode == N64_MODE_PC && pollNeeded && (in_menu || USB_READY)) {
         USBDeviceTasks();
         di();
@@ -23,24 +30,18 @@ void n64_tasks() {
         USBDeviceTasks();
     }
     
-    if (packets.n64_test) {
-        packets.n64_test = false;
-        n64_handle_packet();
-    }
-    
     if (packets.n64_avail) {
         // see if this packet is equal to the last transmitted 
         // one, and if so, discard it
-        if (memcmp(&joydata_n64, &joydata_n64_last, sizeof(n64_packet_t)) == 0) 
-            packets.n64_avail = false;
-    }
-    
-    if (packets.n64_avail && !in_menu && USB_READY && !HIDTxHandleBusy(USBInHandleN64)) {
-        // hid tx
-        USBInHandleN64 = HIDTxPacket(HID_EP_N64, (uint8_t*)&joydata_n64, sizeof(n64_packet_t));
-        packets.n64_avail = false;
-        // save last packet
-        memcpy(&joydata_n64_last, &joydata_n64, sizeof(n64_packet_t));
+        if (memcmp(&joydata_n64, &joydata_n64_last, sizeof(n64_packet_t)) != 0) {
+            if (!in_menu && USB_READY && !HIDTxHandleBusy(USBInHandleN64)) {
+                // hid tx
+                USBInHandleN64 = HIDTxPacket(HID_EP_N64, (uint8_t*)&joydata_n64, sizeof(n64_packet_t));
+                // save last packet
+                memcpy(&joydata_n64_last, &joydata_n64, sizeof(n64_packet_t));
+            }
+        }        
+        packets.n64_avail = false; // now consumed    
     }
 }
 
@@ -53,30 +54,27 @@ void n64_poll() {
     //      00000010
     LOW(); LOW(); LOW(); LOW(); LOW(); LOW(); LOW(); HIGH();
     // stop bit, 2 us
-    CLR(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); 
-    Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); Nop(); 
-    
+    CLR(); 
+    _delay(22);
     SET();// back set to open collector input with pull up
     LATC |= portc_mask; // reset pull up
 }
 
 void n64_handle_packet() {
 	uint8_t idx = sample_w - sample_buff;
-    dbgs("n64 packet len: "); dbgsval(idx); dbgs("\n");
-	if (idx == 42) {
-		uint8_t* r = sample_buff;
-        *r = *r & 0b00000010 ? 10 : 0; // first byte is single sample, so convert to threshold
+    // dbgs("n64 packet len: "); dbgsval(idx); dbgs("\n");
+	if (idx == 41) {
+		int8_t* r = (int8_t*)sample_buff;
         
         if (config.n64_mode == N64_MODE_N64) {
             // see if this is a 'command 1' request from the console
-            uint8_t cmd = 0;
-            for (uint8_t m = 0x80; m; m >>= 1) {
-                if (*r++ >= 7)
-                    cmd |= m;
-            }
+            uint8_t cmd = pack_byte(r);
             // if not controller data, it's possibly identification 
             // or memory pack data -- not of interest to us
-            if (cmd != 0x01) return;
+            if (cmd != 0x01) { 
+                dbgs("invalid n64 command: "); dbgsval(cmd); dbgs("\n");
+                return;
+            }
             r++; // skip stopbit
         }
         else
@@ -85,12 +83,8 @@ void n64_handle_packet() {
 		// bits 0-9 are request, 10 is stop bit, 11-42 is data
 		uint8_t* w = (uint8_t*)&joydata_n64;
 		for (uint8_t i = 0; i < sizeof(n64_packet_t); i++) {
-            uint8_t x = 0;
-            for (uint8_t m = 0x80; m; m >>= 1) {
-                if (*r++ >= 7)
-                   x |= m;
-            }            
-            *w++ = x;
+            *w++ = pack_byte(r);
+            r += 8;
 		}
         
         joydata_n64.joy_x -= 128;

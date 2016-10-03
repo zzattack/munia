@@ -10,7 +10,7 @@ typedef struct {
         struct {
             uint8_t dright : 1;
             uint8_t dleft : 1;
-            uint8_t down : 1;
+            uint8_t ddown : 1;
             uint8_t dup : 1;
             uint8_t start : 1;
             uint8_t z : 1;
@@ -36,11 +36,12 @@ typedef struct {
 } n64_packet_t;
 
 n64_packet_t joydata_n64 @ 0x508; // (0x500 + sizeof(ngc_packet_t));
+n64_packet_t joydata_n64_raw;
 void n64_tasks();
 void n64_fake();
 void n64_real(); 
 void n64_poll();
-extern void n64_sample() @ 0x3c00;
+extern void n64_sample() @ 0x3f90;
 void n64_handle_packet();
 
 #endif	/* N64_H */
