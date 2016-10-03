@@ -2,14 +2,14 @@
 #include <stdio.h>
 
 // debug stuff
-void U1writeVal(uint16_t val) {
+void U1writeVal(int16_t val) {
     char buff[10];
-    sprintf(buff, "%u", val);
+    sprintf(buff, "%i", val);
     U1putsSync(buff);
 }
-void U1writeVal32(uint32_t val) {
+void U1writeVal32(int32_t val) {
     char buff[10];
-    sprintf(buff, "%lu", val);
+    sprintf(buff, "%li", val);
     U1putsSync(buff);
 }
 void U1writeValHex(uint16_t val) {
