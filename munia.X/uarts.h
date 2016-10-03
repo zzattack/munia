@@ -29,8 +29,8 @@ void U1Disable();
 #define dbgsvald(x)
 #endif
 
-void U1writeVal(uint16_t val);
-void U1writeVal32(uint32_t val);
+void U1writeVal(int16_t val);
+void U1writeVal32(int32_t val);
 void U1writeValHex(uint16_t val);
 void U1writeValFloat(float val);
 void U1writeValDouble(double val);
