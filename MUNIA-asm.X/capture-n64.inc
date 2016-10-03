@@ -1,78 +1,33 @@
 n64_sample
-    movf PORTC, w
-    movwf POSTINC0
-    ; bcf TRISA,7
-    ; bcf LATA,7
+    movlw 150
+    movwf TMR0
+    bcf INTCON, TMR0IF
     
+    ; a bit begins on the falling edge, then wait for rise
 n64_wait_rise
+    btfsc INTCON, TMR0IF
+    bra n64_timeout
     btfss PORTC, 1
     bra n64_wait_rise
-    
-n64_preloop
-    movlw 255-60 ; 1.5 bit wait
-    movwf TMR0L
-    bcf INTCON, TMR0IF
-    movlw 0
 
-n64_loop
+    ; save the period spent low
+    movf TMR2, w
+    clrf TMR2
+n64_wait_fall
     btfsc INTCON, TMR0IF
     bra n64_timeout
     btfsc PORTC, 1
-    bra n64_loop
+    bra n64_wait_fall
+    
+    subwf TMR2, w ; bit has ended, compare timers
+    clrf TMR2 ; restart asap for next bit
         
-n64_samplebit
-    ; we have time to sample during at most 3µs, which gives us 3e-6 / (1/12e6)=36 cycles
-    ; sampling takes only 2 instructions, we've lost at most 4 in ngc_loop, and need 
-    ; leaving us time to perform at least (36-4-2)/2=15 samples
+    movwf POSTINC0 ; interpret stored value as 2's complement integer for comparison
+    movlw 150 ; reload tmr0
+    movwf TMR0
     
-    ; bsf LATA,7
-
-    btfsc PORTC, 1
-    incf WREG, w, 0
-    btfsc PORTC, 1
-    incf WREG, w, 0
-    btfsc PORTC, 1
-    incf WREG, w, 0
-    btfsc PORTC, 1
-    incf WREG, w, 0
-    
-    btfsc PORTC, 1
-    incf WREG, w, 0
-    btfsc PORTC, 1
-    incf WREG, w, 0
-    btfsc PORTC, 1
-    incf WREG, w, 0
-    btfsc PORTC, 1
-    incf WREG, w, 0
-    
-    btfsc PORTC, 1
-    incf WREG, w, 0
-    btfsc PORTC, 1
-    incf WREG, w, 0
-    btfsc PORTC, 1
-    incf WREG, w, 0
-    btfsc PORTC, 1
-    incf WREG, w, 0
-    
-    btfsc PORTC, 1
-    incf WREG, w, 0
-    btfsc PORTC, 1
-    incf WREG, w, 0
-    btfsc PORTC, 1
-    incf WREG, w, 0
-    btfsc PORTC, 1
-    incf WREG, w, 0
-    
-    btfsc PORTC, 1
-    incf WREG, w, 0
-        
-    ; bcf LATA,7
-    
-n64_sampledone
-    movwf POSTINC0
-    bra n64_preloop ; prepare for next bit
+    bra n64_wait_rise ; sample next bit
     
 n64_timeout
     bsf packet_state, 1, 0 ; mark packet available    
-    ; bcf LATA,7
     return
