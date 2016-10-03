@@ -2,6 +2,7 @@
 #include "globals.h"
 #include "gamepad.h"
 #include "menu.h"
+#include "fakeout.h"
 #include <usb/usb_device_hid.h>
 
 snes_packet_t joydata_snes_last;
@@ -22,20 +23,20 @@ void snes_tasks() {
     }
     ei();
     
-    if (packets.snes_avail && !in_menu) {        
-        if (config.snes_mode == SNES_MODE_NGC) {
-            snes_create_ngc_fake();
-            ngc_fake_unpack();
-            packets.ngc_fake_avail = true;
+    if (packets.snes_avail) {
+        // see if this packet is equal to the last transmitted one, and if so, discard it
+        if (memcmp(&joydata_snes, &joydata_snes_last, sizeof(snes_packet_t)) != 0) {
+            // new, changed packet available; unpack if faking and send over usb
+            if (config.snes_mode == SNES_MODE_NGC) {
+                snes_create_ngc_fake();
+                fake_unpack((uint8_t*)&joydata_ngc_raw, sizeof(ngc_packet_t));
+            }        
+            if (!in_menu && USB_READY && !HIDTxHandleBusy(USBInHandleSNES)) {
+                USBInHandleSNES = HIDTxPacket(HID_EP_SNES, (uint8_t*)&joydata_snes, sizeof(snes_packet_t));
+                // save last packet
+                memcpy(&joydata_snes_last, &joydata_snes, sizeof(snes_packet_t));            
+            }
         }
-        
-        // send packet over USB if usb connected and packet doesnt equal last one
-        if (USB_READY && !HIDTxHandleBusy(USBInHandleSNES) && memcmp(&joydata_snes, &joydata_snes_last, sizeof(snes_packet_t))) {
-            USBInHandleSNES = HIDTxPacket(HID_EP_SNES, (uint8_t*)&joydata_snes, sizeof(snes_packet_t));
-            // save last packet
-            memcpy(&joydata_snes_last, &joydata_snes, sizeof(snes_packet_t));            
-        }
-        
         packets.snes_avail = false; // now consumed    
     }
 }
@@ -51,7 +52,7 @@ void snes_poll() {
     __delay_us(12);
     SNES_LATCH = 0;    
     
-    // 6 µs after the fall of the data latch pulse, the CPU sends out 16 data clock pulses on
+    // 6 ï¿½s after the fall of the data latch pulse, the CPU sends out 16 data clock pulses on
     // pin 2. These are 50% duty cycle with 12us per full cycle.
     __delay_us(6);
     for (uint8_t i = 0; i < 16; i++) {
@@ -71,9 +72,7 @@ void snes_handle_packet() {
     uint8_t idx = sample_w - sample_buff;
 	if (idx == 16 && !HIDTxHandleBusy(USBInHandleSNES)) {
 		uint8_t* w = (uint8_t*)&joydata_snes;
-        
-		// bit 0 is not sampled
-		uint8_t* r = sample_buff + 0;
+		uint8_t* r = (uint8_t*)sample_buff;
 		for (uint8_t i = 0; i < sizeof(snes_packet_t); i++) {
             uint8_t x = 0;
             for (uint8_t m = 0x80; m; m >>= 1) {
@@ -89,65 +88,4 @@ void snes_handle_packet() {
         packets.snes_avail = true;
 	}
 	sample_w = sample_buff;
-}
-
-void snes_create_ngc_fake() {
-    ngc_fake_packet.one = 1;
-    ngc_fake_packet.zero1 = 0;
-    ngc_fake_packet.zero2 = 0;
-    ngc_fake_packet.zero3 = 0;
-
-    ngc_fake_packet.a = joydata_snes_raw.b;
-    ngc_fake_packet.b = joydata_snes_raw.y;
-    ngc_fake_packet.x = joydata_snes_raw.a;
-    ngc_fake_packet.y = joydata_snes_raw.x;
-    ngc_fake_packet.start = joydata_snes_raw.start;
-    ngc_fake_packet.z = 0;
-    ngc_fake_packet.l = joydata_snes_raw.l;
-    ngc_fake_packet.r = joydata_snes_raw.r;
-    ngc_fake_packet.left_trig = joydata_snes_raw.l ? 200 : 0;
-    ngc_fake_packet.right_trig = joydata_snes_raw.r ? 200 : 0;
-
-    if (!joydata_snes_raw.select) {
-        ngc_fake_packet.joy_x = 128;
-        if (joydata_snes_raw.left)
-            ngc_fake_packet.joy_x -= 127;
-        else if (joydata_snes_raw.right)
-            ngc_fake_packet.joy_x += 127;
-
-        ngc_fake_packet.joy_y = 128;
-        if (joydata_snes_raw.up)
-            ngc_fake_packet.joy_y += 127;
-        else if (joydata_snes_raw.down)
-            ngc_fake_packet.joy_y -= 127;
-
-        ngc_fake_packet.dup = 0;
-        ngc_fake_packet.ddown = 0;
-        ngc_fake_packet.dleft = 0;
-        ngc_fake_packet.dright = 0;
-
-        ngc_fake_packet.c_x = 128;
-        ngc_fake_packet.c_y = 128;
-    }
-    else {
-        ngc_fake_packet.dup = joydata_snes_raw.up;
-        ngc_fake_packet.ddown = joydata_snes_raw.down;
-        ngc_fake_packet.dleft = joydata_snes_raw.left;
-        ngc_fake_packet.dright = joydata_snes_raw.right;
-        ngc_fake_packet.joy_x = 128;
-        ngc_fake_packet.joy_y = 128;
-
-        ngc_fake_packet.c_x = 128;
-        ngc_fake_packet.c_y = 128;
-        
-        if (joydata_snes_raw.y) ngc_fake_packet.c_x -= 127;
-        if (joydata_snes_raw.a) ngc_fake_packet.c_x += 127;
-        if (joydata_snes_raw.b) ngc_fake_packet.c_y -= 127;
-        if (joydata_snes_raw.x) ngc_fake_packet.c_y += 127;
-        
-        ngc_fake_packet.a = false;
-        ngc_fake_packet.b = false;
-        ngc_fake_packet.x = false;
-        ngc_fake_packet.y = false;
-    }                
 }

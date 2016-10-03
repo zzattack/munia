@@ -40,18 +40,14 @@ typedef struct {
 } ngc_packet_t;
 
 ngc_packet_t joydata_ngc @ 0x500;
+ngc_packet_t joydata_ngc_raw;
 
-
-ngc_packet_t ngc_fake_packet;
-uint8_t ngc_fake_buffer[64];
-uint8_t* ngc_outbuf = 0;
 
 void ngc_tasks();
-void ngc_fake(); 
 void ngc_real();
 void ngc_poll();
-extern void ngc_sample() @ 0x3a00;
+extern void ngc_sample() @ 0x3f50;
 void ngc_handle_packet();
-void ngc_fake_unpack();
+
 #endif	/* GAMECUBE_H */
 
