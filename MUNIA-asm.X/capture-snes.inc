@@ -2,8 +2,7 @@ snes_sample
     ; called in interrupt: watches the SNES_CLK for 16 pulses
     ; The controllers serially shift the latched button states out SNES_DAT on every rising edge
     ; and the CPU samples the data on every falling edge.
-    movlw 150
-    movwf TMR0, 0
+    clrf TMR0 ; reset to 0 so latch has ample time to fall
     bcf INTCON, TMR0IF
     movlw 16
     movwf bit_count, 0
