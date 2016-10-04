@@ -87,6 +87,7 @@
     <Compile Include="Controllers\ArduinoController.cs" />
     <Compile Include="Controllers\BufferedController.cs" />
     <Compile Include="Controllers\IController.cs" />
+    <Compile Include="MuniaSettings.cs" />
     <Compile Include="Util\ExtensionMethods.cs" />
     <Compile Include="Util\CircularBuffer.cs" />
     <Compile Include="Forms\DelayValuePicker.cs">
@@ -111,7 +112,6 @@
     <Compile Include="Controllers\MuniaController.cs" />
     <Compile Include="Controllers\MuniaN64.cs" />
     <Compile Include="Controllers\MuniaNgc.cs" />
-    <Compile Include="MuniaSettings.cs" />
     <Compile Include="Forms\MuniaSettingsDialog.cs">
       <SubType>Form</SubType>
     </Compile>

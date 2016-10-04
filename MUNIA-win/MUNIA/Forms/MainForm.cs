@@ -276,12 +276,19 @@ namespace MUNIA.Forms {
 					buff[1] = 0x47;  // CFG_CMD_READ
 					stream.Write(buff, 0, 9);
 					stream.Read(buff, 0, 9);
-					var settings = new MuniaSettings();
+
+					var settings = new MUNIA.MuniaDeviceInfo();
 					if (settings.Parse(buff)) {
-						var dlg = new MuniaSettingsDialog(stream, settings);
-						dlg.ShowDialog(this);
+						if (settings.IsLegacy) {
+							var dlg = new MuniaSettingsDialog(stream, settings);
+							dlg.ShowDialog(this);
+						}
+						else {
+							var dlg = new MuniaSettingsDialog(stream, settings);
+							dlg.ShowDialog(this);
+						}
 					}
-					else throw new InvalidOperationException("Invalid settings container received from MUNIA device");
+					else throw new InvalidOperationException("Invalid settings container received from MUNIA device: " + string.Join(" ", buff.Select(x=>x.ToString("X2"))));
 				}
 
 				catch (Exception exc) {
