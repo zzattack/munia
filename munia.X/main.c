@@ -66,10 +66,10 @@ void main() {
     dbgs("MUNIA Initialized\n");
     
 #ifdef DEBUG
-    config.ngc_mode = NGC_MODE_N64;
-    config.n64_mode = N64_MODE_N64;
-    config.snes_mode = SNES_MODE_SNES;
+    config.output_mode = output_pc;
+    config.input_sources = 0x03;
     apply_config();
+    menu_enter();
 #endif
     
 	while (1) {
@@ -234,35 +234,14 @@ void save_config() {
         ee_write(i, *r++);
 }
 
-void apply_config() {    
-    if (config.ngc_mode == NGC_MODE_PC || config.ngc_mode == NGC_MODE_N64) {
-        SWITCH1 = 0;
-        IOCCbits.IOCC0 = 0; // disable IOC on RC0 (ngc)
-    }
-    else {
-        // pull up, in case no device attached
-        LATC |= 0b00000001;
-        SWITCH1 = 1;
-        IOCCbits.IOCC0 = 1; // enable IOC on RC0 (ngc)
-    }
+void apply_config() {
+    // only take interrupt event from the console we're outputting to
+    IOCCbits.IOCC0 = config.output_mode == output_ngc;
+    IOCCbits.IOCC1 = config.output_mode == output_n64;
+    IOCCbits.IOCC7 = config.output_mode == output_snes;
     
-    if (config.n64_mode == N64_MODE_PC) {
-        SWITCH2 = 0;
-        IOCCbits.IOCC1 = 0; // disable IOC on RC1 (n64)
-    }
-    else { 
-        // pull up, in case no device attached
-        LATC |= 0b00000010;
-        SWITCH2 = 1;
-        IOCCbits.IOCC1 = 1; // enable IOC on RC1 (n64)
-    }
-    
-    if (config.snes_mode == SNES_MODE_PC || config.snes_mode == SNES_MODE_NGC) {
-        SWITCH3 = 0;
-        IOCCbits.IOCC7 = 0; // disable IOC on RC7 (snes latch)
-    }
-    else {
-        SWITCH3 = 1;
-        IOCCbits.IOCC7 = 1; // enable IO7 on RC7 (snes latch)
-    }
+    // redirect joysticks we're not sampling to their console
+    SWITCH1 = IOCCbits.IOCC0 || (config.input_sources & input_ngc);
+    SWITCH2 = IOCCbits.IOCC1 || (config.input_sources & input_n64);
+    SWITCH3 = IOCCbits.IOCC7 || (config.input_sources & input_snes);
 }

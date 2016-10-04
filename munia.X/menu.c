@@ -10,7 +10,13 @@
 #define max(x, y) (((x) > (y)) ? (x) : (y))
 #define min(x, y) (((x) < (y)) ? (x) : (y))
 
+// [*] = multi select, checked and focused
+// [o] = multi select, checked but not focused
+// [.] = multi select, focused but not checked
+// [ ] = not checked or focused
+
 uint8_t submenu_idx = 0;
+uint8_t submenu_mask = 0;
 bool menu_leftalign = true;
 const uint8_t num_menu_pages = MENU_PAGE_COUNT;
 uint8_t menu_next_press_delay;
@@ -29,12 +35,11 @@ void menu_enter() {
     memcpy(&config_backup, &config, sizeof(config_t));
     memcpy(&config_edit, &config, sizeof(config_t));
     
-    config.ngc_mode = NGC_MODE_PC;
-    config.n64_mode = N64_MODE_PC;
-    config.snes_mode = SNES_MODE_PC;
+    config.output_mode = output_pc;
+    config.input_sources = input_ngc | input_n64 | input_snes;
     apply_config();
     
-    menu_page(MENU_PAGE_NGC);
+    menu_page(MENU_PAGE_OUTPUT);
 }
 void menu_exit(bool save_settings) {
     lcd_command(LCD_DISPLAY_OFF);
@@ -63,21 +68,31 @@ void menu_page(uint8_t page) {
     lcd_clear();
     lcd_goto(1, 0);
 
-    if (page == MENU_PAGE_NGC) {
-        lcd_string("NGC");
-        submenu_idx = config_edit.ngc_mode;
+    if (page == MENU_PAGE_OUTPUT) {
+        lcd_string("Output device");
+        submenu_idx = config_edit.output_mode;
     }
-    else if (page == MENU_PAGE_N64) {
-        lcd_string("N64"); 
-        submenu_idx = config_edit.n64_mode;
+    else if (page == MENU_PAGE_PC_INPUTS) {
+        lcd_string("PC inputs"); 
+        submenu_idx = 0;
+        submenu_mask = config_edit.input_sources;
     }
-    else if (page == MENU_PAGE_SNES) {
-        lcd_string("SNES");
-        submenu_idx = config_edit.snes_mode;
+    else if (page == MENU_PAGE_INPUT_NGC) {
+        lcd_string("NGC input");
+        submenu_idx = 0; // todo: restore selection
     }
-    else if (page == MENU_PAGE_EXIT) 
+    else if (page == MENU_PAGE_INPUT_N64) {
+        lcd_string("N64 input");
+        submenu_idx = 0; // todo: restore selection
+    }
+    else if (page == MENU_PAGE_INPUT_SNES) {
+        lcd_string("SNES input");
+        submenu_idx = 0; // todo: restore selection
+    }
+    else if (page == MENU_PAGE_CONFIRM) {
         lcd_string("Save");
-    lcd_string(" config");
+        submenu_idx = 0;
+    }
     
     menu_display_setting();
 }
@@ -88,18 +103,30 @@ void menu_display_setting() {
         
     lcd_goto(2, 0);
     lcd_char(left_display != 0 ? '<' : ' ');
-
+    lcd_goto(2, 15);
+    lcd_char(right_display < submenu_count - 1 ? '>' : ' ');    
+    lcd_goto(2, 1);
+    
     for (uint8_t i = left_display; i <= right_display; i++) {
         lcd_string(menu_current_items[i]);
-        if (current_menu_page != MENU_PAGE_EXIT) {
+        if (current_menu_page == MENU_PAGE_PC_INPUTS) {
+            // multiple checkboxes
+            lcd_char('[');
+            bool marked = submenu_mask & (1<<i);
+            bool focused = submenu_idx == i;
+            if (marked && focused) lcd_char('*');
+            else if (marked) lcd_char('o');
+            else if (focused) lcd_char('.');
+            else lcd_char(' ');
+            lcd_string("] ");
+        }
+        else if (current_menu_page != MENU_PAGE_CONFIRM) {
             lcd_char('[');
             lcd_char(submenu_idx == i ? '*' : ' ');
             lcd_string("] ");
         }
     }
     
-    lcd_goto(2, 15);
-    lcd_char(right_display < submenu_count - 1 ? '>' : ' ');    
 }
 
 
@@ -112,30 +139,24 @@ void menu_tasks() {
     if (packets.snes_avail) {
         if (joydata_snes.dpad == HAT_SWITCH_WEST) menu_press(mc_left);
         else if (joydata_snes.dpad == HAT_SWITCH_EAST) menu_press(mc_right);
-        if (joydata_snes.l) menu_press(mc_prev_page);
-        else if (joydata_snes.r) menu_press(mc_next_page);
-        else if (joydata_snes.start) menu_press(mc_exit);
-        else if (joydata_snes.a) menu_press(mc_confirm);
+        if (joydata_snes.start) menu_press(mc_exit);
+        else if (joydata_snes.a) menu_press(mc_select);
         else if (joydata_snes.b) menu_press(mc_cancel);
         packets.snes_avail = false;
     }
     if (packets.n64_avail) {
         if (joydata_n64.dpad == HAT_SWITCH_WEST) menu_press(mc_left);
         else if (joydata_n64.dpad == HAT_SWITCH_EAST) menu_press(mc_right);
-        if (joydata_n64.l) menu_press(mc_prev_page);
-        else if (joydata_n64.r) menu_press(mc_next_page);
-        else if (joydata_n64.start) menu_press(mc_exit);
-        else if (joydata_n64.a) menu_press(mc_confirm);
+        if (joydata_n64.start) menu_press(mc_exit);
+        else if (joydata_n64.a) menu_press(mc_select);
         else if (joydata_n64.b) menu_press(mc_cancel);
         packets.n64_avail = false;
     }
     else if (packets.ngc_avail) {
         if (joydata_ngc.hat == HAT_SWITCH_WEST) menu_press(mc_left);
         else if (joydata_ngc.hat == HAT_SWITCH_EAST) menu_press(mc_right);
-        if (joydata_ngc.l) menu_press(mc_prev_page);
-        else if (joydata_ngc.r) menu_press(mc_next_page);
-        else if (joydata_ngc.start) menu_press(mc_exit);
-        else if (joydata_ngc.a) menu_press(mc_confirm);
+        if (joydata_ngc.start) menu_press(mc_exit);
+        else if (joydata_ngc.a) menu_press(mc_select);
         else if (joydata_ngc.b) menu_press(mc_cancel);
         packets.ngc_avail = false;
     }
@@ -143,25 +164,41 @@ void menu_tasks() {
 
 void menu_press(uint8_t command) {
     menu_next_press_delay = 250; // 250ms
-    if (command == mc_prev_page) 
-        menu_page((current_menu_page + MENU_PAGE_COUNT - 1) % MENU_PAGE_COUNT);
-    else if (command == mc_next_page) 
-        menu_page((current_menu_page + 1) % MENU_PAGE_COUNT);
-    else if (command == mc_exit)
-        menu_page(MENU_PAGE_EXIT);
-    else if (command == mc_confirm && current_menu_page == MENU_PAGE_EXIT)
-        menu_exit(true);
-    else if (command == mc_cancel && current_menu_page == MENU_PAGE_EXIT)
+    if (command == mc_exit)
+        menu_page(MENU_PAGE_CONFIRM);
+    else if (command == mc_confirm || command == mc_select) {
+        if (current_menu_page == MENU_PAGE_CONFIRM) menu_exit(true);
+        else if (current_menu_page == MENU_PAGE_OUTPUT) {
+            config_edit.output_mode = submenu_idx;
+            if (submenu_idx == output_ngc) menu_page(MENU_PAGE_INPUT_NGC);
+            else if (submenu_idx == output_n64) menu_page(MENU_PAGE_INPUT_N64);
+            else if (submenu_idx == output_snes) menu_page(MENU_PAGE_INPUT_SNES);
+            else if (submenu_idx == output_pc) menu_page(MENU_PAGE_PC_INPUTS);
+        }
+        else if (current_menu_page == MENU_PAGE_PC_INPUTS) {
+            if (command == mc_select) {
+                submenu_mask ^= (1 << submenu_idx);
+                menu_display_setting();
+            }
+            else if (submenu_mask != 0) menu_page(MENU_PAGE_CONFIRM);
+            else { /* no source selected */ }
+        }
+        else {
+            // select only one input source
+            config_edit.input_sources = 1 << submenu_idx;
+            menu_page(MENU_PAGE_CONFIRM);
+        }
+    }
+    else if (command == mc_cancel) {
+        // todo: navigate to previous menu
         menu_exit(false);
+    }
     
     else if (command == mc_left) {
         if (submenu_idx == submenu_count - 2 && !menu_leftalign) 
             menu_leftalign = true;
         else {
             submenu_idx = max(0, submenu_idx - 1);
-            if (current_menu_page == MENU_PAGE_NGC) config_edit.ngc_mode   = submenu_idx;
-            if (current_menu_page == MENU_PAGE_N64) config_edit.n64_mode   = submenu_idx;
-            if (current_menu_page == MENU_PAGE_SNES) config_edit.snes_mode = submenu_idx;
         }
         menu_display_setting();
     }
@@ -170,9 +207,6 @@ void menu_press(uint8_t command) {
             menu_leftalign = false;
         else {
             submenu_idx = min(submenu_idx + 1, submenu_count - 1);
-            if (current_menu_page == MENU_PAGE_NGC) config_edit.ngc_mode   = submenu_idx;
-            if (current_menu_page == MENU_PAGE_N64) config_edit.n64_mode   = submenu_idx;
-            if (current_menu_page == MENU_PAGE_SNES) config_edit.snes_mode = submenu_idx;
         }        
         menu_display_setting();    
     }

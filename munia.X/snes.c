@@ -9,10 +9,8 @@ snes_packet_t joydata_snes_last;
 void snes_create_ngc_fake();
 
 void snes_tasks() {
-    if (pollNeeded && (in_menu || config.snes_mode == SNES_MODE_NGC || (config.snes_mode == SNES_MODE_PC && USB_READY))) {
+    if (pollNeeded && (in_menu || config.input_snes && (config.output_mode == output_pc || config.output_mode != output_snes))) {
         USBDeviceTasks();        
-        // if latch is low without us driving it low, then there's a console attached!
-        // in this case we should never drive the lines, this is dangerous!
         di();        
         snes_poll();
     }
@@ -21,23 +19,26 @@ void snes_tasks() {
         packets.snes_test = false;
         snes_handle_packet();
     }
+    INTCONbits.IOCIF = 0; // don't bother with stuff that happened in the meantime
     ei();
     
     if (packets.snes_avail) {
         // see if this packet is equal to the last transmitted one, and if so, discard it
-        if (memcmp(&joydata_snes, &joydata_snes_last, sizeof(snes_packet_t)) != 0) {
+        if (memcmp(&joydata_snes, &joydata_snes_last, sizeof(snes_packet_t)) == 0)
+            packets.snes_avail = false;
+        else if (!in_menu) { // if in menu, menu_tasks will clear bit
             // new, changed packet available; unpack if faking and send over usb
-            if (config.snes_mode == SNES_MODE_NGC) {
+            if (config.input_snes && config.output_mode == output_ngc) {
                 snes_create_ngc_fake();
                 fake_unpack((uint8_t*)&joydata_ngc_raw, sizeof(ngc_packet_t));
             }        
-            if (!in_menu && USB_READY && !HIDTxHandleBusy(USBInHandleSNES)) {
+            if (USB_READY && !HIDTxHandleBusy(USBInHandleSNES)) {
                 USBInHandleSNES = HIDTxPacket(HID_EP_SNES, (uint8_t*)&joydata_snes, sizeof(snes_packet_t));
                 // save last packet
                 memcpy(&joydata_snes_last, &joydata_snes, sizeof(snes_packet_t));            
             }
-        }
-        packets.snes_avail = false; // now consumed    
+            packets.snes_avail = false;
+        } 
     }
 }
 
@@ -87,5 +88,4 @@ void snes_handle_packet() {
 
         packets.snes_avail = true;
 	}
-	sample_w = sample_buff;
 }
