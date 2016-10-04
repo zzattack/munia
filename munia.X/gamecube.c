@@ -10,13 +10,7 @@
 ngc_packet_t joydata_ngc_last;
 
 void ngc_tasks() {
-    if (packets.ngc_test) {
-        if (config.snes_mode & 2) ngc_fakeout_test();
-        else ngc_handle_packet();
-        packets.ngc_test = false;
-    }
-    
-    if (pollNeeded && (in_menu || config.ngc_mode == NGC_MODE_N64 || (config.ngc_mode == NGC_MODE_PC && USB_READY))) {
+    if (pollNeeded && (in_menu || config.input_ngc && (config.output_mode == output_pc || config.output_mode != output_ngc))) {
         USBDeviceTasks();
         di();
         ngc_poll();
@@ -25,16 +19,23 @@ void ngc_tasks() {
         asm("lfsr 0, _sample_buff+25"); // setup FSR0
         ngc_sample();
         asm("movff FSR0L, _sample_w+0"); // update sample_w
-        asm("movff FSR0H, _sample_w+1");
-        ei();
-        USBDeviceTasks();
+    }
+    
+    if (packets.ngc_test) {
+        if (config.output_mode == output_ngc && !(config.input_sources & input_ngc)) ngc_fakeout_test();
+        else ngc_handle_packet();
+        packets.ngc_test = false;
     }    
+    INTCONbits.IOCIF = 0; // don't bother with stuff that happened in the meantime
+    ei();
 
     if (packets.ngc_avail) {
         // see if this packet is equal to the last transmitted one, and if so, discard it
-        if (memcmp(&joydata_ngc, &joydata_ngc_last, sizeof(ngc_packet_t)) != 0) {
+        if (memcmp(&joydata_ngc, &joydata_ngc_last, sizeof(ngc_packet_t)) == 0)
+            packets.ngc_avail = false;
+        else if (!in_menu) { // if in menu, menu_tasks will clear bit
             // new, changed packet available; unpack if faking and send over usb
-            if (config.ngc_mode == NGC_MODE_N64) {
+            if (config.input_sources & input_ngc && config.output_mode == output_n64) {
                 ngc_create_n64_fake();
                 fake_unpack((uint8_t*)&joydata_n64_raw, sizeof(n64_packet_t));
             }
@@ -43,8 +44,8 @@ void ngc_tasks() {
                 // save last packet
                 memcpy(&joydata_ngc_last, &joydata_ngc, sizeof(ngc_packet_t));
             }   
+            packets.ngc_avail = false; // now consumed    
         }
-        packets.ngc_avail = false; // now consumed    
     }    
 }
 

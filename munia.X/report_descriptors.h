@@ -181,8 +181,9 @@ const uint8_t hid_rpt_ngc[] = {
 };
 
 
-#define CFG_CMD_WRITE 0x46
-#define CFG_CMD_READ  0x47
+#define CFG_CMD_READ  0x47        // if return length
+#define CFG_CMD_WRITE 0x44
+#define CFG_CMD_WRITE_LEGACY 0x46 // used with old menu structure
 #define CFG_CMD_ENTER_BL  0x48
 #define CFG_CMD_REPORT_SIZE 0x08
 
