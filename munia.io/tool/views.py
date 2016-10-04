@@ -73,7 +73,7 @@ def report_bug(request):
             reply_to.append('noreply@munia.io')
         
     email = EmailMessage(subject=subj, body=message, from_email='bugs@munia.io', to=['frank@zzattack.org'], cc=cc, reply_to=reply_to)
-    email.attach(request.POST['skin_name'], request.POST['skin_svg'], 'text/plain')
+    email.attach(request.POST['skin_name'] + '.svg', request.POST['skin_svg'], 'text/plain')
 
     email.send(fail_silently=False)
 

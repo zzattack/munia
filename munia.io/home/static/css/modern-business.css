@@ -35,6 +35,13 @@ header.carousel .carousel-inner {
     height: 100%;
 }
 
+header.carousel .fill2 {
+    width: 600px;
+    height: auto;
+    background-position: center;
+    background-size: cover;
+}
+
 header.carousel .fill {
     width: 100%;
     height: 100%;
