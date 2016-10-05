@@ -11,6 +11,8 @@
     <AssemblyName>MUNIA</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -32,6 +34,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="HidSharp, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -195,6 +198,13 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\MSBuildTasks.1.5.0.196\build\MSBuildTasks.targets" Condition="Exists('..\packages\MSBuildTasks.1.5.0.196\build\MSBuildTasks.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\MSBuildTasks.1.5.0.196\build\MSBuildTasks.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MSBuildTasks.1.5.0.196\build\MSBuildTasks.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
@@ -202,15 +212,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <Import Project="..\Packages\MSBuildTasks.1.4.0.128\tools\MSBuild.Community.Tasks.Targets" />
-  <UsingTask AssemblyFile="..\Packages\MSBuildTasks.1.4.0.128\tools\MSBuild.Community.Tasks.Targets.dll" TaskName="MSBuild.Community.Tasks.Zip" />
-  <Target Name="BeforeBuild">
-    <Version VersionFile="Properties\version.txt" Major="0" Minor="9" BuildType="Automatic" StartDate="1/1/2016" RevisionType="BuildIncrement">
-      <Output TaskParameter="Major" PropertyName="Major" />
-      <Output TaskParameter="Minor" PropertyName="Minor" />
-      <Output TaskParameter="Build" PropertyName="Build" />
-      <Output TaskParameter="Revision" PropertyName="Revision" />
-    </Version>
-    <AssemblyInfo CodeLanguage="CS" OutputFile="Properties\VersionInfo.cs" AssemblyVersion="$(Major).$(Minor)" AssemblyFileVersion="$(Major).$(Minor).$(Build).$(Revision)" />
-  </Target>
 </Project>
