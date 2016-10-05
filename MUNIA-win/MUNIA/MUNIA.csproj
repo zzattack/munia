@@ -1,0 +1,216 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3DC18ABA-B1D8-4556-A9F6-09E95182C5B0}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MUNIA</RootNamespace>
+    <AssemblyName>MUNIA</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="HidSharp, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HidSharp.1.5\lib\net35\HidSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>..\packages\OpenTK.1.1.2225.0\lib\net20\OpenTK.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="OpenTK.GLControl, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>..\packages\OpenTK.GLControl.1.1.1589.5942\lib\NET40\OpenTK.GLControl.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controllers\ArduinoN64.cs" />
+    <Compile Include="Controllers\ArduinoNgc.cs" />
+    <Compile Include="Controllers\ArduinoSnes.cs" />
+    <Compile Include="Forms\AboutBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AboutBox.Designer.cs">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ArduinoMapperForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ArduinoMapperForm.Designer.cs">
+      <DependentUpon>ArduinoMapperForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\BootloaderForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BootloaderForm.Designer.cs">
+      <DependentUpon>BootloaderForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Bootloader\ExtensionMethods.cs" />
+    <Compile Include="Bootloader\HidBootloader.cs" />
+    <Compile Include="Bootloader\IntelHexReader.cs" />
+    <Compile Include="Controllers\ArduinoController.cs" />
+    <Compile Include="Controllers\BufferedController.cs" />
+    <Compile Include="Controllers\IController.cs" />
+    <Compile Include="MuniaSettings.cs" />
+    <Compile Include="Util\ExtensionMethods.cs" />
+    <Compile Include="Util\CircularBuffer.cs" />
+    <Compile Include="Forms\DelayValuePicker.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DelayValuePicker.Designer.cs">
+      <DependentUpon>DelayValuePicker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controllers\ControllerType.cs" />
+    <Compile Include="Interop\SerialPortInfo.cs" />
+    <Compile Include="Interop\SetupApi.cs" />
+    <Compile Include="Util\IniFile.cs" />
+    <Compile Include="skins\NintendoSpySkin.cs" />
+    <Compile Include="skins\PadpyghtSkin.cs" />
+    <Compile Include="Util\TextureHelper.cs" />
+    <Compile Include="Forms\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controllers\MuniaController.cs" />
+    <Compile Include="Controllers\MuniaN64.cs" />
+    <Compile Include="Controllers\MuniaNgc.cs" />
+    <Compile Include="Forms\MuniaSettingsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MuniaSettingsDialog.Designer.cs">
+      <DependentUpon>MuniaSettingsDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Util\Option.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Controllers\MuniaSnes.cs" />
+    <Compile Include="Util\RichTextBoxEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ConfigManager.cs" />
+    <Compile Include="skins\Skin.cs" />
+    <Compile Include="skins\SvgSkin.cs" />
+    <Compile Include="Forms\SubmitBug.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UpdateChecker.cs" />
+    <Compile Include="Interop\UsbNotification.cs" />
+    <Compile Include="Properties\VersionInfo.cs" />
+    <Compile Include="Forms\WindowSizePicker.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\WindowSizePicker.Designer.cs">
+      <DependentUpon>WindowSizePicker.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Forms\AboutBox.resx">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ArduinoMapperForm.resx">
+      <DependentUpon>ArduinoMapperForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BootloaderForm.resx">
+      <DependentUpon>BootloaderForm.cs</DependentUpon>
+      <LastGenOutput>BootloaderForm1.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DelayValuePicker.resx">
+      <DependentUpon>DelayValuePicker.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MuniaSettingsDialog.resx">
+      <DependentUpon>MuniaSettingsDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="Forms\SubmitBug.resx">
+      <DependentUpon>SubmitBug.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\WindowSizePicker.resx">
+      <DependentUpon>WindowSizePicker.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="OpenTK.dll.config" />
+    <None Include="packages.config" />
+    <None Include="Resources\notok.png" />
+    <None Include="Resources\ok.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SVG#\Svg.csproj">
+      <Project>{886a98c5-37c0-4e8b-885e-30c1d2f98b47}</Project>
+      <Name>Svg</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\warn.png" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <Import Project="..\Packages\MSBuildTasks.1.4.0.128\tools\MSBuild.Community.Tasks.Targets" />
+  <UsingTask AssemblyFile="..\Packages\MSBuildTasks.1.4.0.128\tools\MSBuild.Community.Tasks.Targets.dll" TaskName="MSBuild.Community.Tasks.Zip" />
+  <Target Name="BeforeBuild">
+    <Version VersionFile="Properties\version.txt" Major="0" Minor="9" BuildType="Automatic" StartDate="1/1/2016" RevisionType="BuildIncrement">
+      <Output TaskParameter="Major" PropertyName="Major" />
+      <Output TaskParameter="Minor" PropertyName="Minor" />
+      <Output TaskParameter="Build" PropertyName="Build" />
+      <Output TaskParameter="Revision" PropertyName="Revision" />
+    </Version>
+    <AssemblyInfo CodeLanguage="CS" OutputFile="Properties\VersionInfo.cs" AssemblyVersion="$(Major).$(Minor)" AssemblyFileVersion="$(Major).$(Minor).$(Build).$(Revision)" />
+  </Target>
+</Project>
