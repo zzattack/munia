@@ -16,6 +16,7 @@ void ngc_create_n64_fake();
 
 void ngc_fakeout_test();
 void n64_fakeout_test();
+void snes_fakeout_test();
 void fakeout();
 
 // Packets below should not be stored in program memory but kept in RAM,
