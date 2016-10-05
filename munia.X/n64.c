@@ -31,7 +31,7 @@ void n64_tasks() {
     
     if (packets.n64_avail) {
         // see if this packet is equal to the last transmitted one, and if so, discard it
-        if (memcmp(&joydata_n64_usb, &joydata_n64_last, sizeof(n64_packet_t)) == 0) 
+        if (memcmp(&joydata_n64_raw, &joydata_n64_last, sizeof(n64_packet_t)) == 0) 
             packets.n64_avail = false; 
         
         else if (!in_menu) { // if in menu, menu_tasks will clear bit
@@ -87,7 +87,6 @@ void n64_handle_packet() {
         
         // when l and r are pressed, the start button bit seems to shift to unused1
         joydata_n64_raw.start |= joydata_n64_raw.__unused1 & joydata_n64_raw.l & joydata_n64_raw.r;
-        
         packets.n64_avail = true;
 	}
     else {
