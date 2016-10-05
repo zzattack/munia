@@ -6,14 +6,43 @@
 #include "gamecube.h"
 #include "gamepad.h"
 #include <stdbool.h>
-
-#define max(x, y) (((x) > (y)) ? (x) : (y))
-#define min(x, y) (((x) < (y)) ? (x) : (y))
+#include <stdlib.h>
 
 // [*] = multi select, checked and focused
 // [o] = multi select, checked but not focused
 // [.] = multi select, focused but not checked
 // [ ] = not checked or focused
+
+
+enum __menu_pages {
+    MENU_PAGE_OUTPUT, // PC, NGC, N64, SNES
+    MENU_PAGE_PC_INPUTS, // toggle boxes
+    MENU_PAGE_INPUT_NGC, // select either NGC or SNES
+    MENU_PAGE_INPUT_N64, // select either N64 or NGC
+    MENU_PAGE_INPUT_SNES, // only SNES available
+    MENU_PAGE_CONFIRM,
+    MENU_PAGE_COUNT,
+};
+enum __menu_command {
+    mc_left, mc_right, mc_select, mc_confirm, mc_cancel, mc_exit
+};
+
+// this is where the input is redirected to
+const char* menu_sub_items[][5] = {
+    {"NGC ", "N64 ", "SNES", "PC ", NULL},  // MENU_PAGE_NGC,
+    {"NGC ", "N64 ", "SNES", NULL },        // MENU_PAGE_PC_INPUTS,
+    {"NGC ", "SNES", NULL },                // MENU_PAGE_INPUT_NGC,
+    {"N64 ", "NGC ", NULL},                 // MENU_PAGE_INPUT_N64,
+    {"SNES", NULL },                        // MENU_PAGE_INPUT_SNES,
+    {"A:Ok ", " B:Cancel", NULL },          // MENU_PAGE_CONFIRM,
+};
+
+const uint8_t menu_input_options[][3] = {
+    { input_ngc, input_snes }, // for NGC
+    { input_n64, input_ngc }, // for N64
+    { input_snes },
+    // for SNES
+};
 
 uint8_t submenu_idx = 0;
 uint8_t submenu_mask = 0;
@@ -137,27 +166,27 @@ void menu_tasks() {
         return; 
     }
     if (packets.snes_avail) {
-        if (joydata_snes.dpad == HAT_SWITCH_WEST) menu_press(mc_left);
-        else if (joydata_snes.dpad == HAT_SWITCH_EAST) menu_press(mc_right);
-        if (joydata_snes.start) menu_press(mc_exit);
-        else if (joydata_snes.a) menu_press(mc_select);
-        else if (joydata_snes.b) menu_press(mc_cancel);
+        if (joydata_snes_raw.left) menu_press(mc_left);
+        else if (joydata_snes_raw.right) menu_press(mc_right);
+        if (joydata_snes_raw.start) menu_press(mc_exit);
+        else if (joydata_snes_raw.a) menu_press(mc_select);
+        else if (joydata_snes_raw.b) menu_press(mc_cancel);
         packets.snes_avail = false;
     }
     if (packets.n64_avail) {
-        if (joydata_n64.dpad == HAT_SWITCH_WEST) menu_press(mc_left);
-        else if (joydata_n64.dpad == HAT_SWITCH_EAST) menu_press(mc_right);
-        if (joydata_n64.start) menu_press(mc_exit);
-        else if (joydata_n64.a) menu_press(mc_select);
-        else if (joydata_n64.b) menu_press(mc_cancel);
+        if (joydata_n64_raw.dleft) menu_press(mc_left);
+        else if (joydata_n64_raw.dright) menu_press(mc_right);
+        if (joydata_n64_raw.start) menu_press(mc_exit);
+        else if (joydata_n64_raw.a) menu_press(mc_select);
+        else if (joydata_n64_raw.b) menu_press(mc_cancel);
         packets.n64_avail = false;
     }
     else if (packets.ngc_avail) {
-        if (joydata_ngc.hat == HAT_SWITCH_WEST) menu_press(mc_left);
-        else if (joydata_ngc.hat == HAT_SWITCH_EAST) menu_press(mc_right);
-        if (joydata_ngc.start) menu_press(mc_exit);
-        else if (joydata_ngc.a) menu_press(mc_select);
-        else if (joydata_ngc.b) menu_press(mc_cancel);
+        if (joydata_ngc_raw.dleft) menu_press(mc_left);
+        else if (joydata_ngc_raw.dright) menu_press(mc_right);
+        if (joydata_ngc_raw.start) menu_press(mc_exit);
+        else if (joydata_ngc_raw.a) menu_press(mc_select);
+        else if (joydata_ngc_raw.b) menu_press(mc_cancel);
         packets.ngc_avail = false;
     }
 }
@@ -184,8 +213,9 @@ void menu_press(uint8_t command) {
             else { /* no source selected */ }
         }
         else {
-            // select only one input source
-            config_edit.input_sources = 1 << submenu_idx;
+            // select only one input source, lookup from table
+            uint8_t in = menu_input_options[current_menu_page - MENU_PAGE_INPUT_NGC][submenu_idx];
+            config_edit.input_sources = in;
             menu_page(MENU_PAGE_CONFIRM);
         }
     }
