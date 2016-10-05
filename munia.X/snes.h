@@ -34,7 +34,7 @@ typedef struct {
 
 } snes_packet_t;
 
-snes_packet_t joydata_snes @ 0x50D /*+ sizeof(n64_packet_t)*/;
+snes_packet_t joydata_snes_usb @ 0x50D /*+ sizeof(n64_packet_t)*/;
 snes_packet_t joydata_snes_raw;
 
 void snes_tasks();
@@ -43,6 +43,7 @@ void snes_real();
 void snes_poll();
 extern void snes_sample() @ 0x3fc4;
 void snes_handle_packet();
+void snes_joydata_createhid();
 
 #endif	/* SNES_H */
 
