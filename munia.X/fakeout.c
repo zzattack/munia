@@ -20,7 +20,7 @@ void ngc_fakeout_test() {
             pfake_out = ngc_id_packet;
             ngc_fakeout();
         }
-        else if (cmd == 0x01) {
+        else if (cmd == 0x41) {
             fake_count = 80;
             pfake_out = ngc_init_packet;
             ngc_fakeout();
@@ -99,6 +99,10 @@ void fakeout() {
     ei();
 }
 
+void snes_fakeout_test() {
+    // not yet implemented
+}
+
 
 void fake_unpack(uint8_t* r, uint8_t n) {
     // unpack buffer bits to bytes
@@ -170,12 +174,6 @@ void snes_create_ngc_fake() {
         joydata_ngc_raw.y = false;
     }
 
-    // hid report fixup
-    joydata_ngc_raw = joydata_ngc;
-    joydata_ngc.joy_y = -joydata_ngc.joy_y;
-    joydata_ngc.c_y = -joydata_ngc.c_y;
-    joydata_ngc.hat = hat_lookup_ngc[joydata_ngc.hat];
-
     packets.ngc_avail = true;
 }
 
@@ -190,32 +188,21 @@ void ngc_create_n64_fake() {
     
     joydata_n64_raw.start = joydata_ngc_raw.start;
     joydata_n64_raw.z = joydata_ngc_raw.z;
-    joydata_n64_raw.l = joydata_ngc_raw.l > 50;
-    joydata_n64_raw.r = joydata_ngc_raw.r > 50;
-    
-    
+    joydata_n64_raw.l = joydata_ngc_raw.left_trig > 50 || joydata_ngc_raw.l;
+    joydata_n64_raw.r = joydata_ngc_raw.right_trig > 50 || joydata_ngc_raw.r;
+        
     // deadzone of 10 for center stick
-    joydata_n64_raw.joy_x = 128 + joydata_ngc.joy_x;
+    joydata_n64_raw.joy_x = joydata_ngc_raw.joy_x - 128;
     if (abs(joydata_n64_raw.joy_x) < NGC_JOY_DEADZONE) joydata_n64_raw.joy_x = 0;
-    joydata_n64_raw.joy_y = 128 - joydata_ngc.joy_y;
+    joydata_n64_raw.joy_y = joydata_ngc_raw.joy_y - 128;
     if (abs(joydata_n64_raw.joy_y) < NGC_JOY_DEADZONE) joydata_n64_raw.joy_y = 0;
     
     int8_t cx = joydata_ngc_raw.c_x - 128;
-    int8_t cy = 128 - joydata_ngc_raw.c_y;
+    int8_t cy = joydata_ngc_raw.c_y - 128;
     joydata_n64_raw.cleft = cx < -NGC_CSTICK_THRESHOLD;
     joydata_n64_raw.cright = cx > +NGC_CSTICK_THRESHOLD;
-    joydata_n64_raw.cdown = cy > +NGC_CSTICK_THRESHOLD;
-    joydata_n64_raw.cup = cy < -NGC_CSTICK_THRESHOLD;
-    
-    
-    // hid report fixup
-    joydata_n64 = joydata_n64_raw;
-    joydata_n64.joy_x -= 128;
-    joydata_n64.joy_y = 128 - joydata_n64.joy_y;
-    joydata_n64.dpad = hat_lookup_n64_snes[joydata_n64.dpad];
-    // when l and r are pressed, the start button bit seems to shift to unused1
-    joydata_n64.start |= joydata_n64.__unused1 & joydata_n64.l & joydata_n64.r;
-
+    joydata_n64_raw.cup = cy > +NGC_CSTICK_THRESHOLD;
+    joydata_n64_raw.cdown = cy < -NGC_CSTICK_THRESHOLD;    
         
     packets.n64_avail = true;
 }
