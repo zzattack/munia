@@ -31,15 +31,15 @@ typedef struct {
         };
     };
     
-    int8_t joy_x;
-    int8_t joy_y;
-    int8_t c_x;
-    int8_t c_y;
+    uint8_t joy_x;
+    uint8_t joy_y;
+    uint8_t c_x;
+    uint8_t c_y;
     uint8_t left_trig;
     uint8_t right_trig;
 } ngc_packet_t;
 
-ngc_packet_t joydata_ngc @ 0x500;
+ngc_packet_t joydata_ngc_usb @ 0x500;
 ngc_packet_t joydata_ngc_raw;
 
 
@@ -48,6 +48,7 @@ void ngc_real();
 void ngc_poll();
 extern void ngc_sample() @ 0x3f50;
 void ngc_handle_packet();
+void ngc_joydata_createhid();
 
 #endif	/* GAMECUBE_H */
 

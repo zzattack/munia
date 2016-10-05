@@ -66,10 +66,10 @@ void main() {
     dbgs("MUNIA Initialized\n");
     
 #ifdef DEBUG
-    config.output_mode = output_pc;
-    config.input_sources = 0x03;
+    config.output_mode = output_n64;
+    config.input_sources = input_ngc;
     apply_config();
-    menu_enter();
+    //menu_enter();
 #endif
     
 	while (1) {
@@ -241,7 +241,9 @@ void apply_config() {
     IOCCbits.IOCC7 = config.output_mode == output_snes;
     
     // redirect joysticks we're not sampling to their console
-    SWITCH1 = IOCCbits.IOCC0 || (config.input_sources & input_ngc);
-    SWITCH2 = IOCCbits.IOCC1 || (config.input_sources & input_n64);
-    SWITCH3 = IOCCbits.IOCC7 || (config.input_sources & input_snes);
+    // switch position = 0 --> connected to our fake output,
+    //                   1 --> connected to joystick
+    SWITCH1 = IOCCbits.IOCC0 || !config.input_ngc;
+    SWITCH2 = IOCCbits.IOCC1 || !config.input_n64;
+    SWITCH3 = IOCCbits.IOCC7 || !config.input_snes;
 }

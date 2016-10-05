@@ -14,18 +14,20 @@ void snes_tasks() {
         di();        
         snes_poll();
     }
-    
+        
     if (packets.snes_test) {
+        if (!in_menu && config.output_mode == output_snes && !config.input_snes) snes_fakeout_test();
+        else snes_handle_packet();
         packets.snes_test = false;
-        snes_handle_packet();
     }
     INTCONbits.IOCIF = 0; // don't bother with stuff that happened in the meantime
     ei();
     
     if (packets.snes_avail) {
         // see if this packet is equal to the last transmitted one, and if so, discard it
-        if (memcmp(&joydata_snes, &joydata_snes_last, sizeof(snes_packet_t)) == 0)
+        if (memcmp(&joydata_snes_raw, &joydata_snes_last, sizeof(snes_packet_t)) == 0)
             packets.snes_avail = false;
+        
         else if (!in_menu) { // if in menu, menu_tasks will clear bit
             // new, changed packet available; unpack if faking and send over usb
             if (config.input_snes && config.output_mode == output_ngc) {
@@ -33,10 +35,12 @@ void snes_tasks() {
                 fake_unpack((uint8_t*)&joydata_ngc_raw, sizeof(ngc_packet_t));
             }        
             if (USB_READY && !HIDTxHandleBusy(USBInHandleSNES)) {
-                USBInHandleSNES = HIDTxPacket(HID_EP_SNES, (uint8_t*)&joydata_snes, sizeof(snes_packet_t));
-                // save last packet
-                memcpy(&joydata_snes_last, &joydata_snes, sizeof(snes_packet_t));            
+                snes_joydata_createhid();
+                USBInHandleSNES = HIDTxPacket(HID_EP_SNES, (uint8_t*)&joydata_snes_usb, sizeof(snes_packet_t));
             }
+            
+            // save last packet
+            memcpy(&joydata_snes_last, &joydata_snes_raw, sizeof(snes_packet_t));            
             packets.snes_avail = false;
         } 
     }
@@ -71,8 +75,8 @@ void snes_poll() {
 
 void snes_handle_packet() {
     uint8_t idx = sample_w - sample_buff;
-	if (idx == 16 && !HIDTxHandleBusy(USBInHandleSNES)) {
-		uint8_t* w = (uint8_t*)&joydata_snes;
+	if (idx == 16) {
+		uint8_t* w = (uint8_t*)&joydata_snes_raw;
 		uint8_t* r = (uint8_t*)sample_buff;
 		for (uint8_t i = 0; i < sizeof(snes_packet_t); i++) {
             uint8_t x = 0;
@@ -83,9 +87,12 @@ void snes_handle_packet() {
             *w++ = ~x; // high's are not pressed, lows are pressed --> invert
 		}
         // these are inverted in HID reports
-        joydata_snes_raw = joydata_snes;
-        joydata_snes.dpad = hat_lookup_n64_snes[joydata_snes.dpad];
 
         packets.snes_avail = true;
 	}
+}
+
+void snes_joydata_createhid() {
+    joydata_snes_usb = joydata_snes_raw;
+    joydata_snes_usb.dpad = hat_lookup_n64_snes[joydata_snes_usb.dpad];
 }

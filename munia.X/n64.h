@@ -35,7 +35,7 @@ typedef struct {
     int8_t joy_y;
 } n64_packet_t;
 
-n64_packet_t joydata_n64 @ 0x508; // (0x500 + sizeof(ngc_packet_t));
+n64_packet_t joydata_n64_usb @ 0x508; // (0x500 + sizeof(ngc_packet_t));
 n64_packet_t joydata_n64_raw;
 void n64_tasks();
 void n64_fake();
@@ -43,5 +43,6 @@ void n64_real();
 void n64_poll();
 extern void n64_sample() @ 0x3f90;
 void n64_handle_packet();
+void n64_joydata_createhid();
 
 #endif	/* N64_H */
