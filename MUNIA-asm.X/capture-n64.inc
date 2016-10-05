@@ -1,5 +1,5 @@
 n64_sample
-    movlw 150
+    movlw 100
     movwf TMR0
     bcf INTCON, TMR0IF
     
@@ -23,7 +23,7 @@ n64_wait_fall
     clrf TMR2 ; restart asap for next bit
         
     movwf POSTINC0 ; interpret stored value as 2's complement integer for comparison
-    movlw 150 ; reload tmr0
+    movlw 100 ; reload tmr0
     movwf TMR0
     
     bra n64_wait_rise ; sample next bit
