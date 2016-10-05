@@ -1,0 +1,7 @@
+
+*.pyc
+/*.suo
+python*.core
+munia/settings.py
+static/*
+media/*
