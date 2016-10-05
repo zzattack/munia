@@ -36,13 +36,13 @@ namespace MUNIA.Controllers {
         public static IEnumerable<MuniaController> ListDevices() {
 			var loader = new HidDeviceLoader();
             foreach (var device in loader.GetDevices(0x04d8, 0x0058)) {
-                if (device.ProductName == "NinHID NGC") {
+                if (device.ProductName == "NinHID NGC" || (device.MaxInputReportLength == 9 && device.MaxOutputReportLength == 0)) {
                     yield return new MuniaNgc(device);
                 }
-                else if (device.ProductName == "NinHID N64") {
+                else if (device.ProductName == "NinHID N64" || device.MaxInputReportLength == 5) {
                     yield return new MuniaN64(device);
 				}
-				else if (device.ProductName == "NinHID SNES") {
+				else if (device.ProductName == "NinHID SNES" || device.MaxInputReportLength == 3) {
 					yield return new MuniaSnes(device);
 				}
 			}
@@ -54,7 +54,8 @@ namespace MUNIA.Controllers {
 		public static HidDevice GetConfigInterface() {
 			var loader = new HidDeviceLoader();
 			// todo: use foreach/window instead of firstordefault
-		    return loader.GetDevices(0x04d8, 0x0058).FirstOrDefault(device => device.ProductName == "NinHID CFG");
+		    return loader.GetDevices(0x04d8, 0x0058).FirstOrDefault(device => device.ProductName == "NinHID CFG"
+				|| (device.MaxInputReportLength == device.MaxOutputReportLength && device.MaxInputReportLength == 9));
 	    }
 
 	    class StreamAndBuffer {
