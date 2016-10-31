@@ -64,6 +64,8 @@ void main() {
     init_interrupts();    
     
     dbgs("MUNIA Initialized\n");
+    memset(usbOutBuffer, 0, sizeof(usbOutBuffer));
+    memset(usbInBuffer, 0, sizeof(usbInBuffer));
     
 #ifdef DEBUG
     config.output_mode = output_n64;
@@ -121,7 +123,6 @@ void main() {
 }
 
 void init_pll() {
-
 	OSCTUNE = 0x80; // 3X PLL ratio mode selected
 	OSCCON = 0x70;  // Switch to 16MHz HFINTOSC
 	OSCCON2 = 0x10; // Enable PLL, SOSC, PRI OSC drivers turned off
@@ -235,6 +236,9 @@ void save_config() {
 }
 
 void apply_config() {
+    // validate
+    if (config.output_mode > output_pc) config.output_mode = output_pc;
+    config.input_sources &= 0b111;
     // only take interrupt event from the console we're outputting to
     IOCCbits.IOCC0 = config.output_mode == output_ngc;
     IOCCbits.IOCC1 = config.output_mode == output_n64;

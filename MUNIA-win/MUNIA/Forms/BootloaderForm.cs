@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using HidSharp;
@@ -107,10 +109,13 @@ namespace MUNIA.Forms {
 				using (var stream = dev.Open()) {
 					byte[] buff = new byte[9];
 					buff[0] = 0;
-					buff[1] = 0x48;  // CFG_CMD_RESET_BL
+					buff[1] = 0x48; // CFG_CMD_RESET_BL
 					stream.Write(buff, 0, buff.Length);
 				}
 			}
+			catch (Win32Exception) { }
+			catch (IOException) { }
+			catch (TimeoutException) { }
 			catch (Exception exc) {
 				MessageBox.Show("An error occurred while retrieving information from the MUNIA device:\r\n\r\n" + exc,
 					"Unknown error", MessageBoxButtons.OK, MessageBoxIcon.Error);
