@@ -7,6 +7,8 @@
 // #pragma config statements should precede project file includes.
 // Use project enums instead of #define for ON and OFF.
 
+#ifndef BOOTLOADER_INCLUDED
+
 // CONFIG1L
 #pragma config PLLSEL = PLL3X   // PLL Selection (3x clock multiplier)
 #pragma config CFGPLLEN = OFF   // PLL Enable Configuration bit (PLL Disabled (firmware controlled))
@@ -52,6 +54,7 @@
 #pragma config XINST = OFF      // Extended Instruction Set Enable bit (Instruction set extension and Indexed Addressing mode disabled)
 
 // CONFIG5L
+#pragma config CP0 = OFF        // Block 0 Code Protect (Block 0 is not code-protected)
 #pragma config CP1 = OFF        // Block 1 Code Protect (Block 1 is not code-protected)
 
 // CONFIG5H
@@ -64,14 +67,12 @@
 
 
 #ifdef DEBUG
-#pragma config CP0 = OFF        // Block 0 Code Protect (Block 0 is not code-protected)
-#pragma config WRTC = OFF       // Configuration Registers Write Protect (Configuration registers (300000-3000FFh) are write-protected)
 #pragma config WRTB = OFF       // Boot Block Write Protect (Boot block (0000-7FFh) is write-protected)
+#pragma config WRTC = OFF       // Configuration Registers Write Protect (Configuration registers (300000-3000FFh) are write-protected)
 // CONFIG6H
 #else
-#pragma config CP0 = ON         // Block 0 Code Protect (Block 0 is not code-protected)
-#pragma config WRTC = ON        // Configuration Registers Write Protect (Configuration registers (300000-3000FFh) are write-protected)
 #pragma config WRTB = ON        // Boot Block Write Protect (Boot block (0000-7FFh) is write-protected)
+#pragma config WRTC = ON        // Configuration Registers Write Protect (Configuration registers (300000-3000FFh) are write-protected)
 
 #endif
 #pragma config WRTD = OFF       // Data EEPROM Write Protect (Data EEPROM is not write-protected)
@@ -82,3 +83,5 @@
 
 // CONFIG7H
 #pragma config EBTRB = OFF      // Boot Block Table Read Protect (Boot block is not protected from table reads executed in other blocks)
+
+#endif
