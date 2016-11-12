@@ -201,7 +201,7 @@ void menu_press(uint8_t command) {
             config_edit.output_mode = submenu_idx;
             if (submenu_idx == output_ngc) menu_page(MENU_PAGE_INPUT_NGC);
             else if (submenu_idx == output_n64) menu_page(MENU_PAGE_INPUT_N64);
-            else if (submenu_idx == output_snes) menu_page(MENU_PAGE_INPUT_SNES);
+            else if (submenu_idx == output_snes) menu_page(MENU_PAGE_CONFIRM /* todo: when more snes outputs: MENU_PAGE_INPUT_SNES */);
             else if (submenu_idx == output_pc) menu_page(MENU_PAGE_PC_INPUTS);
         }
         else if (current_menu_page == MENU_PAGE_PC_INPUTS) {
