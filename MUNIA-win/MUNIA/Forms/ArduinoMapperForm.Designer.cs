@@ -23,6 +23,7 @@
 		/// the contents of this method with the code editor.
 		/// </summary>
 		private void InitializeComponent() {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ArduinoMapperForm));
 			this.lbSerialPorts = new System.Windows.Forms.ListBox();
 			this.cbDeviceType = new System.Windows.Forms.ComboBox();
 			this.label1 = new System.Windows.Forms.Label();
@@ -125,6 +126,7 @@
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.lbSerialPorts);
 			this.Controls.Add(this.gb);
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "ArduinoMapperForm";
 			this.Text = "Arduino mapper";
 			this.gb.ResumeLayout(false);

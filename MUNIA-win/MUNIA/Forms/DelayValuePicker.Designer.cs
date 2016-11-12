@@ -23,6 +23,7 @@
 		/// the contents of this method with the code editor.
 		/// </summary>
 		private void InitializeComponent() {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DelayValuePicker));
 			this.BtnAccept = new System.Windows.Forms.Button();
 			this.btnCancel = new System.Windows.Forms.Button();
 			this.lblWidth = new System.Windows.Forms.Label();
@@ -132,6 +133,7 @@
 			this.Controls.Add(this.gb);
 			this.Controls.Add(this.btnCancel);
 			this.Controls.Add(this.BtnAccept);
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "DelayValuePicker";
 			this.Text = "Delay picker";
 			this.gb.ResumeLayout(false);
