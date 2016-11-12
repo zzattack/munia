@@ -102,8 +102,8 @@ namespace MUNIA.Forms {
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(321, 33);
 			this.label1.TabIndex = 3;
-			this.label1.Text = "Something seems to have failed. Would you like to transmit a bug report contain" +
-    "ing the error log and skin to bugs@munia.io?";
+			this.label1.Text = "Something seems to have failed. Would you like to transmit a bug report containin" +
+    "g the error log and skin to bugs@munia.io?";
 			// 
 			// label2
 			// 

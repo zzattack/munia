@@ -31,7 +31,7 @@ namespace MUNIA.Forms {
 			this.lblVersion = new System.Windows.Forms.Label();
 			this.lblCopyright = new System.Windows.Forms.Label();
 			this.lblCompanyName = new System.Windows.Forms.Label();
-			this.tbDescription = new RichTextBoxEx();
+			this.tbDescription = new MUNIA.Util.RichTextBoxEx();
 			this.okButton = new System.Windows.Forms.Button();
 			this.tableLayoutPanel.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).BeginInit();

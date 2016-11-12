@@ -25,6 +25,7 @@ namespace MUNIA.Forms {
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.tsmiControllers = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiOptions = new System.Windows.Forms.ToolStripMenuItem();
@@ -32,6 +33,7 @@ namespace MUNIA.Forms {
 			this.tsmiMuniaSettings = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiFirmware = new System.Windows.Forms.ToolStripMenuItem();
 			this.setCaptureLagCompensationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.mapArduinoDevicesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiHelp = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiCheckUpdates = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiAbout = new System.Windows.Forms.ToolStripMenuItem();
@@ -41,7 +43,6 @@ namespace MUNIA.Forms {
 			this.lblFill = new System.Windows.Forms.ToolStripStatusLabel();
 			this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
 			this.pbProgress = new System.Windows.Forms.ToolStripProgressBar();
-			this.mapArduinoDevicesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.statusStrip1.SuspendLayout();
 			this.SuspendLayout();
@@ -103,6 +104,13 @@ namespace MUNIA.Forms {
 			this.setCaptureLagCompensationToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
 			this.setCaptureLagCompensationToolStripMenuItem.Text = "Set &lag compensation";
 			this.setCaptureLagCompensationToolStripMenuItem.Click += new System.EventHandler(this.tsmiSetLagCompensation);
+			// 
+			// mapArduinoDevicesToolStripMenuItem
+			// 
+			this.mapArduinoDevicesToolStripMenuItem.Name = "mapArduinoDevicesToolStripMenuItem";
+			this.mapArduinoDevicesToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+			this.mapArduinoDevicesToolStripMenuItem.Text = "Map arduino devices";
+			this.mapArduinoDevicesToolStripMenuItem.Click += new System.EventHandler(this.tsmiMapArduinoDevicesClick);
 			// 
 			// tsmiHelp
 			// 
@@ -175,13 +183,6 @@ namespace MUNIA.Forms {
 			this.pbProgress.Size = new System.Drawing.Size(100, 16);
 			this.pbProgress.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
 			// 
-			// mapArduinoDevicesToolStripMenuItem
-			// 
-			this.mapArduinoDevicesToolStripMenuItem.Name = "mapArduinoDevicesToolStripMenuItem";
-			this.mapArduinoDevicesToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
-			this.mapArduinoDevicesToolStripMenuItem.Text = "Map arduino devices";
-			this.mapArduinoDevicesToolStripMenuItem.Click += new System.EventHandler(this.tsmiMapArduinoDevicesClick);
-			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -190,6 +191,7 @@ namespace MUNIA.Forms {
 			this.Controls.Add(this.glControl);
 			this.Controls.Add(this.statusStrip1);
 			this.Controls.Add(this.menuStrip1);
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MainMenuStrip = this.menuStrip1;
 			this.Name = "MainForm";
 			this.Text = "MUNIA";
