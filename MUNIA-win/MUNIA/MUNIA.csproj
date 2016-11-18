@@ -200,7 +200,6 @@
     <None Include="Resources\warn.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="mun.ico" />
     <Content Include="munia256.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
