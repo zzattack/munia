@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using HidSharp;
@@ -41,7 +42,7 @@ namespace MUNIA.Forms {
 			if (!_skipUpdateCheck)
 				PerformUpdateCheck();
 			else
-				UpdateStatus("not checking for newer version", 100);
+				UpdateStatus("not checking for newer version", 100);			
 		}
 
 		private Task _buildMenuTask;
@@ -98,8 +99,8 @@ namespace MUNIA.Forms {
 				else
 					ConfigManager.WindowSizes[skin] = glControl.Size;
 			}
-
-			skin.Render(glControl.Width, glControl.Height);
+			
+			UpdateController();
 			Render();
 		}
 
@@ -107,16 +108,28 @@ namespace MUNIA.Forms {
 			glControl.MakeCurrent();
 			glControl.VSync = true;
 		}
-
+		
+		private readonly Stopwatch _stopwatch = Stopwatch.StartNew();
+		private const int maxFPS = 60;
 		private void OnApplicationOnIdle(object s, EventArgs a) {
 			while (glControl.IsIdle) {
-				if (Update()) Render();
-			}
+                glControl.MakeCurrent();
+                _stopwatch.Restart();
+				if (UpdateController())
+					Render();
+                Thread.Sleep((int)(Math.Max(1000f / maxFPS - _stopwatch.Elapsed.TotalMilliseconds, 0)));
+    		}
 		}
 
-		private bool Update() {
+		private bool UpdateController() {
 			if (ConfigManager.ActiveSkin == null) return false;
 			return ConfigManager.ActiveSkin.UpdateState(ConfigManager.GetActiveController());
+		}
+
+		private void UpdateRender() {
+			if (UpdateController()) {
+				Render();
+			}
 		}
 
 		private void Render() {
@@ -142,6 +155,7 @@ namespace MUNIA.Forms {
 				ConfigManager.ActiveSkin?.Render(glControl.Width, glControl.Height);
 			}
 			GL.Viewport(0, 0, glControl.Width, glControl.Height);
+			Render();
 		}
 
 		private void tsmiSetWindowSize_Click(object sender, EventArgs e) {
