@@ -96,7 +96,10 @@ namespace MUNIA.Skins {
 
 		private void CalcBounds() {
 			foreach (var button in Buttons) {
-				var bounds = new Rectangle(button.Offset, button.Size);
+				var bounds = new RectangleF(button.Offset, button.Size);
+				// center, divide by 2 non-floating
+				bounds.Offset(-button.Size.Width / 2, -button.Size.Height / 2);
+
 				var l = Project(bounds.Location, _baseDimension, _dimensions);
 				var s = Project(new PointF(bounds.Right, bounds.Bottom), _baseDimension,  _dimensions);
 				var boundsScaled = RectangleF.FromLTRB(l.X, l.Y, s.X, s.Y);
