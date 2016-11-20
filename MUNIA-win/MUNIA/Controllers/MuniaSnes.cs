@@ -13,18 +13,18 @@ namespace MUNIA.Controllers {
 
 		protected override bool Parse(byte[] ev) {
 			// B Y SEL START
-			int i = 0, mask = 0x80;
-			_buttons[i++] = (ev[1] & mask) != 0; mask >>= 1;
-			_buttons[i++] = (ev[1] & mask) != 0; mask >>= 1;
-			_buttons[i++] = (ev[1] & mask) != 0; mask >>= 1;
-			_buttons[i++] = (ev[1] & mask) != 0; mask >>= 1;
+			int i = 0, mask = 0x10;
+			_buttons[i++] = (ev[1] & mask) != 0; mask <<= 1;
+			_buttons[i++] = (ev[1] & mask) != 0; mask <<= 1;
+			_buttons[i++] = (ev[1] & mask) != 0; mask <<= 1;
+			_buttons[i++] = (ev[1] & mask) != 0; mask <<= 1;
 
 			// A X L R
-			mask = 0x80;
-			_buttons[i++] = (ev[2] & mask) != 0; mask >>= 1;
-			_buttons[i++] = (ev[2] & mask) != 0; mask >>= 1;
-			_buttons[i++] = (ev[2] & mask) != 0; mask >>= 1;
-			_buttons[i++] = (ev[2] & mask) != 0; mask >>= 1;
+			mask = 0x10;
+			_buttons[i++] = (ev[2] & mask) != 0; mask <<= 1;
+			_buttons[i++] = (ev[2] & mask) != 0; mask <<= 1;
+			_buttons[i++] = (ev[2] & mask) != 0; mask <<= 1;
+			_buttons[i++] = (ev[2] & mask) != 0; mask <<= 1;
 
             // UP DOWN LEFT RIGHT
             Hat hat = ControllerState.HatLookup[(byte)(ev[1] & 0x0F)];
