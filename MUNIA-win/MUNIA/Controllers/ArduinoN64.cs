@@ -15,18 +15,18 @@ namespace MUNIA.Controllers {
 			var packet = Repack(buffer);
 
 			// A B Z START
-			_buttons[0] = (packet[0] & 0x80) != 0;
-			_buttons[1] = (packet[0] & 0x40) != 0;
-			_buttons[2] = (packet[0] & 0x20) != 0;
-			_buttons[3] = (packet[0] & 0x10) != 0;
+			_buttons[0] = (packet[0] & 0x10) != 0;
+			_buttons[1] = (packet[0] & 0x20) != 0;
+			_buttons[2] = (packet[0] & 0x40) != 0;
+			_buttons[3] = (packet[0] & 0x80) != 0;
 
 			// _ _ L R CUP CDOWN CLEFT CRIGHT
-			_buttons[4] = (packet[1] & 0x20) != 0;
-			_buttons[5] = (packet[1] & 0x10) != 0;
-			_buttons[6] = (packet[1] & 0x08) != 0;
-			_buttons[7] = (packet[1] & 0x04) != 0;
-			_buttons[8] = (packet[1] & 0x02) != 0;
-			_buttons[9] = (packet[1] & 0x01) != 0;
+			_buttons[4] = (packet[1] & 0x01) != 0;
+			_buttons[5] = (packet[1] & 0x02) != 0;
+			_buttons[6] = (packet[1] & 0x04) != 0;
+			_buttons[7] = (packet[1] & 0x08) != 0;
+			_buttons[8] = (packet[1] & 0x10) != 0;
+			_buttons[9] = (packet[1] & 0x20) != 0;
 
 			byte bhat = (byte)(packet[0] & 0x0F);
 			Hat hat = Hat.None;

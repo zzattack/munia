@@ -13,19 +13,19 @@ namespace MUNIA.Controllers {
 		public override string Name => string.IsNullOrEmpty(base.Name) ? "MUNIA N64" : base.Name;
         protected override bool Parse(byte[] ev) {
             // A B Z START
-            _buttons[0] = (ev[1] & 0x80) != 0;
-            _buttons[1] = (ev[1] & 0x40) != 0;
-            _buttons[2] = (ev[1] & 0x20) != 0;
-            _buttons[3] = (ev[1] & 0x10) != 0;
+            _buttons[0] = (ev[1] & 0x10) != 0;
+            _buttons[1] = (ev[1] & 0x20) != 0;
+            _buttons[2] = (ev[1] & 0x40) != 0;
+            _buttons[3] = (ev[1] & 0x80) != 0;
 
             // _ _ L R CUP CDOWN CLEFT CRIGHT
-            _buttons[4] = (ev[2] & 0x20) != 0;
-            _buttons[5] = (ev[2] & 0x10) != 0;
-            _buttons[6] = (ev[2] & 0x08) != 0;
-            _buttons[7] = (ev[2] & 0x04) != 0;
-            _buttons[8] = (ev[2] & 0x02) != 0;
-            _buttons[9] = (ev[2] & 0x01) != 0;
-
+            _buttons[4] = (ev[2] & 0x01) != 0;
+			_buttons[5] = (ev[2] & 0x02) != 0;
+            _buttons[6] = (ev[2] & 0x04) != 0;
+            _buttons[7] = (ev[2] & 0x08) != 0;
+            _buttons[8] = (ev[2] & 0x10) != 0;
+            _buttons[9] = (ev[2] & 0x20) != 0;
+            
             // UP DOWN LEFT RIGHT
             Hat hat = ControllerState.HatLookup[(byte)(ev[1] & 0x0F)];
 			_hats[0] = hat;

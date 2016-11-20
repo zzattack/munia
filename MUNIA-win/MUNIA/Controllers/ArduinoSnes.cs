@@ -15,18 +15,18 @@ namespace MUNIA.Controllers {
 			var packet = Repack(buffer);
 
 			// B Y SEL START
-			int i = 0, mask = 0x80;
-			_buttons[i] = (packet[0] & mask) != 0; mask >>= 1; i++;
-			_buttons[i] = (packet[0] & mask) != 0; mask >>= 1; i++;
-			_buttons[i] = (packet[0] & mask) != 0; mask >>= 1; i++;
-			_buttons[i] = (packet[0] & mask) != 0; mask >>= 1; i++;
+			int i = 0, mask = 0x10;
+			_buttons[i++] = (packet[0] & mask) != 0; mask <<= 1;
+			_buttons[i++] = (packet[0] & mask) != 0; mask <<= 1;
+			_buttons[i++] = (packet[0] & mask) != 0; mask <<= 1;
+			_buttons[i++] = (packet[0] & mask) != 0; mask <<= 1;	 
 
 			// A X L R
-			mask = 0x80;
-			_buttons[i] = (packet[1] & mask) != 0; mask >>= 1; i++;
-			_buttons[i] = (packet[1] & mask) != 0; mask >>= 1; i++;
-			_buttons[i] = (packet[1] & mask) != 0; mask >>= 1; i++;
-			_buttons[i] = (packet[1] & mask) != 0; mask >>= 1; i++;
+			mask = 0x10;										
+			_buttons[i++] = (packet[1] & mask) != 0; mask <<= 1;
+			_buttons[i++] = (packet[1] & mask) != 0; mask <<= 1;
+			_buttons[i++] = (packet[1] & mask) != 0; mask <<= 1;
+			_buttons[i++] = (packet[1] & mask) != 0; mask <<= 1;
 
 			byte bhat = (byte)(packet[0] & 0x0F);
 			Hat hat = Hat.None;
