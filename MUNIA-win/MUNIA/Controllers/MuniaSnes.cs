@@ -9,6 +9,7 @@ namespace MUNIA.Controllers {
 		}
 		
 		public override ControllerType Type => ControllerType.SNES;
+		public override string Name => string.IsNullOrEmpty(base.Name) ? "MUNIA SNES" : base.Name;
 
 		protected override bool Parse(byte[] ev) {
 			// B Y SEL START

@@ -10,6 +10,7 @@ namespace MUNIA.Controllers {
         }
 		
 	    public override ControllerType Type => ControllerType.N64;
+		public override string Name => string.IsNullOrEmpty(base.Name) ? "MUNIA N64" : base.Name;
         protected override bool Parse(byte[] ev) {
             // A B Z START
             _buttons[0] = (ev[1] & 0x80) != 0;

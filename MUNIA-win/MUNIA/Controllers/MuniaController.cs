@@ -16,7 +16,7 @@ namespace MUNIA.Controllers {
         public HidDevice HidDevice;
 		private HidStream _stream;
 		public string DevicePath => HidDevice.DevicePath;
-		public string Name => HidDevice.ProductName;
+		public virtual string Name => HidDevice.ProductName;
 	    public abstract ControllerType Type { get; }
 		
         protected readonly List<bool> _buttons = new List<bool>();
@@ -30,7 +30,7 @@ namespace MUNIA.Controllers {
             this.HidDevice = hidDevice;
         }
         public override string ToString() {
-            return HidDevice.ProductName;
+            return Name;
         }
         
         public static IEnumerable<MuniaController> ListDevices() {
