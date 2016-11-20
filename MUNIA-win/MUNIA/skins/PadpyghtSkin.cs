@@ -37,10 +37,7 @@ namespace MUNIA.Skins {
 				Sticks.Clear();
 				Triggers.Clear();
 
-				Name = pi.Name;
-				foreach (ControllerType t in Enum.GetValues(typeof(ControllerType)))
-					Controllers.Add(t);
-
+				Name = pi.Directory.Name;
 
 				var general = ini.GetSection("General");
 				// _dimensions = new Size(general.ReadInt("Width"), general.ReadInt("Height"));
@@ -61,13 +58,36 @@ namespace MUNIA.Skins {
 				int numButtons = Buttons.Count;
 				Buttons.EnsureSize(numButtons + 4);
 				Buttons[numButtons] = ReadIniButton(ini.GetSection("Up"), pi);
-				Buttons[numButtons+1] = ReadIniButton(ini.GetSection("Down"), pi);
-				Buttons[numButtons+2] = ReadIniButton(ini.GetSection("Left"), pi);
-				Buttons[numButtons+3] = ReadIniButton(ini.GetSection("Right"), pi);
+				Buttons[numButtons + 1] = ReadIniButton(ini.GetSection("Down"), pi);
+				Buttons[numButtons + 2] = ReadIniButton(ini.GetSection("Left"), pi);
+				Buttons[numButtons + 3] = ReadIniButton(ini.GetSection("Right"), pi);
 
-				// todo: axes
+				// triggers
+				foreach (var sec in ini.Sections) {
+					if (sec.Name.StartsWith("Trigger")) {
+						int trigNum = int.Parse(sec.Name.Substring(7));
+						Triggers.EnsureSize(trigNum);
+						Triggers[trigNum - 1] = ReadIniTrigger(sec, pi);
+					}
+				}
 
-				// CalcBounds();
+				// sticks
+				foreach (var sec in ini.Sections) {
+					if (sec.Name.StartsWith("Stick")) {
+						int stickNum = int.Parse(sec.Name.Substring(5));
+						Sticks.EnsureSize(stickNum);
+						Sticks[stickNum - 1] = ReadIniStick(sec, pi);
+					}
+				}
+
+				foreach (ControllerType t in Enum.GetValues(typeof(ControllerType))) {
+					var c = ControllerFactory.MakeController(t);
+					var state = c?.GetState();
+					if (state?.Axes.Count >= (Triggers.Max(tr => (int?)tr.Axis) ?? 0)
+						&& state.Axes.Count >= (Sticks.Max(s => (int?)Math.Max(s.HorizontalAxis, s.VerticalAxis)) ?? 0)
+						&& state.Buttons.Count >= Buttons.Count)
+						Controllers.Add(t);
+				}
 
 				LoadResult = SkinLoadResult.Ok;
 			}
@@ -79,10 +99,46 @@ namespace MUNIA.Skins {
 			var ret = new Button {
 				Offset = sec.ReadPoint("Position"),
 				Size = sec.ReadSize("Size"),
-				Pressed = (Bitmap)Image.FromFile(System.IO.Path.Combine(pi.DirectoryName, sec.ReadString("File_Push")))
 			};
-			if (ret.Pressed != null)
+			if (sec.HasKey("File_Free", false)) {
+				ret.Bitmap = (Bitmap)Image.FromFile(System.IO.Path.Combine(pi.DirectoryName, sec.ReadString("File_Free", "", false)));
+				ret.Texture = TextureHelper.CreateTexture(ret.Bitmap);
+			}
+			if (sec.HasKey("File_Push", false)) {
+				ret.Pressed = (Bitmap)Image.FromFile(System.IO.Path.Combine(pi.DirectoryName, sec.ReadString("File_Push", "", false)));
 				ret.PressedTexture = TextureHelper.CreateTexture(ret.Pressed);
+			}
+			return ret;
+		}
+
+		private static Trigger ReadIniTrigger(IniFile.IniSection sec, FileInfo pi) {
+			if (sec == null) return null;
+			var ret = new Trigger {
+				Offset = sec.ReadPoint("Position"),
+				Size = sec.ReadSize("Size"),
+			};
+			ret.Axis = sec.ReadInt("Axis");
+			ret.OffsetScale = 0.08f;
+			if (sec.HasKey("File_Trigger", false)) {
+				ret.Bitmap = (Bitmap)Image.FromFile(System.IO.Path.Combine(pi.DirectoryName, sec.ReadString("File_Trigger", "", false)));
+				ret.Texture = TextureHelper.CreateTexture(ret.Bitmap);
+			}
+			ret.Z = -1; // default to behind controller
+			return ret;
+		}
+
+		private static Stick ReadIniStick(IniFile.IniSection sec, FileInfo pi) {
+			if (sec == null) return null;
+			var ret = new Stick {
+				Offset = sec.ReadPoint("Position"),
+				Size = sec.ReadSize("Size"),
+			};
+			var axes = sec.ReadPoint("Axes");
+			ret.HorizontalAxis = axes.X;
+			ret.VerticalAxis = axes.Y;
+			ret.OffsetScale = 0.15f;
+			ret.Bitmap = (Bitmap)Image.FromFile(System.IO.Path.Combine(pi.DirectoryName, sec.ReadString("File_Stick", "", false)));
+			ret.Texture = TextureHelper.CreateTexture(ret.Bitmap);
 			return ret;
 		}
 
@@ -95,19 +151,15 @@ namespace MUNIA.Skins {
 		}
 
 		private void CalcBounds() {
-			foreach (var button in Buttons) {
-				var bounds = new RectangleF(button.Offset, button.Size);
+			foreach (var item in Buttons.Cast<ControllerItem>().Union(Sticks).Union(Triggers)) {
+				var bounds = new RectangleF(item.Offset, item.Size);
 				// center, divide by 2 non-floating
-				bounds.Offset(-button.Size.Width / 2, -button.Size.Height / 2);
+				bounds.Offset(-item.Size.Width / 2, -item.Size.Height / 2);
 
 				var l = Project(bounds.Location, _baseDimension, _dimensions);
-				var s = Project(new PointF(bounds.Right, bounds.Bottom), _baseDimension,  _dimensions);
+				var s = Project(new PointF(bounds.Right, bounds.Bottom), _baseDimension, _dimensions);
 				var boundsScaled = RectangleF.FromLTRB(l.X, l.Y, s.X, s.Y);
-				button.Bounds = button.PressedBounds = boundsScaled;
-			}
-			foreach (var stick in Sticks) {
-			}
-			foreach (var trigger in Triggers) {
+				item.Bounds = boundsScaled;
 			}
 		}
 
@@ -122,13 +174,14 @@ namespace MUNIA.Skins {
 			GL.BlendFunc(BlendingFactorSrc.One, BlendingFactorDest.OneMinusSrcAlpha);
 			GL.Enable(EnableCap.Texture2D);
 
-			foreach (var ci in all.Where(x => x.Item1.Z < 0))
+			var allOrdered = all.OrderBy(x => x.Item1.Z);
+			foreach (var ci in allOrdered.Where(x => x.Item1.Z < 0))
 				RenderItem(ci.Item1, ci.Item2);
 
 			GL.BindTexture(TextureTarget.Texture2D, _baseTexture);
 			TextureHelper.RenderTexture(0, _dimensions.Width, 0, _dimensions.Height);
 
-			foreach (var ci in all.Where(x => x.Item1.Z >= 0))
+			foreach (var ci in allOrdered.Where(x => x.Item1.Z >= 0))
 				RenderItem(ci.Item1, ci.Item2);
 
 			GL.Disable(EnableCap.Blend);
@@ -144,7 +197,7 @@ namespace MUNIA.Skins {
 			bool pressed = State != null && State.Buttons[i];
 			if (pressed && btn.Pressed != null) {
 				GL.BindTexture(TextureTarget.Texture2D, btn.PressedTexture);
-				TextureHelper.RenderTexture(btn.PressedBounds);
+				TextureHelper.RenderTexture(btn.Bounds);
 			}
 			else if (!pressed && btn.Bitmap != null) {
 				GL.BindTexture(TextureTarget.Texture2D, btn.Texture);
@@ -195,7 +248,7 @@ namespace MUNIA.Skins {
 				dim.Width = dim.Height * svgAR;
 			return dim;
 		}
-		
+
 		private PointF Project(PointF p, SizeF original, SizeF target) {
 			/*float originalAR = original.Width / original.Height;
 			float targetAR = target.Width / target.Height;
@@ -216,7 +269,7 @@ namespace MUNIA.Skins {
 			var y = p.Y / original.Height * target.Height;
 			return new PointF(x, y);
 		}
-		
+
 		internal PointF Unproject(PointF p) {
 			float targetAR = _dimensions.Width / _dimensions.Height;
 			float imgAR = _baseDimension.Width / _baseDimension.Height;
@@ -251,7 +304,6 @@ namespace MUNIA.Skins {
 		public class Button : ControllerItem {
 			public Bitmap Pressed;
 			public int PressedTexture = -1;
-			public RectangleF PressedBounds;
 		}
 		public class Stick : ControllerItem {
 			public float OffsetScale;
