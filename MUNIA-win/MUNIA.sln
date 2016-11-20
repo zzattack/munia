@@ -12,13 +12,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{6104F3
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Svg", "SVG#\Svg.csproj", "{886A98C5-37C0-4E8B-885E-30C1D2F98B47}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{904E8FEC-B27F-4277-9673-FCAC9954C72D}"
-	ProjectSection(SolutionItems) = preProject
-		Build.proj = Build.proj
-		.build\MSBuild.Community.Tasks.dll = .build\MSBuild.Community.Tasks.dll
-		.build\MSBuild.Community.Tasks.targets = .build\MSBuild.Community.Tasks.targets
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MUNIA", "MUNIA\MUNIA.csproj", "{3DC18ABA-B1D8-4556-A9F6-09E95182C5B0}"
 EndProject
 Global
