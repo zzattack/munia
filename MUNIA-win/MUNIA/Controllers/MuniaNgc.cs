@@ -11,6 +11,7 @@ namespace MUNIA.Controllers {
         }
 		
 	    public override ControllerType Type => ControllerType.NGC;
+		public override string Name => string.IsNullOrEmpty(base.Name) ? "MUNIA NGC" : base.Name;
         protected override bool Parse(byte[] ev) {
             // 0 0 0 START Y X B A
             _buttons[0] = (ev[1] & 0x10) != 0;
