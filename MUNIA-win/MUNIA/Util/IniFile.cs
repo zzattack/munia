@@ -208,8 +208,10 @@ namespace MUNIA.Util {
 				return copy;
 			}
 
-			public bool HasKey(string keyName) {
-				return SortedEntries.ContainsKey(keyName);
+			public bool HasKey(string keyName, bool caseSensitive = true) {
+				return caseSensitive
+					? SortedEntries.ContainsKey(keyName)
+					: SortedEntries.Any(e => e.Key.Equals(keyName, StringComparison.OrdinalIgnoreCase));
 			}
 
 			static readonly string[] TrueValues = { "yes", "1", "true", "on" };
@@ -224,10 +226,14 @@ namespace MUNIA.Util {
 				else return defaultValue;
 			}
 
-			public string ReadString(string key, string defaultValue = "") {
+			public string ReadString(string key, string defaultValue = "", bool caseSensitive = true) {
 				IniValue ret;
-				if (SortedEntries.TryGetValue(key, out ret))
+				if (caseSensitive && SortedEntries.TryGetValue(key, out ret))
 					return ret;
+				else if (!caseSensitive) {
+					var v = OrderedEntries.Where(x => x.Key.Equals(key, StringComparison.OrdinalIgnoreCase));
+					return v.Any() ? v.First().Value.ToString() : defaultValue;
+				}
 				else
 					return defaultValue;
 			}

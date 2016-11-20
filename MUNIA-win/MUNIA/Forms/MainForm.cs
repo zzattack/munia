@@ -42,7 +42,7 @@ namespace MUNIA.Forms {
 			if (!_skipUpdateCheck)
 				PerformUpdateCheck();
 			else
-				UpdateStatus("not checking for newer version", 100);			
+				UpdateStatus("not checking for newer version", 100);
 		}
 
 		private Task _buildMenuTask;
@@ -67,7 +67,7 @@ namespace MUNIA.Forms {
 			foreach (var ctrlr in ConfigManager.Controllers) {
 				var tsmiController = new ToolStripMenuItem(ctrlr.Name);
 
-				foreach (var skin in ConfigManager.Skins.Where(s=>s.Controllers.Contains(ctrlr.Type))) {
+				foreach (var skin in ConfigManager.Skins.Where(s => s.Controllers.Contains(ctrlr.Type))) {
 					var tsmiSkin = new ToolStripMenuItem($"{skin.Name}");
 					tsmiSkin.Enabled = true;
 					tsmiSkin.Click += (sender, args) => ActivateConfig(ctrlr, skin);
@@ -99,7 +99,7 @@ namespace MUNIA.Forms {
 				else
 					ConfigManager.WindowSizes[skin] = glControl.Size;
 			}
-			
+
 			UpdateController();
 			Render();
 		}
@@ -108,17 +108,17 @@ namespace MUNIA.Forms {
 			glControl.MakeCurrent();
 			glControl.VSync = true;
 		}
-		
+
 		private readonly Stopwatch _stopwatch = Stopwatch.StartNew();
 		private const int maxFPS = 60;
 		private void OnApplicationOnIdle(object s, EventArgs a) {
 			while (glControl.IsIdle) {
-                glControl.MakeCurrent();
-                _stopwatch.Restart();
+				glControl.MakeCurrent();
+				_stopwatch.Restart();
 				if (UpdateController())
 					Render();
-                Thread.Sleep((int)(Math.Max(1000f / maxFPS - _stopwatch.Elapsed.TotalMilliseconds, 0)));
-    		}
+				Thread.Sleep((int)(Math.Max(1000f / maxFPS - _stopwatch.Elapsed.TotalMilliseconds, 0)));
+			}
 		}
 
 		private bool UpdateController() {
