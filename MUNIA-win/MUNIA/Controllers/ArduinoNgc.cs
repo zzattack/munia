@@ -16,16 +16,16 @@ namespace MUNIA.Controllers {
 			var packet = Repack(buffer);
 
 			// 0 0 0 START Y X B A
-			_buttons[0] = (packet[0] & 0x10) != 0;
-			_buttons[1] = (packet[0] & 0x08) != 0;
+			_buttons[0] = (packet[0] & 0x01) != 0;
+			_buttons[1] = (packet[0] & 0x02) != 0;
 			_buttons[2] = (packet[0] & 0x04) != 0;
-			_buttons[3] = (packet[0] & 0x02) != 0;
-			_buttons[4] = (packet[0] & 0x01) != 0;
+			_buttons[3] = (packet[0] & 0x08) != 0;
+			_buttons[4] = (packet[0] & 0x10) != 0;
 
 			// L R Z
-			_buttons[5] = (packet[1] & 0x40) != 0;
+			_buttons[5] = (packet[1] & 0x10) != 0;
 			_buttons[6] = (packet[1] & 0x20) != 0;
-			_buttons[7] = (packet[1] & 0x10) != 0;
+			_buttons[7] = (packet[1] & 0x40) != 0;
 			
 			byte bhat = (byte)(packet[1] & 0x0F);
 			Hat hat = Hat.None;
@@ -42,11 +42,11 @@ namespace MUNIA.Controllers {
 
 			_axes[0] = packet[2] - 128;
 			_axes[1] = 128 - packet[3];
-			_axes[2] = packet[4] - 128;
-			_axes[3] = 128 - packet[5];
-			_axes[4] = packet[6];
-			_axes[5] = packet[7];
-
+			_axes[2] = packet[6];
+			_axes[3] = packet[7];
+			_axes[4] = 128 - packet[5];
+			_axes[5] = packet[4] - 128;
+			
 			return true;
 		}
 	}
