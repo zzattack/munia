@@ -60,7 +60,7 @@ def report_bug(request):
     message += '\r\n'
     
     message += '\r\n'
-    message += '\r\nThis mail was sent automatically by the portal @ munia.io'
+    message += '\r\nThis mail was sent automatically by the portal @ config.io'
 
     reply_to = []
     cc = []
@@ -70,9 +70,9 @@ def report_bug(request):
             cc.append(submitter)
             reply_to.append(submitter)
         else:
-            reply_to.append('noreply@munia.io')
+            reply_to.append('noreply@config.io')
         
-    email = EmailMessage(subject=subj, body=message, from_email='bugs@munia.io', to=['frank@zzattack.org'], cc=cc, reply_to=reply_to)
+    email = EmailMessage(subject=subj, body=message, from_email='bugs@config.io', to=['frank@zzattack.org'], cc=cc, reply_to=reply_to)
     email.attach(request.POST['skin_name'] + '.svg', request.POST['skin_svg'], 'text/plain')
 
     email.send(fail_silently=False)
