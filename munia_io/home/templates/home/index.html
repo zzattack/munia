@@ -1,13 +1,14 @@
 {%  extends 'base.html' %}
 
 {% block content %}
+{% load static %}
 
 <section><div class="container">
     <div class="row">
         <div class="col-sm-12"><div class="elements--title"><h4>Input adapters</h4></div></div>
         <div class="col-md-4 col-sm-6">
             <div class="card card-1">
-                <div class="card__image"><img alt="Pic" src="img/small2.jpg"></div>
+                <div class="card__image"><img alt="Pic" src="{% static "img/small2.jpg" %}"></div>
                 <div class="card__body boxed bg--white">
                     <div class="card__title"><h5>Capture videogame inputs</h5></div>
                     <span><em>Show your inputs on screen or stream!</em></span>
@@ -20,7 +21,7 @@
         </div>
         <div class="col-md-4 col-sm-6">
             <div class="card card-1">
-                <div class="card__image"><img alt="Pic" src="img/small1.jpg"></div>
+                <div class="card__image"><img alt="Pic" src="{%  static "img/small1.jpg"  %}"></div>
                 <div class="card__body boxed bg--white">
                     <div class="card__title"><h5>Console modifications</h5></div>
                     <span><em>Get the most out of your consoles</em></span>
