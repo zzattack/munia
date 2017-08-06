@@ -60,12 +60,12 @@
 			this.rbN64PC = new System.Windows.Forms.RadioButton();
 			this.lblN64Mode = new System.Windows.Forms.Label();
 			this.rbN64Console = new System.Windows.Forms.RadioButton();
-			this.pnlNGC = new System.Windows.Forms.Panel();
-			this.rbNgcPC = new System.Windows.Forms.RadioButton();
-			this.lblNGCMode = new System.Windows.Forms.Label();
-			this.rbNgcConsole = new System.Windows.Forms.RadioButton();
 			this.btnAccept = new System.Windows.Forms.Button();
 			this.btnCancel = new System.Windows.Forms.Button();
+			this.rbNgcConsole = new System.Windows.Forms.RadioButton();
+			this.lblNGCMode = new System.Windows.Forms.Label();
+			this.rbNgcPC = new System.Windows.Forms.RadioButton();
+			this.pnlNGC = new System.Windows.Forms.Panel();
 			this.gbMunia.SuspendLayout();
 			this.gbSettings.SuspendLayout();
 			this.pnlOutput.SuspendLayout();
@@ -211,7 +211,6 @@
 			this.rbOutputN64.Name = "rbOutputN64";
 			this.rbOutputN64.Size = new System.Drawing.Size(45, 17);
 			this.rbOutputN64.TabIndex = 4;
-			this.rbOutputN64.TabStop = true;
 			this.rbOutputN64.Text = "N64";
 			this.rbOutputN64.UseVisualStyleBackColor = true;
 			this.rbOutputN64.CheckedChanged += new System.EventHandler(this.rbOutput_CheckedChanged);
@@ -232,7 +231,6 @@
 			this.rbOutputPC.Name = "rbOutputPC";
 			this.rbOutputPC.Size = new System.Drawing.Size(39, 17);
 			this.rbOutputPC.TabIndex = 2;
-			this.rbOutputPC.TabStop = true;
 			this.rbOutputPC.Text = "PC";
 			this.rbOutputPC.UseVisualStyleBackColor = true;
 			this.rbOutputPC.CheckedChanged += new System.EventHandler(this.rbOutput_CheckedChanged);
@@ -244,7 +242,6 @@
 			this.rbOutputNGC.Name = "rbOutputNGC";
 			this.rbOutputNGC.Size = new System.Drawing.Size(48, 17);
 			this.rbOutputNGC.TabIndex = 1;
-			this.rbOutputNGC.TabStop = true;
 			this.rbOutputNGC.Text = "NGC";
 			this.rbOutputNGC.UseVisualStyleBackColor = true;
 			this.rbOutputNGC.CheckedChanged += new System.EventHandler(this.rbOutput_CheckedChanged);
@@ -256,7 +253,6 @@
 			this.rbOutputSNES.Name = "rbOutputSNES";
 			this.rbOutputSNES.Size = new System.Drawing.Size(54, 17);
 			this.rbOutputSNES.TabIndex = 3;
-			this.rbOutputSNES.TabStop = true;
 			this.rbOutputSNES.Text = "SNES";
 			this.rbOutputSNES.UseVisualStyleBackColor = true;
 			this.rbOutputSNES.CheckedChanged += new System.EventHandler(this.rbOutput_CheckedChanged);
@@ -281,7 +277,6 @@
 			this.rbInputN64.Name = "rbInputN64";
 			this.rbInputN64.Size = new System.Drawing.Size(45, 17);
 			this.rbInputN64.TabIndex = 4;
-			this.rbInputN64.TabStop = true;
 			this.rbInputN64.Text = "N64";
 			this.rbInputN64.UseVisualStyleBackColor = true;
 			// 
@@ -301,7 +296,6 @@
 			this.rbInputNGC.Name = "rbInputNGC";
 			this.rbInputNGC.Size = new System.Drawing.Size(48, 17);
 			this.rbInputNGC.TabIndex = 1;
-			this.rbInputNGC.TabStop = true;
 			this.rbInputNGC.Text = "NGC";
 			this.rbInputNGC.UseVisualStyleBackColor = true;
 			// 
@@ -312,7 +306,6 @@
 			this.rbInputSNES.Name = "rbInputSNES";
 			this.rbInputSNES.Size = new System.Drawing.Size(54, 17);
 			this.rbInputSNES.TabIndex = 3;
-			this.rbInputSNES.TabStop = true;
 			this.rbInputSNES.Text = "SNES";
 			this.rbInputSNES.UseVisualStyleBackColor = true;
 			// 
@@ -477,49 +470,6 @@
 			this.rbN64Console.Text = "Console";
 			this.rbN64Console.UseVisualStyleBackColor = true;
 			// 
-			// pnlNGC
-			// 
-			this.pnlNGC.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.pnlNGC.Controls.Add(this.rbNgcPC);
-			this.pnlNGC.Controls.Add(this.lblNGCMode);
-			this.pnlNGC.Controls.Add(this.rbNgcConsole);
-			this.pnlNGC.Location = new System.Drawing.Point(7, 85);
-			this.pnlNGC.Name = "pnlNGC";
-			this.pnlNGC.Size = new System.Drawing.Size(270, 31);
-			this.pnlNGC.TabIndex = 6;
-			// 
-			// rbNgcPC
-			// 
-			this.rbNgcPC.AutoSize = true;
-			this.rbNgcPC.Location = new System.Drawing.Point(161, 7);
-			this.rbNgcPC.Name = "rbNgcPC";
-			this.rbNgcPC.Size = new System.Drawing.Size(39, 17);
-			this.rbNgcPC.TabIndex = 2;
-			this.rbNgcPC.TabStop = true;
-			this.rbNgcPC.Text = "PC";
-			this.rbNgcPC.UseVisualStyleBackColor = true;
-			// 
-			// lblNGCMode
-			// 
-			this.lblNGCMode.AutoSize = true;
-			this.lblNGCMode.Location = new System.Drawing.Point(8, 9);
-			this.lblNGCMode.Name = "lblNGCMode";
-			this.lblNGCMode.Size = new System.Drawing.Size(59, 13);
-			this.lblNGCMode.TabIndex = 0;
-			this.lblNGCMode.Text = "NGC mode";
-			// 
-			// rbNgcConsole
-			// 
-			this.rbNgcConsole.AutoSize = true;
-			this.rbNgcConsole.Location = new System.Drawing.Point(93, 7);
-			this.rbNgcConsole.Name = "rbNgcConsole";
-			this.rbNgcConsole.Size = new System.Drawing.Size(63, 17);
-			this.rbNgcConsole.TabIndex = 1;
-			this.rbNgcConsole.TabStop = true;
-			this.rbNgcConsole.Text = "Console";
-			this.rbNgcConsole.UseVisualStyleBackColor = true;
-			// 
 			// btnAccept
 			// 
 			this.btnAccept.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -542,6 +492,49 @@
 			this.btnCancel.TabIndex = 1;
 			this.btnCancel.Text = "&Cancel";
 			this.btnCancel.UseVisualStyleBackColor = true;
+			// 
+			// rbNgcConsole
+			// 
+			this.rbNgcConsole.AutoSize = true;
+			this.rbNgcConsole.Location = new System.Drawing.Point(93, 7);
+			this.rbNgcConsole.Name = "rbNgcConsole";
+			this.rbNgcConsole.Size = new System.Drawing.Size(63, 17);
+			this.rbNgcConsole.TabIndex = 1;
+			this.rbNgcConsole.TabStop = true;
+			this.rbNgcConsole.Text = "Console";
+			this.rbNgcConsole.UseVisualStyleBackColor = true;
+			// 
+			// lblNGCMode
+			// 
+			this.lblNGCMode.AutoSize = true;
+			this.lblNGCMode.Location = new System.Drawing.Point(8, 9);
+			this.lblNGCMode.Name = "lblNGCMode";
+			this.lblNGCMode.Size = new System.Drawing.Size(59, 13);
+			this.lblNGCMode.TabIndex = 0;
+			this.lblNGCMode.Text = "NGC mode";
+			// 
+			// rbNgcPC
+			// 
+			this.rbNgcPC.AutoSize = true;
+			this.rbNgcPC.Location = new System.Drawing.Point(161, 7);
+			this.rbNgcPC.Name = "rbNgcPC";
+			this.rbNgcPC.Size = new System.Drawing.Size(39, 17);
+			this.rbNgcPC.TabIndex = 2;
+			this.rbNgcPC.TabStop = true;
+			this.rbNgcPC.Text = "PC";
+			this.rbNgcPC.UseVisualStyleBackColor = true;
+			// 
+			// pnlNGC
+			// 
+			this.pnlNGC.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.pnlNGC.Controls.Add(this.rbNgcPC);
+			this.pnlNGC.Controls.Add(this.lblNGCMode);
+			this.pnlNGC.Controls.Add(this.rbNgcConsole);
+			this.pnlNGC.Location = new System.Drawing.Point(7, 85);
+			this.pnlNGC.Name = "pnlNGC";
+			this.pnlNGC.Size = new System.Drawing.Size(270, 31);
+			this.pnlNGC.TabIndex = 6;
 			// 
 			// MuniaSettingsDialog
 			// 
@@ -583,14 +576,10 @@
 		private System.Windows.Forms.GroupBox gbMunia;
 		private System.Windows.Forms.TextBox tbHardware;
 		private System.Windows.Forms.TextBox tbFirmware;
-		private System.Windows.Forms.Panel pnlNGC;
 		private System.Windows.Forms.Panel pnlN64;
 		private System.Windows.Forms.Panel pnlSNES;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label lblFirmwareVersion;
-		private System.Windows.Forms.RadioButton rbNgcPC;
-		private System.Windows.Forms.Label lblNGCMode;
-		private System.Windows.Forms.RadioButton rbNgcConsole;
 		private System.Windows.Forms.RadioButton rbN64PC;
 		private System.Windows.Forms.Label lblN64Mode;
 		private System.Windows.Forms.RadioButton rbN64Console;
@@ -622,5 +611,9 @@
 		private System.Windows.Forms.RadioButton rbInputSNES;
 		private System.Windows.Forms.GroupBox gbSettingsLegacy;
 		private System.Windows.Forms.GroupBox gbSettings;
+		private System.Windows.Forms.Panel pnlNGC;
+		private System.Windows.Forms.RadioButton rbNgcPC;
+		private System.Windows.Forms.Label lblNGCMode;
+		private System.Windows.Forms.RadioButton rbNgcConsole;
 	}
 }
