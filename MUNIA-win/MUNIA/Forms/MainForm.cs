@@ -111,12 +111,15 @@ namespace MUNIA.Forms {
 
 		private readonly Stopwatch _stopwatch = Stopwatch.StartNew();
 		private const int maxFPS = 60;
+		long prevTicks = 0;
 		private void OnApplicationOnIdle(object s, EventArgs a) {
 			while (glControl.IsIdle) {
 				glControl.MakeCurrent();
 				_stopwatch.Restart();
-				if (UpdateController())
+				if (UpdateController() || Environment.TickCount - prevTicks > 200) {
 					Render();
+					prevTicks = Environment.TickCount; // Redraw at least every 200ms
+				}
 				Thread.Sleep((int)(Math.Max(1000f / maxFPS - _stopwatch.Elapsed.TotalMilliseconds, 0)));
 			}
 		}
