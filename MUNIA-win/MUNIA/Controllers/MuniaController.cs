@@ -110,9 +110,9 @@ namespace MUNIA.Controllers {
 				}
 			}
 			catch (IOException exc) {
+				_stream = null;
 				Debug.WriteLine("IOException: " + exc.Message);
 				sb.stream.Dispose();
-				_stream = null;
 			}
 			catch (NullReferenceException) { }
 		}
