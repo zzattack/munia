@@ -1,5 +1,7 @@
+#define NGC_TIMEOUT 180
+
 ngc_sample:
-    movlw 150
+    movlw NGC_TIMEOUT
     movwf TMR0, c
     bcf TMR0IF, c
     
@@ -23,7 +25,7 @@ ngc_wait_fall:
     clrf TMR2, c ; restart asap for next bit
         
     movwf POSTINC0, c ; interpret stored value as 2's complement integer for comparison
-    movlw 150 ; reload tmr0
+    movlw NGC_TIMEOUT
     movwf TMR0, c
 
     bra ngc_wait_rise ; sample next bit

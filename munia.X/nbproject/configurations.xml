@@ -296,6 +296,7 @@
         <property key="ToolFirmwareFilePath" value=""/>
         <property key="ToolFirmwareOption.UseLatestFirmware" value="false"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="hwtoolclock.instructionspeed" value="4"/>
         <property key="hwtoolclock.units" value="mips"/>

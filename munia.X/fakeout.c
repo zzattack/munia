@@ -7,8 +7,8 @@
 #define NGC_JOY_DEADZONE 15
 #define NGC_CSTICK_THRESHOLD 30
 
-#define ngc_fakeout() do { portc_mask = 0b00000001; fakeout(); } while (0);
-#define n64_fakeout() do { portc_mask = 0b00000010; fakeout(); } while (0);
+#define ngc_fakeout() do { portc_mask = 0b00000001; fakeout_ngc64(); } while (0);
+#define n64_fakeout() do { portc_mask = 0b00000010; fakeout_ngc64(); } while (0);
 
 void ngc_fakeout_test() {
     // Test if fake out needed. This is called from the interrupt so that
@@ -35,7 +35,6 @@ void ngc_fakeout_test() {
         fake_count = 64;
         pfake_out = fake_buffer;
         ngc_fakeout();
-        TMR3 = 60000; // request next poll cycle real quickly
     }
     else {
         dbgs("unexpected ngc sample idx: "); dbgsval(idx); dbgs("\n");
@@ -65,7 +64,7 @@ void n64_fakeout_test() {
     }
 }
 
-void fakeout() {
+void fakeout_ngc64() {
     LATC &= ~portc_mask; // pull down - always call this before CLR() calls
     
     di(); // we have to disable interrupts, because we are toggling
@@ -101,10 +100,6 @@ void fakeout() {
     ei();
 }
 
-void snes_fakeout_test() {
-    // not yet implemented
-}
-
 void fake_unpack(uint8_t* r, uint8_t n) {
     // unpack buffer bits to bytes
     uint8_t* w = fake_buffer;
@@ -113,6 +108,10 @@ void fake_unpack(uint8_t* r, uint8_t n) {
         for (uint8_t m = 0x80; m; m >>= 1)
             *w++ = (b & m) ? 1 : 0;
     }
+}
+
+void snes_fakeout_test() {
+    // not yet implemented
 }
 
 void snes_create_ngc_fake() {
@@ -154,6 +153,7 @@ void snes_create_ngc_fake() {
         joydata_ngc_raw.c_y = 128;
     }
     else {
+        // while holding select, treat the face buttons as C-stick
         joydata_ngc_raw.dup = joydata_snes_raw.up;
         joydata_ngc_raw.ddown = joydata_snes_raw.down;
         joydata_ngc_raw.dleft = joydata_snes_raw.left;
@@ -164,10 +164,17 @@ void snes_create_ngc_fake() {
         joydata_ngc_raw.c_x = 128;
         joydata_ngc_raw.c_y = 128;
         
-        if (joydata_snes_raw.y) joydata_ngc_raw.c_x -= 127;
-        if (joydata_snes_raw.a) joydata_ngc_raw.c_x += 127;
-        if (joydata_snes_raw.b) joydata_ngc_raw.c_y -= 127;
-        if (joydata_snes_raw.x) joydata_ngc_raw.c_y += 127;
+        if (joydata_snes_raw.y && joydata_snes_raw.a && joydata_snes_raw.b && joydata_snes_raw.x) {
+            // when holding select and all the face buttons, treat it as a 'Z'
+            joydata_ngc_raw.z = 1;
+        }
+        else {
+            joydata_ngc_raw.z = 0;
+            if (joydata_snes_raw.y) joydata_ngc_raw.c_x -= 127;
+            if (joydata_snes_raw.a) joydata_ngc_raw.c_x += 127;
+            if (joydata_snes_raw.b) joydata_ngc_raw.c_y -= 127;
+            if (joydata_snes_raw.x) joydata_ngc_raw.c_y += 127;
+        }
         
         joydata_ngc_raw.a = false;
         joydata_ngc_raw.b = false;
@@ -247,3 +254,13 @@ void ngc_create_n64_fake() {
         
     packets.n64_avail = true;
 }
+
+
+void snes_create_n64_fake() {}
+void n64_create_snes_fake() {}
+void ngc_create_snes_fake() {}
+
+
+
+
+void fakeout_snes() { }
