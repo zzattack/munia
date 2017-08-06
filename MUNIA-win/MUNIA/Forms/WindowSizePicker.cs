@@ -25,27 +25,29 @@ namespace MUNIA.Forms {
 				Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
 				"obs-studio", "basic", "scenes");
 
-			foreach (string js in Directory.EnumerateFiles(path, "*.json")) {
-				var collection = new SceneCollection();
-				dynamic json = JsonConvert.DeserializeObject(File.ReadAllText(Path.Combine(path, js)));
-				collection.Name = json.name;
-				foreach (dynamic s in json.scene_order) {
-					collection.Scenes.Add(new Scene() { Name = s.name});
-				}
-				foreach (dynamic src in json.sources) {
-					string sceneName = src.name;
-					var scene = collection.Scenes.FirstOrDefault(s => s.Name == sceneName);
-					if (scene == null) continue;
-
-					JArray items = src.settings.items;
-					foreach (dynamic item in items) {
-						scene.Source.Add(new Source {
-							Name = item.name,
-							Size = new Size((int) item.bounds.x, (int) item.bounds.y)
-						});
+			if (Directory.Exists(path)) {
+				foreach (string js in Directory.EnumerateFiles(path, "*.json")) {
+					var collection = new SceneCollection();
+					dynamic json = JsonConvert.DeserializeObject(File.ReadAllText(Path.Combine(path, js)));
+					collection.Name = json.name;
+					foreach (dynamic s in json.scene_order) {
+						collection.Scenes.Add(new Scene() { Name = s.name });
 					}
+					foreach (dynamic src in json.sources) {
+						string sceneName = src.name;
+						var scene = collection.Scenes.FirstOrDefault(s => s.Name == sceneName);
+						if (scene == null) continue;
+
+						JArray items = src.settings.items;
+						foreach (dynamic item in items) {
+							scene.Source.Add(new Source {
+								Name = item.name,
+								Size = new Size((int)item.bounds.x, (int)item.bounds.y)
+							});
+						}
+					}
+					_sceneCollections.Add(collection);
 				}
-				_sceneCollections.Add(collection);
 			}
 
 			gbOBS.Enabled = _sceneCollections.Any();
