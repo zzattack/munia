@@ -8,11 +8,11 @@
 
 #include "uarts.h"
 
-snes_packet_t joydata_snes_last;
+snes_packet_t joydata_snes_last_raw;
 void snes_create_ngc_fake();
 
 void snes_tasks() {
-    if (pollNeeded && (in_menu || config.input_snes && (config.output_mode == output_pc || config.output_mode != output_snes))) {
+    if (pollNeeded && (in_menu || config.input_snes && config.output_mode != output_snes)) {
         USBDeviceTasks();        
         di();        
         snes_poll();
@@ -27,30 +27,38 @@ void snes_tasks() {
     ei();
     
     if (packets.snes_avail) {
-        dbgs("snes packet avail\n");
         // see if this packet is equal to the last transmitted one, and if so, discard it
-        if (memcmp(&joydata_snes_raw, &joydata_snes_last, sizeof(snes_packet_t)) == 0)
-            packets.snes_avail = false;
-        
-        else if (!in_menu) { // if in menu, menu_tasks will clear bit
+        // also when in menu, menu_tasks will clear bit
+        if (!in_menu && memcmp(&joydata_snes_raw, &joydata_snes_last_raw, sizeof(snes_packet_t))) {
+            // dbgs("new packets.snes_avail\n");
             // new, changed packet available; unpack if faking and send over usb
+            
             if (config.input_snes && config.output_mode == output_ngc) {
+                // dbgs("snes_create_ngc_fake()\n");
                 snes_create_ngc_fake();
                 fake_unpack((uint8_t*)&joydata_ngc_raw, sizeof(ngc_packet_t));
-            }        
+            }
+            
+            else if (config.input_snes && config.output_mode == output_n64) {
+                // dbgs("snes_create_n64_fake()\n");
+                snes_create_n64_fake();
+                fake_unpack((uint8_t*)&joydata_n64_raw, sizeof(n64_packet_t));
+            }
+            
             if (USB_READY && !HIDTxHandleBusy(USBInHandleSNES)) {
+                // dbgs("snes_joydata_createhid()\n");
                 snes_joydata_createhid();
                 USBInHandleSNES = HIDTxPacket(HID_EP_SNES, (uint8_t*)&joydata_snes_usb, sizeof(snes_packet_t));
             }
             
             // save last packet
-            memcpy(&joydata_snes_last, &joydata_snes_raw, sizeof(snes_packet_t));            
-            packets.snes_avail = false;
+            memcpy(&joydata_snes_last_raw, &joydata_snes_raw, sizeof(snes_packet_t));            
         } 
+        packets.snes_avail = false;
     }
 }
 
-void snes_poll() {
+void snes_poll() {    
     sample_w = sample_buff;
 
     // Every 16.67ms (or about 60Hz), the SNES CPU sends out a 12us wide, positive
@@ -61,7 +69,7 @@ void snes_poll() {
     __delay_us(12);
     SNES_LATCH = 0;    
     
-    // 6 �s after the fall of the data latch pulse, the CPU sends out 16 data clock pulses on
+    // 6 us after the fall of the data latch pulse, the CPU sends out 16 data clock pulses on
     // pin 2. These are 50% duty cycle with 12us per full cycle.
     __delay_us(6);
     for (uint8_t i = 0; i < 16; i++) {

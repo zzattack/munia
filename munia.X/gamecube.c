@@ -8,7 +8,7 @@
 #include "menu.h"
 #include "uarts.h"
 
-ngc_packet_t joydata_ngc_last;
+ngc_packet_t joydata_ngc_last_raw;
 
 void ngc_tasks() {
     if (pollNeeded && (in_menu || config.input_ngc && config.output_mode != output_ngc)) {
@@ -26,31 +26,40 @@ void ngc_tasks() {
         if (!in_menu && config.output_mode == output_ngc && !config.input_ngc) ngc_fakeout_test();
         else ngc_handle_packet();
         packets.ngc_test = false;
-    }    
+    }
+    
     INTCONbits.IOCIF = 0; // don't bother with stuff that happened in the meantime
     ei();
 
     if (packets.ngc_avail) {
         // see if this packet is equal to the last transmitted one, and if so, discard it
-        if (memcmp(&joydata_ngc_raw, &joydata_ngc_last, sizeof(ngc_packet_t)) == 0)
-            packets.ngc_avail = false;
-        
-        else if (!in_menu) { // if in menu, menu_tasks will clear bit
+        // also when in menu, menu_tasks will clear bit
+        if (!in_menu && memcmp(&joydata_ngc_raw, &joydata_ngc_last_raw, sizeof(ngc_packet_t))) {
+            // dbgs("new packets.ngc_avail\n");
             // new, changed packet available; unpack if faking and send over usb
-            if (config.input_sources & input_ngc && config.output_mode == output_n64) {
+            
+            if (config.input_sources & input_ngc && config.output_mode == output_ngc) {
+                // dbgs("ngc_create_n64_fake()\n");
                 ngc_create_n64_fake();
                 fake_unpack((uint8_t*)&joydata_n64_raw, sizeof(n64_packet_t));
             }
+        
+            else if (config.input_sources & input_ngc && config.output_mode == output_snes) {
+                // dbgs("ngc_create_snes_fake()\n");
+                ngc_create_snes_fake();
+                fake_unpack((uint8_t*)&joydata_snes_raw, sizeof(snes_packet_t));
+            }
             
             if (USB_READY && !HIDTxHandleBusy(USBInHandleNGC)) {
+                // dbgs("ngc_joydata_createhid()\n");
                 ngc_joydata_createhid();
                 USBInHandleNGC = HIDTxPacket(HID_EP_NGC, (uint8_t*)&joydata_ngc_usb, sizeof(ngc_packet_t));
             }
             
             // save last packet
-            memcpy(&joydata_ngc_last, &joydata_ngc_raw, sizeof(ngc_packet_t));
-            packets.ngc_avail = false; // now consumed    
+            memcpy(&joydata_ngc_last_raw, &joydata_ngc_raw, sizeof(ngc_packet_t));
         }
+        packets.ngc_avail = false; // now consumed
     }    
 }
 
@@ -86,13 +95,12 @@ void ngc_handle_packet() {
 		for (uint8_t i = 0; i < sizeof(ngc_packet_t); i++) {
             *w++ = pack_byte(r);
             r += 8;
-		} 
-        
+		}
 
         packets.ngc_avail = true;
 	}
-    else {
-        dbgs("ngc unexpected packet len: "); dbgsval(idx); dbgs("\n");
+    else if (idx != 8 && idx != 24) { // 8,24 for poll, with no controller attached/fake mode
+        // dbgs("ngc unexpected packet len: "); dbgsval(idx); dbgs("\n");
     }
 }
 
