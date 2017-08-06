@@ -3,6 +3,7 @@
 #include "globals.h"
 #include <usb/usb_device_hid.h>
 #include "gamepad.h"
+#include "asm_decl.h"
 #include "menu.h"
 #include "uarts.h"
 #include "fakeout.h"

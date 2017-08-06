@@ -7,8 +7,6 @@
 // #pragma config statements should precede project file includes.
 // Use project enums instead of #define for ON and OFF.
 
-#ifndef BOOTLOADER_INCLUDED
-
 // CONFIG1L
 #pragma config PLLSEL = PLL3X   // PLL Selection (3x clock multiplier)
 #pragma config CFGPLLEN = OFF   // PLL Enable Configuration bit (PLL Disabled (firmware controlled))
@@ -83,5 +81,3 @@
 
 // CONFIG7H
 #pragma config EBTRB = OFF      // Boot Block Table Read Protect (Boot block is not protected from table reads executed in other blocks)
-
-#endif

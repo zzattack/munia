@@ -1,6 +1,7 @@
 #include "menu.h"
 #include "lcd.h"
 #include "globals.h"
+#include "asm_decl.h"
 #include "snes.h"
 #include "n64.h"
 #include "gamecube.h"
@@ -57,7 +58,7 @@ void menu_display_setting();
 
 void menu_enter() {
     lcd_command(LCD_DISPLAY_ON_CURSOR_OFF);
-    lcd_backLightValue = 10;
+    lcd_backlight(10);
     in_menu = true;
     
     // copy config
@@ -72,7 +73,7 @@ void menu_enter() {
 }
 void menu_exit(bool save_settings) {
     lcd_command(LCD_DISPLAY_OFF);
-    lcd_backLightValue = 0;
+    lcd_backlight(0);
     in_menu = false;
     
     if (save_settings) {

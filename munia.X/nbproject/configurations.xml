@@ -4,7 +4,6 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <itemPath>config_bits.h</itemPath>
       <itemPath>system_config.h</itemPath>
       <itemPath>system.h</itemPath>
       <itemPath>hardware.h</itemPath>
@@ -22,6 +21,8 @@
       <itemPath>uarts.h</itemPath>
       <itemPath>usb_requests.h</itemPath>
       <itemPath>fakeout.h</itemPath>
+      <itemPath>C:/Users/Frank/Desktop/workspace/munia/munia.X/easytimer.h</itemPath>
+      <itemPath>C:/Users/Frank/Desktop/workspace/munia/munia.X/asm_decl.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -44,9 +45,15 @@
       <itemPath>memory.c</itemPath>
       <itemPath>uarts.c</itemPath>
       <itemPath>uarts_debug.c</itemPath>
-      <itemPath>isr_remap_dbg.asm</itemPath>
       <itemPath>usb_requests.c</itemPath>
       <itemPath>fakeout.c</itemPath>
+      <itemPath>asm_routines.asm</itemPath>
+      <itemPath>isrs.inc</itemPath>
+      <itemPath>capture-n64.inc</itemPath>
+      <itemPath>capture-ngc.inc</itemPath>
+      <itemPath>capture-snes.inc</itemPath>
+      <itemPath>C:/Users/Frank/Desktop/workspace/munia/munia.X/easytimer.c</itemPath>
+      <itemPath>C:/Users/Frank/Desktop/workspace/munia/munia.X/config_bits.c</itemPath>
     </logicalFolder>
     <logicalFolder name="f1" displayName="USB" projectFiles="true">
       <itemPath>usb/usb_device.c</itemPath>
@@ -58,7 +65,6 @@
                    displayName="Important Files"
                    projectFiles="false">
       <itemPath>Makefile</itemPath>
-      <itemPath>C:/Users/Frank/Desktop/workspace/munia/munia.X/mcc/MyConfig.mc3</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
@@ -69,12 +75,12 @@
     <conf name="release" type="2">
       <toolsSet>
         <developmentServer>localhost</developmentServer>
-        <targetDevice>PIC18F24K50</targetDevice>
+        <targetDevice>PIC18F25K50</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
         <platformTool>RealICEPlatformTool</platformTool>
         <languageToolchain>XC8</languageToolchain>
-        <languageToolchainVersion>1.38</languageToolchainVersion>
+        <languageToolchainVersion>1.42</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <compileType>
@@ -85,21 +91,6 @@
         <archiverTool>
         </archiverTool>
         <loading>
-          <makeArtifact PL="../MUNIA-asm.X"
-                        CT="1"
-                        CN="default"
-                        AC="true"
-                        BL="true"
-                        WD="../MUNIA-asm.X"
-                        BC="${MAKE}  -f Makefile CONF=default"
-                        DBC="${MAKE}  -f Makefile CONF=default TYPE_IMAGE=DEBUG_RUN"
-                        CC="rm -rf &quot;build/default&quot; &quot;dist/default&quot;"
-                        OP="dist/default/production/MUNIA-asm.X.production.hex"
-                        DOP="dist/default/debug/MUNIA-asm.X.debug.cof"
-                        FL="dist/default/production/MUNIA-asm.X.production.hex"
-                        PD="dist/default/production/MUNIA-asm.X.production.cof"
-                        DD="dist/default/debug/MUNIA-asm.X.debug.cof">
-          </makeArtifact>
           <makeArtifact PL="../../../../../../microchip/mla/v2015_08_10/apps/usb/device/bootloaders/firmware/pic18_non_j/MPLAB.X"
                         CT="1"
                         CN="PIC18F24K50_XC8"
@@ -131,6 +122,10 @@
         <makeCustomizationEnableLongLines>false</makeCustomizationEnableLongLines>
         <makeCustomizationNormalizeHexFile>false</makeCustomizationNormalizeHexFile>
       </makeCustomizationType>
+      <item path="C:/Users/Frank/Desktop/workspace/munia/munia.X/config_bits.c"
+            ex="true"
+            overriding="false">
+      </item>
       <HI-TECH-COMP>
         <property key="asmlist" value="true"/>
         <property key="define-macros" value="BOOTLOADER_INCLUDED"/>
@@ -138,10 +133,11 @@
         <property key="extra-include-directories" value=".;.\USB"/>
         <property key="favor-optimization-for" value="-speed,+space"/>
         <property key="identifier-length" value="100"/>
+        <property key="local-generation" value="false"/>
         <property key="operation-mode" value="pro"/>
         <property key="opt-xc8-compiler-strict_ansi" value="false"/>
         <property key="optimization-assembler" value="true"/>
-        <property key="optimization-assembler-files" value="true"/>
+        <property key="optimization-assembler-files" value="false"/>
         <property key="optimization-debug" value="false"/>
         <property key="optimization-global" value="true"/>
         <property key="optimization-invariant-enable" value="false"/>
@@ -154,7 +150,7 @@
         <property key="undefine-macros" value=""/>
         <property key="use-cci" value="false"/>
         <property key="use-iar" value="false"/>
-        <property key="verbose" value="true"/>
+        <property key="verbose" value="false"/>
         <property key="warning-level" value="0"/>
         <property key="what-to-do" value="require"/>
       </HI-TECH-COMP>
@@ -171,12 +167,11 @@
         <property key="calibrate-oscillator-value" value=""/>
         <property key="clear-bss" value="true"/>
         <property key="code-model-external" value="wordwrite"/>
-        <property key="code-model-rom"
-                  value="default,-0-FFF,-1006-1007,-1008-1019,-3f00-3fff"/>
+        <property key="code-model-rom" value="default,-0-FFF,-1006-1007,-1016-1017"/>
         <property key="create-html-files" value="false"/>
         <property key="data-model-ram" value=""/>
         <property key="data-model-size-of-double" value="32"/>
-        <property key="data-model-size-of-float" value="24"/>
+        <property key="data-model-size-of-float" value="32"/>
         <property key="display-class-usage" value="false"/>
         <property key="display-hex-usage" value="false"/>
         <property key="display-overall-usage" value="true"/>
@@ -298,9 +293,8 @@
         <property key="RIExTrigs.Two" value="OFF"/>
         <property key="RIExTrigs.Zero" value="OFF"/>
         <property key="SecureSegment.SegmentProgramming" value="FullChipProgramming"/>
-        <property key="ToolFirmwareFilePath"
-                  value="Press to browse for a specific firmware version"/>
-        <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
+        <property key="ToolFirmwareFilePath" value=""/>
+        <property key="ToolFirmwareOption.UseLatestFirmware" value="false"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="hwtoolclock.instructionspeed" value="4"/>
@@ -542,14 +536,6 @@
         <property key="stack-size-main" value="auto"/>
         <property key="stack-type" value="compiled"/>
       </XC8-config-global>
-      <item path="isr_remap_dbg.asm" ex="true" overriding="false">
-        <HI-TECH-COMP>
-        </HI-TECH-COMP>
-        <HI-TECH-LINK>
-        </HI-TECH-LINK>
-        <XC8-config-global>
-        </XC8-config-global>
-      </item>
     </conf>
     <conf name="debug" type="2">
       <toolsSet>
@@ -557,9 +543,9 @@
         <targetDevice>PIC18F25K50</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>PICkit3PlatformTool</platformTool>
+        <platformTool>RealICEPlatformTool</platformTool>
         <languageToolchain>XC8</languageToolchain>
-        <languageToolchainVersion>1.38</languageToolchainVersion>
+        <languageToolchainVersion>1.42</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <compileType>
@@ -570,21 +556,6 @@
         <archiverTool>
         </archiverTool>
         <loading>
-          <makeArtifact PL="../MUNIA-asm.X"
-                        CT="1"
-                        CN="default"
-                        AC="true"
-                        BL="true"
-                        WD="../MUNIA-asm.X"
-                        BC="${MAKE}  -f Makefile CONF=default"
-                        DBC="${MAKE}  -f Makefile CONF=default TYPE_IMAGE=DEBUG_RUN"
-                        CC="rm -rf &quot;build/default&quot; &quot;dist/default&quot;"
-                        OP="dist/default/production/MUNIA-asm.X.production.hex"
-                        DOP="dist/default/debug/MUNIA-asm.X.debug.cof"
-                        FL="dist/default/production/MUNIA-asm.X.production.hex"
-                        PD="dist/default/production/MUNIA-asm.X.production.cof"
-                        DD="dist/default/debug/MUNIA-asm.X.debug.cof">
-          </makeArtifact>
           <useAlternateLoadableFile>false</useAlternateLoadableFile>
           <parseOnProdLoad>true</parseOnProdLoad>
           <alternateLoadableFile></alternateLoadableFile>
@@ -608,10 +579,11 @@
         <property key="extra-include-directories" value=".;.\USB"/>
         <property key="favor-optimization-for" value="-speed,+space"/>
         <property key="identifier-length" value="100"/>
+        <property key="local-generation" value="false"/>
         <property key="operation-mode" value="pro"/>
         <property key="opt-xc8-compiler-strict_ansi" value="false"/>
         <property key="optimization-assembler" value="true"/>
-        <property key="optimization-assembler-files" value="true"/>
+        <property key="optimization-assembler-files" value="false"/>
         <property key="optimization-debug" value="false"/>
         <property key="optimization-global" value="true"/>
         <property key="optimization-invariant-enable" value="false"/>
@@ -641,11 +613,11 @@
         <property key="calibrate-oscillator-value" value=""/>
         <property key="clear-bss" value="true"/>
         <property key="code-model-external" value="wordwrite"/>
-        <property key="code-model-rom" value="default,-1008-100a,-3f00-3fff"/>
+        <property key="code-model-rom" value="default"/>
         <property key="create-html-files" value="false"/>
         <property key="data-model-ram" value=""/>
-        <property key="data-model-size-of-double" value="24"/>
-        <property key="data-model-size-of-float" value="24"/>
+        <property key="data-model-size-of-double" value="32"/>
+        <property key="data-model-size-of-float" value="32"/>
         <property key="display-class-usage" value="false"/>
         <property key="display-hex-usage" value="false"/>
         <property key="display-overall-usage" value="true"/>
@@ -749,6 +721,64 @@
         <property key="programoptions.uselvpprogramming" value="false"/>
         <property key="voltagevalue" value="5.0"/>
       </PICkit3PlatformTool>
+      <RealICEPlatformTool>
+        <property key="AutoSelectMemRanges" value="auto"/>
+        <property key="Freeze Peripherals" value="true"/>
+        <property key="RIExTrigs.Five" value="OFF"/>
+        <property key="RIExTrigs.Four" value="OFF"/>
+        <property key="RIExTrigs.One" value="OFF"/>
+        <property key="RIExTrigs.Seven" value="OFF"/>
+        <property key="RIExTrigs.Six" value="OFF"/>
+        <property key="RIExTrigs.Three" value="OFF"/>
+        <property key="RIExTrigs.Two" value="OFF"/>
+        <property key="RIExTrigs.Zero" value="OFF"/>
+        <property key="SecureSegment.SegmentProgramming" value="FullChipProgramming"/>
+        <property key="ToolFirmwareFilePath"
+                  value="Press to browse for a specific firmware version"/>
+        <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
+        <property key="debugoptions.useswbreakpoints" value="false"/>
+        <property key="hwtoolclock.frcindebug" value="false"/>
+        <property key="hwtoolclock.instructionspeed" value="4"/>
+        <property key="hwtoolclock.units" value="mips"/>
+        <property key="memories.aux" value="false"/>
+        <property key="memories.bootflash" value="true"/>
+        <property key="memories.configurationmemory" value="true"/>
+        <property key="memories.configurationmemory2" value="true"/>
+        <property key="memories.dataflash" value="true"/>
+        <property key="memories.eeprom" value="true"/>
+        <property key="memories.flashdata" value="true"/>
+        <property key="memories.id" value="true"/>
+        <property key="memories.instruction.ram" value="true"/>
+        <property key="memories.instruction.ram.ranges"
+                  value="${memories.instruction.ram.ranges}"/>
+        <property key="memories.programmemory" value="true"/>
+        <property key="memories.programmemory.ranges" value="0-7fff"/>
+        <property key="poweroptions.powerenable" value="false"/>
+        <property key="programoptions.donoteraseauxmem" value="false"/>
+        <property key="programoptions.eraseb4program" value="true"/>
+        <property key="programoptions.preservedataflash" value="false"/>
+        <property key="programoptions.preservedataflash.ranges" value=""/>
+        <property key="programoptions.preserveeeprom" value="false"/>
+        <property key="programoptions.preserveeeprom.ranges" value=""/>
+        <property key="programoptions.preserveprogram.ranges" value=""/>
+        <property key="programoptions.preserveprogramrange" value="false"/>
+        <property key="programoptions.preserveuserid" value="false"/>
+        <property key="programoptions.programcalmem" value="false"/>
+        <property key="programoptions.programuserotp" value="false"/>
+        <property key="programoptions.usehighvoltageonmclr" value="false"/>
+        <property key="programoptions.uselvpprogramming" value="false"/>
+        <property key="tracecontrol.disablemacros" value="false"/>
+        <property key="tracecontrol.include.timestamp" value="summarydataenabled"/>
+        <property key="tracecontrol.medium" value="0"/>
+        <property key="tracecontrol.portselect" value="0"/>
+        <property key="tracecontrol.select" value="0"/>
+        <property key="tracecontrol.spiselect" value="0"/>
+        <property key="tracecontrol.stallontracebufferfull" value="false"/>
+        <property key="tracecontrol.tracebufmax" value="546000"/>
+        <property key="tracecontrol.tracefile" value="defmplabxtrace.log"/>
+        <property key="tracecontrol.tracefilemax" value="10000000"/>
+        <property key="voltagevalue" value="5.0"/>
+      </RealICEPlatformTool>
       <Simulator>
         <property key="codecoverage.enabled" value="Disable"/>
         <property key="codecoverage.enableoutputtofile" value="false"/>
@@ -992,6 +1022,7 @@
         <property key="extra-include-directories" value="./USB;."/>
         <property key="favor-optimization-for" value="-speed,+space"/>
         <property key="identifier-length" value="255"/>
+        <property key="local-generation" value="false"/>
         <property key="operation-mode" value="pro"/>
         <property key="opt-xc8-compiler-strict_ansi" value="false"/>
         <property key="optimization-assembler" value="true"/>
@@ -1208,9 +1239,15 @@
         <property key="warningmessagebreakoptions.W0028_TBLRD_WORM_CONFIG_MEMORY"
                   value="report"/>
         <property key="warningmessagebreakoptions.W0029_TBLRD_DEVICE_ID" value="report"/>
+        <property key="warningmessagebreakoptions.W0030_CORE_UNIMPLEMENTED_MEMORY_ACCESS"
+                  value="report"/>
         <property key="warningmessagebreakoptions.W0031_BSLIM_INSUFFICIENT_BOOT_SEGMENT"
                   value="report"/>
         <property key="warningmessagebreakoptions.W0032_BSLIM_LIMITS_EXCEEDS_PROG_MEMORY"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W0033_CORE_UNPREDICTABLE_OPCODE"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W0034_CORE_UNALIGNED_MEMORY_ACCESS"
                   value="report"/>
         <property key="warningmessagebreakoptions.W0051_INSTRUCTION_DIV_NOT_ENOUGH_REPEAT"
                   value="report"/>
@@ -1231,6 +1268,10 @@
         <property key="warningmessagebreakoptions.W0107_SIM_NOT_SUPPORTED"
                   value="report"/>
         <property key="warningmessagebreakoptions.W0108_SIM_RESERVED_SETTING"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W0109_SIM_PERIPHERAL_IN_DEVELOPMENT"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W0110_SIM_UNEXPECTED_EVENT"
                   value="report"/>
         <property key="warningmessagebreakoptions.W0201_ADC_NO_STIMULUS_FILE"
                   value="report"/>
@@ -1311,6 +1352,9 @@
         <property key="warningmessagebreakoptions.W0241_ADC_FRACTIONAL_NOT_ALLOWED"
                   value="report"/>
         <property key="warningmessagebreakoptions.W0242_ADC_BG_INT_BEFORE_PWR"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W0243_ADC_INVALID_TAD" value="report"/>
+        <property key="warningmessagebreakoptions.W0244_ADC_CONVERSION_ABORTED"
                   value="report"/>
         <property key="warningmessagebreakoptions.W0400_PWM_PWM_FASTER_THAN_FOSC"
                   value="report"/>
@@ -1410,6 +1454,10 @@
                   value="report"/>
         <property key="warningmessagebreakoptions.W9805_SCL_UNRECOGNIZED_VAR"
                   value="report"/>
+        <property key="warningmessagebreakoptions.W9901_RTSP_INVALID_OPERATION_SELECTION"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W9902_RTSP_FLASH_PROGRAM_WRITE_PROTECTED"
+                  value="report"/>
         <property key="warningmessagebreakoptions.displaywarningmessagesoption"
                   value=""/>
         <property key="warningmessagebreakoptions.warningmessages" value="holdstate"/>
@@ -1422,14 +1470,6 @@
         <property key="stack-size-main" value="auto"/>
         <property key="stack-type" value="compiled"/>
       </XC8-config-global>
-      <item path="isr_remap_dbg.asm" ex="true" overriding="false">
-        <HI-TECH-COMP>
-        </HI-TECH-COMP>
-        <HI-TECH-LINK>
-        </HI-TECH-LINK>
-        <XC8-config-global>
-        </XC8-config-global>
-      </item>
     </conf>
   </confs>
 </configurationDescriptor>

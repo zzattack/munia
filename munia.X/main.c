@@ -1,4 +1,3 @@
-#include "config_bits.h"
 #include "system_config.h"
 #include <usb/usb.h>
 #include <usb/usb_device_hid.h>
@@ -17,6 +16,7 @@
 #include "usb_requests.h"
 #include "uarts.h"
 #include "fakeout.h"
+#include "easytimer.h"
 
 void init_random();
 void init_pll();
@@ -47,32 +47,31 @@ void main() {
     LED_SNES_GREEN = 0;
     LED_SNES_ORANGE = 0;
     LED_GC_ORANGE = 0;
-    LED_GC_GREEN = 0;    
-    LCD_PWM = 0;
-    lcd_backLightValue = 0;
+    LED_GC_GREEN = 0;
+    lcd_backlight(0);
     init_pll();
         
     init_timers();
-    // usb_descriptors_check();
+    usb_descriptors_check();
 	USBDeviceInit();
     USBDeviceAttach();
     bcInit();
     lcd_setup();
     
     load_config();
+    
+#ifdef DEBUG
+    config.output_mode = output_ngc;
+    config.input_sources = input_ngc;
+    //menu_enter();
+#endif    
+    
     apply_config();
     init_interrupts();    
     
     dbgs("MUNIA Initialized\n");
     memset(usbOutBuffer, 0, sizeof(usbOutBuffer));
     memset(usbInBuffer, 0, sizeof(usbInBuffer));
-    
-#ifdef DEBUG
-    config.output_mode = output_n64;
-    config.input_sources = input_ngc;
-    apply_config();
-    //menu_enter();
-#endif
     
 	while (1) {
         ClrWdt();                
@@ -83,29 +82,9 @@ void main() {
         LED_SNES_ORANGE = !USBSuspendControl;
 #endif
         
-        if (tick1khz) {
-            tick1khz = false;
-            timer100hz++;
-            timer1000hz++;
-            if (timer1000hz == 1000) timer1000hz = 0;
-            
-            lcd_process();
-
-            if (timer100hz == 10) {
-                timer100hz = 0;
-                
-#ifndef DEBUG
-                if (bcCheck()) {
-                    if (BTN_MENU_PRESSED) {
-                        if (in_menu) menu_exit(false);
-                        else menu_enter();
-                    }
-                    BTN_MENU_PRESSED = false;
-                }
-#endif
-            }
-            
-            menu_tasks();
+        if (EasyTimerTick) {
+            tick1000HzInternal();
+            EasyTimerTick = false;            
         }
         
         if (PIR2bits.TMR3IF) {
@@ -148,7 +127,16 @@ void init_io() {
     LATC |= 0b10000111;
 }
 
-void init_timers() {    
+void init_timers() {
+    // Timer 0: used for packet capture timeout detection
+    //   Speed is FOSC
+    //   Reset when starting packet sample, or new bit received
+    //   Once IF set, packet sample has finished
+    // Timer 1: count packet length during NGC/N64 sampling
+    // Timer 2: source at 1KHz, for EasyTimer
+    // Timer 3: polling indicator, runs either at 50Hz or 60Hz
+    
+    
 	// Timer0 as 8-bit 1:1 on instruction clock
 	INTCONbits.TMR0IE = 0; // Disables the TMR0 overflow interrupt
 	T0CONbits.TMR0ON = 1; // Enables Timer0
@@ -156,20 +144,20 @@ void init_timers() {
 	T0CONbits.T0CS = 0; // Instruction clock (FOSC/4)
 	T0CONbits.PSA = 1; // Timer0 prescaler is NOT assigned. 
     
-    //Timer1 Registers Prescaler= 1 - TMR1 Preset = 53536 - Freq = 1000.00 Hz - Period = 0.001000 seconds
+    // Timer 1 counts during n64/ngc sampling
     T1CONbits.TMR1CS = 0b00; // clock source is instruction clock (FOSC/4)
     T1CONbits.T1CKPS = 0b00; // 1:1 prescaler
-    IPR1bits.TMR1IP = 0; // // Interrupt on low priority group
-	PIE1bits.TMR1IE = 1; // Enables the TMR1 overflow interrupt
+	PIE1bits.TMR1IE = 0; // Disables the TMR1 overflow interrupt
     T1CONbits.TMR1ON = 1; // start
-    WRITETIMER1(53536);
     
-    // Timer 2 counts during n64/ngc sampling
-    T2CONbits.T2OUTPS = 0b0000; // 1:1 Postscaler
-    T2CONbits.TMR2ON = true;
-    T2CONbits.T2CKPS = 0b00; // Prescaler is 1
-    
-    
+    // Timer2 Registers Prescaler=16 - PostScaler=15 - PR2=50 - Freq = 1000.00 Hz
+    T2CONbits.T2CKPS = 0b11; // Prescaler = 1:16
+    T2CONbits.T2OUTPS = 0b1110; // Postscaler = 1:15
+    PR2 = 50;         // Period register
+    T2CONbits.TMR2ON = 1;  // Enable timer
+    IPR1bits.TMR2IP = 0; // Low priority group
+    PIE1bits.TMR2IE = 1; // Interrupt enabled
+
     // Timer3 Registers Prescaler= 4 - TMR3 Preset = 15536 - Freq = 60.00 Hz - Period = 0.016667 seconds
     T3CONbits.TMR3CS = 0b00; // clock source is instruction clock (FOSC/4)
     T3CONbits.T3CKPS = 0b10; // 1:1 prescaler
@@ -212,17 +200,6 @@ void init_interrupts() {
 }
 
 
-// Low priority interrupt procedure
-uint8_t pwmCycle = 0;
-void low_priority interrupt isr_low() {    
-    WRITETIMER1(53536);
-    PIR1bits.TMR1IF = 0;  // Clear the timer1 interrupt flag
-    LCD_PWM = pwmCycle < lcd_backLightValue;
-    pwmCycle++;
-    if (pwmCycle == 4) pwmCycle = 0;
-    tick1khz = 1;
-}
-
 void load_config() {
     uint8_t* w = (uint8_t*)&config;
     for (uint8_t i = 0; i < sizeof(config); i++)
@@ -251,3 +228,24 @@ void apply_config() {
     SWITCH2 = IOCCbits.IOCC1 || !config.input_n64;
     SWITCH3 = IOCCbits.IOCC7 || !config.input_snes;
 }
+
+
+void tickTimer1000Hz() {
+    lcd_process();
+    menu_tasks();
+}
+
+void tickTimer100Hz() {
+#ifndef DEBUG
+    if (bcCheck()) {
+        if (BTN_MENU_PRESSED) {
+            if (in_menu) menu_exit(false);
+            else menu_enter();
+        }
+        BTN_MENU_PRESSED = false;
+    }
+#endif
+}
+
+void tickTimer10Hz() { }
+void tickTimer1Hz() { }

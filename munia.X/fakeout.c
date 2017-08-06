@@ -1,6 +1,8 @@
 #include "fakeout.h"
+#include "asm_decl.h"
 #include "uarts.h"
 #include <stdlib.h>
+#include <xc.h>
 
 #define NGC_JOY_DEADZONE 15
 #define NGC_CSTICK_THRESHOLD 30
@@ -103,7 +105,6 @@ void snes_fakeout_test() {
     // not yet implemented
 }
 
-
 void fake_unpack(uint8_t* r, uint8_t n) {
     // unpack buffer bits to bytes
     uint8_t* w = fake_buffer;
@@ -175,6 +176,46 @@ void snes_create_ngc_fake() {
     }
 
     packets.ngc_avail = true;
+}
+
+void n64_create_ngc_fake() {
+    joydata_ngc_raw.one = 1;
+    joydata_ngc_raw.zero1 = 0;
+    joydata_ngc_raw.zero2 = 0;
+    joydata_ngc_raw.zero3 = 0;
+
+    joydata_ngc_raw.a = joydata_n64_raw.a;
+    joydata_ngc_raw.b = joydata_n64_raw.b;
+    joydata_ngc_raw.x = joydata_n64_raw.z;
+    joydata_ngc_raw.y = 0;
+    joydata_ngc_raw.start = joydata_n64_raw.start;
+    joydata_ngc_raw.z = 0;
+    joydata_ngc_raw.l = joydata_n64_raw.l;
+    joydata_ngc_raw.r = joydata_n64_raw.r;
+    joydata_ngc_raw.left_trig = joydata_n64_raw.l ? 255 : 0;
+    joydata_ngc_raw.right_trig = joydata_n64_raw.r ? 255 : 0;
+
+    joydata_ngc_raw.joy_x = 128;
+    if (joydata_n64_raw.dleft)
+        joydata_ngc_raw.joy_x -= 127;
+    else if (joydata_n64_raw.dright)
+        joydata_ngc_raw.joy_x += 127;
+
+    joydata_ngc_raw.joy_y = 128;
+    if (joydata_n64_raw.dup)
+        joydata_ngc_raw.joy_y += 127;
+    else if (joydata_n64_raw.ddown)
+        joydata_ngc_raw.joy_y -= 127;
+
+    joydata_ngc_raw.dup = 0;
+    joydata_ngc_raw.ddown = 0;
+    joydata_ngc_raw.dleft = 0;
+    joydata_ngc_raw.dright = 0;
+
+    joydata_ngc_raw.c_x = 128;
+    joydata_ngc_raw.c_y = 128;
+
+    packets.ngc_avail = true;    
 }
 
 void ngc_create_n64_fake() {

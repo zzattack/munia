@@ -6,6 +6,7 @@
 #include "lcd.h"
 #include <stdlib.h>
 #include <stdbool.h>
+#include <xc.h>
 
 void addByte(uint8_t b);
 void lcd_pulseE();
@@ -137,4 +138,10 @@ void lcd_process() {
             sendPortLow(c);
         }
     }
+}
+
+void lcd_backlight(uint8_t value) {
+    if (value == 0) InitLATB &= ~0b00010000;
+    else InitLATB |= 0b00010000;
+    LcdBacklightValue = value;    
 }

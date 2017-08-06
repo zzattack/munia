@@ -3,6 +3,7 @@
 /******************************************************************************/
 
 #include "buttonchecker.h"
+#include <xc.h>
 
 #define STATE_PRESSED 1
 #define STATE_RELEASED 0

@@ -9,9 +9,8 @@
             <cpp-extensions/>
             <header-extensions>h</header-extensions>
             <sourceEncoding>UTF-8</sourceEncoding>
-            <asminc-extensions/>
+            <asminc-extensions>inc</asminc-extensions>
             <make-dep-projects>
-                <make-dep-project>../MUNIA-asm.X</make-dep-project>
                 <make-dep-project>../../../../../../microchip/mla/v2015_08_10/apps/usb/device/bootloaders/firmware/pic18_non_j/MPLAB.X</make-dep-project>
             </make-dep-projects>
         </data>

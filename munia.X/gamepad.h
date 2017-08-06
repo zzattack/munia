@@ -64,13 +64,6 @@ typedef struct {
     //uint8_t n64_fake_avail : 1;
 } packet_state_t;
 
-volatile uint8_t bit_count @ 0x002;
-volatile packet_state_t packets @ 0x006;
-volatile uint8_t sample_buff[256] @ 0x700 = {0}; // reserved memory where samples may be written
-volatile uint8_t portc_mask @ 0x007;
-volatile uint8_t* fsr_backup @ 0x008;
-volatile uint8_t* sample_w @ 0x010;
-
 uint8_t pack_byte(int8_t* r); // reads 8 integers and packs to byte
 
 #define CLR() TRISC &= ~portc_mask; // NEVER CALL THIS WHEN CORRESPONDING LATC IS HIGH! WE SHOULD NOT DRIVE THIS LINE
