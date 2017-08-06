@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("MUNA")]
-[assembly: AssemblyCopyright("Copyright © Frank Razenberg 2016")]
+[assembly: AssemblyCopyright("Copyright © Frank Razenberg 2015-2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
