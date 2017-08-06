@@ -1,4 +1,5 @@
 #include "gamepad.h"
+#include "asm_decl.h"
 #include <xc.h>
 
 void HIGH() { 

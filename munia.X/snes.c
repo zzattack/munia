@@ -1,9 +1,12 @@
 #include "snes.h"
 #include "globals.h"
 #include "gamepad.h"
+#include "asm_decl.h"
 #include "menu.h"
 #include "fakeout.h"
 #include <usb/usb_device_hid.h>
+
+#include "uarts.h"
 
 snes_packet_t joydata_snes_last;
 void snes_create_ngc_fake();
@@ -24,6 +27,7 @@ void snes_tasks() {
     ei();
     
     if (packets.snes_avail) {
+        dbgs("snes packet avail\n");
         // see if this packet is equal to the last transmitted one, and if so, discard it
         if (memcmp(&joydata_snes_raw, &joydata_snes_last, sizeof(snes_packet_t)) == 0)
             packets.snes_avail = false;

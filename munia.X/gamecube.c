@@ -3,6 +3,7 @@
 #include "globals.h"
 #include <usb/usb_device_hid.h>
 #include "gamepad.h"
+#include "asm_decl.h"
 #include "fakeout.h"
 #include "menu.h"
 #include "uarts.h"
@@ -10,7 +11,7 @@
 ngc_packet_t joydata_ngc_last;
 
 void ngc_tasks() {
-    if (pollNeeded && (in_menu || config.input_ngc && (config.output_mode == output_pc || config.output_mode != output_ngc))) {
+    if (pollNeeded && (in_menu || config.input_ngc && config.output_mode != output_ngc)) {
         USBDeviceTasks();
         di();
         ngc_poll();

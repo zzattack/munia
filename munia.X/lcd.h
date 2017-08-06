@@ -22,7 +22,9 @@ void lcd_goto(uint8_t line, uint8_t pos);
 void lcd_char(uint8_t chr);
 void lcd_string(const char *q);
 void lcd_process();
+void lcd_backlight(uint8_t value);
 
-uint8_t lcd_backLightValue = 0;
+uint8_t LcdBacklightValue = 0;
+uint8_t InitLATB = 0;
 
 #endif	/* LCD_H */

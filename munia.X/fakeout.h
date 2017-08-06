@@ -11,8 +11,15 @@ uint8_t fake_buffer[64];
 uint8_t* pfake_out = 0;
 uint8_t fake_count = 0;
 void fake_unpack(uint8_t* r, uint8_t n);
+
 void snes_create_ngc_fake();
+void n64_create_ngc_fake();
+
 void ngc_create_n64_fake();
+void snes_create_n64_fake(); // todo
+
+void ngc_create_snes_fake(); // todo
+void snes_create_snes_fake(); // todo
 
 void ngc_fakeout_test();
 void n64_fakeout_test();

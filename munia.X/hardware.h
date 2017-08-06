@@ -1,9 +1,6 @@
 #ifndef HARDWARE_H
 #define	HARDWARE_H
 
-#include <xc.h>
-#include <stdint.h>
-
 #define HW_REVISION 2
 
 #define _XTAL_FREQ 48000000
