@@ -1,5 +1,7 @@
-n64_sample:
-    movlw 100
+#define N64_TIMEOUT 100
+GLOBAL _n64_sample
+_n64_sample:
+    movlw N64_TIMEOUT
     movwf TMR0, c
     bcf TMR0IF, c
     
@@ -11,19 +13,19 @@ n64_wait_rise:
     bra n64_wait_rise
 
     ; save the period spent low
-    movf TMR2, w, c
-    clrf TMR2, c
+    movf TMR1L, w, c
+    clrf TMR1L, c
 n64_wait_fall:
     btfsc TMR0IF, c
     bra n64_timeout
     btfsc PORTC, 1, c
     bra n64_wait_fall
     
-    subwf TMR2, w, c ; bit has ended, compare timers
-    clrf TMR2, c ; restart asap for next bit
+    subwf TMR1L, w, c ; bit has ended, compare timers
+    clrf TMR1L, c ; restart asap for next bit
         
     movwf POSTINC0, c ; interpret stored value as 2's complement integer for comparison
-    movlw 100 ; reload tmr0
+    movlw N64_TIMEOUT ; reload tmr0
     movwf TMR0, c
     
     bra n64_wait_rise ; sample next bit

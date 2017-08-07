@@ -8,10 +8,10 @@
 #include "uarts.h"
 #include "fakeout.h"
 
-n64_packet_t joydata_n64_last; // last non-fake packet sent over usb
+n64_packet_t joydata_n64_last_raw; // last non-fake packet sent over usb
 
 void n64_tasks() {
-    if (pollNeeded && (in_menu || config.input_n64 && (config.output_mode == output_pc || config.output_mode != output_n64))) {
+    if (pollNeeded && (in_menu || (config.input_n64 && config.output_mode != output_n64))) {
         USBDeviceTasks();
         di();
         n64_poll();
@@ -27,25 +27,40 @@ void n64_tasks() {
         else n64_handle_packet();
         packets.n64_test = false;
     }
+    
     INTCONbits.IOCIF = 0; // don't bother with stuff that happened in the meantime
     ei();
     
     if (packets.n64_avail) {
         // see if this packet is equal to the last transmitted one, and if so, discard it
-        if (memcmp(&joydata_n64_raw, &joydata_n64_last, sizeof(n64_packet_t)) == 0) 
-            packets.n64_avail = false; 
-        
-        else if (!in_menu) { // if in menu, menu_tasks will clear bit
-            // new, changed packet available; unpack if faking and send over usb            
+        // also when in menu, menu_tasks will clear bit
+        if (in_menu) return;
+        else if (memcmp(&joydata_n64_raw, &joydata_n64_last_raw, sizeof(n64_packet_t))) {
+            // dbgs("new packets.n64_avail\n");
+            // new, changed packet available; unpack if faking and send over usb
+            
+            if (config.input_sources & input_n64 && config.output_mode == output_ngc) {
+                // dbgs("n64_create_ngc_fake()\n");
+                n64_to_ngc();
+                fake_unpack((uint8_t*)&joydata_ngc_raw, sizeof(ngc_packet_t));
+            }
+            
+            else if (config.input_sources & input_n64 && config.output_mode == output_snes) {
+                // dbgs("n64_create_snes_fake()\n");
+                n64_to_snes();
+                fake_unpack((uint8_t*)&joydata_snes_raw, sizeof(snes_packet_t));
+            }
+                
             if (USB_READY && !HIDTxHandleBusy(USBInHandleN64)) {
+                // dbgs("n64_joydata_createhid()\n");
                 n64_joydata_createhid();
                 USBInHandleN64 = HIDTxPacket(HID_EP_N64, (uint8_t*)&joydata_n64_usb, sizeof(n64_packet_t));
             }
             
             // save last packet
-            memcpy(&joydata_n64_last, &joydata_n64_raw, sizeof(n64_packet_t));
-            packets.n64_avail = false; // now consumed
+            memcpy(&joydata_n64_last_raw, &joydata_n64_raw, sizeof(n64_packet_t));
         }
+        packets.n64_avail = false; 
     }
 }
 
@@ -53,9 +68,7 @@ void n64_poll() {
     portc_mask = 0b00000010;
     LATC &= ~portc_mask; // pull down - always call this before CLR() calls
     CLR(); // set data pin to output, making the pin low despite the pull up
-    // send 01000000
-    //      00000011    
-    //      00000010
+    // send 000000101
     LOW(); LOW(); LOW(); LOW(); LOW(); LOW(); LOW(); HIGH();
     // stop bit, 2 us
     CLR(); 

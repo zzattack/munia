@@ -17,10 +17,8 @@
 
 enum __menu_pages {
     MENU_PAGE_OUTPUT, // PC, NGC, N64, SNES
-    MENU_PAGE_PC_INPUTS, // toggle boxes
-    MENU_PAGE_INPUT_NGC, // select either NGC or SNES
-    MENU_PAGE_INPUT_N64, // select either N64 or NGC
-    MENU_PAGE_INPUT_SNES, // only SNES available
+    MENU_PAGE_PC_INPUTS, // toggle select NGC/N64/SNES
+    MENU_PAGE_INPUT,     // radio select either NGC or N64 or SNES
     MENU_PAGE_CONFIRM,
     MENU_PAGE_COUNT,
 };
@@ -32,24 +30,15 @@ enum __menu_command {
 const char* menu_sub_items[][5] = {
     {"NGC ", "N64 ", "SNES", "PC ", NULL},  // MENU_PAGE_NGC,
     {"NGC ", "N64 ", "SNES", NULL },        // MENU_PAGE_PC_INPUTS,
-    {"NGC ", "SNES", NULL },                // MENU_PAGE_INPUT_NGC,
-    {"N64 ", "NGC ", NULL},                 // MENU_PAGE_INPUT_N64,
-    {"SNES", NULL },                        // MENU_PAGE_INPUT_SNES,
+    {"NGC ", "N64",  "SNES", NULL },        // MENU_PAGE_INPUT,
     {"A:Ok ", " B:Cancel", NULL },          // MENU_PAGE_CONFIRM,
-};
-
-const uint8_t menu_input_options[][3] = {
-    { input_ngc, input_snes }, // for NGC
-    { input_n64, input_ngc }, // for N64
-    { input_snes },
-    // for SNES
 };
 
 uint8_t submenu_idx = 0;
 uint8_t submenu_mask = 0;
 bool menu_leftalign = true;
 const uint8_t num_menu_pages = MENU_PAGE_COUNT;
-uint8_t menu_next_press_delay;
+uint16_t menu_next_press_delay;
 const char** menu_current_items;
 uint8_t submenu_count = 0;
 
@@ -107,15 +96,15 @@ void menu_page(uint8_t page) {
         submenu_idx = 0;
         submenu_mask = config_edit.input_sources;
     }
-    else if (page == MENU_PAGE_INPUT_NGC) {
+    else if (page == MENU_PAGE_INPUT && config_edit.output_mode == output_ngc) {
         lcd_string("NGC input");
         submenu_idx = 0; // todo: restore selection
     }
-    else if (page == MENU_PAGE_INPUT_N64) {
+    else if (page == MENU_PAGE_INPUT && config_edit.output_mode == output_n64) {
         lcd_string("N64 input");
         submenu_idx = 0; // todo: restore selection
     }
-    else if (page == MENU_PAGE_INPUT_SNES) {
+    else if (page == MENU_PAGE_INPUT && config_edit.output_mode == output_snes) {
         lcd_string("SNES input");
         submenu_idx = 0; // todo: restore selection
     }
@@ -174,7 +163,7 @@ void menu_tasks() {
         else if (joydata_snes_raw.b) menu_press(mc_cancel);
         packets.snes_avail = false;
     }
-    if (packets.n64_avail) {
+    else if (packets.n64_avail) {
         if (joydata_n64_raw.dleft) menu_press(mc_left);
         else if (joydata_n64_raw.dright) menu_press(mc_right);
         if (joydata_n64_raw.start) menu_press(mc_exit);
@@ -193,16 +182,16 @@ void menu_tasks() {
 }
 
 void menu_press(uint8_t command) {
-    menu_next_press_delay = 250; // 250ms
+    menu_next_press_delay = 300; // 300ms
     if (command == mc_exit)
         menu_page(MENU_PAGE_CONFIRM);
     else if (command == mc_confirm || command == mc_select) {
         if (current_menu_page == MENU_PAGE_CONFIRM) menu_exit(true);
         else if (current_menu_page == MENU_PAGE_OUTPUT) {
             config_edit.output_mode = submenu_idx;
-            if (submenu_idx == output_ngc) menu_page(MENU_PAGE_INPUT_NGC);
-            else if (submenu_idx == output_n64) menu_page(MENU_PAGE_INPUT_N64);
-            else if (submenu_idx == output_snes) menu_page(MENU_PAGE_CONFIRM /* todo: when more snes outputs: MENU_PAGE_INPUT_SNES */);
+            if (submenu_idx == output_ngc) menu_page(MENU_PAGE_INPUT);
+            else if (submenu_idx == output_n64) menu_page(MENU_PAGE_INPUT);
+            else if (submenu_idx == output_snes) menu_page(MENU_PAGE_INPUT);
             else if (submenu_idx == output_pc) menu_page(MENU_PAGE_PC_INPUTS);
         }
         else if (current_menu_page == MENU_PAGE_PC_INPUTS) {
@@ -215,7 +204,7 @@ void menu_press(uint8_t command) {
         }
         else {
             // select only one input source, lookup from table
-            uint8_t in = menu_input_options[current_menu_page - MENU_PAGE_INPUT_NGC][submenu_idx];
+            uint8_t in = submenu_idx;
             config_edit.input_sources = in;
             menu_page(MENU_PAGE_CONFIRM);
         }

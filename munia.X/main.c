@@ -16,7 +16,6 @@
 #include "usb_requests.h"
 #include "uarts.h"
 #include "fakeout.h"
-#include "easytimer.h"
 
 void init_random();
 void init_pll();
@@ -29,10 +28,9 @@ void load_config();
 void apply_config();
 void save_config();
 
-bool tick1khz = false;
-uint8_t timer100hz;
-uint16_t timer1000hz;
+volatile uint8_t EasyTimerTick;
 uint8_t counter60hz = 0;
+void tick1000Hz();
 
 void usb_tasks();
 
@@ -61,9 +59,9 @@ void main() {
     load_config();
     
 #ifdef DEBUG
-    config.output_mode = output_ngc;
-    config.input_sources = input_ngc;
-    //menu_enter();
+    config.output_mode = output_pc;
+    config.input_sources = input_snes | input_ngc | input_n64;
+    menu_enter();
 #endif    
     
     apply_config();
@@ -82,9 +80,9 @@ void main() {
         LED_SNES_ORANGE = !USBSuspendControl;
 #endif
         
-        if (EasyTimerTick) {
-            tick1000HzInternal();
-            EasyTimerTick = false;            
+        if (EasyTimerTick > 0) {
+            EasyTimerTick--;         
+            tick1000Hz();   
         }
         
         if (PIR2bits.TMR3IF) {
@@ -125,6 +123,8 @@ void init_io() {
     // pull ups on the inputs
     LATA |= 0b11000000;
     LATC |= 0b10000111;
+
+    ADCON0bits.ADON = 0;
 }
 
 void init_timers() {
@@ -147,16 +147,18 @@ void init_timers() {
     // Timer 1 counts during n64/ngc sampling
     T1CONbits.TMR1CS = 0b00; // clock source is instruction clock (FOSC/4)
     T1CONbits.T1CKPS = 0b00; // 1:1 prescaler
+    T1CONbits.SOSCEN = 0; // 0 = Dedicated secondary oscillator circuit disabled
+    T1CONbits.RD16 = 0; // 0 = Dedicated secondary oscillator circuit disabled
 	PIE1bits.TMR1IE = 0; // Disables the TMR1 overflow interrupt
     T1CONbits.TMR1ON = 1; // start
     
-    // Timer2 Registers Prescaler=16 - PostScaler=15 - PR2=50 - Freq = 1000.00 Hz
+    // Timer2 Registers Prescaler=16 - PostScaler=15 - PR2=50 - Freq =~ 1000.00 Hz
     T2CONbits.T2CKPS = 0b11; // Prescaler = 1:16
     T2CONbits.T2OUTPS = 0b1110; // Postscaler = 1:15
     PR2 = 50;         // Period register
-    T2CONbits.TMR2ON = 1;  // Enable timer
     IPR1bits.TMR2IP = 0; // Low priority group
     PIE1bits.TMR2IE = 1; // Interrupt enabled
+    T2CONbits.TMR2ON = 1;  // Enable timer
 
     // Timer3 Registers Prescaler= 4 - TMR3 Preset = 15536 - Freq = 60.00 Hz - Period = 0.016667 seconds
     T3CONbits.TMR3CS = 0b00; // clock source is instruction clock (FOSC/4)
@@ -230,22 +232,16 @@ void apply_config() {
 }
 
 
-void tickTimer1000Hz() {
+void tick1000Hz() {
     lcd_process();
     menu_tasks();
-}
 
-void tickTimer100Hz() {
 #ifndef DEBUG
     if (bcCheck()) {
-        if (BTN_MENU_PRESSED) {
+        if (bcTick(0) && bcPressed(0)) {
             if (in_menu) menu_exit(false);
             else menu_enter();
         }
-        BTN_MENU_PRESSED = false;
     }
 #endif
 }
-
-void tickTimer10Hz() { }
-void tickTimer1Hz() { }

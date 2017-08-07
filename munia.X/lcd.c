@@ -141,7 +141,7 @@ void lcd_process() {
 }
 
 void lcd_backlight(uint8_t value) {
-    if (value == 0) InitLATB &= ~0b00010000;
-    else InitLATB |= 0b00010000;
+    if (value == 0) InitLATB &= ~0b00100000; // LATB5 is backlight
+    else InitLATB |= 0b00100000;
     LcdBacklightValue = value;    
 }

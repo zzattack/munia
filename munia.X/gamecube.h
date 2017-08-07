@@ -46,7 +46,7 @@ ngc_packet_t joydata_ngc_raw;
 void ngc_tasks();
 void ngc_real();
 void ngc_poll();
-extern void ngc_sample() @ 0x3f50;
+extern void ngc_sample();
 void ngc_handle_packet();
 void ngc_joydata_createhid();
 
