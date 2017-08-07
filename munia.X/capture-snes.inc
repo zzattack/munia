@@ -1,4 +1,5 @@
-snes_sample:
+GLOBAL _snes_sample
+_snes_sample:
     ; called in interrupt: watches the SNES_CLK for 16 pulses
     ; The controllers serially shift the latched button states out SNES_DAT on every rising edge
     ; and the CPU samples the data on every falling edge.

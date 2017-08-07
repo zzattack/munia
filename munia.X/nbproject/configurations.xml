@@ -21,7 +21,6 @@
       <itemPath>uarts.h</itemPath>
       <itemPath>usb_requests.h</itemPath>
       <itemPath>fakeout.h</itemPath>
-      <itemPath>C:/Users/Frank/Desktop/workspace/munia/munia.X/easytimer.h</itemPath>
       <itemPath>C:/Users/Frank/Desktop/workspace/munia/munia.X/asm_decl.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
@@ -52,7 +51,6 @@
       <itemPath>capture-n64.inc</itemPath>
       <itemPath>capture-ngc.inc</itemPath>
       <itemPath>capture-snes.inc</itemPath>
-      <itemPath>C:/Users/Frank/Desktop/workspace/munia/munia.X/easytimer.c</itemPath>
       <itemPath>C:/Users/Frank/Desktop/workspace/munia/munia.X/config_bits.c</itemPath>
     </logicalFolder>
     <logicalFolder name="f1" displayName="USB" projectFiles="true">
@@ -75,7 +73,7 @@
     <conf name="release" type="2">
       <toolsSet>
         <developmentServer>localhost</developmentServer>
-        <targetDevice>PIC18F25K50</targetDevice>
+        <targetDevice>PIC18F24K50</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
         <platformTool>RealICEPlatformTool</platformTool>
@@ -122,10 +120,6 @@
         <makeCustomizationEnableLongLines>false</makeCustomizationEnableLongLines>
         <makeCustomizationNormalizeHexFile>false</makeCustomizationNormalizeHexFile>
       </makeCustomizationType>
-      <item path="C:/Users/Frank/Desktop/workspace/munia/munia.X/config_bits.c"
-            ex="true"
-            overriding="false">
-      </item>
       <HI-TECH-COMP>
         <property key="asmlist" value="true"/>
         <property key="define-macros" value="BOOTLOADER_INCLUDED"/>
@@ -738,6 +732,7 @@
                   value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="hwtoolclock.instructionspeed" value="4"/>
         <property key="hwtoolclock.units" value="mips"/>

@@ -5,80 +5,192 @@
 #include "buttonchecker.h"
 #include <xc.h>
 
-#define STATE_PRESSED 1
-#define STATE_RELEASED 0
-
 void bcInit() {
+    
+#if BUTTON_COUNT >= 1
+    bcState[0].debouncedState = BUTTON_0;
+#endif
+#if BUTTON_COUNT >= 2
+    bcState[1].debouncedState = BUTTON_1;
+#endif
+#if BUTTON_COUNT >= 3
+    bcState[2].debouncedState = BUTTON_2;
+#endif
+#if BUTTON_COUNT >= 4
+    bcState[3].debouncedState = BUTTON_3;
+#endif
+#if BUTTON_COUNT >= 5
+    bcState[4].debouncedState = BUTTON_4;
+#endif
+#if BUTTON_COUNT >= 6
+    bcState[5].debouncedState = BUTTON_5;
+#endif
+#if BUTTON_COUNT >= 7
+    bcState[6].debouncedState = BUTTON_6;
+#endif
+#if BUTTON_COUNT >= 8
+    bcState[7].debouncedState = BUTTON_7;
+#endif
+#if BUTTON_COUNT >= 9
+    bcState[8].debouncedState = BUTTON_8;
+#endif
+#if BUTTON_COUNT >= 10
+    bcState[9].debouncedState = BUTTON_9;
+#endif
+#if BUTTON_COUNT >= 11
+    bcState[10].debouncedState = BUTTON_10;
+#endif
+#if BUTTON_COUNT >= 12
+    bcState[11].debouncedState = BUTTON_11;
+#endif
+#if BUTTON_COUNT >= 13
+    bcState[12].debouncedState = BUTTON_12;
+#endif
+#if BUTTON_COUNT >= 14
+    bcState[13].debouncedState = BUTTON_13;
+#endif
+#if BUTTON_COUNT >= 15
+    bcState[14].debouncedState = BUTTON_14;
+#endif
+#if BUTTON_COUNT >= 16
+    bcState[15].debouncedState = BUTTON_15;
+#endif
+#if BUTTON_COUNT >= 17
+    bcState[16].debouncedState = BUTTON_16;
+#endif
+#if BUTTON_COUNT >= 18
+    bcState[17].debouncedState = BUTTON_17;
+#endif
+#if BUTTON_COUNT >= 19
+    bcState[18].debouncedState = BUTTON_18;
+#endif
+#if BUTTON_COUNT >= 20
+    bcState[19].debouncedState = BUTTON_19;
+#endif
+    
     for (uint8_t i = 0; i < BUTTON_COUNT; i++) {
-        bcPressed[i] = false;
-        bcState[i].downTime = bcState[i].upTime = STATE_RELEASED;
+        bcState[i].count = BC_PRESS_MSEC;
+        bcState[i].repeatCount = BC_REPEAT_MSEC;
+        bcState[i].tick = 0;
+        bcState[i].repeat = 0;
     }
 }
 
 bool bcCheck() {
     bool result = false;
-    bool button[BUTTON_COUNT];
+    bool raw_button[BUTTON_COUNT];
     
 #if BUTTON_COUNT >= 1
-    button[0] = BUTTON_0;
+    raw_button[0] = BUTTON_0;
 #endif
 #if BUTTON_COUNT >= 2
-    button[1] = BUTTON_1;
+    raw_button[1] = BUTTON_1;
 #endif
 #if BUTTON_COUNT >= 3
-    button[2] = BUTTON_2;
+    raw_button[2] = BUTTON_2;
 #endif
 #if BUTTON_COUNT >= 4
-    button[3] = BUTTON_3;
+    raw_button[3] = BUTTON_3;
 #endif
 #if BUTTON_COUNT >= 5
-    button[4] = BUTTON_4;
+    raw_button[4] = BUTTON_4;
 #endif
 #if BUTTON_COUNT >= 6
-    button[5] = BUTTON_5;
+    raw_button[5] = BUTTON_5;
 #endif
 #if BUTTON_COUNT >= 7
-    button[6] = BUTTON_6;
+    raw_button[6] = BUTTON_6;
 #endif
 #if BUTTON_COUNT >= 8
-    button[7] = BUTTON_7;
+    raw_button[7] = BUTTON_7;
 #endif
 #if BUTTON_COUNT >= 9
-    button[8] = BUTTON_8;
+    raw_button[8] = BUTTON_8;
 #endif
 #if BUTTON_COUNT >= 10
-    button[9] = BUTTON_9;
+    raw_button[9] = BUTTON_9;
 #endif
-
+#if BUTTON_COUNT >= 11
+    raw_button[10] = BUTTON_10;
+#endif
+#if BUTTON_COUNT >= 12
+    raw_button[11] = BUTTON_11;
+#endif
+#if BUTTON_COUNT >= 13
+    raw_button[12] = BUTTON_12;
+#endif
+#if BUTTON_COUNT >= 14
+    raw_button[13] = BUTTON_13;
+#endif
+#if BUTTON_COUNT >= 15
+    raw_button[14] = BUTTON_14;
+#endif
+#if BUTTON_COUNT >= 16
+    raw_button[15] = BUTTON_15;
+#endif
+#if BUTTON_COUNT >= 17
+    raw_button[16] = BUTTON_16;
+#endif
+#if BUTTON_COUNT >= 18
+    raw_button[17] = BUTTON_17;
+#endif
+#if BUTTON_COUNT >= 19
+    raw_button[18] = BUTTON_18;
+#endif
+#if BUTTON_COUNT >= 20
+    raw_button[19] = BUTTON_19;
+#endif
+    
     for (int i = 0; i < BUTTON_COUNT; i++) {
-        // Button release
-        if (button[i] == STATE_RELEASED && bcState[i].state == STATE_PRESSED && bcState[i].downTime > 5) {
-            bcState[i].upTime = 0;
+        // no change
+        if (raw_button[i] == bcState[i].debouncedState) {
+            // (re)set the timer which allows a change from the current state
+
+            if (raw_button[i]) {
+                bcState[i].count = BC_RELEASE_MSEC;            
+            
+                // update repeat counter while pressed
+                if (--bcState[i].repeatCount == 0 && BC_REPEAT_MSEC != 0) {
+                    // dbgs("repeat @ "); dbgsval(i); dbgs("\n");
+                    bcState[i].repeatCount = BC_REPEAT_MSEC;
+                    bcState[i].repeat = 1;
+                    result = true;
+                }
+            }
+            
+            else 
+                bcState[i].count = BC_PRESS_MSEC;
         }
-
-        // Button press
-        if (button[i] == STATE_PRESSED && bcState[i].state == STATE_RELEASED && bcState[i].upTime > 5) {
-            bcState[i].downTime = 0;
-            bcState[i].repeat = 0;
+        else {
+            // raw press state has changed, wait for new state to stabilize
+            if (--bcState[i].count == 0) {            
+                bcState[i].debouncedState = raw_button[i];
+                bcState[i].tick = 1;
+                bcState[i].repeatCount = BC_REPEAT_MSEC;
+                bcState[i].repeat = 0;
+                result = true;
+                
+                // and reset the timer
+                if (bcState[i].debouncedState) bcState[i].count = BC_RELEASE_MSEC;
+                else bcState[i].count = BC_PRESS_MSEC;
+            }
         }
-
-        // Button pressed
-        if (button[i] == STATE_PRESSED && bcState[i].downTime == 5 && bcState[i].upTime > 5) {
-            bcPressed[i] = true;
-            result = true;
-        }
-
-        bcState[i].state = button[i];
-
-        bcState[i].downTime++;
-        if (bcState[i].downTime == 75) {
-            bcState[i].downTime = 0;
-            bcState[i].repeat = 1;
-        }
-
-        if (bcState[i].upTime != 250)
-            bcState[i].upTime++;
     }
-
+    
     return result;
+}
+
+bool bcTick(uint8_t i) {
+    bool ret = bcState[i].tick;
+    bcState[i].tick = 0;
+    return ret;
+}
+bool bcRepeat(uint8_t i) {
+    bool ret = bcState[i].repeat;
+    bcState[i].repeat = 0;
+    return ret;
+}
+
+bool bcPressed(uint8_t i) {
+    return bcState[i].debouncedState;
 }

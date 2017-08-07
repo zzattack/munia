@@ -9,10 +9,10 @@
 #include "uarts.h"
 
 snes_packet_t joydata_snes_last_raw;
-void snes_create_ngc_fake();
+void snes_to_ngc();
 
 void snes_tasks() {
-    if (pollNeeded && (in_menu || config.input_snes && config.output_mode != output_snes)) {
+    if (pollNeeded && (in_menu || (config.input_snes && config.output_mode != output_snes))) {
         USBDeviceTasks();        
         di();        
         snes_poll();
@@ -29,19 +29,19 @@ void snes_tasks() {
     if (packets.snes_avail) {
         // see if this packet is equal to the last transmitted one, and if so, discard it
         // also when in menu, menu_tasks will clear bit
-        if (!in_menu && memcmp(&joydata_snes_raw, &joydata_snes_last_raw, sizeof(snes_packet_t))) {
+        if (in_menu) return;
+        else if (memcmp(&joydata_snes_raw, &joydata_snes_last_raw, sizeof(snes_packet_t))) {
             // dbgs("new packets.snes_avail\n");
             // new, changed packet available; unpack if faking and send over usb
             
             if (config.input_snes && config.output_mode == output_ngc) {
                 // dbgs("snes_create_ngc_fake()\n");
-                snes_create_ngc_fake();
+                snes_to_ngc();
                 fake_unpack((uint8_t*)&joydata_ngc_raw, sizeof(ngc_packet_t));
             }
             
             else if (config.input_snes && config.output_mode == output_n64) {
-                // dbgs("snes_create_n64_fake()\n");
-                snes_create_n64_fake();
+                snes_to_n64();
                 fake_unpack((uint8_t*)&joydata_n64_raw, sizeof(n64_packet_t));
             }
             

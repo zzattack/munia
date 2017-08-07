@@ -11,7 +11,7 @@
 ngc_packet_t joydata_ngc_last_raw;
 
 void ngc_tasks() {
-    if (pollNeeded && (in_menu || config.input_ngc && config.output_mode != output_ngc)) {
+    if (pollNeeded && (in_menu || (config.input_ngc && config.output_mode != output_ngc))) {
         USBDeviceTasks();
         di();
         ngc_poll();
@@ -34,19 +34,20 @@ void ngc_tasks() {
     if (packets.ngc_avail) {
         // see if this packet is equal to the last transmitted one, and if so, discard it
         // also when in menu, menu_tasks will clear bit
-        if (!in_menu && memcmp(&joydata_ngc_raw, &joydata_ngc_last_raw, sizeof(ngc_packet_t))) {
+        if (in_menu) return;
+        else if (memcmp(&joydata_ngc_raw, &joydata_ngc_last_raw, sizeof(ngc_packet_t))) {
             // dbgs("new packets.ngc_avail\n");
             // new, changed packet available; unpack if faking and send over usb
             
-            if (config.input_sources & input_ngc && config.output_mode == output_ngc) {
+            if (config.input_sources & input_ngc && config.output_mode == output_n64) {
                 // dbgs("ngc_create_n64_fake()\n");
-                ngc_create_n64_fake();
+                ngc_to_n64();
                 fake_unpack((uint8_t*)&joydata_n64_raw, sizeof(n64_packet_t));
             }
         
             else if (config.input_sources & input_ngc && config.output_mode == output_snes) {
                 // dbgs("ngc_create_snes_fake()\n");
-                ngc_create_snes_fake();
+                ngc_to_snes();
                 fake_unpack((uint8_t*)&joydata_snes_raw, sizeof(snes_packet_t));
             }
             

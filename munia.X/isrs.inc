@@ -20,7 +20,8 @@ isr_low:
     movff   STATUS,STATUSCPY   
     
     ; TMR2 is only interrupt source
-    bcf	    TMR2IF,c ; tmr2 uses period, no need to reload, just increment 1000khz timer
+    bcf	    TMR2IF,c ; tmr2 uses period, no need to reload, just increment 100Hz timer
+    
     banksel _EasyTimerTick
     incf    BANKMASK(_EasyTimerTick),f,b    
     
@@ -39,8 +40,9 @@ isr_low:
 pwm_reset:
     clrf    PWMCycle, c
     banksel _LcdBacklightValue
-    movf    BANKMASK(_LcdBacklightValue), w, b
+    movf    BANKMASK(_InitLATB), w, b
     iorwf   LATB, f, c
+    
 isr_low_end:    
     movff   BSRCPY,BSR
     movff   STATUSCPY,STATUS
@@ -51,7 +53,7 @@ isr_low_end:
     
 isr_high:
     movf PORTC, w, c ; determine which port got triggered    
-    clrf TMR2, c ; reset timer 2, used to determine how long current bit is low
+    clrf TMR1L, c ; reset timer 1, used to determine how long current bit is low
     
     ; no need to check IF flag because IOCIF is the only enabled interrupt
     movff FSR0L, GMEM+0 ; backup FSR
@@ -63,19 +65,19 @@ isr_high:
     
     btfss WREG, 1, c ; RC1 is n64
     bra isr_test_ngc
-    call n64_sample
+    call _n64_sample
     bra isr_cleanup
     
 isr_test_ngc:
     btfss WREG, 0, c ; RC0 is ngc
     bra isr_test_snes
-    call ngc_sample
+    call _ngc_sample
     bra isr_cleanup
     
 isr_test_snes:
     ; btfsc test, 7 ; RC7 is snes lat, which is normally high on super famicom
     ; and normally low on snes, so toggle direction test is useless
-    call snes_sample
+    call _snes_sample
 
 isr_cleanup:
     movff FSR0L, sample_w+0 ; update sample_w

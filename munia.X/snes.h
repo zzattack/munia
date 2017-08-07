@@ -41,7 +41,7 @@ void snes_tasks();
 void snes_fake();
 void snes_real();
 void snes_poll();
-extern void snes_sample() @ 0x3fc4;
+extern void _snes_sample();
 void snes_handle_packet();
 void snes_joydata_createhid();
 

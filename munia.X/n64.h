@@ -41,7 +41,7 @@ void n64_tasks();
 void n64_fake();
 void n64_real(); 
 void n64_poll();
-extern void n64_sample() @ 0x3f90;
+extern void n64_sample();
 void n64_handle_packet();
 void n64_joydata_createhid();
 

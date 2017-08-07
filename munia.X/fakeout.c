@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <xc.h>
 
-#define NGC_JOY_DEADZONE 15
+#define NGC_JOY_DEADZONE 18
 #define NGC_CSTICK_THRESHOLD 30
 
 #define ngc_fakeout() do { portc_mask = 0b00000001; fakeout_ngc64(); } while (0);
@@ -37,7 +37,7 @@ void ngc_fakeout_test() {
         ngc_fakeout();
     }
     else {
-        dbgs("unexpected ngc sample idx: "); dbgsval(idx); dbgs("\n");
+        // dbgs("unexpected ngc sample idx: "); dbgsval(idx); dbgs("\n");
     }
 }
 
@@ -54,15 +54,21 @@ void n64_fakeout_test() {
             fake_count = 32;
             pfake_out = fake_buffer;
             n64_fakeout();
+            // dbgs("n64_fakeout() completed\n");
         }
         else {
             dbgs("unknown n64 command: "); dbgsval(cmd); dbgs("\n");
         }
     }
-    else {
+    else if (idx != 41) { // 41 for fake poll
         dbgs("unexpected n64 sample idx: "); dbgsval(idx); dbgs("\n");
     }
 }
+
+void snes_fakeout_test() {
+    // not yet implemented
+}
+
 
 void fakeout_ngc64() {
     LATC &= ~portc_mask; // pull down - always call this before CLR() calls
@@ -110,50 +116,136 @@ void fake_unpack(uint8_t* r, uint8_t n) {
     }
 }
 
-void snes_fakeout_test() {
-    // not yet implemented
+void fakeout_snes() { 
+
 }
 
-void snes_create_ngc_fake() {
+
+
+// Create N64 packet from SNES data
+void snes_to_n64() {
+    joydata_n64_raw.start = joydata_snes_raw.start;
+    joydata_n64_raw.l = joydata_snes_raw.l;
+    joydata_n64_raw.r = joydata_snes_raw.r;
+    
+    if (!joydata_snes_raw.select) {
+        // face buttons map directly
+        joydata_n64_raw.a = joydata_snes_raw.b;
+        joydata_n64_raw.b = joydata_snes_raw.y;
+        joydata_n64_raw.z = joydata_snes_raw.a || joydata_snes_raw.x;
+    
+        // control stick based on d-pad input
+        joydata_n64_raw.joy_x = 0;
+        if (joydata_snes_raw.left)
+            joydata_n64_raw.joy_x -= 127;
+        else if (joydata_snes_raw.right)
+            joydata_n64_raw.joy_x += 127;
+        
+        joydata_n64_raw.joy_y = 0;
+        if (joydata_snes_raw.up)
+            joydata_n64_raw.joy_y += 127;
+        else if (joydata_snes_raw.down)
+            joydata_n64_raw.joy_y -= 127;
+
+        // d-pad unused
+        joydata_n64_raw.dup = 0;
+        joydata_n64_raw.ddown = 0;
+        joydata_n64_raw.dleft = 0;
+        joydata_n64_raw.dright = 0;
+
+        // c-stick unused
+        joydata_n64_raw.cdown = 0;
+        joydata_n64_raw.cleft = 0;
+        joydata_n64_raw.cright = 0;
+        joydata_n64_raw.cup = 0;
+    }
+    else {
+        // face buttons disabled
+        joydata_n64_raw.a = false;
+        joydata_n64_raw.b = false;
+        joydata_n64_raw.z = 0;
+        
+        // control stick disabled 
+        joydata_n64_raw.joy_x = 0;
+        joydata_n64_raw.joy_y = 0;
+        
+        // d-pad maps to d-pad
+        joydata_n64_raw.dup = joydata_snes_raw.up;
+        joydata_n64_raw.ddown = joydata_snes_raw.down;
+        joydata_n64_raw.dleft = joydata_snes_raw.left;
+        joydata_n64_raw.dright = joydata_snes_raw.right;
+
+        // face buttons map to c-stick
+        joydata_n64_raw.cleft = joydata_snes_raw.y;
+        joydata_n64_raw.cright = joydata_snes_raw.a;
+        joydata_n64_raw.cdown = joydata_snes_raw.b;
+        joydata_n64_raw.cup = joydata_snes_raw.x;
+    }
+    
+    packets.n64_avail = true;
+}
+
+// Create NGC packet from SNES data
+void snes_to_ngc() {
     joydata_ngc_raw.one = 1;
     joydata_ngc_raw.zero1 = 0;
     joydata_ngc_raw.zero2 = 0;
     joydata_ngc_raw.zero3 = 0;
 
-    joydata_ngc_raw.a = joydata_snes_raw.b;
-    joydata_ngc_raw.b = joydata_snes_raw.y;
-    joydata_ngc_raw.x = joydata_snes_raw.a;
-    joydata_ngc_raw.y = joydata_snes_raw.x;
-    joydata_ngc_raw.start = joydata_snes_raw.start;
     joydata_ngc_raw.z = 0;
+    joydata_ngc_raw.start = joydata_snes_raw.start;
     joydata_ngc_raw.l = joydata_snes_raw.l;
     joydata_ngc_raw.r = joydata_snes_raw.r;
+
+    
     joydata_ngc_raw.left_trig = joydata_snes_raw.l ? 255 : 0;
     joydata_ngc_raw.right_trig = joydata_snes_raw.r ? 255 : 0;
 
     if (!joydata_snes_raw.select) {
+        // face buttons map directly
+        joydata_ngc_raw.a = joydata_snes_raw.b;
+        joydata_ngc_raw.b = joydata_snes_raw.y;
+        joydata_ngc_raw.x = joydata_snes_raw.a;
+        joydata_ngc_raw.y = joydata_snes_raw.x;
+    
+        // control stick based on d-pad input
         joydata_ngc_raw.joy_x = 128;
         if (joydata_snes_raw.left)
             joydata_ngc_raw.joy_x -= 127;
         else if (joydata_snes_raw.right)
             joydata_ngc_raw.joy_x += 127;
-
+        
         joydata_ngc_raw.joy_y = 128;
         if (joydata_snes_raw.up)
             joydata_ngc_raw.joy_y += 127;
         else if (joydata_snes_raw.down)
             joydata_ngc_raw.joy_y -= 127;
 
+        // d-pad unused
         joydata_ngc_raw.dup = 0;
         joydata_ngc_raw.ddown = 0;
         joydata_ngc_raw.dleft = 0;
         joydata_ngc_raw.dright = 0;
 
+        // c-stick unused
         joydata_ngc_raw.c_x = 128;
         joydata_ngc_raw.c_y = 128;
+        
+        // z-button unavailable
+        joydata_ngc_raw.z = 0;
     }
     else {
-        // while holding select, treat the face buttons as C-stick
+        // facebuttons disabled
+        joydata_ngc_raw.a = false;
+        joydata_ngc_raw.b = false;
+        joydata_ngc_raw.x = false;
+        joydata_ngc_raw.y = false;
+        
+        // control stick disabled 
+        joydata_ngc_raw.c_x = 128;
+        joydata_ngc_raw.c_y = 128;
+        
+        // d-pad maps to d-pad
         joydata_ngc_raw.dup = joydata_snes_raw.up;
         joydata_ngc_raw.ddown = joydata_snes_raw.down;
         joydata_ngc_raw.dleft = joydata_snes_raw.left;
@@ -161,71 +253,80 @@ void snes_create_ngc_fake() {
         joydata_ngc_raw.joy_x = 128;
         joydata_ngc_raw.joy_y = 128;
 
-        joydata_ngc_raw.c_x = 128;
-        joydata_ngc_raw.c_y = 128;
+        // face buttons map to c-stick
+        if (joydata_snes_raw.y) joydata_ngc_raw.c_x -= 127;
+        if (joydata_snes_raw.a) joydata_ngc_raw.c_x += 127;
+        if (joydata_snes_raw.b) joydata_ngc_raw.c_y -= 127;
+        if (joydata_snes_raw.x) joydata_ngc_raw.c_y += 127;
         
-        if (joydata_snes_raw.y && joydata_snes_raw.a && joydata_snes_raw.b && joydata_snes_raw.x) {
-            // when holding select and all the face buttons, treat it as a 'Z'
-            joydata_ngc_raw.z = 1;
-        }
-        else {
-            joydata_ngc_raw.z = 0;
-            if (joydata_snes_raw.y) joydata_ngc_raw.c_x -= 127;
-            if (joydata_snes_raw.a) joydata_ngc_raw.c_x += 127;
-            if (joydata_snes_raw.b) joydata_ngc_raw.c_y -= 127;
-            if (joydata_snes_raw.x) joydata_ngc_raw.c_y += 127;
-        }
-        
-        joydata_ngc_raw.a = false;
-        joydata_ngc_raw.b = false;
-        joydata_ngc_raw.x = false;
-        joydata_ngc_raw.y = false;
+        // when holding select and L + R, then press Z on gamecube side
+        joydata_ngc_raw.z = joydata_snes_raw.l && joydata_snes_raw.r;
     }
 
     packets.ngc_avail = true;
 }
 
-void n64_create_ngc_fake() {
+void n64_to_snes() {
+    joydata_snes_raw.a = 0;
+    packets.snes_avail = true;
+}
+
+// Create NGC packet from N64 data
+void n64_to_ngc() {
     joydata_ngc_raw.one = 1;
     joydata_ngc_raw.zero1 = 0;
     joydata_ngc_raw.zero2 = 0;
     joydata_ngc_raw.zero3 = 0;
 
-    joydata_ngc_raw.a = joydata_n64_raw.a;
-    joydata_ngc_raw.b = joydata_n64_raw.b;
-    joydata_ngc_raw.x = joydata_n64_raw.z;
-    joydata_ngc_raw.y = 0;
     joydata_ngc_raw.start = joydata_n64_raw.start;
-    joydata_ngc_raw.z = 0;
-    joydata_ngc_raw.l = joydata_n64_raw.l;
-    joydata_ngc_raw.r = joydata_n64_raw.r;
-    joydata_ngc_raw.left_trig = joydata_n64_raw.l ? 255 : 0;
-    joydata_ngc_raw.right_trig = joydata_n64_raw.r ? 255 : 0;
+    joydata_ngc_raw.joy_x = joydata_n64_raw.joy_x - 128;
+    joydata_ngc_raw.joy_y = joydata_n64_raw.joy_y - 128;
 
-    joydata_ngc_raw.joy_x = 128;
-    if (joydata_n64_raw.dleft)
-        joydata_ngc_raw.joy_x -= 127;
-    else if (joydata_n64_raw.dright)
-        joydata_ngc_raw.joy_x += 127;
-
-    joydata_ngc_raw.joy_y = 128;
-    if (joydata_n64_raw.dup)
-        joydata_ngc_raw.joy_y += 127;
-    else if (joydata_n64_raw.ddown)
-        joydata_ngc_raw.joy_y -= 127;
-
-    joydata_ngc_raw.dup = 0;
-    joydata_ngc_raw.ddown = 0;
-    joydata_ngc_raw.dleft = 0;
-    joydata_ngc_raw.dright = 0;
+    joydata_ngc_raw.dup = joydata_n64_raw.dup;
+    joydata_ngc_raw.ddown = joydata_n64_raw.ddown;
+    joydata_ngc_raw.dleft = joydata_n64_raw.dleft;
+    joydata_ngc_raw.dright = joydata_n64_raw.dright;
 
     joydata_ngc_raw.c_x = 128;
     joydata_ngc_raw.c_y = 128;
+    
+    if (joydata_n64_raw.l && joydata_n64_raw.r && joydata_n64_raw.z) {
+        // disable normal buttons
+        joydata_ngc_raw.z = 0;
+        joydata_ngc_raw.l = 0;
+        joydata_ngc_raw.r = 0;
+        joydata_ngc_raw.a = 0;
+        joydata_ngc_raw.b = 0;
+        
+        if (joydata_n64_raw.cright && joydata_n64_raw.cup) joydata_ngc_raw.y = 1;
+        if (joydata_n64_raw.cleft && joydata_n64_raw.cdown) joydata_ngc_raw.x = 1;
+        if (joydata_n64_raw.a && joydata_n64_raw.b) joydata_ngc_raw.z = 1;        
+    }
+    else {
+        joydata_ngc_raw.l = joydata_n64_raw.l;
+        joydata_ngc_raw.r = joydata_n64_raw.r;
+        joydata_ngc_raw.a = joydata_n64_raw.a;
+        joydata_ngc_raw.b = joydata_n64_raw.b;
+        joydata_ngc_raw.z = 0;
+        if (joydata_n64_raw.cleft) joydata_ngc_raw.c_x -= 128;
+        if (joydata_n64_raw.cright) joydata_ngc_raw.c_x += 127;
+        if (joydata_n64_raw.cdown) joydata_ngc_raw.c_y -= 128;
+        if (joydata_n64_raw.cup) joydata_ngc_raw.c_y += 127;
+    }
 
+    joydata_ngc_raw.left_trig = joydata_ngc_raw.l ? 255 : 0;
+    joydata_ngc_raw.right_trig = joydata_ngc_raw.r ? 255 : 0;
+    
     packets.ngc_avail = true;    
 }
 
-void ngc_create_n64_fake() {
+void ngc_to_snes() {
+    joydata_snes_raw.a = 0;
+    packets.snes_avail = true;
+}
+
+// Create N64 packet from NGC data
+void ngc_to_n64() {
     joydata_n64_raw.dright = joydata_ngc_raw.dright;
     joydata_n64_raw.dleft = joydata_ngc_raw.dleft;
     joydata_n64_raw.ddown = joydata_ngc_raw.ddown;
@@ -239,7 +340,7 @@ void ngc_create_n64_fake() {
     joydata_n64_raw.l = joydata_ngc_raw.left_trig > 50 || joydata_ngc_raw.l;
     joydata_n64_raw.r = joydata_ngc_raw.right_trig > 50 || joydata_ngc_raw.r;
         
-    // deadzone of 10 for center stick
+    // deadzone of 20 for center stick
     joydata_n64_raw.joy_x = joydata_ngc_raw.joy_x - 128;
     if (abs(joydata_n64_raw.joy_x) < NGC_JOY_DEADZONE) joydata_n64_raw.joy_x = 0;
     joydata_n64_raw.joy_y = joydata_ngc_raw.joy_y - 128;
@@ -256,11 +357,5 @@ void ngc_create_n64_fake() {
 }
 
 
-void snes_create_n64_fake() {}
-void n64_create_snes_fake() {}
-void ngc_create_snes_fake() {}
 
 
-
-
-void fakeout_snes() { }
