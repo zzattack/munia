@@ -5,7 +5,6 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>system_config.h</itemPath>
-      <itemPath>system.h</itemPath>
       <itemPath>hardware.h</itemPath>
       <itemPath>lcd.h</itemPath>
       <itemPath>snes.h</itemPath>
@@ -22,6 +21,7 @@
       <itemPath>usb_requests.h</itemPath>
       <itemPath>fakeout.h</itemPath>
       <itemPath>C:/Users/Frank/Desktop/workspace/munia/munia.X/asm_decl.h</itemPath>
+      <itemPath>C:/Users/Frank/Desktop/workspace/munia/munia.X/config.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
