@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using HidSharp;
 
 namespace MUNIA.Forms {
@@ -13,7 +14,8 @@ namespace MUNIA.Forms {
 		public MuniaSettingsDialog(HidStream hidStream, MuniaDeviceInfo deviceInfo) : this() {
 			this._hidStream = hidStream;
 			_deviceInfo = deviceInfo;
-			
+			lblDeviceType.Text += deviceInfo.DevType.ToString();
+
 			_blockRecurse = true;
 			if (_deviceInfo.IsLegacy) {
 				if (_deviceInfo.SNES == MuniaDeviceInfo.SnesMode.SNES_MODE_NGC) rbSnesNgc.Checked = true;
@@ -25,19 +27,30 @@ namespace MUNIA.Forms {
 				else rbNgcPC.Checked = true;
 			}
 			else {
-				if (_deviceInfo.Output == MuniaDeviceInfo.OutputMode.PC) {
-					rbOutputPC.Checked = true;
-					ckbNGC.Checked = _deviceInfo.Inputs.HasFlag(MuniaDeviceInfo.InputSources.NGC);
-					ckbN64.Checked = _deviceInfo.Inputs.HasFlag(MuniaDeviceInfo.InputSources.N64);
-					ckbSNES.Checked = _deviceInfo.Inputs.HasFlag(MuniaDeviceInfo.InputSources.SNES);
+				if (_deviceInfo.DevType == MuniaDeviceInfo.DeviceType.MuniaOriginal) {
+					// munia revision 2
+					if (_deviceInfo.Output == MuniaDeviceInfo.OutputMode.PC) {
+						rbOutputPC.Checked = true;
+						ckbNGC.Checked = _deviceInfo.Inputs.HasFlag(MuniaDeviceInfo.InputSources.NGC);
+						ckbN64.Checked = _deviceInfo.Inputs.HasFlag(MuniaDeviceInfo.InputSources.N64);
+						ckbSNES.Checked = _deviceInfo.Inputs.HasFlag(MuniaDeviceInfo.InputSources.SNES);
+					}
+					else {
+						rbOutputNGC.Checked = _deviceInfo.Output == MuniaDeviceInfo.OutputMode.NGC;
+						rbOutputN64.Checked = _deviceInfo.Output == MuniaDeviceInfo.OutputMode.N64;
+						rbOutputSNES.Checked = _deviceInfo.Output == MuniaDeviceInfo.OutputMode.SNES;
+						rbInputNGC.Checked = _deviceInfo.Inputs.HasFlag(MuniaDeviceInfo.InputSources.NGC);
+						rbInputN64.Checked = _deviceInfo.Inputs.HasFlag(MuniaDeviceInfo.InputSources.N64);
+						rbInputSNES.Checked = _deviceInfo.Inputs.HasFlag(MuniaDeviceInfo.InputSources.SNES);
+					}
 				}
-				else {
-					rbOutputNGC.Checked = _deviceInfo.Output == MuniaDeviceInfo.OutputMode.NGC;
-					rbOutputN64.Checked = _deviceInfo.Output == MuniaDeviceInfo.OutputMode.N64;
-					rbOutputSNES.Checked = _deviceInfo.Output == MuniaDeviceInfo.OutputMode.SNES;
-					rbInputNGC.Checked = _deviceInfo.Inputs.HasFlag(MuniaDeviceInfo.InputSources.NGC);
-					rbInputN64.Checked = _deviceInfo.Inputs.HasFlag(MuniaDeviceInfo.InputSources.N64);
-					rbInputSNES.Checked = _deviceInfo.Inputs.HasFlag(MuniaDeviceInfo.InputSources.SNES);
+				else if (_deviceInfo.DevType == MuniaDeviceInfo.DeviceType.MuniaNgc) {
+					// MUNIA-NGC
+					if (_deviceInfo.Output == MuniaDeviceInfo.OutputMode.PC)
+						rbOutputPC.Checked = true;
+					else
+						rbOutputNGC.Checked = true;
+					ckbNGC.Checked = true;
 				}
 			}
 			_blockRecurse = false;
@@ -69,35 +82,48 @@ namespace MUNIA.Forms {
 				else rbNgcPC.Checked = true;
 			}
 			else {
-				pnlInputsPC.Visible = rbOutputPC.Checked;
-				pnlInputs.Visible = !rbOutputPC.Checked;
 
-				if (!rbOutputPC.Checked) {
-					if (rbOutputNGC.Checked) {
-						rbInputNGC.Enabled = true;
-						rbInputN64.Enabled = false;
-						rbInputSNES.Enabled = true;
-						if (rbInputN64.Checked) {
-							rbInputNGC.Checked = true;
-							rbInputN64.Checked = false;
+				if (_deviceInfo.DevType == MuniaDeviceInfo.DeviceType.MuniaOriginal) {
+					pnlInputsPC.Visible = rbOutputPC.Checked;
+					pnlInputs.Visible = !rbOutputPC.Checked;
+
+					if (!rbOutputPC.Checked) {
+						if (rbOutputNGC.Checked) {
+							rbInputNGC.Enabled = true;
+							rbInputN64.Enabled = _deviceInfo.Version >= new Version(1, 6);
+							rbInputSNES.Enabled = true;
 						}
-					}
-					else if (rbOutputN64.Checked) {
-						rbInputNGC.Enabled = true;
-						rbInputN64.Enabled = true;
-						rbInputSNES.Enabled = false;
-						if (rbInputSNES.Checked) {
-							rbInputN64.Checked = true;
-							rbInputSNES.Checked = false;
+						else if (rbOutputN64.Checked) {
+							rbInputNGC.Enabled = true;
+							rbInputN64.Enabled = true;
+							rbInputSNES.Checked = _deviceInfo.Version >= new Version(1, 6);
 						}
-					}
-					else if (rbOutputSNES.Checked) {
-						rbInputNGC.Enabled = false;
-						rbInputN64.Enabled = false;
-						rbInputSNES.Enabled = true;
-						rbInputSNES.Checked = true;
+						else if (rbOutputSNES.Checked) {
+							rbInputNGC.Enabled = _deviceInfo.Version >= new Version(1, 6);
+							rbInputN64.Enabled = _deviceInfo.Version >= new Version(1, 6);
+							rbInputSNES.Enabled = true;
+						}
 					}
 				}
+
+				else if (_deviceInfo.DevType == MuniaDeviceInfo.DeviceType.MuniaNgc) {
+					// MUNIA-NGC
+					pnlInputs.Visible = true;
+					pnlInputsPC.Visible = false;
+
+					rbOutputPC.Enabled = true;
+					rbOutputNGC.Enabled = true;
+					rbOutputN64.Enabled = false;
+					rbOutputSNES.Enabled = false;
+
+					rbInputNGC.Checked = true;
+					rbInputNGC.Enabled = false;
+					rbInputN64.Enabled = false;
+					rbInputN64.Checked = false;
+					rbInputSNES.Enabled = false;
+					rbInputSNES.Checked = false;
+				}
+				
 			}
 
 			_blockRecurse = false;
