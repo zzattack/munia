@@ -1,4 +1,4 @@
-﻿namespace MUNIA.Forms {
+﻿	namespace MUNIA.Forms {
 	partial class MuniaSettingsDialog {
 		/// <summary>
 		/// Required designer variable.
@@ -60,12 +60,13 @@
 			this.rbN64PC = new System.Windows.Forms.RadioButton();
 			this.lblN64Mode = new System.Windows.Forms.Label();
 			this.rbN64Console = new System.Windows.Forms.RadioButton();
+			this.pnlNGC = new System.Windows.Forms.Panel();
+			this.rbNgcPC = new System.Windows.Forms.RadioButton();
+			this.lblNGCMode = new System.Windows.Forms.Label();
+			this.rbNgcConsole = new System.Windows.Forms.RadioButton();
 			this.btnAccept = new System.Windows.Forms.Button();
 			this.btnCancel = new System.Windows.Forms.Button();
-			this.rbNgcConsole = new System.Windows.Forms.RadioButton();
-			this.lblNGCMode = new System.Windows.Forms.Label();
-			this.rbNgcPC = new System.Windows.Forms.RadioButton();
-			this.pnlNGC = new System.Windows.Forms.Panel();
+			this.lblDeviceType = new System.Windows.Forms.Label();
 			this.gbMunia.SuspendLayout();
 			this.gbSettings.SuspendLayout();
 			this.pnlOutput.SuspendLayout();
@@ -82,6 +83,7 @@
 			this.gbMunia.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.gbMunia.Controls.Add(this.lblDeviceType);
 			this.gbMunia.Controls.Add(this.tbMCURevision);
 			this.gbMunia.Controls.Add(this.label1);
 			this.gbMunia.Controls.Add(this.tbMCUId);
@@ -94,7 +96,7 @@
 			this.gbMunia.Controls.Add(this.gbSettingsLegacy);
 			this.gbMunia.Location = new System.Drawing.Point(12, 12);
 			this.gbMunia.Name = "gbMunia";
-			this.gbMunia.Size = new System.Drawing.Size(311, 202);
+			this.gbMunia.Size = new System.Drawing.Size(311, 220);
 			this.gbMunia.TabIndex = 0;
 			this.gbMunia.TabStop = false;
 			this.gbMunia.Text = "MUNIA Info";
@@ -104,7 +106,7 @@
 			this.tbMCURevision.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.tbMCURevision.Enabled = false;
-			this.tbMCURevision.Location = new System.Drawing.Point(242, 45);
+			this.tbMCURevision.Location = new System.Drawing.Point(242, 62);
 			this.tbMCURevision.Name = "tbMCURevision";
 			this.tbMCURevision.ReadOnly = true;
 			this.tbMCURevision.Size = new System.Drawing.Size(50, 20);
@@ -113,7 +115,7 @@
 			// label1
 			// 
 			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(171, 48);
+			this.label1.Location = new System.Drawing.Point(171, 65);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(59, 13);
 			this.label1.TabIndex = 9;
@@ -124,7 +126,7 @@
 			this.tbMCUId.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.tbMCUId.Enabled = false;
-			this.tbMCUId.Location = new System.Drawing.Point(113, 45);
+			this.tbMCUId.Location = new System.Drawing.Point(113, 62);
 			this.tbMCUId.Name = "tbMCUId";
 			this.tbMCUId.ReadOnly = true;
 			this.tbMCUId.Size = new System.Drawing.Size(49, 20);
@@ -133,7 +135,7 @@
 			// lblMicrocontroller
 			// 
 			this.lblMicrocontroller.AutoSize = true;
-			this.lblMicrocontroller.Location = new System.Drawing.Point(21, 48);
+			this.lblMicrocontroller.Location = new System.Drawing.Point(21, 65);
 			this.lblMicrocontroller.Name = "lblMicrocontroller";
 			this.lblMicrocontroller.Size = new System.Drawing.Size(76, 13);
 			this.lblMicrocontroller.TabIndex = 7;
@@ -144,7 +146,7 @@
 			this.tbHardware.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.tbHardware.Enabled = false;
-			this.tbHardware.Location = new System.Drawing.Point(242, 23);
+			this.tbHardware.Location = new System.Drawing.Point(242, 40);
 			this.tbHardware.Name = "tbHardware";
 			this.tbHardware.ReadOnly = true;
 			this.tbHardware.Size = new System.Drawing.Size(50, 20);
@@ -153,7 +155,7 @@
 			// label2
 			// 
 			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(171, 26);
+			this.label2.Location = new System.Drawing.Point(171, 43);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(65, 13);
 			this.label2.TabIndex = 2;
@@ -164,7 +166,7 @@
 			this.tbFirmware.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.tbFirmware.Enabled = false;
-			this.tbFirmware.Location = new System.Drawing.Point(113, 23);
+			this.tbFirmware.Location = new System.Drawing.Point(113, 40);
 			this.tbFirmware.Name = "tbFirmware";
 			this.tbFirmware.ReadOnly = true;
 			this.tbFirmware.Size = new System.Drawing.Size(49, 20);
@@ -173,7 +175,7 @@
 			// lblFirmwareVersion
 			// 
 			this.lblFirmwareVersion.AutoSize = true;
-			this.lblFirmwareVersion.Location = new System.Drawing.Point(21, 26);
+			this.lblFirmwareVersion.Location = new System.Drawing.Point(21, 43);
 			this.lblFirmwareVersion.Name = "lblFirmwareVersion";
 			this.lblFirmwareVersion.Size = new System.Drawing.Size(86, 13);
 			this.lblFirmwareVersion.TabIndex = 0;
@@ -184,7 +186,7 @@
 			this.gbSettings.Controls.Add(this.pnlOutput);
 			this.gbSettings.Controls.Add(this.pnlInputs);
 			this.gbSettings.Controls.Add(this.pnlInputsPC);
-			this.gbSettings.Location = new System.Drawing.Point(9, 71);
+			this.gbSettings.Location = new System.Drawing.Point(9, 83);
 			this.gbSettings.Name = "gbSettings";
 			this.gbSettings.Size = new System.Drawing.Size(296, 85);
 			this.gbSettings.TabIndex = 15;
@@ -366,7 +368,7 @@
 			this.gbSettingsLegacy.Controls.Add(this.pnlSNES);
 			this.gbSettingsLegacy.Controls.Add(this.pnlN64);
 			this.gbSettingsLegacy.Controls.Add(this.pnlNGC);
-			this.gbSettingsLegacy.Location = new System.Drawing.Point(9, 71);
+			this.gbSettingsLegacy.Location = new System.Drawing.Point(9, 83);
 			this.gbSettingsLegacy.Name = "gbSettingsLegacy";
 			this.gbSettingsLegacy.Size = new System.Drawing.Size(296, 123);
 			this.gbSettingsLegacy.TabIndex = 14;
@@ -470,60 +472,6 @@
 			this.rbN64Console.Text = "Console";
 			this.rbN64Console.UseVisualStyleBackColor = true;
 			// 
-			// btnAccept
-			// 
-			this.btnAccept.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnAccept.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.btnAccept.Location = new System.Drawing.Point(248, 227);
-			this.btnAccept.Name = "btnAccept";
-			this.btnAccept.Size = new System.Drawing.Size(75, 23);
-			this.btnAccept.TabIndex = 2;
-			this.btnAccept.Text = "&Apply";
-			this.btnAccept.UseVisualStyleBackColor = true;
-			this.btnAccept.Click += new System.EventHandler(this.btnAccept_Click);
-			// 
-			// btnCancel
-			// 
-			this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.btnCancel.Location = new System.Drawing.Point(167, 227);
-			this.btnCancel.Name = "btnCancel";
-			this.btnCancel.Size = new System.Drawing.Size(75, 23);
-			this.btnCancel.TabIndex = 1;
-			this.btnCancel.Text = "&Cancel";
-			this.btnCancel.UseVisualStyleBackColor = true;
-			// 
-			// rbNgcConsole
-			// 
-			this.rbNgcConsole.AutoSize = true;
-			this.rbNgcConsole.Location = new System.Drawing.Point(93, 7);
-			this.rbNgcConsole.Name = "rbNgcConsole";
-			this.rbNgcConsole.Size = new System.Drawing.Size(63, 17);
-			this.rbNgcConsole.TabIndex = 1;
-			this.rbNgcConsole.TabStop = true;
-			this.rbNgcConsole.Text = "Console";
-			this.rbNgcConsole.UseVisualStyleBackColor = true;
-			// 
-			// lblNGCMode
-			// 
-			this.lblNGCMode.AutoSize = true;
-			this.lblNGCMode.Location = new System.Drawing.Point(8, 9);
-			this.lblNGCMode.Name = "lblNGCMode";
-			this.lblNGCMode.Size = new System.Drawing.Size(59, 13);
-			this.lblNGCMode.TabIndex = 0;
-			this.lblNGCMode.Text = "NGC mode";
-			// 
-			// rbNgcPC
-			// 
-			this.rbNgcPC.AutoSize = true;
-			this.rbNgcPC.Location = new System.Drawing.Point(161, 7);
-			this.rbNgcPC.Name = "rbNgcPC";
-			this.rbNgcPC.Size = new System.Drawing.Size(39, 17);
-			this.rbNgcPC.TabIndex = 2;
-			this.rbNgcPC.TabStop = true;
-			this.rbNgcPC.Text = "PC";
-			this.rbNgcPC.UseVisualStyleBackColor = true;
-			// 
 			// pnlNGC
 			// 
 			this.pnlNGC.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -536,13 +484,76 @@
 			this.pnlNGC.Size = new System.Drawing.Size(270, 31);
 			this.pnlNGC.TabIndex = 6;
 			// 
+			// rbNgcPC
+			// 
+			this.rbNgcPC.AutoSize = true;
+			this.rbNgcPC.Location = new System.Drawing.Point(161, 7);
+			this.rbNgcPC.Name = "rbNgcPC";
+			this.rbNgcPC.Size = new System.Drawing.Size(39, 17);
+			this.rbNgcPC.TabIndex = 2;
+			this.rbNgcPC.TabStop = true;
+			this.rbNgcPC.Text = "PC";
+			this.rbNgcPC.UseVisualStyleBackColor = true;
+			// 
+			// lblNGCMode
+			// 
+			this.lblNGCMode.AutoSize = true;
+			this.lblNGCMode.Location = new System.Drawing.Point(8, 9);
+			this.lblNGCMode.Name = "lblNGCMode";
+			this.lblNGCMode.Size = new System.Drawing.Size(59, 13);
+			this.lblNGCMode.TabIndex = 0;
+			this.lblNGCMode.Text = "NGC mode";
+			// 
+			// rbNgcConsole
+			// 
+			this.rbNgcConsole.AutoSize = true;
+			this.rbNgcConsole.Location = new System.Drawing.Point(93, 7);
+			this.rbNgcConsole.Name = "rbNgcConsole";
+			this.rbNgcConsole.Size = new System.Drawing.Size(63, 17);
+			this.rbNgcConsole.TabIndex = 1;
+			this.rbNgcConsole.TabStop = true;
+			this.rbNgcConsole.Text = "Console";
+			this.rbNgcConsole.UseVisualStyleBackColor = true;
+			// 
+			// btnAccept
+			// 
+			this.btnAccept.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnAccept.DialogResult = System.Windows.Forms.DialogResult.OK;
+			this.btnAccept.Location = new System.Drawing.Point(248, 245);
+			this.btnAccept.Name = "btnAccept";
+			this.btnAccept.Size = new System.Drawing.Size(75, 23);
+			this.btnAccept.TabIndex = 2;
+			this.btnAccept.Text = "&Apply";
+			this.btnAccept.UseVisualStyleBackColor = true;
+			this.btnAccept.Click += new System.EventHandler(this.btnAccept_Click);
+			// 
+			// btnCancel
+			// 
+			this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.btnCancel.Location = new System.Drawing.Point(167, 245);
+			this.btnCancel.Name = "btnCancel";
+			this.btnCancel.Size = new System.Drawing.Size(75, 23);
+			this.btnCancel.TabIndex = 1;
+			this.btnCancel.Text = "&Cancel";
+			this.btnCancel.UseVisualStyleBackColor = true;
+			// 
+			// lblDeviceType
+			// 
+			this.lblDeviceType.AutoSize = true;
+			this.lblDeviceType.Location = new System.Drawing.Point(24, 20);
+			this.lblDeviceType.Name = "lblDeviceType";
+			this.lblDeviceType.Size = new System.Drawing.Size(70, 13);
+			this.lblDeviceType.TabIndex = 16;
+			this.lblDeviceType.Text = "Device type: ";
+			// 
 			// MuniaSettingsDialog
 			// 
 			this.AcceptButton = this.btnAccept;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.btnCancel;
-			this.ClientSize = new System.Drawing.Size(335, 262);
+			this.ClientSize = new System.Drawing.Size(335, 280);
 			this.Controls.Add(this.btnCancel);
 			this.Controls.Add(this.btnAccept);
 			this.Controls.Add(this.gbMunia);
@@ -615,5 +626,6 @@
 		private System.Windows.Forms.RadioButton rbNgcPC;
 		private System.Windows.Forms.Label lblNGCMode;
 		private System.Windows.Forms.RadioButton rbNgcConsole;
+		private System.Windows.Forms.Label lblDeviceType;
 	}
 }

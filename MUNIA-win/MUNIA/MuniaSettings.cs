@@ -12,12 +12,25 @@ namespace MUNIA {
 			SNES = 4
 		};
 
+		public enum DeviceType {
+			MuniaOriginal,
+			MuniaNgc,
+			MuniaN64,
+			MuniaSNES,
+			MuniaPS2,
+			MuniaXBOX
+		};
+
+
 		// new menu structure fields
 		public InputSources Inputs;
 		public OutputMode Output;
+		public DeviceType DevType;
 
 		// legacy fields
 		public bool IsLegacy { get; private set; }
+		public Version Version => new Version(VersionMajor, VersionMinor);
+
 		public SnesMode SNES;
 		public N64Mode N64;
 		public NGCMode NGC;
@@ -36,6 +49,7 @@ namespace MUNIA {
 			VersionMajor = report[2] >> 4;
 			VersionMinor = report[2] & 0x0f;
 			HardwareRevision = report[3] & 0x0f;
+			DevType = (DeviceType)(report[3] >> 4);
 			var v = new Version(VersionMajor, VersionMinor);
 			if (v >= Version.Parse("1.5")) {
 				IsLegacy = false;
