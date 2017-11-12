@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1"
+	 id="svg2" inkscape:version="0.91 r13725" sodipodi:docname="n64.svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:munia="http://www.munia.io/namespaces/munia" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:svg="http://www.w3.org/2000/svg"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 678 234.6"
+	 style="enable-background:new 0 0 678 234.6;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#505050;stroke:#000000;stroke-width:5;}
+	.st1{fill:#FF0000;stroke:#FF0000;stroke-width:5;}
+	.st2{fill:#505050;stroke:#3A3A3A;stroke-width:5;stroke-linecap:round;}
+	.st3{fill:#202020;stroke:#303030;stroke-width:5;stroke-linecap:round;}
+	.st4{fill:none;stroke:#969696;stroke-width:8;}
+	.st5{fill:none;stroke:#969696;stroke-width:4;stroke-linecap:round;}
+	.st6{fill:#BDBDBD;stroke:#AAAAAA;stroke-width:5;stroke-linecap:round;}
+	.st7{fill:#B2B2B2;}
+	.st8{fill:#E8E8E8;stroke:#A6A6A6;stroke-width:5;stroke-linecap:round;}
+	.st9{fill:#E8E8E8;stroke:#A6A6A6;stroke-width:2;stroke-linecap:round;}
+	.st10{fill:#505050;stroke:#3A3A3A;stroke-width:3.479;stroke-linecap:round;}
+	.st11{fill:#3A3A3A;}
+	.st12{fill:#3A3A3A;stroke:#3A3A3A;stroke-width:4.5694;stroke-linecap:round;}
+	.st13{fill:#FFFFFF;stroke:#FFFFFF;stroke-width:3.479;stroke-linecap:round;}
+	.st14{fill:#DCDCDC;}
+	.st15{fill:#FF0505;stroke:#C10F0F;stroke-width:5;stroke-linecap:round;}
+	.st16{fill:#E60000;}
+	.st17{font-family:'Impact';}
+	.st18{font-size:20.923px;}
+	.st19{fill:#3E39A6;stroke:#242768;stroke-width:5;stroke-linecap:round;}
+	.st20{fill:#232665;}
+	.st21{font-size:30.0609px;}
+	.st22{fill:#2C7938;stroke:#1F5725;stroke-width:5;stroke-linecap:round;}
+	.st23{fill:#225E28;}
+	.st24{font-size:30.5127px;}
+	.st25{fill:#FFD832;stroke:#D8A105;stroke-width:4;stroke-linecap:round;}
+	.st26{fill:#F6C706;}
+	.st27{fill:#FF9292;stroke:#FF9292;stroke-width:5;stroke-linecap:round;}
+	.st28{fill:#FF6464;}
+	.st29{fill:#807DE5;stroke:#807DE5;stroke-width:5;stroke-linecap:round;}
+	.st30{fill:#5257C3;}
+	.st31{fill:#70D37F;stroke:#70D37F;stroke-width:5;stroke-linecap:round;}
+	.st32{fill:#43B74E;}
+	.st33{fill:#FFEEA2;stroke:#FFEEA2;stroke-width:4;stroke-linecap:round;}
+	.st34{fill:#FBDD63;}
+	.st35{display:none;fill:#7F7F7F;stroke:#7F7F7F;stroke-width:5;}
+	.st36{fill:#212121;}
+</style>
+<sodipodi:namedview  bordercolor="#666666" borderopacity="1" gridtolerance="10" guidetolerance="10" id="namedview105" inkscape:current-layer="layer3" inkscape:cx="633.05691" inkscape:cy="384.65166" inkscape:pageopacity="0" inkscape:pageshadow="2" inkscape:window-height="1027" inkscape:window-maximized="1" inkscape:window-width="1680" inkscape:window-x="-8" inkscape:window-y="-8" inkscape:zoom="0.95625009" objecttolerance="10" pagecolor="#ffffff" showgrid="false">
+	</sodipodi:namedview>
+<munia:info  munia:device-type="N64" munia:skin-name="N64 - Square"></munia:info>
+<g id="layer5" inkscape:groupmode="layer" inkscape:label="Triggers">
+	
+		<path id="L" inkscape:connector-curvature="0" munia:button-id="9" munia:button-state="released" sodipodi:nodetypes="ccccccc" class="st0" d="
+		M189.1,3.7l-19.4,1.4l-90,10.7c0,0-41.6,4.1-74.9,25c-3,1.3-2.2,10.4-2.2,10.4l183.9-30.7L189.1,3.7z"/>
+	
+		<path id="R" inkscape:connector-curvature="0" munia:button-id="8" munia:button-state="released" sodipodi:nodetypes="ccccccc" class="st0" d="
+		M488.9,3.7l19.4,1.4l90,10.7c0,0,41.6,4.1,74.9,25c3,1.3,2.2,10.4,2.2,10.4L491.5,20.5L488.9,3.7z"/>
+	
+		<path id="L_Pressed" inkscape:connector-curvature="0" munia:button-id="9" munia:button-state="pressed" sodipodi:nodetypes="ccccccc" class="st1" d="
+		M189.1,3.7l-19.4,1.4l-90,10.7c0,0-41.6,4.1-74.9,25c-3,1.3-2.2,10.4-2.2,10.4l183.9-30.7L189.1,3.7z"/>
+	
+		<path id="R_Pressed" inkscape:connector-curvature="0" munia:button-id="8" munia:button-state="pressed" sodipodi:nodetypes="ccccccc" class="st1" d="
+		M488.9,3.7l19.4,1.4l90,10.7c0,0,41.6,4.1,74.9,25c3,1.3,2.2,10.4,2.2,10.4L491.5,20.5L488.9,3.7z"/>
+</g>
+<g id="layer1" inkscape:groupmode="layer" inkscape:label="Base">
+	<circle id="path4194" class="st2" cx="341.4" cy="158.9" r="72"/>
+	
+		<path id="path4196" inkscape:flatsided="true" inkscape:randomized="0" inkscape:rounded="0" sodipodi:arg1="0.78539816" sodipodi:arg2="1.1780972" sodipodi:cx="652.92297" sodipodi:cy="385" sodipodi:r1="43.717552" sodipodi:r2="40.389751" sodipodi:sides="8" sodipodi:type="star" class="st3" d="
+		M372.3,189.8l-30.9,12.8l-30.9-12.8l-12.8-30.9l12.8-30.9l30.9-12.8l30.9,12.8l12.8,30.9L372.3,189.8z"/>
+	<path id="path4854" inkscape:connector-curvature="0" class="st4" d="M475,143.2l28.3,32.3"/>
+	<circle id="path4856" class="st5" cx="615.5" cy="157.9" r="48"/>
+	<circle id="path4858" class="st6" cx="88.5" cy="158.9" r="73.2"/>
+	<g id="text4860" transform="matrix(0.84132994,0,0,0.93653198,141.33976,12.821628)">
+		<path id="path4867" inkscape:connector-curvature="0" sodipodi:nodetypes="ccscscsscscccccsscsscccssccc" class="st7" d="
+			M572.4,150l-6.7,0l0-1.3c0-1.3-0.1-2.1-0.2-2.5c-0.1-0.3-0.5-0.5-0.9-0.5c-0.6,0-0.9,0.2-1.1,0.6s-0.2,1.3-0.2,2.6V161
+			c0,1.3,0.1,2.1,0.2,2.5s0.5,0.6,1,0.6c0.5,0,0.8-0.2,1-0.6c0.3-0.6,0.2-2.9,0.2-2.9l6.7,0c0,0,0.3,0.9-0.5,3.7
+			c-0.4,1.1-1.2,2.1-2.5,3c-1.3,0.8-2.9,1.3-4.8,1.3c-2,0-3.6-0.4-4.9-1.1c-1.3-0.7-2.1-1.7-2.6-3c-0.4-1.3-0.6-3.2-0.6-5.7v-7.6
+			c0-1.9,0.1-3.3,0.2-4.2c0.1-0.9,0.5-1.8,1.1-2.7c0.6-0.9,1.5-1.5,2.6-2c1.1-0.5,2.4-0.8,3.9-0.8c2,0,3.6,0.4,4.9,1.2
+			s2.1,1.7,2.6,2.9C572.5,146.6,572.4,150,572.4,150L572.4,150z"/>
+	</g>
+</g>
+<g id="stick" inkscape:groupmode="layer" inkscape:label="Stick" munia:axis-h="0" munia:axis-v="1" munia:offset-scale="0.6" munia:stick-id="0">
+	<circle id="path4759" class="st8" cx="341.4" cy="157.9" r="31.3"/>
+	<circle id="path4759-3" class="st9" cx="341.4" cy="157.9" r="23.8"/>
+	<circle id="path4759-3-6" class="st9" cx="341.4" cy="157.9" r="17.3"/>
+	<circle id="path4759-3-6-1" class="st9" cx="341.4" cy="157.9" r="10.3"/>
+	<circle id="path4759-3-6-1-8" cx="341.4" cy="157.9" r="3.1"/>
+</g>
+<g id="layer2" inkscape:groupmode="layer" inkscape:label="Buttons">
+	<g id="D-Pad">
+		<path id="rect4975" inkscape:connector-curvature="0" class="st10" d="M75.5,99.9c-2.2,0-4,1.8-4,4v38h-38c-2.2,0-4,1.8-4,4v26
+			c0,2.2,1.8,4,4,4h38v38c0,2.2,1.8,4,4,4h26c2.2,0,4-1.8,4-4v-38h38c2.2,0,4-1.8,4-4v-26c0-2.2-1.8-4-4-4h-38v-38c0-2.2-1.8-4-4-4
+			H75.5z"/>
+		
+			<path id="path4869-0" inkscape:flatsided="true" inkscape:randomized="0" inkscape:rounded="0" sodipodi:arg1="3.1415927" sodipodi:arg2="0" sodipodi:cx="845" sodipodi:cy="202" sodipodi:r1="10" sodipodi:r2="5" sodipodi:sides="3" sodipodi:type="star" class="st11" d="
+			M36.1,158.9l20-10.1V169L36.1,158.9z"/>
+		
+			<path id="path4869-0-4" inkscape:flatsided="true" inkscape:randomized="0" inkscape:rounded="0" sodipodi:arg1="3.1415927" sodipodi:arg2="0" sodipodi:cx="845" sodipodi:cy="202" sodipodi:r1="10" sodipodi:r2="5" sodipodi:sides="3" sodipodi:type="star" class="st11" d="
+			M141.5,158.9l-20-10.1V169L141.5,158.9z"/>
+		
+			<path id="path4869-0-4-6" inkscape:flatsided="true" inkscape:randomized="0" inkscape:rounded="0" sodipodi:arg1="3.1415927" sodipodi:arg2="0" sodipodi:cx="845" sodipodi:cy="202" sodipodi:r1="10" sodipodi:r2="5" sodipodi:sides="3" sodipodi:type="star" class="st11" d="
+			M88.5,211.7l10.1-20H78.4L88.5,211.7z"/>
+		
+			<path id="path4869-0-4-6-4" inkscape:flatsided="true" inkscape:randomized="0" inkscape:rounded="0" sodipodi:arg1="3.1415927" sodipodi:arg2="0" sodipodi:cx="845" sodipodi:cy="202" sodipodi:r1="10" sodipodi:r2="5" sodipodi:sides="3" sodipodi:type="star" class="st11" d="
+			M88.5,106.6l10.1,20H78.4L88.5,106.6z"/>
+		<circle id="path4286" class="st12" cx="88.5" cy="158.9" r="9.2"/>
+	</g>
+	<g id="Left_Pressed" munia:button-id="12" munia:button-state="pressed">
+		<path id="rect4975-1" inkscape:connector-curvature="0" sodipodi:nodetypes="csssscc" class="st13" d="M71.5,141.9h-38
+			c-2.2,0-4,1.8-4,4v26c0,2.2,1.8,4,4,4h38V141.9z"/>
+		
+			<path id="path4869-0-8" inkscape:flatsided="true" inkscape:randomized="0" inkscape:rounded="0" sodipodi:arg1="3.1415927" sodipodi:arg2="0" sodipodi:cx="845" sodipodi:cy="202" sodipodi:r1="10" sodipodi:r2="5" sodipodi:sides="3" sodipodi:type="star" class="st14" d="
+			M36.1,158.9l20-10.1V169L36.1,158.9z"/>
+	</g>
+	<g id="Up_Pressed" munia:button-id="10" munia:button-state="pressed">
+		<path id="rect4975-3" inkscape:connector-curvature="0" sodipodi:nodetypes="ssccsss" class="st13" d="M75.5,99.9
+			c-2.2,0-4,1.8-4,4v38h34v-38c0-2.2-1.8-4-4-4H75.5z"/>
+		
+			<path id="path4869-0-4-6-4-5" inkscape:flatsided="true" inkscape:randomized="0" inkscape:rounded="0" sodipodi:arg1="3.1415927" sodipodi:arg2="0" sodipodi:cx="845" sodipodi:cy="202" sodipodi:r1="10" sodipodi:r2="5" sodipodi:sides="3" sodipodi:type="star" class="st14" d="
+			M88.5,106.6l10.1,20H78.4L88.5,106.6z"/>
+	</g>
+	<g id="Right_Pressed" munia:button-id="13" munia:button-state="pressed">
+		<path id="rect4975-3-3" inkscape:connector-curvature="0" sodipodi:nodetypes="csssscc" class="st13" d="M105.5,175.9h38
+			c2.2,0,4-1.8,4-4v-26c0-2.2-1.8-4-4-4h-38V175.9z"/>
+		
+			<path id="path4869-0-4-4" inkscape:flatsided="true" inkscape:randomized="0" inkscape:rounded="0" sodipodi:arg1="3.1415927" sodipodi:arg2="0" sodipodi:cx="845" sodipodi:cy="202" sodipodi:r1="10" sodipodi:r2="5" sodipodi:sides="3" sodipodi:type="star" class="st14" d="
+			M141.5,158.9l-20-10.1V169L141.5,158.9z"/>
+	</g>
+	<g id="Down_Pressed" munia:button-id="11" munia:button-state="pressed">
+		<path id="rect4975-3-6" inkscape:connector-curvature="0" sodipodi:nodetypes="csssscc" class="st13" d="M71.5,175.9v38
+			c0,2.2,1.8,4,4,4h26c2.2,0,4-1.8,4-4v-38H71.5z"/>
+		
+			<path id="path4869-0-4-6-3" inkscape:flatsided="true" inkscape:randomized="0" inkscape:rounded="0" sodipodi:arg1="3.1415927" sodipodi:arg2="0" sodipodi:cx="845" sodipodi:cy="202" sodipodi:r1="10" sodipodi:r2="5" sodipodi:sides="3" sodipodi:type="star" class="st14" d="
+			M88.5,211.7l10.1-20H78.4L88.5,211.7z"/>
+	</g>
+	<g id="Start" munia:button-id="0" munia:button-state="released">
+		<circle id="path4754" class="st15" cx="341.4" cy="27.5" r="25"/>
+		<text transform="matrix(0.7679 0 0 1 321.6329 35.7705)" class="st16 st17 st18">START</text>
+	</g>
+	<g id="A" munia:button-id="3" munia:button-state="released">
+		<circle id="path4148-4" class="st19" cx="512.5" cy="186.9" r="27"/>
+		<text transform="matrix(0.8961 0 0 1 498.8018 199.5149)" class="st20 st17 st21">A</text>
+	</g>
+	<g id="B" munia:button-id="2" munia:button-state="released">
+		<circle id="path4148" class="st22" cx="465.5" cy="135.9" r="27"/>
+		<text transform="matrix(0.8706 0 0 1 450.7305 148.4182)" class="st23 st17 st24">B</text>
+	</g>
+	<g id="C-Up" transform="matrix(0,1,-1,0,1087.9999,-682.00001)" munia:button-id="7" munia:button-state="released">
+		<circle id="path4165-5" class="st25" cx="800.9" cy="472.5" r="19"/>
+		
+			<path id="path4869-5" inkscape:flatsided="true" inkscape:randomized="0" inkscape:rounded="0" sodipodi:arg1="3.1415927" sodipodi:arg2="0" sodipodi:cx="845" sodipodi:cy="202" sodipodi:r1="10" sodipodi:r2="5" sodipodi:sides="3" sodipodi:type="star" class="st26" d="
+			M789,472.5l20-10.1v20.2L789,472.5z"/>
+	</g>
+	<g id="C-Right" transform="matrix(-1,0,0,1,1771.9999,-1.0813315e-5)" munia:button-id="4" munia:button-state="released">
+		<circle id="path4165-0" class="st25" cx="1115.5" cy="157.9" r="19"/>
+		
+			<path id="path4869-6" inkscape:flatsided="true" inkscape:randomized="0" inkscape:rounded="0" sodipodi:arg1="3.1415927" sodipodi:arg2="0" sodipodi:cx="845" sodipodi:cy="202" sodipodi:r1="10" sodipodi:r2="5" sodipodi:sides="3" sodipodi:type="star" class="st26" d="
+			M1103.6,157.9l20-10.1V168L1103.6,157.9z"/>
+	</g>
+	<g id="C-Left" munia:button-id="5" munia:button-state="released">
+		<circle id="path4165" class="st25" cx="574.5" cy="157.9" r="19"/>
+		
+			<path id="path4869" inkscape:flatsided="true" inkscape:randomized="0" inkscape:rounded="0" sodipodi:arg1="3.1415927" sodipodi:arg2="0" sodipodi:cx="845" sodipodi:cy="202" sodipodi:r1="10" sodipodi:r2="5" sodipodi:sides="3" sodipodi:type="star" class="st26" d="
+			M562.6,157.9l20-10.1V168L562.6,157.9z"/>
+	</g>
+	<g id="C-Down" transform="matrix(0,-1,-1,0,1087.9999,1086)" munia:button-id="6" munia:button-state="released">
+		<circle id="path4165-5-8" class="st25" cx="889.1" cy="472.5" r="19"/>
+		
+			<path id="path4869-5-7" inkscape:flatsided="true" inkscape:randomized="0" inkscape:rounded="0" sodipodi:arg1="3.1415927" sodipodi:arg2="0" sodipodi:cx="845" sodipodi:cy="202" sodipodi:r1="10" sodipodi:r2="5" sodipodi:sides="3" sodipodi:type="star" class="st26" d="
+			M877.2,472.5l20-10.1v20.2L877.2,472.5z"/>
+	</g>
+	<g id="Start_Pressed" transform="translate(-1.0351563e-6,-8.1331495e-7)" munia:button-id="0" munia:button-state="pressed">
+		<circle id="path4754-3" class="st27" cx="341.4" cy="27.5" r="25"/>
+		<text transform="matrix(0.7679 0 0 1 321.6329 35.7705)" class="st28 st17 st18">START</text>
+	</g>
+	<g id="A_Pressed" transform="translate(-1.0351563e-6,-8.1331495e-7)" munia:button-id="3" munia:button-state="pressed">
+		<circle id="path4148-4-3" class="st29" cx="512.5" cy="186.9" r="27"/>
+		<text transform="matrix(0.8961 0 0 1 498.8018 199.5149)" class="st30 st17 st21">A</text>
+	</g>
+	<g id="B_Pressed" transform="translate(-1.0351563e-6,-8.1331495e-7)" munia:button-id="2" munia:button-state="pressed">
+		<circle id="path4148-9" class="st31" cx="465.5" cy="135.9" r="27"/>
+		<text transform="matrix(0.8706 0 0 1 450.7305 148.4182)" class="st32 st17 st24">B</text>
+	</g>
+	<g id="C-Up_Pressed" transform="matrix(0,1,-1,0,1087.9999,-682.00001)" munia:button-id="7" munia:button-state="pressed">
+		<circle id="path4165-5-5" class="st33" cx="800.9" cy="472.5" r="19"/>
+		
+			<path id="path4869-5-9" inkscape:flatsided="true" inkscape:randomized="0" inkscape:rounded="0" sodipodi:arg1="3.1415927" sodipodi:arg2="0" sodipodi:cx="845" sodipodi:cy="202" sodipodi:r1="10" sodipodi:r2="5" sodipodi:sides="3" sodipodi:type="star" class="st34" d="
+			M789,472.5l20-10.1v20.2L789,472.5z"/>
+	</g>
+	<g id="C-Right_Pressed" transform="matrix(-1,0,0,1,1771.9999,-1.0813315e-5)" munia:button-id="4" munia:button-state="pressed">
+		<circle id="path4165-0-4" class="st33" cx="1115.5" cy="157.9" r="19"/>
+		
+			<path id="path4869-6-7" inkscape:flatsided="true" inkscape:randomized="0" inkscape:rounded="0" sodipodi:arg1="3.1415927" sodipodi:arg2="0" sodipodi:cx="845" sodipodi:cy="202" sodipodi:r1="10" sodipodi:r2="5" sodipodi:sides="3" sodipodi:type="star" class="st34" d="
+			M1103.6,157.9l20-10.1V168L1103.6,157.9z"/>
+	</g>
+	<g id="C-Left_Pressed" transform="translate(-1.0351563e-6,-8.1331495e-7)" munia:button-id="5" munia:button-state="pressed">
+		<circle id="path4165-2" class="st33" cx="574.5" cy="157.9" r="19"/>
+		
+			<path id="path4869-63" inkscape:flatsided="true" inkscape:randomized="0" inkscape:rounded="0" sodipodi:arg1="3.1415927" sodipodi:arg2="0" sodipodi:cx="845" sodipodi:cy="202" sodipodi:r1="10" sodipodi:r2="5" sodipodi:sides="3" sodipodi:type="star" class="st34" d="
+			M562.6,157.9l20-10.1V168L562.6,157.9z"/>
+	</g>
+	<g id="C-Down_Pressed" transform="matrix(0,-1,-1,0,1087.9999,1086)" munia:button-id="6" munia:button-state="pressed">
+		<circle id="path4165-5-8-4" class="st33" cx="889.1" cy="472.5" r="19"/>
+		
+			<path id="path4869-5-7-9" inkscape:flatsided="true" inkscape:randomized="0" inkscape:rounded="0" sodipodi:arg1="3.1415927" sodipodi:arg2="0" sodipodi:cx="845" sodipodi:cy="202" sodipodi:r1="10" sodipodi:r2="5" sodipodi:sides="3" sodipodi:type="star" class="st34" d="
+			M877.2,472.5l20-10.1v20.2L877.2,472.5z"/>
+	</g>
+</g>
+<g id="Z" munia:button-id="1" munia:button-state="released">
+	<path id="Z_1_" class="st0" d="M224.8,201.9h-17.4c-10.1,0-18.3-8.2-18.3-18.3v-69.7h54v69.7C243.1,193.7,234.9,201.9,224.8,201.9z
+		"/>
+	<text transform="matrix(0.8706 0 0 1 209.5 157.7133)" class="st36 st17 st24">Z</text>
+</g>
+
+<g id="Z_Pressed" munia:button-id="1" munia:button-state="pressed">
+	<path id="Z_Pressed_1_" class="st35" d="M224.8,201.9h-17.4c-10.1,0-18.3-8.2-18.3-18.3v-69.7h54v69.7
+		C243.1,193.7,234.9,201.9,224.8,201.9z"/>
+	<text transform="matrix(0.8706 0 0 1 209.5 157.7133)" class="st36 st17 st24">Z</text>
+</g>
+</svg>
