@@ -78,5 +78,5 @@ The MUNIA software can render controller triggers as either a bar that fills up,
 
 
 ### Finding id's
-One can easily find the id's of buttons and axes of a controller using the [http://html5gamepad.com](HTML5 Gamepad Tester).
+One can easily find the id's of buttons and axes of a controller using the [HTML5 Gamepad Tester](http://html5gamepad.com).
 Hats are mapped after the buttons, in order up/down/left/right. So if the controller has 6 face buttons and a d-pad, then the last face button has `button-id=5` and the left-direction on the d-pad is assigned `button-id=8`.
