@@ -41,6 +41,18 @@ namespace MUNIA.Util {
 		public static void RenderTexture(RectangleF r) {
 			RenderTexture(r.Left, r.Right, r.Top, r.Bottom);
 		}
+		public static void RenderTexture(RectangleF crop, RectangleF dest) {
+			GL.Begin(PrimitiveType.Quads);
+			GL.TexCoord2(crop.Left, crop.Top);
+			GL.Vertex2(dest.Left, dest.Top);
+			GL.TexCoord2(crop.Right, crop.Top);
+			GL.Vertex2(dest.Right, dest.Top);
+			GL.TexCoord2(crop.Right, crop.Bottom);
+			GL.Vertex2(dest.Right, dest.Bottom);
+			GL.TexCoord2(crop.Left, crop.Bottom);
+			GL.Vertex2(dest.Left, dest.Bottom);
+			GL.End();
+		}
 	    public static void RenderTexture(float l, float r, float t, float b) {
 		    GL.Begin(PrimitiveType.Quads);
 		    GL.TexCoord2(0, 0);
