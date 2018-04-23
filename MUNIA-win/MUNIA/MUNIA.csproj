@@ -9,10 +9,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MUNIA</RootNamespace>
     <AssemblyName>MUNIA</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -114,6 +115,7 @@
     <Compile Include="Util\IniFile.cs" />
     <Compile Include="skins\NintendoSpySkin.cs" />
     <Compile Include="skins\PadpyghtSkin.cs" />
+    <Compile Include="Util\Range.cs" />
     <Compile Include="Util\TextureHelper.cs" />
     <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
