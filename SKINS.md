@@ -9,7 +9,7 @@ Benefits of using SVG files include perfect scaling, self-contained files and ab
 
 2. *Add highlights:* button presses are typically shown by changing the color of said button, but MUNIA allows a lot of freedom in this aspect. Per button you normally define 2 object groups, one for the non-pressed and one for the pressed state of this button. They will typically overlap exactly, but this is not mandatory. The MUNIA software will show only one of both states at a time.
 
-3. *Add metadata:* the last step is to add some XML attributes to the resulting .svg file. These will allow the MUNIA software to identify the various parts of the controller, and thereby animate them in the desired way. Full details on the possible attributes to specify are detailed in the final section below.
+3. *Add metadata:* the last step is to add some XML attributes to the resulting .svg file. These will allow the MUNIA software to identify the various parts of the controller, and thereby animate them in the desired way. Full details on the possible attributes to specify are detailed in the sections below.
 
 
 ## Skin engine
@@ -20,7 +20,7 @@ The controller is rendered as a layered image. The base image is fixed at layer 
 
 
 ## Skin elements
-Game controllers typically contain 3 kinds of elements that require some form of animation: buttons, triggers and sticks. We also need one element to specify what kind of controller is defined in this file. The following sections outline how to model each of them in MUNIA skins.
+Game controllers typically contain 3 kinds of elements that require some form of animation: buttons, triggers and sticks. We also need one XML element to specify what kind of controller is defined in this file. The following sections outline how to model each of them in MUNIA skins.
 
 ### Info metadata
 The root `svg` element in the resulting document should contain a `munia:info` element specifying a name for the skin and the device type it is compatible with. 
@@ -35,10 +35,10 @@ Supported device types at the time of writing are:
 
 
 ### Buttons/dpad
-Buttons and d-pad directions are considered identical in the MUNIA software. This simplifies skinning them. There are only 2 unique relevant XML attributes:
+Buttons and d-pad directions are considered identical in the MUNIA software. This simplifies skinning them. These are the relevant XML attributes:
 * `munia:button-id="X"`: this specifies which button links to this image element. Refer to the final section in this document for hints on finding the correct id.
-* `munia:button-state="state"` with state being `pressed` or `released`: this indicates whether this element is supposed to be visible in the pressed or released state. Effectively the software replaces the image group with `munia:button-state="released"` for the one with `button-state="pressed"` group if both have matching `munia:button-id` attributes. If you specify only one of both, the other is simply never drawn.
-* `munia:z-order=x`: see Layering section above
+* `munia:button-state="pressed/released"`: this indicates whether this element is supposed to be visible in the pressed or released state. Effectively the software replaces the image group with `munia:button-state="released"` for the one with `button-state="pressed"` group if both have matching `munia:button-id` attributes. If you specify only one of both, the other is simply never drawn.
+* `munia:z-order="x `: see Layering section above
 
 #### Example
 Taken from the SNES skin `snes-light-blue.svg` skin that ships with the software:
@@ -54,6 +54,7 @@ Sticks refer to the control sticks that made their appearance in the 5th generat
 * `munia:stick-id="id"`: indicates that this element is to be considered a stick, and assigns an id to it. The id should be any unique integer number.
 * `munia:axis-h="h" munia:axis-v="v": id's of the horizontal and vertical movement axes respectively. Refer to last section.
 * `munia:offset-scale="f.f"`: a real/floating-point number indicating how far the stick moves away from its center. Good values are easily determined through trial and error. Typically a number between 0.5-2.0 should work well.
+* `munia:z-order="x"`: see Layering section above
 
 #### Example
 Taken from the Gamecube skin `gc.svg` skin that ships with the software:
@@ -66,11 +67,14 @@ Taken from the Gamecube skin `gc.svg` skin that ships with the software:
 The MUNIA software can render controller triggers as either a bar that fills up, or as an element that moves in certain direction.
 
 * `munia:trigger-id="id"`: indicates that this element is to be considered a trigger, and assigns an id to it. The id should be any unique integer number.
-* `munia:trigger-axis="t"`: id of this trigger axis on the controller. Refer to last section.
+* `munia:trigger-axis="x"`: id of this trigger axis on the controller. Refer to last section.
 * `munia:trigger-type="bar/slide"`: whether this is rendered as a bar or slide. Bars are made partially visible, and slide-type triggers move some amount in one direction, depending on how far the trigger is pressed. 
+* `munia:trigger-mirror="yes/no"`: only applies to bar type triggers. When non-mirrored (default), bars fill from left-to-right or top-to-bottom. Specifying `mirror="yes"` reverses that.
 * `munia:trigger-orientation="vertical/horizontal"`: whether the bar/slide is filled/moved in vertical or horizontal direction.
+
 * `munia:offset-scale="f.f"`: applies only to *slide*-type triggers. Similar to the offset-scale attribute for sticks.
-* `munia:trigger-range`: specifies the deadzone. Defaults to '0-255' but can be limited, e.g. to '30-240' for controllers with imperfect range.
+* `munia:trigger-range="a-b"`: specifies the deadzone. Defaults to '0-255' but can be limited, e.g. to '30-240' for controllers with imperfect range.
+* `munia:z-order="x"`: see Layering section above
 
 
 ### Finding id's
