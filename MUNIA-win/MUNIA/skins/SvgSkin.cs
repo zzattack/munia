@@ -64,45 +64,56 @@ namespace MUNIA.Skins {
 
 				if (c.ContainsAttribute("button-id")) {
 					var b = c as SvgVisualElement;
-					int id = int.Parse(c.CustomAttributes["button-id"]);
 					bool pressed = c.CustomAttributes["button-state"] == "pressed";
-					Buttons.EnsureSize(id+1);
+					var button = new Button { Id = int.Parse(c.CustomAttributes["button-id"]) };
 
 					if (c.ContainsAttribute("z-index"))
-						Buttons[id].Z = int.Parse(c.CustomAttributes["z-index"]);
+						button.Z = int.Parse(c.CustomAttributes["z-index"]);
 
 					if (pressed)
-						Buttons[id].Pressed = b;
+						button.Pressed = b;
 					else
-						Buttons[id].Element = b;
+						button.Element = b;
+					Buttons.Add(button);
 				}
 
 				else if (c.ContainsAttribute("stick-id")) {
 					var s = c as SvgVisualElement;
-					int id = int.Parse(c.CustomAttributes["stick-id"]);
-					Sticks.EnsureSize(id+1);
-					Sticks[id].Element = s;
-					Sticks[id].HorizontalAxis = int.Parse(c.CustomAttributes["axis-h"]);
-					Sticks[id].VerticalAxis = int.Parse(c.CustomAttributes["axis-v"]);
-					Sticks[id].OffsetScale = float.Parse(c.CustomAttributes["offset-scale"], CultureInfo.InvariantCulture);
-
-					if (c.ContainsAttribute("z-index"))
-						Sticks[id].Z = int.Parse(c.CustomAttributes["z-index"]);
-					else
-						Sticks[id].Z = 1;
+					var stick = new Stick {
+						Id = int.Parse(c.CustomAttributes["stick-id"]),
+						Element = s,
+						HorizontalAxis = int.Parse(c.CustomAttributes["axis-h"]),
+						VerticalAxis = int.Parse(c.CustomAttributes["axis-v"]),
+						OffsetScale = float.Parse(c.CustomAttributes["offset-scale"], CultureInfo.InvariantCulture),
+						Z = c.ContainsAttribute("z-index") ? int.Parse(c.CustomAttributes["z-index"]) : 1
+					};
+					Sticks.Add(stick);
 				}
 
 				else if (c.ContainsAttribute("trigger-id")) {
 					var t = c as SvgVisualElement;
-					int id = int.Parse(c.CustomAttributes["trigger-id"]);
-					Triggers.EnsureSize(id+1);
-					Triggers[id].Element = t;
-					Triggers[id].Axis = int.Parse(c.CustomAttributes["trigger-axis"]);
-					Triggers[id].OffsetScale = float.Parse(c.CustomAttributes["offset-scale"], CultureInfo.InvariantCulture);
+
+					var trigger = new Trigger {Id = int.Parse(c.CustomAttributes["trigger-id"])};
+					trigger.Element = t;
+					trigger.Axis = int.Parse(c.CustomAttributes["trigger-axis"]);
+					trigger.OffsetScale = float.Parse(c.CustomAttributes["offset-scale"], CultureInfo.InvariantCulture);
 					if (c.ContainsAttribute("z-index"))
-						Triggers[id].Z = int.Parse(c.CustomAttributes["z-index"]);
+						trigger.Z = int.Parse(c.CustomAttributes["z-index"]);
 					else
-						Triggers[id].Z = -1;
+						trigger.Z = -1;
+					
+					if (c.ContainsAttribute("trigger-orientation"))
+						trigger.Orientation = (TriggerOrientation)Enum.Parse(typeof(TriggerOrientation), 
+							c.CustomAttributes["trigger-orientation"], true);
+					
+					if (c.ContainsAttribute("trigger-type"))
+						trigger.Type = (TriggerType)Enum.Parse(typeof(TriggerType), 
+							c.CustomAttributes["trigger-type"], true);
+
+					if (c.ContainsAttribute("trigger-range"))
+						trigger.Range = Range.Parse(c.CustomAttributes["trigger-range"]);
+
+					Triggers.Add(trigger);
 				}
 				RecursiveGetElements(c);
 			}
@@ -117,36 +128,34 @@ namespace MUNIA.Skins {
 		}
 
 		public void Render() {
-			List<Tuple<ControllerItem, int>> all = new List<Tuple<ControllerItem, int>>();
-			all.AddRange(Buttons.Select((b, idx) => Tuple.Create((ControllerItem)b, idx)));
-			all.AddRange(Sticks.Select((b, idx) => Tuple.Create((ControllerItem)b, idx)));
-			all.AddRange(Triggers.Select((b, idx) => Tuple.Create((ControllerItem)b, idx)));
-			all.Sort((tuple, tuple1) => tuple.Item1.Z.CompareTo(tuple1.Item1.Z));
+			List<ControllerItem> all = new List<ControllerItem>();
+			all.AddRange(Buttons);
+			all.AddRange(Sticks);
+			all.AddRange(Triggers);
 
 			GL.Enable(EnableCap.Blend);
 			GL.BlendFunc(BlendingFactorSrc.One, BlendingFactorDest.OneMinusSrcAlpha);
 			GL.Enable(EnableCap.Texture2D);
 
-			foreach (var ci in all.Where(x => x.Item1.Z < 0))
-				RenderItem(ci.Item1, ci.Item2);
+			foreach (var ci in all.Where(x => x.Z < 0))
+				RenderItem(ci);
 
 			GL.BindTexture(TextureTarget.Texture2D, _baseTexture);
 			TextureHelper.RenderTexture(0, _svgDocument.Width, 0, _svgDocument.Height);
 
-			foreach (var ci in all.Where(x => x.Item1.Z >= 0))
-				RenderItem(ci.Item1, ci.Item2);
+			foreach (var ci in all.Where(x => x.Z >= 0))
+				RenderItem(ci);
 
 			GL.Disable(EnableCap.Blend);
 		}
 
-		private void RenderItem(ControllerItem i, int itemidx) {
-			if (i is Button) RenderButton(itemidx);
-			if (i is Stick) RenderStick(itemidx);
-			if (i is Trigger) RenderTrigger(itemidx);
+		private void RenderItem(ControllerItem i) {
+			if (i is Button b) RenderButton(b);
+			if (i is Stick s) RenderStick(s);
+			if (i is Trigger t) RenderTrigger(t);
 		}
-		private void RenderButton(int i) {
-			var btn = Buttons[i];
-			bool pressed = State != null && State.Buttons[i];
+		private void RenderButton(Button btn) {
+			bool pressed = State != null && State.Buttons[btn.Id];
 			if (pressed && btn.Pressed != null) {
 				GL.BindTexture(TextureTarget.Texture2D, btn.PressedTexture);
 				TextureHelper.RenderTexture(btn.PressedBounds);
@@ -156,8 +165,7 @@ namespace MUNIA.Skins {
 				TextureHelper.RenderTexture(btn.Bounds);
 			}
 		}
-		private void RenderStick(int i) {
-			var stick = Sticks[i];
+		private void RenderStick(Stick stick) {
 			var r = stick.Bounds;
 			float x, y;
 			if (State != null) {
@@ -177,17 +185,47 @@ namespace MUNIA.Skins {
 			TextureHelper.RenderTexture(r);
 		}
 
-		private void RenderTrigger(int i) {
-			var trigger = Triggers[i];
+		private void RenderTrigger(Trigger trigger) {
 			var r = trigger.Bounds;
 			float o = State?.Axes[trigger.Axis] ?? 0f;
+			
+			if (trigger.Type == TriggerType.Slide) {
+				SizeF img = GetCorrectedDimensions(new SizeF(_svgDocument.Width, _svgDocument.Height));
+				if (trigger.Orientation == TriggerOrientation.Vertical) {
+					o *= img.Height / _dimensions.Height * trigger.OffsetScale;
+					r.Offset(new PointF(0, o));
+				}
+				else {
+					o *= img.Width / _dimensions.Width * trigger.OffsetScale;
+					r.Offset(new PointF(o, 0));
+				}
+				GL.BindTexture(TextureTarget.Texture2D, trigger.Texture);
+				TextureHelper.RenderTexture(r);
+			}
+			
+			else if (trigger.Type == TriggerType.Bar) {
+				float pressRate = o / 128f;
+				SizeF img = GetCorrectedDimensions(new SizeF(_svgDocument.Width, _svgDocument.Height));
 
-			SizeF img = GetCorrectedDimensions(new SizeF(_svgDocument.Width, _svgDocument.Height));
-			o *= img.Height / _dimensions.Height * trigger.OffsetScale;
+				RectangleF crop = new RectangleF(PointF.Empty, new SizeF(1.0f, 1.0f));
+				o /= 256.0f * trigger.OffsetScale;
 
-			r.Offset(new PointF(0, o));
-			GL.BindTexture(TextureTarget.Texture2D, trigger.Texture);
-			TextureHelper.RenderTexture(r);
+				if (trigger.Orientation == TriggerOrientation.Vertical) {
+					if (!trigger.Mirror) { crop.Y += o; }
+					crop.Height -= o;
+				}
+				else {
+					if (!trigger.Mirror) {
+						crop.X += o;
+					}
+					crop.Width -= o;
+				}
+				GL.BindTexture(TextureTarget.Texture2D, trigger.Texture);
+				TextureHelper.RenderTexture(crop, r);
+
+				r.Offset(0, -80);
+				TextureHelper.RenderTexture(r);
+			}
 		}
 
 		private void RenderBase(int width, int height) {
@@ -363,6 +401,7 @@ namespace MUNIA.Skins {
 		}
 
 		public class ControllerItem {
+			public int Id; // stick, button or trigger Id on controller
 			public SvgVisualElement Element;
 			public RectangleF Bounds;
 			public int Z;
@@ -378,9 +417,22 @@ namespace MUNIA.Skins {
 			public int HorizontalAxis;
 			public int VerticalAxis;
 		}
+
+		public enum TriggerType {
+			Slide,
+			Bar
+		}
+		public enum TriggerOrientation {
+			Vertical,
+			Horizontal
+		}
 		public class Trigger : ControllerItem {
 			public float OffsetScale;
 			public int Axis;
+			public TriggerType Type = TriggerType.Slide;
+			public TriggerOrientation Orientation = TriggerOrientation.Vertical;
+			public bool Mirror = false; // applies to 'Bar', normally filles left-to-right; mirror-->right-to-left
+			public Range Range = new Range(0, 255);
 		}
 	}
 }
