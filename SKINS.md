@@ -68,12 +68,12 @@ The MUNIA software can render controller triggers as either a bar that fills up,
 
 * `munia:trigger-id="id"`: indicates that this element is to be considered a trigger, and assigns an id to it. The id should be any unique integer number.
 * `munia:trigger-axis="x"`: id of this trigger axis on the controller. Refer to last section.
-* `munia:trigger-type="bar/slide"`: whether this is rendered as a bar or slide. Bars are made partially visible, and slide-type triggers move some amount in one direction, depending on how far the trigger is pressed. 
-* `munia:trigger-mirror="yes/no"`: only applies to bar type triggers. When non-mirrored (default), bars fill from left-to-right or top-to-bottom. Specifying `mirror="yes"` reverses that.
-* `munia:trigger-orientation="vertical/horizontal"`: whether the bar/slide is filled/moved in vertical or horizontal direction.
-
-* `munia:offset-scale="f.f"`: applies only to *slide*-type triggers. Similar to the offset-scale attribute for sticks.
 * `munia:trigger-range="a-b"`: specifies the deadzone. Defaults to '0-255' but can be limited, e.g. to '30-240' for controllers with imperfect range.
+* `munia:trigger-type="bar/slide"`: whether this is rendered as a bar or slide. Bars are made partially visible, and slide-type triggers move some amount in one direction, depending on how far the trigger is pressed. 
+* `munia:trigger-orientation="vertical/horizontal"`: whether the bar/slide is filled/moved in vertical or horizontal direction.
+* `munia:trigger-reverse="yes/no"`: only applies to bar type triggers. When non-reversed (default), bars fill from left-to-right or top-to-bottom. Specifying `trigger-reverse="yes"` reverses that.
+* `munia:trigger-inverse="yes/no"`: only applies to bar type triggers. Non-inversed triggers are 0% filled when the trigger is in resting state, and 100% filled when the trigger is entirely pressed. Inversing makes it so that not pressing the trigger reveals the entire object instead.
+* `munia:offset-scale="f.f"`: applies only to *slide*-type triggers. Similar to the offset-scale attribute for sticks.
 * `munia:z-order="x"`: see Layering section above
 
 
