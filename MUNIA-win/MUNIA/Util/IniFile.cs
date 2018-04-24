@@ -214,8 +214,8 @@ namespace MUNIA.Util {
 					: SortedEntries.Any(e => e.Key.Equals(keyName, StringComparison.OrdinalIgnoreCase));
 			}
 
-			static readonly string[] TrueValues = { "yes", "1", "true", "on" };
-			static readonly string[] FalseValues = { "no", "0", "false", "off" };
+			public static readonly string[] TrueValues = { "yes", "1", "true", "on" };
+			public static readonly string[] FalseValues = { "no", "0", "false", "off" };
 
 			public bool ReadBool(string key, bool defaultValue = false) {
 				string entry = ReadString(key);

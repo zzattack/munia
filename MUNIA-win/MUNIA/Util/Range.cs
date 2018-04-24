@@ -99,6 +99,12 @@ namespace MUNIA.Util {
 		public virtual bool Contains(int num) {
 			return LowerBound <= num && num <= UpperBound;
 		}
+
+		public float Clip(float f) {
+			if (f < LowerBound) return LowerBound;
+			if (f > UpperBound) return UpperBound;
+			return f;
+		}
 	}
 
 	public class RangeStrict : Range {

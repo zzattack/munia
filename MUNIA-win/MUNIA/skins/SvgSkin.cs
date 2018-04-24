@@ -96,11 +96,12 @@ namespace MUNIA.Skins {
 					var trigger = new Trigger {Id = int.Parse(c.CustomAttributes["trigger-id"])};
 					trigger.Element = t;
 					trigger.Axis = int.Parse(c.CustomAttributes["trigger-axis"]);
-					trigger.OffsetScale = float.Parse(c.CustomAttributes["offset-scale"], CultureInfo.InvariantCulture);
+
+					if (c.ContainsAttribute("offset-scale"))
+						trigger.OffsetScale = float.Parse(c.CustomAttributes["offset-scale"], CultureInfo.InvariantCulture);
+
 					if (c.ContainsAttribute("z-index"))
 						trigger.Z = int.Parse(c.CustomAttributes["z-index"]);
-					else
-						trigger.Z = -1;
 					
 					if (c.ContainsAttribute("trigger-orientation"))
 						trigger.Orientation = (TriggerOrientation)Enum.Parse(typeof(TriggerOrientation), 
@@ -109,9 +110,15 @@ namespace MUNIA.Skins {
 					if (c.ContainsAttribute("trigger-type"))
 						trigger.Type = (TriggerType)Enum.Parse(typeof(TriggerType), 
 							c.CustomAttributes["trigger-type"], true);
-
+					
 					if (c.ContainsAttribute("trigger-range"))
 						trigger.Range = Range.Parse(c.CustomAttributes["trigger-range"]);
+
+					if (c.ContainsAttribute("trigger-reverse"))
+						trigger.Reverse = IniFile.IniSection.TrueValues.Contains(c.CustomAttributes["trigger-reverse"].ToLowerInvariant());
+					
+					if (c.ContainsAttribute("trigger-inverse"))
+						trigger.Inverse = IniFile.IniSection.TrueValues.Contains(c.CustomAttributes["trigger-inverse"].ToLowerInvariant());
 
 					Triggers.Add(trigger);
 				}
@@ -132,19 +139,21 @@ namespace MUNIA.Skins {
 			all.AddRange(Buttons);
 			all.AddRange(Sticks);
 			all.AddRange(Triggers);
+			all.Sort((l, r) => l.Z.CompareTo(r.Z));
 
 			GL.Enable(EnableCap.Blend);
 			GL.BlendFunc(BlendingFactorSrc.One, BlendingFactorDest.OneMinusSrcAlpha);
 			GL.Enable(EnableCap.Texture2D);
 
-			foreach (var ci in all.Where(x => x.Z < 0))
-				RenderItem(ci);
+			int i, cut = all.FindIndex(item => item.Z >= 0);
+			for (i = 0; i < cut; i++)
+				RenderItem(all[i]);
 
 			GL.BindTexture(TextureTarget.Texture2D, _baseTexture);
 			TextureHelper.RenderTexture(0, _svgDocument.Width, 0, _svgDocument.Height);
 
-			foreach (var ci in all.Where(x => x.Z >= 0))
-				RenderItem(ci);
+			for (; i < all.Count; i++)
+				RenderItem(all[i]);
 
 			GL.Disable(EnableCap.Blend);
 		}
@@ -188,6 +197,7 @@ namespace MUNIA.Skins {
 		private void RenderTrigger(Trigger trigger) {
 			var r = trigger.Bounds;
 			float o = State?.Axes[trigger.Axis] ?? 0f;
+			o = trigger.Range.Clip(o);
 			
 			if (trigger.Type == TriggerType.Slide) {
 				SizeF img = GetCorrectedDimensions(new SizeF(_svgDocument.Width, _svgDocument.Height));
@@ -204,27 +214,27 @@ namespace MUNIA.Skins {
 			}
 			
 			else if (trigger.Type == TriggerType.Bar) {
-				float pressRate = o / 128f;
-				SizeF img = GetCorrectedDimensions(new SizeF(_svgDocument.Width, _svgDocument.Height));
-
 				RectangleF crop = new RectangleF(PointF.Empty, new SizeF(1.0f, 1.0f));
-				o /= 256.0f * trigger.OffsetScale;
+				float pressRate = (o - trigger.Range.LowerBound) / (trigger.Range.UpperBound - trigger.Range.LowerBound);
+				if (trigger.Inverse) pressRate = 1.0f - pressRate;
 
-				if (trigger.Orientation == TriggerOrientation.Vertical) {
-					if (!trigger.Mirror) { crop.Y += o; }
-					crop.Height -= o;
+				if (trigger.Orientation == TriggerOrientation.Horizontal) {
+					crop.X = trigger.Reverse ^ trigger.Inverse ? 1.0f - pressRate : 0;
+					crop.Width = pressRate;
 				}
 				else {
-					if (!trigger.Mirror) {
-						crop.X += o;
-					}
-					crop.Width -= o;
+					crop.Y = trigger.Reverse ^ trigger.Inverse ? 1.0f - pressRate : 0;
+					crop.Height = pressRate;
 				}
+				
+				// compensate texture size for crop rate
+				r.X += r.Width * crop.X;
+				r.Y += r.Height * crop.Y;
+				r.Width *= crop.Width;
+				r.Height *= crop.Height;
+
 				GL.BindTexture(TextureTarget.Texture2D, trigger.Texture);
 				TextureHelper.RenderTexture(crop, r);
-
-				r.Offset(0, -80);
-				TextureHelper.RenderTexture(r);
 			}
 		}
 
@@ -404,7 +414,7 @@ namespace MUNIA.Skins {
 			public int Id; // stick, button or trigger Id on controller
 			public SvgVisualElement Element;
 			public RectangleF Bounds;
-			public int Z;
+			public int Z = 0;
 			public int Texture = -1;
 		}
 		public class Button : ControllerItem {
@@ -431,7 +441,8 @@ namespace MUNIA.Skins {
 			public int Axis;
 			public TriggerType Type = TriggerType.Slide;
 			public TriggerOrientation Orientation = TriggerOrientation.Vertical;
-			public bool Mirror = false; // applies to 'Bar', normally filles left-to-right; mirror-->right-to-left
+			public bool Reverse = false; // applies to 'Bar', normally fills left-to-right; Reverse-->right-to-left
+			public bool Inverse = false; // applies to 'Bar', normally fills 0% when not pressed
 			public Range Range = new Range(0, 255);
 		}
 	}
