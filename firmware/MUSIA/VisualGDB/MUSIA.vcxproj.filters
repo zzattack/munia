@@ -9,10 +9,6 @@
       <UniqueIdentifier>{a1d46dd0-c194-4c02-8542-041821b12974}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource files">
-      <UniqueIdentifier>{fd1c2d1e-bd2d-4744-aca9-02e20665d07f}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
-    </Filter>
     <Filter Include="Source files\Device-specific files">
       <UniqueIdentifier>{f77f1b04-fb07-40d7-8a9b-b5aef7e980cd}</UniqueIdentifier>
     </Filter>
@@ -210,9 +206,6 @@
     <ClCompile Include="$(BSP_ROOT)\STM32F0xxxx\STM32F0xx_HAL_Driver\Src\stm32f0xx_ll_utils.c">
       <Filter>Source files\Device-specific files\HAL</Filter>
     </ClCompile>
-    <ClInclude Include="stm32f0xx_hal_conf.h">
-      <Filter>Header files</Filter>
-    </ClInclude>
     <ClInclude Include="$(BSP_ROOT)\STM32F0xxxx\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal.h">
       <Filter>Header files\Device-specific files\HAL</Filter>
     </ClInclude>
@@ -480,153 +473,156 @@
     <None Include="stm32.xml">
       <Filter>VisualGDB settings</Filter>
     </None>
-    <ClCompile Include="Src\gpio.c">
-      <Filter>Source files\CubeMX</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\iwdg.c">
-      <Filter>Source files\CubeMX</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\main.c">
-      <Filter>Source files\CubeMX</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\spi.c">
-      <Filter>Source files\CubeMX</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\stm32f0xx_hal_msp.c">
-      <Filter>Source files\CubeMX</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\stm32f0xx_it.c">
-      <Filter>Source files\CubeMX</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\system_stm32f0xx.c">
-      <Filter>Source files\CubeMX</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\usart.c">
-      <Filter>Source files\CubeMX</Filter>
-    </ClCompile>
     <ClCompile Include="$(BSP_ROOT)\STM32F0xxxx\StartupFiles\startup_stm32f042x6.c">
       <Filter>Source files\Device-specific files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="musia.cpp">
+    <ClCompile Include="..\config.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
-    <ClCompile Include="retarget.c">
+    <ClCompile Include="..\musia.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\dma.c">
-      <Filter>Source files\CubeMX</Filter>
-    </ClCompile>
-    <ClCompile Include="spi_sniffer.cpp">
+    <ClCompile Include="..\ps2_poller.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
-    <ClCompile Include="ps2_state.cpp">
+    <ClCompile Include="..\ps2_state.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
-    <ClCompile Include="ps2_poller.cpp">
+    <ClCompile Include="..\retarget.c">
       <Filter>Source files</Filter>
     </ClCompile>
-    <ClCompile Include="config.cpp">
+    <ClCompile Include="..\spi_sniffer.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
-    <ClCompile Include="usb_joystick.cpp">
-      <Filter>Source files</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\usb_device.c">
-      <Filter>Source files\CubeMX</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\usbd_conf.c">
-      <Filter>Source files\CubeMX</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\usbd_desc.c">
-      <Filter>Source files\CubeMX</Filter>
-    </ClCompile>
-    <ClCompile Include="USB\usbd_ctlreq.c">
+    <ClCompile Include="..\Src\usb_device.c">
       <Filter>USB</Filter>
     </ClCompile>
-    <ClCompile Include="USB\usbd_customhid.c">
+    <ClCompile Include="..\usb_joystick.cpp">
       <Filter>USB</Filter>
     </ClCompile>
-    <ClCompile Include="USB\usbd_ioreq.c">
+    <ClCompile Include="..\Src\usbd_conf.c">
       <Filter>USB</Filter>
     </ClCompile>
-    <ClCompile Include="USB\usbd_core.c">
+    <ClCompile Include="..\USB\usbd_core.c">
       <Filter>USB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\USB\usbd_ctlreq.c">
+      <Filter>USB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\USB\usbd_customhid.c">
+      <Filter>USB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\usbd_desc.c">
+      <Filter>USB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\USB\usbd_ioreq.c">
+      <Filter>USB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\dma.c">
+      <Filter>Source files\CubeMX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\gpio.c">
+      <Filter>Source files\CubeMX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\iwdg.c">
+      <Filter>Source files\CubeMX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\main.c">
+      <Filter>Source files\CubeMX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\spi.c">
+      <Filter>Source files\CubeMX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\usart.c">
+      <Filter>Source files\CubeMX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\system_stm32f0xx.c">
+      <Filter>Source files\CubeMX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\stm32f0xx_it.c">
+      <Filter>Source files\CubeMX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\stm32f0xx_hal_msp.c">
+      <Filter>Source files\CubeMX</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="retarget.h">
+    <ClInclude Include="..\USB\report_descriptors.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="Inc\gpio.h">
-      <Filter>Header files\CubeMX</Filter>
-    </ClInclude>
-    <ClInclude Include="Inc\iwdg.h">
-      <Filter>Header files\CubeMX</Filter>
-    </ClInclude>
-    <ClInclude Include="Inc\main.h">
-      <Filter>Header files\CubeMX</Filter>
-    </ClInclude>
-    <ClInclude Include="Inc\spi.h">
-      <Filter>Header files\CubeMX</Filter>
-    </ClInclude>
-    <ClInclude Include="Inc\stm32f0xx_hal_conf.h">
-      <Filter>Header files\CubeMX</Filter>
-    </ClInclude>
-    <ClInclude Include="Inc\stm32f0xx_it.h">
-      <Filter>Header files\CubeMX</Filter>
-    </ClInclude>
-    <ClInclude Include="Inc\usart.h">
-      <Filter>Header files\CubeMX</Filter>
-    </ClInclude>
-    <ClInclude Include="Inc\usb_device.h">
-      <Filter>Header files\CubeMX</Filter>
-    </ClInclude>
-    <ClInclude Include="Inc\usbd_conf.h">
-      <Filter>Header files\CubeMX</Filter>
-    </ClInclude>
-    <ClInclude Include="Inc\usbd_desc.h">
-      <Filter>Header files\CubeMX</Filter>
-    </ClInclude>
-    <ClInclude Include="Inc\dma.h">
-      <Filter>Header files\CubeMX</Filter>
-    </ClInclude>
-    <ClInclude Include="musia.h">
+    <ClInclude Include="..\config.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="ps2_state.h">
+    <ClInclude Include="..\musia.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="spi_sniffer.h">
+    <ClInclude Include="..\ps2_poller.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="ps2_poller.h">
+    <ClInclude Include="..\ps2_state.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="config.h">
+    <ClInclude Include="..\retarget.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="usb_joystick.h">
+    <ClInclude Include="..\spi_sniffer.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="USB\usbd_ctlreq.h">
+    <ClInclude Include="..\Inc\dma.h">
+      <Filter>Header files\CubeMX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Inc\gpio.h">
+      <Filter>Header files\CubeMX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Inc\iwdg.h">
+      <Filter>Header files\CubeMX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Inc\main.h">
+      <Filter>Header files\CubeMX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\stm32f0xx_hal_conf.h">
+      <Filter>Header files\CubeMX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Inc\stm32f0xx_hal_conf.h">
+      <Filter>Header files\CubeMX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Inc\stm32f0xx_it.h">
+      <Filter>Header files\CubeMX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Inc\usart.h">
+      <Filter>Header files\CubeMX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Inc\usb_device.h">
       <Filter>USB</Filter>
     </ClInclude>
-    <ClInclude Include="USB\usbd_customhid.h">
+    <ClInclude Include="..\usb_joystick.h">
       <Filter>USB</Filter>
     </ClInclude>
-    <ClInclude Include="USB\usbd_def.h">
+    <ClInclude Include="..\Inc\usbd_conf.h">
       <Filter>USB</Filter>
     </ClInclude>
-    <ClInclude Include="USB\usbd_ioreq.h">
+    <ClInclude Include="..\USB\usbd_core.h">
       <Filter>USB</Filter>
     </ClInclude>
-    <ClInclude Include="USB\usbd_core.h">
+    <ClInclude Include="..\USB\usbd_ctlreq.h">
       <Filter>USB</Filter>
     </ClInclude>
-    <ClInclude Include="USB\report_descriptors.h">
+    <ClInclude Include="..\USB\usbd_customhid.h">
       <Filter>USB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\USB\usbd_def.h">
+      <Filter>USB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Inc\usbd_desc.h">
+      <Filter>USB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\USB\usbd_ioreq.h">
+      <Filter>USB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Inc\spi.h">
+      <Filter>Header files\CubeMX</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

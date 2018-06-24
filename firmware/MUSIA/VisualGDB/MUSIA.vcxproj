@@ -42,11 +42,11 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|VisualGDB'">
     <ClCompile>
-      <AdditionalIncludeDirectories>Inc;USB;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Inc;..\USB;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>DEBUG=1;DEBUG_DEFAULT_INTERRUPT_HANDLERS=0;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
       <Optimization>O1</Optimization>
       <InlineFunctions>true</InlineFunctions>
-      <ForcedIncludeFiles>retarget.h</ForcedIncludeFiles>
+      <ForcedIncludeFiles>..\retarget.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <AdditionalLinkerInputs>;%(Link.AdditionalLinkerInputs)</AdditionalLinkerInputs>
@@ -61,9 +61,9 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|VisualGDB'">
     <ClCompile>
-      <AdditionalIncludeDirectories>Inc;USB;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Inc;..\USB;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG=1;RELEASE=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ForcedIncludeFiles>retarget.h</ForcedIncludeFiles>
+      <ForcedIncludeFiles>..\retarget.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <AdditionalLinkerInputs>;%(Link.AdditionalLinkerInputs)</AdditionalLinkerInputs>
@@ -78,36 +78,36 @@
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
   <ItemGroup>
-    <ClCompile Include="config.cpp" />
-    <ClCompile Include="musia.cpp" />
-    <ClCompile Include="ps2_poller.cpp" />
-    <ClCompile Include="ps2_state.cpp" />
-    <ClCompile Include="retarget.c" />
-    <ClCompile Include="spi_sniffer.cpp" />
-    <ClCompile Include="Src\dma.c" />
-    <ClCompile Include="Src\gpio.c" />
-    <ClCompile Include="Src\iwdg.c" />
-    <ClCompile Include="Src\main.c" />
-    <ClCompile Include="Src\spi.c" />
-    <ClCompile Include="Src\stm32f0xx_hal_msp.c" />
-    <ClCompile Include="Src\stm32f0xx_it.c" />
-    <ClCompile Include="Src\system_stm32f0xx.c" />
-    <ClCompile Include="Src\usart.c" />
-    <ClCompile Include="Src\usbd_conf.c" />
-    <ClCompile Include="Src\usbd_desc.c" />
-    <ClCompile Include="Src\usb_device.c" />
-    <ClCompile Include="USB\usbd_core.c" />
-    <ClCompile Include="USB\usbd_ctlreq.c" />
-    <ClCompile Include="USB\usbd_customhid.c" />
-    <ClCompile Include="USB\usbd_ioreq.c" />
-    <ClCompile Include="usb_joystick.cpp" />
-    <ClInclude Include="USB\report_descriptors.h" />
-    <ClInclude Include="USB\usbd_core.h" />
-    <ClInclude Include="USB\usbd_ctlreq.h" />
-    <ClInclude Include="USB\usbd_customhid.h" />
-    <ClInclude Include="USB\usbd_def.h" />
-    <ClInclude Include="USB\usbd_ioreq.h" />
-    <ClInclude Include="usb_joystick.h" />
+    <ClCompile Include="..\config.cpp" />
+    <ClCompile Include="..\musia.cpp" />
+    <ClCompile Include="..\ps2_poller.cpp" />
+    <ClCompile Include="..\ps2_state.cpp" />
+    <ClCompile Include="..\retarget.c" />
+    <ClCompile Include="..\spi_sniffer.cpp" />
+    <ClCompile Include="..\Src\dma.c" />
+    <ClCompile Include="..\Src\gpio.c" />
+    <ClCompile Include="..\Src\iwdg.c" />
+    <ClCompile Include="..\Src\main.c" />
+    <ClCompile Include="..\Src\spi.c" />
+    <ClCompile Include="..\Src\stm32f0xx_hal_msp.c" />
+    <ClCompile Include="..\Src\stm32f0xx_it.c" />
+    <ClCompile Include="..\Src\system_stm32f0xx.c" />
+    <ClCompile Include="..\Src\usart.c" />
+    <ClCompile Include="..\Src\usbd_conf.c" />
+    <ClCompile Include="..\Src\usbd_desc.c" />
+    <ClCompile Include="..\Src\usb_device.c" />
+    <ClCompile Include="..\USB\usbd_core.c" />
+    <ClCompile Include="..\USB\usbd_ctlreq.c" />
+    <ClCompile Include="..\USB\usbd_customhid.c" />
+    <ClCompile Include="..\USB\usbd_ioreq.c" />
+    <ClCompile Include="..\usb_joystick.cpp" />
+    <ClInclude Include="..\USB\report_descriptors.h" />
+    <ClInclude Include="..\USB\usbd_core.h" />
+    <ClInclude Include="..\USB\usbd_ctlreq.h" />
+    <ClInclude Include="..\USB\usbd_customhid.h" />
+    <ClInclude Include="..\USB\usbd_def.h" />
+    <ClInclude Include="..\USB\usbd_ioreq.h" />
+    <ClInclude Include="..\usb_joystick.h" />
     <None Include="stm32.props" />
     <ClCompile Include="$(BSP_ROOT)\STM32F0xxxx\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal.c" />
     <ClCompile Include="$(BSP_ROOT)\STM32F0xxxx\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_adc.c" />
@@ -165,24 +165,24 @@
     <ClCompile Include="$(BSP_ROOT)\STM32F0xxxx\STM32F0xx_HAL_Driver\Src\stm32f0xx_ll_tim.c" />
     <ClCompile Include="$(BSP_ROOT)\STM32F0xxxx\STM32F0xx_HAL_Driver\Src\stm32f0xx_ll_usart.c" />
     <ClCompile Include="$(BSP_ROOT)\STM32F0xxxx\STM32F0xx_HAL_Driver\Src\stm32f0xx_ll_utils.c" />
-    <ClInclude Include="config.h" />
-    <ClInclude Include="Inc\dma.h" />
-    <ClInclude Include="Inc\gpio.h" />
-    <ClInclude Include="Inc\iwdg.h" />
-    <ClInclude Include="Inc\main.h" />
-    <ClInclude Include="Inc\spi.h" />
-    <ClInclude Include="Inc\stm32f0xx_hal_conf.h" />
-    <ClInclude Include="Inc\stm32f0xx_it.h" />
-    <ClInclude Include="Inc\usart.h" />
-    <ClInclude Include="Inc\usbd_conf.h" />
-    <ClInclude Include="Inc\usbd_desc.h" />
-    <ClInclude Include="Inc\usb_device.h" />
-    <ClInclude Include="musia.h" />
-    <ClInclude Include="ps2_poller.h" />
-    <ClInclude Include="ps2_state.h" />
-    <ClInclude Include="retarget.h" />
-    <ClInclude Include="spi_sniffer.h" />
-    <ClInclude Include="stm32f0xx_hal_conf.h" />
+    <ClInclude Include="..\config.h" />
+    <ClInclude Include="..\Inc\dma.h" />
+    <ClInclude Include="..\Inc\gpio.h" />
+    <ClInclude Include="..\Inc\iwdg.h" />
+    <ClInclude Include="..\Inc\main.h" />
+    <ClInclude Include="..\Inc\spi.h" />
+    <ClInclude Include="..\Inc\stm32f0xx_hal_conf.h" />
+    <ClInclude Include="..\Inc\stm32f0xx_it.h" />
+    <ClInclude Include="..\Inc\usart.h" />
+    <ClInclude Include="..\Inc\usbd_conf.h" />
+    <ClInclude Include="..\Inc\usbd_desc.h" />
+    <ClInclude Include="..\Inc\usb_device.h" />
+    <ClInclude Include="..\musia.h" />
+    <ClInclude Include="..\ps2_poller.h" />
+    <ClInclude Include="..\ps2_state.h" />
+    <ClInclude Include="..\retarget.h" />
+    <ClInclude Include="..\spi_sniffer.h" />
+    <ClInclude Include="..\stm32f0xx_hal_conf.h" />
     <ClInclude Include="$(BSP_ROOT)\STM32F0xxxx\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal.h" />
     <ClInclude Include="$(BSP_ROOT)\STM32F0xxxx\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_adc.h" />
     <ClInclude Include="$(BSP_ROOT)\STM32F0xxxx\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_adc_ex.h" />
