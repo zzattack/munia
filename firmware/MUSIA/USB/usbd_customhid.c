@@ -76,7 +76,7 @@ __ALIGN_BEGIN static uint8_t USBD_CUSTOM_HID_CfgDesc[] __ALIGN_END = {
 			0x00, // bCountryCode: Hardware target country
 			0x01, // bNumDescriptors: Number of CUSTOM_HID class descriptors to follow
 			0x22, // bDescriptorType
-			HID_RPT_PS2_SIZE, // wItemLength: Total length of Report descriptor
+			HID_RPT_PS2_SIZE, // wItemLength: Total length of Report descriptor // TODO: this varies!!
 			0x00,
 			// -------------------------------------------------------------------------
 	

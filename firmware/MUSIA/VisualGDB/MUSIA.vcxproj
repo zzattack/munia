@@ -96,10 +96,12 @@
     <ClCompile Include="..\Src\usbd_conf.c" />
     <ClCompile Include="..\Src\usbd_desc.c" />
     <ClCompile Include="..\Src\usb_device.c" />
+    <ClCompile Include="..\USB\usbd_cfg_hid_if.c" />
     <ClCompile Include="..\USB\usbd_core.c" />
     <ClCompile Include="..\USB\usbd_ctlreq.c" />
     <ClCompile Include="..\USB\usbd_customhid.c" />
     <ClCompile Include="..\USB\usbd_ioreq.c" />
+    <ClCompile Include="..\USB\usbd_ps2_hid_if.c" />
     <ClCompile Include="..\usb_joystick.cpp" />
     <ClInclude Include="..\USB\report_descriptors.h" />
     <ClInclude Include="..\USB\usbd_core.h" />

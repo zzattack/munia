@@ -67,7 +67,7 @@
 
 /* USER CODE END PV */
 
-PCD_HandleTypeDef hpcd_USB_FS;
+                PCD_HandleTypeDef hpcd_USB_FS;
 void _Error_Handler(char * file, int line);
 
 /* USER CODE BEGIN 0 */
@@ -310,9 +310,8 @@ USBD_StatusTypeDef USBD_LL_Init(USBD_HandleTypeDef *pdev)
 
   HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , 0x00 , PCD_SNG_BUF, 0x18);
   HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , 0x80 , PCD_SNG_BUF, 0x58);
-  HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData, HID_EP_MUSIA | 0x80, PCD_SNG_BUF, 0x98); // TODO cleanup
-	// HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData, MUSIA_HID_EPIN_ADDR, PCD_SNG_BUF, 0x98);
-	  // HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , CUSTOM_HID_EPOUT_ADDR , PCD_SNG_BUF, 0xD8);
+  HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , MUSIA_HID_EPIN_ADDR , PCD_SNG_BUF, 0x98);
+	// todo: same for cfg endpoints
   return USBD_OK;
 }
 

@@ -511,9 +511,6 @@
     <ClCompile Include="..\USB\usbd_ctlreq.c">
       <Filter>USB</Filter>
     </ClCompile>
-    <ClCompile Include="..\USB\usbd_customhid.c">
-      <Filter>USB</Filter>
-    </ClCompile>
     <ClCompile Include="..\Src\usbd_desc.c">
       <Filter>USB</Filter>
     </ClCompile>
@@ -547,11 +544,17 @@
     <ClCompile Include="..\Src\stm32f0xx_hal_msp.c">
       <Filter>Source files\CubeMX</Filter>
     </ClCompile>
+    <ClCompile Include="..\USB\usbd_customhid.c">
+      <Filter>USB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\USB\usbd_cfg_hid_if.c">
+      <Filter>USB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\USB\usbd_ps2_hid_if.c">
+      <Filter>USB</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\USB\report_descriptors.h">
-      <Filter>Header files</Filter>
-    </ClInclude>
     <ClInclude Include="..\config.h">
       <Filter>Header files</Filter>
     </ClInclude>
@@ -609,9 +612,6 @@
     <ClInclude Include="..\USB\usbd_ctlreq.h">
       <Filter>USB</Filter>
     </ClInclude>
-    <ClInclude Include="..\USB\usbd_customhid.h">
-      <Filter>USB</Filter>
-    </ClInclude>
     <ClInclude Include="..\USB\usbd_def.h">
       <Filter>USB</Filter>
     </ClInclude>
@@ -623,6 +623,12 @@
     </ClInclude>
     <ClInclude Include="..\Inc\spi.h">
       <Filter>Header files\CubeMX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\USB\usbd_customhid.h">
+      <Filter>USB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\USB\report_descriptors.h">
+      <Filter>USB</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -81,26 +81,35 @@ USBD_HandleTypeDef hUsbDeviceFS;
  * -- Insert your external function declaration here --
  */
 /* USER CODE BEGIN 1 */
-
+extern USBD_CUSTOM_HID_ItfTypeDef USBD_CustomHID_PS2_fops_FS;
+extern USBD_CUSTOM_HID_ItfTypeDef USBD_CustomHID_CFG_fops_FS;
 /* USER CODE END 1 */
 
 /**
   * Init USB device Library, add supported class and start the library
   * @retval None
   */
-void MX_USB_DEVICE_Init() {
+void MX_USB_DEVICE_Init(void)
+{
   /* USER CODE BEGIN USB_DEVICE_Init_PreTreatment */
+	if (0) {  
+/* USER CODE END USB_DEVICE_Init_PreTreatment */
   
-  /* USER CODE END USB_DEVICE_Init_PreTreatment */
-  
-  /* Init Device Library, add supported class and start the library. */
-  USBD_Init(&hUsbDeviceFS, &FS_Desc, DEVICE_FS);
-  USBD_RegisterClass(&hUsbDeviceFS, &USBD_CUSTOM_HID);
+/* Init Device Library, add supported class and start the library. */
+USBD_Init(&hUsbDeviceFS, &FS_Desc, DEVICE_FS);
 
-  USBD_Start(&hUsbDeviceFS);
+USBD_RegisterClass(&hUsbDeviceFS, &USBD_CUSTOM_HID);
 
-  /* USER CODE BEGIN USB_DEVICE_Init_PostTreatment */
-  
+USBD_Start(&hUsbDeviceFS);
+
+/* USER CODE BEGIN USB_DEVICE_Init_PostTreatment */
+	}
+
+	USBD_Init(&hUsbDeviceFS, &FS_Desc, DEVICE_FS);
+	USBD_RegisterClass(&hUsbDeviceFS, &USBD_CUSTOM_HID);
+	USBD_Start(&hUsbDeviceFS);
+	USBD_CUSTOM_HID_RegisterInterface(&hUsbDeviceFS, &USBD_CustomHID_PS2_fops_FS);
+	USBD_CUSTOM_HID_RegisterInterface(&hUsbDeviceFS, &USBD_CustomHID_CFG_fops_FS);  
   /* USER CODE END USB_DEVICE_Init_PostTreatment */
 }
 
