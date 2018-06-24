@@ -42,7 +42,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|VisualGDB'">
     <ClCompile>
-      <AdditionalIncludeDirectories>Inc;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Inc;USB;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>DEBUG=1;DEBUG_DEFAULT_INTERRUPT_HANDLERS=0;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
       <Optimization>O1</Optimization>
       <InlineFunctions>true</InlineFunctions>
@@ -61,7 +61,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|VisualGDB'">
     <ClCompile>
-      <AdditionalIncludeDirectories>Inc;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Inc;USB;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG=1;RELEASE=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
       <ForcedIncludeFiles>retarget.h</ForcedIncludeFiles>
     </ClCompile>
@@ -96,7 +96,17 @@
     <ClCompile Include="Src\usbd_conf.c" />
     <ClCompile Include="Src\usbd_desc.c" />
     <ClCompile Include="Src\usb_device.c" />
+    <ClCompile Include="USB\usbd_core.c" />
+    <ClCompile Include="USB\usbd_ctlreq.c" />
+    <ClCompile Include="USB\usbd_customhid.c" />
+    <ClCompile Include="USB\usbd_ioreq.c" />
     <ClCompile Include="usb_joystick.cpp" />
+    <ClInclude Include="USB\report_descriptors.h" />
+    <ClInclude Include="USB\usbd_core.h" />
+    <ClInclude Include="USB\usbd_ctlreq.h" />
+    <ClInclude Include="USB\usbd_customhid.h" />
+    <ClInclude Include="USB\usbd_def.h" />
+    <ClInclude Include="USB\usbd_ioreq.h" />
     <ClInclude Include="usb_joystick.h" />
     <None Include="stm32.props" />
     <ClCompile Include="$(BSP_ROOT)\STM32F0xxxx\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal.c" />
@@ -164,7 +174,6 @@
     <ClInclude Include="Inc\stm32f0xx_hal_conf.h" />
     <ClInclude Include="Inc\stm32f0xx_it.h" />
     <ClInclude Include="Inc\usart.h" />
-    <ClInclude Include="Inc\usb.h" />
     <ClInclude Include="Inc\usbd_conf.h" />
     <ClInclude Include="Inc\usbd_desc.h" />
     <ClInclude Include="Inc\usb_device.h" />
@@ -264,14 +273,5 @@
     <None Include="MUSIA-Release.vgdbsettings" />
     <None Include="stm32.xml" />
     <ClCompile Include="$(BSP_ROOT)\STM32F0xxxx\StartupFiles\startup_stm32f042x6.c" />
-    <ClCompile Include="$(BSP_ROOT)\STM32_USB_Device_Library\Core\Src\usbd_core.c" />
-    <ClCompile Include="$(BSP_ROOT)\STM32_USB_Device_Library\Core\Src\usbd_ctlreq.c" />
-    <ClCompile Include="$(BSP_ROOT)\STM32_USB_Device_Library\Core\Src\usbd_ioreq.c" />
-    <ClInclude Include="$(BSP_ROOT)\STM32_USB_Device_Library\Core\Inc\usbd_core.h" />
-    <ClInclude Include="$(BSP_ROOT)\STM32_USB_Device_Library\Core\Inc\usbd_ctlreq.h" />
-    <ClInclude Include="$(BSP_ROOT)\STM32_USB_Device_Library\Core\Inc\usbd_def.h" />
-    <ClInclude Include="$(BSP_ROOT)\STM32_USB_Device_Library\Core\Inc\usbd_ioreq.h" />
-    <ClCompile Include="$(BSP_ROOT)\STM32_USB_Device_Library\Class\CustomHID\Src\usbd_customhid.c" />
-    <ClInclude Include="$(BSP_ROOT)\STM32_USB_Device_Library\Class\CustomHID\Inc\usbd_customhid.h" />
   </ItemGroup>
 </Project>

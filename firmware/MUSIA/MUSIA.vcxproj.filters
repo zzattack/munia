@@ -34,11 +34,8 @@
     <Filter Include="Source files\CubeMX">
       <UniqueIdentifier>{0b6cd422-03d3-4409-9c3f-8419527f8c58}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source files\Device-specific files\USB Device">
-      <UniqueIdentifier>{b9f3e7ee-d678-44bf-9016-83ffa88e375e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header files\Device-specific files\USB Device">
-      <UniqueIdentifier>{a9501880-0cc3-48d2-8b40-bec5d1e7ddac}</UniqueIdentifier>
+    <Filter Include="USB">
+      <UniqueIdentifier>{e3df40ee-af99-4137-ad0b-b8c404e0a424}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -510,33 +507,6 @@
     <ClCompile Include="$(BSP_ROOT)\STM32F0xxxx\StartupFiles\startup_stm32f042x6.c">
       <Filter>Source files\Device-specific files</Filter>
     </ClCompile>
-    <ClCompile Include="$(BSP_ROOT)\STM32_USB_Device_Library\Core\Src\usbd_core.c">
-      <Filter>Source files\Device-specific files\USB Device</Filter>
-    </ClCompile>
-    <ClCompile Include="$(BSP_ROOT)\STM32_USB_Device_Library\Core\Src\usbd_ctlreq.c">
-      <Filter>Source files\Device-specific files\USB Device</Filter>
-    </ClCompile>
-    <ClCompile Include="$(BSP_ROOT)\STM32_USB_Device_Library\Core\Src\usbd_ioreq.c">
-      <Filter>Source files\Device-specific files\USB Device</Filter>
-    </ClCompile>
-    <ClInclude Include="$(BSP_ROOT)\STM32_USB_Device_Library\Core\Inc\usbd_core.h">
-      <Filter>Header files\Device-specific files\USB Device</Filter>
-    </ClInclude>
-    <ClInclude Include="$(BSP_ROOT)\STM32_USB_Device_Library\Core\Inc\usbd_ctlreq.h">
-      <Filter>Header files\Device-specific files\USB Device</Filter>
-    </ClInclude>
-    <ClInclude Include="$(BSP_ROOT)\STM32_USB_Device_Library\Core\Inc\usbd_def.h">
-      <Filter>Header files\Device-specific files\USB Device</Filter>
-    </ClInclude>
-    <ClInclude Include="$(BSP_ROOT)\STM32_USB_Device_Library\Core\Inc\usbd_ioreq.h">
-      <Filter>Header files\Device-specific files\USB Device</Filter>
-    </ClInclude>
-    <ClCompile Include="$(BSP_ROOT)\STM32_USB_Device_Library\Class\CustomHID\Src\usbd_customhid.c">
-      <Filter>Source files\Device-specific files\USB Device</Filter>
-    </ClCompile>
-    <ClInclude Include="$(BSP_ROOT)\STM32_USB_Device_Library\Class\CustomHID\Inc\usbd_customhid.h">
-      <Filter>Header files\Device-specific files\USB Device</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="musia.cpp">
@@ -546,15 +516,6 @@
       <Filter>Source files</Filter>
     </ClCompile>
     <ClCompile Include="Src\dma.c">
-      <Filter>Source files\CubeMX</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\usb_device.c">
-      <Filter>Source files\CubeMX</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\usbd_conf.c">
-      <Filter>Source files\CubeMX</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\usbd_desc.c">
       <Filter>Source files\CubeMX</Filter>
     </ClCompile>
     <ClCompile Include="spi_sniffer.cpp">
@@ -571,6 +532,27 @@
     </ClCompile>
     <ClCompile Include="usb_joystick.cpp">
       <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\usb_device.c">
+      <Filter>Source files\CubeMX</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\usbd_conf.c">
+      <Filter>Source files\CubeMX</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\usbd_desc.c">
+      <Filter>Source files\CubeMX</Filter>
+    </ClCompile>
+    <ClCompile Include="USB\usbd_ctlreq.c">
+      <Filter>USB</Filter>
+    </ClCompile>
+    <ClCompile Include="USB\usbd_customhid.c">
+      <Filter>USB</Filter>
+    </ClCompile>
+    <ClCompile Include="USB\usbd_ioreq.c">
+      <Filter>USB</Filter>
+    </ClCompile>
+    <ClCompile Include="USB\usbd_core.c">
+      <Filter>USB</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -610,9 +592,6 @@
     <ClInclude Include="Inc\dma.h">
       <Filter>Header files\CubeMX</Filter>
     </ClInclude>
-    <ClInclude Include="Inc\usb.h">
-      <Filter>Header files\CubeMX</Filter>
-    </ClInclude>
     <ClInclude Include="musia.h">
       <Filter>Header files</Filter>
     </ClInclude>
@@ -630,6 +609,24 @@
     </ClInclude>
     <ClInclude Include="usb_joystick.h">
       <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="USB\usbd_ctlreq.h">
+      <Filter>USB</Filter>
+    </ClInclude>
+    <ClInclude Include="USB\usbd_customhid.h">
+      <Filter>USB</Filter>
+    </ClInclude>
+    <ClInclude Include="USB\usbd_def.h">
+      <Filter>USB</Filter>
+    </ClInclude>
+    <ClInclude Include="USB\usbd_ioreq.h">
+      <Filter>USB</Filter>
+    </ClInclude>
+    <ClInclude Include="USB\usbd_core.h">
+      <Filter>USB</Filter>
+    </ClInclude>
+    <ClInclude Include="USB\report_descriptors.h">
+      <Filter>USB</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

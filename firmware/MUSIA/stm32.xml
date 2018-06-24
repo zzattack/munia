@@ -29,11 +29,14 @@
   <BSPSourceFolderName>Device-specific files</BSPSourceFolderName>
   <MCUMakFile>stm32.mak</MCUMakFile>
   <ReferencedFrameworks>
-    <string>com.sysprogs.arm.stm32.usbdev</string>
     <string>com.sysprogs.arm.stm32.hal</string>
   </ReferencedFrameworks>
   <FrameworkProperties>
     <Entries>
+      <KeyValue>
+        <Key>com.sysprogs.bspoptions.stm32.hal_legacy</Key>
+        <Value />
+      </KeyValue>
       <KeyValue>
         <Key>com.sysprogs.bspoptions.stm32.usb.devclass</Key>
         <Value>CustomHID</Value>
@@ -41,10 +44,6 @@
       <KeyValue>
         <Key>com.sysprogs.bspoptions.stm32.usb.speed</Key>
         <Value>FS</Value>
-      </KeyValue>
-      <KeyValue>
-        <Key>com.sysprogs.bspoptions.stm32.hal_legacy</Key>
-        <Value />
       </KeyValue>
     </Entries>
   </FrameworkProperties>
