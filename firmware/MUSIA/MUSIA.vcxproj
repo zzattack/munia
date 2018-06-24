@@ -46,6 +46,7 @@
       <PreprocessorDefinitions>DEBUG=1;DEBUG_DEFAULT_INTERRUPT_HANDLERS=0;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
       <Optimization>O1</Optimization>
       <InlineFunctions>true</InlineFunctions>
+      <ForcedIncludeFiles>retarget.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <AdditionalLinkerInputs>;%(Link.AdditionalLinkerInputs)</AdditionalLinkerInputs>
@@ -62,6 +63,7 @@
     <ClCompile>
       <AdditionalIncludeDirectories>Inc;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG=1;RELEASE=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ForcedIncludeFiles>retarget.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <AdditionalLinkerInputs>;%(Link.AdditionalLinkerInputs)</AdditionalLinkerInputs>
@@ -76,8 +78,12 @@
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
   <ItemGroup>
+    <ClCompile Include="config.cpp" />
     <ClCompile Include="musia.cpp" />
+    <ClCompile Include="ps2_poller.cpp" />
+    <ClCompile Include="ps2_state.cpp" />
     <ClCompile Include="retarget.c" />
+    <ClCompile Include="spi_sniffer.cpp" />
     <ClCompile Include="Src\dma.c" />
     <ClCompile Include="Src\gpio.c" />
     <ClCompile Include="Src\iwdg.c" />
@@ -90,6 +96,8 @@
     <ClCompile Include="Src\usbd_conf.c" />
     <ClCompile Include="Src\usbd_desc.c" />
     <ClCompile Include="Src\usb_device.c" />
+    <ClCompile Include="usb_joystick.cpp" />
+    <ClInclude Include="usb_joystick.h" />
     <None Include="stm32.props" />
     <ClCompile Include="$(BSP_ROOT)\STM32F0xxxx\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal.c" />
     <ClCompile Include="$(BSP_ROOT)\STM32F0xxxx\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_adc.c" />
@@ -147,6 +155,7 @@
     <ClCompile Include="$(BSP_ROOT)\STM32F0xxxx\STM32F0xx_HAL_Driver\Src\stm32f0xx_ll_tim.c" />
     <ClCompile Include="$(BSP_ROOT)\STM32F0xxxx\STM32F0xx_HAL_Driver\Src\stm32f0xx_ll_usart.c" />
     <ClCompile Include="$(BSP_ROOT)\STM32F0xxxx\STM32F0xx_HAL_Driver\Src\stm32f0xx_ll_utils.c" />
+    <ClInclude Include="config.h" />
     <ClInclude Include="Inc\dma.h" />
     <ClInclude Include="Inc\gpio.h" />
     <ClInclude Include="Inc\iwdg.h" />
@@ -157,10 +166,13 @@
     <ClInclude Include="Inc\usart.h" />
     <ClInclude Include="Inc\usb.h" />
     <ClInclude Include="Inc\usbd_conf.h" />
-    <ClInclude Include="Inc\usbd_custom_hid_if.h" />
     <ClInclude Include="Inc\usbd_desc.h" />
     <ClInclude Include="Inc\usb_device.h" />
+    <ClInclude Include="musia.h" />
+    <ClInclude Include="ps2_poller.h" />
+    <ClInclude Include="ps2_state.h" />
     <ClInclude Include="retarget.h" />
+    <ClInclude Include="spi_sniffer.h" />
     <ClInclude Include="stm32f0xx_hal_conf.h" />
     <ClInclude Include="$(BSP_ROOT)\STM32F0xxxx\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal.h" />
     <ClInclude Include="$(BSP_ROOT)\STM32F0xxxx\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_adc.h" />
@@ -252,14 +264,14 @@
     <None Include="MUSIA-Release.vgdbsettings" />
     <None Include="stm32.xml" />
     <ClCompile Include="$(BSP_ROOT)\STM32F0xxxx\StartupFiles\startup_stm32f042x6.c" />
-    <ClCompile Include="$(BSP_ROOT)\STM32_USB_Device_Library\Class\HID\Src\usbd_hid.c" />
     <ClCompile Include="$(BSP_ROOT)\STM32_USB_Device_Library\Core\Src\usbd_core.c" />
     <ClCompile Include="$(BSP_ROOT)\STM32_USB_Device_Library\Core\Src\usbd_ctlreq.c" />
     <ClCompile Include="$(BSP_ROOT)\STM32_USB_Device_Library\Core\Src\usbd_ioreq.c" />
-    <ClInclude Include="$(BSP_ROOT)\STM32_USB_Device_Library\Class\HID\Inc\usbd_hid.h" />
     <ClInclude Include="$(BSP_ROOT)\STM32_USB_Device_Library\Core\Inc\usbd_core.h" />
     <ClInclude Include="$(BSP_ROOT)\STM32_USB_Device_Library\Core\Inc\usbd_ctlreq.h" />
     <ClInclude Include="$(BSP_ROOT)\STM32_USB_Device_Library\Core\Inc\usbd_def.h" />
     <ClInclude Include="$(BSP_ROOT)\STM32_USB_Device_Library\Core\Inc\usbd_ioreq.h" />
+    <ClCompile Include="$(BSP_ROOT)\STM32_USB_Device_Library\Class\CustomHID\Src\usbd_customhid.c" />
+    <ClInclude Include="$(BSP_ROOT)\STM32_USB_Device_Library\Class\CustomHID\Inc\usbd_customhid.h" />
   </ItemGroup>
 </Project>

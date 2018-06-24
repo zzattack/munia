@@ -36,7 +36,7 @@
     <Entries>
       <KeyValue>
         <Key>com.sysprogs.bspoptions.stm32.usb.devclass</Key>
-        <Value>HID</Value>
+        <Value>CustomHID</Value>
       </KeyValue>
       <KeyValue>
         <Key>com.sysprogs.bspoptions.stm32.usb.speed</Key>

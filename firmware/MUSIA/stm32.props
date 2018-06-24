@@ -10,7 +10,7 @@
 	<ItemDefinitionGroup>
 		<ClCompile>
 			<PreprocessorDefinitions>ARM_MATH_CM0;STM32F042C6;USE_USB_FS;flash_layout;STM32F042x6;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
-			<AdditionalIncludeDirectories>$(ProjectDir);$(BSP_ROOT)/STM32_USB_Device_Library/Core/Inc;$(BSP_ROOT)/STM32_USB_Device_Library/Class/HID/Inc;$(BSP_ROOT)/STM32F0xxxx/STM32F0xx_HAL_Driver/Inc;$(BSP_ROOT)/STM32F0xxxx/STM32F0xx_HAL_Driver/Inc/Legacy;$(BSP_ROOT)/STM32F0xxxx/CMSIS_HAL/Device/ST/STM32F0xx/Include;$(BSP_ROOT)/STM32F0xxxx/CMSIS_HAL/Include;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<AdditionalIncludeDirectories>$(ProjectDir);$(BSP_ROOT)/STM32_USB_Device_Library/Core/Inc;$(BSP_ROOT)/STM32_USB_Device_Library/Class/CustomHID/Inc;$(BSP_ROOT)/STM32F0xxxx/STM32F0xx_HAL_Driver/Inc;$(BSP_ROOT)/STM32F0xxxx/STM32F0xx_HAL_Driver/Inc/Legacy;$(BSP_ROOT)/STM32F0xxxx/CMSIS_HAL/Device/ST/STM32F0xx/Include;$(BSP_ROOT)/STM32F0xxxx/CMSIS_HAL/Include;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 		</ClCompile>
 	</ItemDefinitionGroup>
 	<ItemDefinitionGroup>

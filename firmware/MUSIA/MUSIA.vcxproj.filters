@@ -510,9 +510,6 @@
     <ClCompile Include="$(BSP_ROOT)\STM32F0xxxx\StartupFiles\startup_stm32f042x6.c">
       <Filter>Source files\Device-specific files</Filter>
     </ClCompile>
-    <ClCompile Include="$(BSP_ROOT)\STM32_USB_Device_Library\Class\HID\Src\usbd_hid.c">
-      <Filter>Source files\Device-specific files\USB Device</Filter>
-    </ClCompile>
     <ClCompile Include="$(BSP_ROOT)\STM32_USB_Device_Library\Core\Src\usbd_core.c">
       <Filter>Source files\Device-specific files\USB Device</Filter>
     </ClCompile>
@@ -522,9 +519,6 @@
     <ClCompile Include="$(BSP_ROOT)\STM32_USB_Device_Library\Core\Src\usbd_ioreq.c">
       <Filter>Source files\Device-specific files\USB Device</Filter>
     </ClCompile>
-    <ClInclude Include="$(BSP_ROOT)\STM32_USB_Device_Library\Class\HID\Inc\usbd_hid.h">
-      <Filter>Header files\Device-specific files\USB Device</Filter>
-    </ClInclude>
     <ClInclude Include="$(BSP_ROOT)\STM32_USB_Device_Library\Core\Inc\usbd_core.h">
       <Filter>Header files\Device-specific files\USB Device</Filter>
     </ClInclude>
@@ -535,6 +529,12 @@
       <Filter>Header files\Device-specific files\USB Device</Filter>
     </ClInclude>
     <ClInclude Include="$(BSP_ROOT)\STM32_USB_Device_Library\Core\Inc\usbd_ioreq.h">
+      <Filter>Header files\Device-specific files\USB Device</Filter>
+    </ClInclude>
+    <ClCompile Include="$(BSP_ROOT)\STM32_USB_Device_Library\Class\CustomHID\Src\usbd_customhid.c">
+      <Filter>Source files\Device-specific files\USB Device</Filter>
+    </ClCompile>
+    <ClInclude Include="$(BSP_ROOT)\STM32_USB_Device_Library\Class\CustomHID\Inc\usbd_customhid.h">
       <Filter>Header files\Device-specific files\USB Device</Filter>
     </ClInclude>
   </ItemGroup>
@@ -556,6 +556,21 @@
     </ClCompile>
     <ClCompile Include="Src\usbd_desc.c">
       <Filter>Source files\CubeMX</Filter>
+    </ClCompile>
+    <ClCompile Include="spi_sniffer.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="ps2_state.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="ps2_poller.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="config.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="usb_joystick.cpp">
+      <Filter>Source files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -598,8 +613,23 @@
     <ClInclude Include="Inc\usb.h">
       <Filter>Header files\CubeMX</Filter>
     </ClInclude>
-    <ClInclude Include="Inc\usbd_custom_hid_if.h">
-      <Filter>Header files\CubeMX</Filter>
+    <ClInclude Include="musia.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="ps2_state.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="spi_sniffer.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="ps2_poller.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="config.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="usb_joystick.h">
+      <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
