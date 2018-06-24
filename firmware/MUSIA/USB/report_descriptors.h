@@ -15,27 +15,18 @@ const uint8_t hid_rpt_ps2[] = {
 	0x19,
 	0x01,                    //   USAGE_MINIMUM (Button 1)
 	0x29,
-	0x05,                    //   USAGE_MAXIMUM (Button 5)
+	0x0C,                    //   USAGE_MAXIMUM (Button12)
 	0x15,
 	0x00,                    //   LOGICAL MINIMUM (0)
 	0x25,
 	0x01,                    //   LOGICAL_MAXIMUM (1)
 	0x95,
-	0x05,                    //   REPORT_COUNT (5)
+	0x0C,                    //   REPORT_COUNT (12)
 	0x75,
 	0x01,                    //   REPORT_SIZE (1)
 	0x81,
 	0x02,                    //   INPUT (Data,Var,Abs)
     
-	//  zero zero zero
-	0x09,
-	0x00,		               //   USAGE (Undefined)
-	0x95,
-	0x01,                    //   REPORT_COUNT (1)
-	0x75,
-	0x03,                    //   REPORT_SIZE (3)
-	0x81,
-	0x03,                    //   INPUT (Cnst,Var,Abs)
     
 	// hat
 	0x05,
@@ -58,37 +49,8 @@ const uint8_t hid_rpt_ps2[] = {
 	0x81,
 	0x42,                    //   INPUT(Data,Var,Abs,Null)
 
-	0x05,
-	0x09,                    //   USAGE_PAGE (Button)
-	0x19,
-	0x06,                    //   USAGE_MINIMUM (Button 6)
-	0x29,
-	0x08,                    //   USAGE_MAXIMUM (Button 8)
-	0x15,
-	0x00,                    //   LOGICAL_MINIMUM (0)
-	0x25,
-	0x01,                    //   LOGICAL_MAXIMUM (1)
-	0x95,
-	0x03,                    //   REPORT_COUNT (3)
-	0x75,
-	0x01,                    //   REPORT_SIZE (1)
-	0x81,
-	0x02,                    //   INPUT (Data,Var,Abs)
-            
-	0x09,
-	0x00,		               //   USAGE (Undefined)
-	0x15,
-	0x00,                    //   LOGICAL MINIMUM (0)
-	0x25,
-	0x01,                    //   LOGICAL_MAXIMUM (1)
-	0x95,
-	0x01,                    //   REPORT_COUNT (1)
-	0x75,
-	0x01,                    //   REPORT_SIZE (1)
-	0x81,
-	0x03,                    //   INPUT (Cnst,Var,Abs)
     
-	// x,y is left stick, rx,ry is c-stick
+	// 2 analog sticks
 	0x05,
 	0x01,                    //   USAGE_PAGE (Generic Desktop)
 	0x09,
@@ -111,22 +73,6 @@ const uint8_t hid_rpt_ps2[] = {
 	0x81,
 	0x02,                    //   INPUT (Data,Var,Abs)
     
-	// z = left trigger, rz = right trigger
-	0x09,
-	0x32,                    //   USAGE (X)
-	0x09,
-	0x35,                    //   USAGE (Rz)
-	0x15,
-	0x00,                    //   LOGICAL MINIMUM (0)
-	0x26,
-	0xff,
-	0x00,              //   LOGICAL_MAXIMUM (255)
-	0x75,
-	0x08,                    //   REPORT_SIZE (8)
-	0x95,
-	0x02,                    //   REPORT_COUNT (2)
-	0x81,
-	0x02,                    //   INPUT (Data,Var,Abs)
 
 	0xc0,                          // END_COLLECTION
 };

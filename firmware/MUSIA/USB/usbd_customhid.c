@@ -85,9 +85,9 @@ __ALIGN_BEGIN static uint8_t USBD_CUSTOM_HID_CfgDesc[] __ALIGN_END = {
 			/* 27 */
 			0x07, // bLength: Endpoint Descriptor size
 			USB_DESC_TYPE_ENDPOINT, // bDescriptorType:
-			HID_EP_MUSIA | 0x80, // bEndpointAddress: Endpoint Address (IN)
+			PS2_HID_EPIN_ADDR, // bEndpointAddress: Endpoint Address (IN)
 			0x03, // bmAttributes: Interrupt endpoint
-			HID_INT_IN_MUSIA_SIZE, // wMaxPacketSize
+			HID_INT_IN_PS2_SIZE, // wMaxPacketSize
 			0x00,
 			0x01, //  bInterval: Polling Interval (1 ms)
 			// -------------------------------------------------------------------------	
@@ -133,7 +133,7 @@ static uint8_t  USBD_CUSTOM_HID_Init(USBD_HandleTypeDef *pdev, uint8_t cfgidx) {
 	uint8_t ret = 0;
 	USBD_CUSTOM_HID_HandleTypeDef *hhid;
 	/* Open MUSIA EP IN */
-	USBD_LL_OpenEP(pdev, MUSIA_HID_EPIN_ADDR, USBD_EP_TYPE_INTR, HID_INT_IN_MUSIA_SIZE);  
+	USBD_LL_OpenEP(pdev, PS2_HID_EPIN_ADDR, USBD_EP_TYPE_INTR, HID_INT_IN_PS2_SIZE);  
   
 	/* Open Config EP OUT */ // todo
 	// TODO: USBD_LL_OpenEP(pdev, CFG_HID_EPIN_ADDR, USBD_EP_TYPE_INTR, HID_INT_CFG_SIZE);
@@ -166,7 +166,7 @@ static uint8_t  USBD_CUSTOM_HID_Init(USBD_HandleTypeDef *pdev, uint8_t cfgidx) {
   */
 static uint8_t  USBD_CUSTOM_HID_DeInit(USBD_HandleTypeDef *pdev, uint8_t cfgidx) {
 	/* Close CUSTOM_HID EP IN */
-	USBD_LL_CloseEP(pdev, MUSIA_HID_EPIN_ADDR);
+	USBD_LL_CloseEP(pdev, PS2_HID_EPIN_ADDR);
 	// TODO: USBD_LL_CloseEP(pdev, CFG_HID_EPIN_ADDR);
 	// TODO: USBD_LL_CloseEP(pdev, CFG_HID_EPOUT_ADDR); 
 
@@ -248,20 +248,25 @@ static uint8_t  USBD_CUSTOM_HID_Setup(USBD_HandleTypeDef* pdev, USBD_SetupReqTyp
 	return USBD_OK;
 }
 
-/**
-  * @brief  USBD_CUSTOM_HID_SendReport 
-  *         Send CUSTOM_HID Report
-  * @param  pdev: device instance
-  * @param  buff: pointer to report
-  * @retval status
-  */
-uint8_t USBD_CUSTOM_HID_SendReport(USBD_HandleTypeDef  *pdev, uint8_t *report, uint16_t len) {
+uint8_t USBD_HID_PS2_SendReport(USBD_HandleTypeDef  *pdev, uint8_t *report, uint16_t len) {
 	USBD_CUSTOM_HID_HandleTypeDef *hhid = (USBD_CUSTOM_HID_HandleTypeDef*)pdev->pClassData;
   
 	if (pdev->dev_state == USBD_STATE_CONFIGURED) {
 		if (hhid->state == CUSTOM_HID_IDLE) {
 			hhid->state = CUSTOM_HID_BUSY;
-			USBD_LL_Transmit(pdev, MUSIA_HID_EPIN_ADDR, report, len);
+			USBD_LL_Transmit(pdev, PS2_HID_EPIN_ADDR, report, len);
+		}
+	}
+	return USBD_OK;
+}
+
+uint8_t USBD_HID_CFG_SendReport(USBD_HandleTypeDef  *pdev, uint8_t *report, uint16_t len) {
+	USBD_CUSTOM_HID_HandleTypeDef *hhid = (USBD_CUSTOM_HID_HandleTypeDef*)pdev->pClassData;
+  
+	if (pdev->dev_state == USBD_STATE_CONFIGURED) {
+		if (hhid->state == CUSTOM_HID_IDLE) {
+			hhid->state = CUSTOM_HID_BUSY;
+			USBD_LL_Transmit(pdev, CFG_HID_EPIN_ADDR, report, len);
 		}
 	}
 	return USBD_OK;
@@ -291,7 +296,6 @@ static uint8_t  USBD_CUSTOM_HID_DataIn(USBD_HandleTypeDef *pdev, uint8_t epnum) 
 	/* Ensure that the FIFO is empty before a new transfer, this condition could 
 	be caused by  a new transfer before the end of the previous transfer */
 	((USBD_CUSTOM_HID_HandleTypeDef *)pdev->pClassData)->state = CUSTOM_HID_IDLE;
-
 	return USBD_OK;
 }
 
