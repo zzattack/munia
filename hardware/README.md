@@ -1,0 +1,1 @@
+This folder contains the EAGLE schematics for the various hardware boards.

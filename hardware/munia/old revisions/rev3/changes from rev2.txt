@@ -1,0 +1,14 @@
+rev3 changes from rev2:
+- more space between 4 and 8 pin header for LCD
+- route power trace more inward near LCD headers
+- change big electrolytic capacitor for 1206 tantalum
+- finally align the enclosure drill holes correctly
+- changed contrast resistor from 2k to 2k2
+- removed 3.3v output to rj45 connectors
+- swapped pin 1 and 3 on N64 connector for unity
+- reverse lcd power header
+- reversed lcd d4-d7 connections on header
+- icsp header more to the left so pickit fits
+- silk text further away from headers
+- slightly larger drills for ethernet leds (0.6-->0.9mm)
+- remove extra grounds from ngc connector
