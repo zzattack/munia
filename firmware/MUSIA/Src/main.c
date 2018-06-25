@@ -43,7 +43,6 @@
 #include "iwdg.h"
 #include "spi.h"
 #include "usart.h"
-#include "usb.h"
 #include "gpio.h"
 
 /* USER CODE BEGIN Includes */
