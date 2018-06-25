@@ -4,14 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define JOY_OUT_DATA_SIZE  32
-
-static void Joy_Init(void);
-static void Joy_DeInit(void);
-static void Joy_USB_Control(USB_SetupRequestType * req, uint8_t* pbuf);
-static void Joy_GetReport(uint8_t reportId);
-static void Joy_SetReport(uint8_t * data, uint16_t length);
-
 //Class specific descriptor - HID
 __ALIGN_BEGIN static const uint8_t hid_rpt_ps2[] __ALIGN_END = {
 	0x05,
@@ -89,14 +81,8 @@ __ALIGN_BEGIN static const uint8_t hid_rpt_ps2[] __ALIGN_END = {
 	0xc0,                          // END_COLLECTION
 };
 
-
 const USBD_HID_AppType joyApp = {
 	.Name = "PS2 controller",
-	.Init = Joy_Init,
-	.Deinit = Joy_DeInit,
-	
-	.SetReport = Joy_SetReport,
-	.GetReport = Joy_GetReport,
 	.Report = {
 		.Desc = hid_rpt_ps2,
 		.Length = sizeof(hid_rpt_ps2),
@@ -110,20 +96,3 @@ USBD_HID_IfHandleType hjoy_if = {
 	.Config.InEp.Size = sizeof(ps2_hid_packet),
 	.Config.InEp.Interval = 1,
 }, *const joy_if = &hjoy_if;
-
-
-
-static void Joy_Init() { 
-}
-
-
-static void Joy_DeInit() { 	
-}
-
-
-static void Joy_GetReport(uint8_t reportId) {
-}
-
-
-static void Joy_SetReport(uint8_t * data, uint16_t length) {
-}
