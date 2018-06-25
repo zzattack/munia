@@ -5,9 +5,8 @@
 #include "spi_sniffer.h"
 #include "usb_joystick.h"
 #include "spi.h"
-
 #include <stm32f0xx_hal.h>
-#include <bsp_usb.h>
+
 #include "usb_device.h"
 #include "joy_if.h"
 #include "configurator_if.h"
@@ -29,7 +28,10 @@ EXTERNC int musia_main(void) {
 	hspi1.Instance = SPI1;
 	hspi2.Instance = SPI2;
 	
-	BSP_USB_Bind();
+	
+	__HAL_RCC_USB_CLK_ENABLE();
+	NVIC_SetPriority(USB_IRQn, 0);
+	NVIC_EnableIRQ(USB_IRQn);
 	UsbDevice_Init();
 
 	sys_printf("MUSIA started\n");
@@ -40,7 +42,7 @@ EXTERNC int musia_main(void) {
 	else
 		poller.configure();
 	
-	for(;;) {
+	for (;;) {
 		HAL_IWDG_Refresh(&hiwdg);
 		
 		if (cfg.mode == musia_mode::sniffer) {

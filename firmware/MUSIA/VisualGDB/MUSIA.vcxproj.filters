@@ -48,9 +48,6 @@
     <Filter Include="USB\Lib\Inc">
       <UniqueIdentifier>{7009f8e5-d04e-4d7f-a501-0b8f93da0a12}</UniqueIdentifier>
     </Filter>
-    <Filter Include="USB\BSP">
-      <UniqueIdentifier>{13a56c1c-f52d-4596-a59d-fd63f2d39fd5}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="stm32.props">
@@ -544,9 +541,6 @@
     <ClCompile Include="..\USB\xpd_usb.c">
       <Filter>USB\XPD</Filter>
     </ClCompile>
-    <ClCompile Include="..\USB\usbd_customhid.c">
-      <Filter>USB\MUSIA</Filter>
-    </ClCompile>
     <ClCompile Include="..\USB\usbd.c">
       <Filter>USB\Lib</Filter>
     </ClCompile>
@@ -568,9 +562,6 @@
     <ClCompile Include="..\USB\usbd_utils.c">
       <Filter>USB\Lib</Filter>
     </ClCompile>
-    <ClCompile Include="..\USB\bsp_usb.c">
-      <Filter>USB\BSP</Filter>
-    </ClCompile>
     <ClCompile Include="..\USB\usb_device.c">
       <Filter>USB\MUSIA</Filter>
     </ClCompile>
@@ -580,8 +571,11 @@
     <ClCompile Include="..\USB\configurator_if.c">
       <Filter>USB\MUSIA</Filter>
     </ClCompile>
-    <ClCompile Include="usb_joystick.cpp">
-      <Filter>USB\MUSIA</Filter>
+    <ClCompile Include="..\usb_joystick.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\USB\bsp_glue.c">
+      <Filter>USB</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -613,9 +607,6 @@
       <Filter>Header files\CubeMX</Filter>
     </ClInclude>
     <ClInclude Include="..\Inc\main.h">
-      <Filter>Header files\CubeMX</Filter>
-    </ClInclude>
-    <ClInclude Include="..\stm32f0xx_hal_conf.h">
       <Filter>Header files\CubeMX</Filter>
     </ClInclude>
     <ClInclude Include="..\Inc\stm32f0xx_hal_conf.h">
@@ -666,9 +657,6 @@
     <ClInclude Include="..\USB\hid_report.h">
       <Filter>USB\HID</Filter>
     </ClInclude>
-    <ClInclude Include="..\USB\report_descriptors.h">
-      <Filter>USB\MUSIA</Filter>
-    </ClInclude>
     <ClInclude Include="..\USB\usbd_config.h">
       <Filter>USB\MUSIA</Filter>
     </ClInclude>
@@ -702,14 +690,11 @@
     <ClInclude Include="..\USB\usbd_utils.h">
       <Filter>USB\Lib\Inc</Filter>
     </ClInclude>
-    <ClInclude Include="..\USB\bsp_usb.h">
-      <Filter>USB\BSP</Filter>
-    </ClInclude>
     <ClInclude Include="..\USB\joy_if.h">
       <Filter>USB\MUSIA</Filter>
     </ClInclude>
     <ClInclude Include="..\usb_joystick.h">
-      <Filter>USB\MUSIA</Filter>
+      <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

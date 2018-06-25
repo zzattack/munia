@@ -44,7 +44,7 @@
     <ClCompile>
       <AdditionalIncludeDirectories>..\Inc;..\USB;..;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>DEBUG=1;DEBUG_DEFAULT_INTERRUPT_HANDLERS=0;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Optimization>O1</Optimization>
+      <Optimization>Os</Optimization>
       <InlineFunctions>true</InlineFunctions>
       <ForcedIncludeFiles>..\retarget.h</ForcedIncludeFiles>
     </ClCompile>
@@ -93,12 +93,11 @@
     <ClCompile Include="..\Src\stm32f0xx_it.c" />
     <ClCompile Include="..\Src\system_stm32f0xx.c" />
     <ClCompile Include="..\Src\usart.c" />
-    <ClCompile Include="..\USB\bsp_usb.c" />
+    <ClCompile Include="..\USB\bsp_glue.c" />
     <ClCompile Include="..\USB\configurator_if.c" />
     <ClCompile Include="..\USB\joy_if.c" />
     <ClCompile Include="..\USB\usbd.c" />
     <ClCompile Include="..\USB\usbd_ctrl.c" />
-    <ClCompile Include="..\USB\usbd_customhid.c" />
     <ClCompile Include="..\USB\usbd_desc.c" />
     <ClCompile Include="..\USB\usbd_ep.c" />
     <ClCompile Include="..\USB\usbd_hid.c" />
@@ -106,14 +105,12 @@
     <ClCompile Include="..\USB\usbd_utils.c" />
     <ClCompile Include="..\USB\usb_device.c" />
     <ClCompile Include="..\USB\xpd_usb.c" />
-    <ClCompile Include="usb_joystick.cpp" />
-    <ClInclude Include="..\USB\bsp_usb.h" />
+    <ClCompile Include="..\usb_joystick.cpp" />
     <ClInclude Include="..\USB\configurator_if.h" />
     <ClInclude Include="..\USB\joy_if.h" />
     <ClInclude Include="..\USB\hid_report.h" />
     <ClInclude Include="..\USB\hid_usage_power.h" />
     <ClInclude Include="..\USB\hid_usage_sensor.h" />
-    <ClInclude Include="..\USB\report_descriptors.h" />
     <ClInclude Include="..\USB\usbd.h" />
     <ClInclude Include="..\USB\usbd_config.h" />
     <ClInclude Include="..\USB\usb_device.h" />
@@ -205,7 +202,6 @@
     <ClInclude Include="..\ps2_state.h" />
     <ClInclude Include="..\retarget.h" />
     <ClInclude Include="..\spi_sniffer.h" />
-    <ClInclude Include="..\stm32f0xx_hal_conf.h" />
     <ClInclude Include="$(BSP_ROOT)\STM32F0xxxx\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal.h" />
     <ClInclude Include="$(BSP_ROOT)\STM32F0xxxx\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_adc.h" />
     <ClInclude Include="$(BSP_ROOT)\STM32F0xxxx\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_adc_ex.h" />
