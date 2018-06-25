@@ -41,8 +41,8 @@ EXTERNC int musia_main(void) {
 			auto* upd = sniffer.getNewPacket();			
 			if (upd != nullptr) {
 				ps2State.update(upd->cmd, upd->data, upd->pktLength);
+				usbJoy.updateState();
 				upd->isNew = false;
-				usbJoy.sendReport();
 			}
 		}
 		else {

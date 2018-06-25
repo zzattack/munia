@@ -499,9 +499,6 @@
     <ClCompile Include="..\Src\usb_device.c">
       <Filter>USB</Filter>
     </ClCompile>
-    <ClCompile Include="..\usb_joystick.cpp">
-      <Filter>USB</Filter>
-    </ClCompile>
     <ClCompile Include="..\Src\usbd_conf.c">
       <Filter>USB</Filter>
     </ClCompile>
@@ -553,6 +550,9 @@
     <ClCompile Include="..\USB\usbd_ps2_hid_if.c">
       <Filter>USB</Filter>
     </ClCompile>
+    <ClCompile Include="..\usb_joystick.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\config.h">
@@ -600,9 +600,6 @@
     <ClInclude Include="..\Inc\usb_device.h">
       <Filter>USB</Filter>
     </ClInclude>
-    <ClInclude Include="..\usb_joystick.h">
-      <Filter>USB</Filter>
-    </ClInclude>
     <ClInclude Include="..\Inc\usbd_conf.h">
       <Filter>USB</Filter>
     </ClInclude>
@@ -629,6 +626,9 @@
     </ClInclude>
     <ClInclude Include="..\USB\report_descriptors.h">
       <Filter>USB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\usb_joystick.h">
+      <Filter>Source files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

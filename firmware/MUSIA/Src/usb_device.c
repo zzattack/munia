@@ -109,7 +109,7 @@ USBD_Start(&hUsbDeviceFS);
 	USBD_RegisterClass(&hUsbDeviceFS, &USBD_CUSTOM_HID);
 	USBD_Start(&hUsbDeviceFS);
 	USBD_CUSTOM_HID_RegisterInterface(&hUsbDeviceFS, &USBD_CustomHID_PS2_fops_FS);
-	USBD_CUSTOM_HID_RegisterInterface(&hUsbDeviceFS, &USBD_CustomHID_CFG_fops_FS);  
+	// USBD_CUSTOM_HID_RegisterInterface(&hUsbDeviceFS, &USBD_CustomHID_CFG_fops_FS);  
   /* USER CODE END USB_DEVICE_Init_PostTreatment */
 }
 

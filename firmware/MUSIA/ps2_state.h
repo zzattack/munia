@@ -29,8 +29,8 @@ struct pressures_t {
 	bool available = false;
 };
 
-class ps2_state {
-private:
+class ps2_state {	
+public:
 	bool dpad_up, dpad_down, dpad_left, dpad_right;
 	bool start, select;
 	bool l1, l2, r1, r2;
@@ -39,8 +39,8 @@ private:
 	int8_t analog2_x, analog2_y;
 	bool l_stick, r_stick;
 	pressures_t pressures;
+
 	
-public:
 	bool update(uint8_t* cmd, uint8_t* data, uint8_t pkt_len);
 	bool updatePoll(uint8_t* data, int len);
 	bool updateConfig(uint8_t* cmd, uint8_t* data, int len);
