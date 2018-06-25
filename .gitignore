@@ -26,6 +26,6 @@ Package-*
 private
 funclist
 disassembly
-/MUSIA/.vs
-/MUSIA/VisualGDB
+.vs
+VisualGDB
 /datasheets
