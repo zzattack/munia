@@ -7,18 +7,20 @@ extern USBD_HandleType *const UsbDevice;
 extern USBD_HID_IfHandleType *const joy_if;
 extern USBD_HID_IfHandleType *const cfg_if;
 
+#define DEVICE_ID_REG        ((const uint32_t *)UID_BASE)
+
 /** @brief USB device configuration */
 const USBD_DescriptionType hdev_cfg = {
 	.Vendor = {
 		.Name = "munia.io",
-		.ID = 0xffff, /* TODO placeholder */
+		.ID = 0xFFFF, /* TODO placeholder */
 	},
 	.Product = {
 		.Name = "MUSIA",
-		.ID = 0xffff, /* TODO placeholder */
+		.ID = 0xFFFF, /* TODO placeholder */
 		.Version.bcd = 0x010B,
 	},
-	// .SerialNumber = (USBD_SerialNumberType*)DEVICE_ID_REG,
+	.SerialNumber = (USBD_SerialNumberType*)DEVICE_ID_REG,
 	.Config = {
 		.Name = "MUSIA",
 		.MaxCurrent_mA = 500,
@@ -43,13 +45,13 @@ void UsbDevice_Init() {
 
 	/* All fields of Config have to be properly set up */
 	joy_if->Config.InEp.Num = 0x81;
-	//cfg_if->Config.InEp.Num = 0x82;
-	//cfg_if->Config.OutEp.Num = 0x02;
+	cfg_if->Config.InEp.Num = 0x82;
+	cfg_if->Config.OutEp.Num = 0x02;
 
 
 	// Mount the interfaces to the device
 	USBD_HID_MountInterface(joy_if, UsbDevice);
-	//USBD_HID_MountInterface(cfg_if, UsbDevice);
+	USBD_HID_MountInterface(cfg_if, UsbDevice);
 
 	// After charger detection the device connection can be made
 	USBD_Connect(UsbDevice);
