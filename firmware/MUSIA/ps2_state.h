@@ -1,7 +1,6 @@
 #pragma once
 
-#include <cstdint>
-#include "spi_sniffer.h"
+#include <stdint.h>
 
 enum class device_mode : uint8_t {
 	digital = 0x04,
@@ -39,7 +38,6 @@ public:
 	int8_t analog2_x, analog2_y;
 	bool l_stick, r_stick;
 	pressures_t pressures;
-
 	
 	bool update(uint8_t* cmd, uint8_t* data, uint8_t pkt_len);
 	bool updatePoll(uint8_t* data, int len);

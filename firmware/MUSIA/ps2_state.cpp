@@ -1,4 +1,5 @@
 #include "ps2_state.h"
+#include <cstdio>
 
 bool ps2_state::update(uint8_t* cmd, uint8_t* data, uint8_t pkt_len) {	
 	if (pkt_len < 5) return false;

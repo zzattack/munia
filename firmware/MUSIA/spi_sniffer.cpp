@@ -1,6 +1,5 @@
 #include "spi_sniffer.h"
 #include "gpio.h"
-#include <stm32f0xx_hal.h>
 
 spi_sniffer* gSniffer;
 

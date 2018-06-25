@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stm32f0xx_hal.h>
+
 struct ps2_packet {
 	bool isNew;
 	uint8_t pktLength;

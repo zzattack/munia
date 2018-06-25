@@ -33,6 +33,24 @@
     <Filter Include="USB">
       <UniqueIdentifier>{e3df40ee-af99-4137-ad0b-b8c404e0a424}</UniqueIdentifier>
     </Filter>
+    <Filter Include="USB\HID">
+      <UniqueIdentifier>{b3196cbf-50cb-46ff-b633-dea234bb6e31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="USB\XPD">
+      <UniqueIdentifier>{d3c9f2aa-8905-4d61-acab-e39ff2dfa1d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="USB\MUSIA">
+      <UniqueIdentifier>{3a85200c-f77a-478d-8860-9237a4eb5fd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="USB\Lib">
+      <UniqueIdentifier>{00dc32d4-2d15-4039-bb71-841dd0b29c3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="USB\Lib\Inc">
+      <UniqueIdentifier>{7009f8e5-d04e-4d7f-a501-0b8f93da0a12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="USB\BSP">
+      <UniqueIdentifier>{13a56c1c-f52d-4596-a59d-fd63f2d39fd5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="stm32.props">
@@ -496,24 +514,6 @@
     <ClCompile Include="..\spi_sniffer.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Src\usb_device.c">
-      <Filter>USB</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Src\usbd_conf.c">
-      <Filter>USB</Filter>
-    </ClCompile>
-    <ClCompile Include="..\USB\usbd_core.c">
-      <Filter>USB</Filter>
-    </ClCompile>
-    <ClCompile Include="..\USB\usbd_ctlreq.c">
-      <Filter>USB</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Src\usbd_desc.c">
-      <Filter>USB</Filter>
-    </ClCompile>
-    <ClCompile Include="..\USB\usbd_ioreq.c">
-      <Filter>USB</Filter>
-    </ClCompile>
     <ClCompile Include="..\Src\dma.c">
       <Filter>Source files\CubeMX</Filter>
     </ClCompile>
@@ -541,17 +541,47 @@
     <ClCompile Include="..\Src\stm32f0xx_hal_msp.c">
       <Filter>Source files\CubeMX</Filter>
     </ClCompile>
+    <ClCompile Include="..\USB\xpd_usb.c">
+      <Filter>USB\XPD</Filter>
+    </ClCompile>
     <ClCompile Include="..\USB\usbd_customhid.c">
-      <Filter>USB</Filter>
+      <Filter>USB\MUSIA</Filter>
     </ClCompile>
-    <ClCompile Include="..\USB\usbd_cfg_hid_if.c">
-      <Filter>USB</Filter>
+    <ClCompile Include="..\USB\usbd.c">
+      <Filter>USB\Lib</Filter>
     </ClCompile>
-    <ClCompile Include="..\USB\usbd_ps2_hid_if.c">
-      <Filter>USB</Filter>
+    <ClCompile Include="..\USB\usbd_ctrl.c">
+      <Filter>USB\Lib</Filter>
     </ClCompile>
-    <ClCompile Include="..\usb_joystick.cpp">
-      <Filter>Source files</Filter>
+    <ClCompile Include="..\USB\usbd_desc.c">
+      <Filter>USB\Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\USB\usbd_ep.c">
+      <Filter>USB\Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\USB\usbd_hid.c">
+      <Filter>USB\Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\USB\usbd_if.c">
+      <Filter>USB\Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\USB\usbd_utils.c">
+      <Filter>USB\Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\USB\bsp_usb.c">
+      <Filter>USB\BSP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\USB\usb_device.c">
+      <Filter>USB\MUSIA</Filter>
+    </ClCompile>
+    <ClCompile Include="..\USB\joy_if.c">
+      <Filter>USB\MUSIA</Filter>
+    </ClCompile>
+    <ClCompile Include="..\USB\configurator_if.c">
+      <Filter>USB\MUSIA</Filter>
+    </ClCompile>
+    <ClCompile Include="usb_joystick.cpp">
+      <Filter>USB\MUSIA</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -597,38 +627,89 @@
     <ClInclude Include="..\Inc\usart.h">
       <Filter>Header files\CubeMX</Filter>
     </ClInclude>
-    <ClInclude Include="..\Inc\usb_device.h">
-      <Filter>USB</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Inc\usbd_conf.h">
-      <Filter>USB</Filter>
-    </ClInclude>
-    <ClInclude Include="..\USB\usbd_core.h">
-      <Filter>USB</Filter>
-    </ClInclude>
-    <ClInclude Include="..\USB\usbd_ctlreq.h">
-      <Filter>USB</Filter>
-    </ClInclude>
-    <ClInclude Include="..\USB\usbd_def.h">
-      <Filter>USB</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Inc\usbd_desc.h">
-      <Filter>USB</Filter>
-    </ClInclude>
-    <ClInclude Include="..\USB\usbd_ioreq.h">
-      <Filter>USB</Filter>
-    </ClInclude>
     <ClInclude Include="..\Inc\spi.h">
       <Filter>Header files\CubeMX</Filter>
     </ClInclude>
-    <ClInclude Include="..\USB\usbd_customhid.h">
+    <ClInclude Include="..\USB\usb_types.h">
       <Filter>USB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\USB\xpd_utils.h">
+      <Filter>USB\XPD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\USB\xpd_common.h">
+      <Filter>USB\XPD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\USB\xpd_config.h">
+      <Filter>USB\XPD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\USB\xpd_rcc.h">
+      <Filter>USB\XPD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\USB\xpd_rcc_pc.h">
+      <Filter>USB\XPD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\USB\xpd_syscfg.h">
+      <Filter>USB\XPD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\USB\xpd_usb.h">
+      <Filter>USB\XPD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\USB\xpd_usb_wrapper.h">
+      <Filter>USB\XPD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\USB\hid_usage_power.h">
+      <Filter>USB\HID</Filter>
+    </ClInclude>
+    <ClInclude Include="..\USB\hid_usage_sensor.h">
+      <Filter>USB\HID</Filter>
+    </ClInclude>
+    <ClInclude Include="..\USB\hid_report.h">
+      <Filter>USB\HID</Filter>
     </ClInclude>
     <ClInclude Include="..\USB\report_descriptors.h">
-      <Filter>USB</Filter>
+      <Filter>USB\MUSIA</Filter>
+    </ClInclude>
+    <ClInclude Include="..\USB\usbd_config.h">
+      <Filter>USB\MUSIA</Filter>
+    </ClInclude>
+    <ClInclude Include="..\USB\usb_device.h">
+      <Filter>USB\MUSIA</Filter>
+    </ClInclude>
+    <ClInclude Include="..\USB\configurator_if.h">
+      <Filter>USB\MUSIA</Filter>
+    </ClInclude>
+    <ClInclude Include="..\USB\usbd.h">
+      <Filter>USB\Lib\Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\USB\usbd_hid.h">
+      <Filter>USB\Lib\Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\USB\usbd_internal.h">
+      <Filter>USB\Lib\Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\USB\usbd_pd_def.h">
+      <Filter>USB\Lib\Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\USB\usbd_pd_if.h">
+      <Filter>USB\Lib\Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\USB\usbd_private.h">
+      <Filter>USB\Lib\Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\USB\usbd_types.h">
+      <Filter>USB\Lib\Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\USB\usbd_utils.h">
+      <Filter>USB\Lib\Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\USB\bsp_usb.h">
+      <Filter>USB\BSP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\USB\joy_if.h">
+      <Filter>USB\MUSIA</Filter>
     </ClInclude>
     <ClInclude Include="..\usb_joystick.h">
-      <Filter>Source files</Filter>
+      <Filter>USB\MUSIA</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

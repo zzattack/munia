@@ -1,8 +1,5 @@
 #pragma once
 
-#include <stm32f0xx_hal.h>
-#include <sys/stat.h>
-
 #ifdef __cplusplus
 #define EXTERNC extern "C"
 #else
@@ -11,8 +8,7 @@
 
 EXTERNC int sync_printf_pfx(const char* prefix, const char* format, ...);
 EXTERNC int sync_printf(const char* format, ...);
-EXTERNC void RetargetInit(UART_HandleTypeDef *huart);
-
+EXTERNC void RetargetInit(void* huart);
 
 #ifndef FAST_SEMIHOSTING_PROFILER_DRIVER
 EXTERNC int _isatty(int fd);
@@ -20,7 +16,7 @@ EXTERNC int _write(int fd, char* ptr, int len);
 EXTERNC int _close(int fd);
 EXTERNC int _lseek(int fd, int ptr, int dir);
 EXTERNC int _read(int fd, char* ptr, int len);
-EXTERNC int _fstat(int fd, struct stat* st);
+// EXTERNC int _fstat(int fd, struct stat* st);
 #endif
 
 #ifndef RELEASE

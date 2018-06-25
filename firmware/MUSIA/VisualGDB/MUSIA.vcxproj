@@ -42,7 +42,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|VisualGDB'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\Inc;..\USB;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Inc;..\USB;..;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>DEBUG=1;DEBUG_DEFAULT_INTERRUPT_HANDLERS=0;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
       <Optimization>O1</Optimization>
       <InlineFunctions>true</InlineFunctions>
@@ -61,7 +61,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|VisualGDB'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\Inc;..\USB;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Inc;..\USB;..;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG=1;RELEASE=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
       <ForcedIncludeFiles>..\retarget.h</ForcedIncludeFiles>
     </ClCompile>
@@ -93,22 +93,46 @@
     <ClCompile Include="..\Src\stm32f0xx_it.c" />
     <ClCompile Include="..\Src\system_stm32f0xx.c" />
     <ClCompile Include="..\Src\usart.c" />
-    <ClCompile Include="..\Src\usbd_conf.c" />
-    <ClCompile Include="..\Src\usbd_desc.c" />
-    <ClCompile Include="..\Src\usb_device.c" />
-    <ClCompile Include="..\USB\usbd_cfg_hid_if.c" />
-    <ClCompile Include="..\USB\usbd_core.c" />
-    <ClCompile Include="..\USB\usbd_ctlreq.c" />
+    <ClCompile Include="..\USB\bsp_usb.c" />
+    <ClCompile Include="..\USB\configurator_if.c" />
+    <ClCompile Include="..\USB\joy_if.c" />
+    <ClCompile Include="..\USB\usbd.c" />
+    <ClCompile Include="..\USB\usbd_ctrl.c" />
     <ClCompile Include="..\USB\usbd_customhid.c" />
-    <ClCompile Include="..\USB\usbd_ioreq.c" />
-    <ClCompile Include="..\USB\usbd_ps2_hid_if.c" />
-    <ClCompile Include="..\usb_joystick.cpp" />
+    <ClCompile Include="..\USB\usbd_desc.c" />
+    <ClCompile Include="..\USB\usbd_ep.c" />
+    <ClCompile Include="..\USB\usbd_hid.c" />
+    <ClCompile Include="..\USB\usbd_if.c" />
+    <ClCompile Include="..\USB\usbd_utils.c" />
+    <ClCompile Include="..\USB\usb_device.c" />
+    <ClCompile Include="..\USB\xpd_usb.c" />
+    <ClCompile Include="usb_joystick.cpp" />
+    <ClInclude Include="..\USB\bsp_usb.h" />
+    <ClInclude Include="..\USB\configurator_if.h" />
+    <ClInclude Include="..\USB\joy_if.h" />
+    <ClInclude Include="..\USB\hid_report.h" />
+    <ClInclude Include="..\USB\hid_usage_power.h" />
+    <ClInclude Include="..\USB\hid_usage_sensor.h" />
     <ClInclude Include="..\USB\report_descriptors.h" />
-    <ClInclude Include="..\USB\usbd_core.h" />
-    <ClInclude Include="..\USB\usbd_ctlreq.h" />
-    <ClInclude Include="..\USB\usbd_customhid.h" />
-    <ClInclude Include="..\USB\usbd_def.h" />
-    <ClInclude Include="..\USB\usbd_ioreq.h" />
+    <ClInclude Include="..\USB\usbd.h" />
+    <ClInclude Include="..\USB\usbd_config.h" />
+    <ClInclude Include="..\USB\usb_device.h" />
+    <ClInclude Include="..\USB\usbd_hid.h" />
+    <ClInclude Include="..\USB\usbd_internal.h" />
+    <ClInclude Include="..\USB\usbd_pd_def.h" />
+    <ClInclude Include="..\USB\usbd_pd_if.h" />
+    <ClInclude Include="..\USB\usbd_private.h" />
+    <ClInclude Include="..\USB\usbd_types.h" />
+    <ClInclude Include="..\USB\usbd_utils.h" />
+    <ClInclude Include="..\USB\usb_types.h" />
+    <ClInclude Include="..\USB\xpd_common.h" />
+    <ClInclude Include="..\USB\xpd_config.h" />
+    <ClInclude Include="..\USB\xpd_rcc.h" />
+    <ClInclude Include="..\USB\xpd_rcc_pc.h" />
+    <ClInclude Include="..\USB\xpd_syscfg.h" />
+    <ClInclude Include="..\USB\xpd_usb.h" />
+    <ClInclude Include="..\USB\xpd_usb_wrapper.h" />
+    <ClInclude Include="..\USB\xpd_utils.h" />
     <ClInclude Include="..\usb_joystick.h" />
     <None Include="stm32.props" />
     <ClCompile Include="$(BSP_ROOT)\STM32F0xxxx\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal.c" />
@@ -176,9 +200,6 @@
     <ClInclude Include="..\Inc\stm32f0xx_hal_conf.h" />
     <ClInclude Include="..\Inc\stm32f0xx_it.h" />
     <ClInclude Include="..\Inc\usart.h" />
-    <ClInclude Include="..\Inc\usbd_conf.h" />
-    <ClInclude Include="..\Inc\usbd_desc.h" />
-    <ClInclude Include="..\Inc\usb_device.h" />
     <ClInclude Include="..\musia.h" />
     <ClInclude Include="..\ps2_poller.h" />
     <ClInclude Include="..\ps2_state.h" />

@@ -1,3 +1,4 @@
+#include "retarget.h"
 #include <stdio.h>
 #include <stdarg.h>
 #include <stm32f0xx_hal.h>
@@ -7,15 +8,14 @@
 #include <sys/time.h>
 #include <sys/times.h>
 #include <sys/stat.h>
-#include "retarget.h"
 
 UART_HandleTypeDef *gHuart;
 #define STDIN_FILENO  0
 #define STDOUT_FILENO 1
 #define STDERR_FILENO 2
 
-void RetargetInit(UART_HandleTypeDef *huart) {
-	gHuart = huart;
+void RetargetInit(void* huart) {
+	gHuart = (UART_HandleTypeDef*)huart ;
 
 	/* Disable I/O buffering for STDOUT stream, so that
 	 * chars are sent out as soon as they are printed. */

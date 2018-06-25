@@ -2,10 +2,16 @@
 #include "config.h"
 #include "ps2_poller.h"
 #include "ps2_state.h"
+#include "spi_sniffer.h"
 #include "usb_joystick.h"
 #include "spi.h"
 
 #include <stm32f0xx_hal.h>
+#include <bsp_usb.h>
+#include "usb_device.h"
+#include "joy_if.h"
+#include "configurator_if.h"
+
 #include "iwdg.h"
 #include "usart.h"
 
@@ -20,10 +26,11 @@ EXTERNC int musia_main(void) {
 #ifndef FAST_SEMIHOSTING_PROFILER_DRIVER
 	RetargetInit(&huart1);
 #endif
-
 	hspi1.Instance = SPI1;
 	hspi2.Instance = SPI2;
-
+	
+	BSP_USB_Bind();
+	UsbDevice_Init();
 
 	sys_printf("MUSIA started\n");
 	HAL_GPIO_WritePin(EE_CS_GPIO_Port, EE_CS_Pin, GPIO_PIN_SET);   // SET = disabled

@@ -53,7 +53,6 @@
 #include "iwdg.h"
 #include "spi.h"
 #include "usart.h"
-#include "usb_device.h"
 #include "gpio.h"
 
 /* USER CODE BEGIN Includes */
@@ -111,7 +110,6 @@ int main(void)
   MX_DMA_Init();
   MX_IWDG_Init();
   MX_USART1_UART_Init();
-  MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
