@@ -1,0 +1,1 @@
+This is the .NET software which uses SVG skins and OpenGL rendering to make a powerful controller overlay for videogame streaming
