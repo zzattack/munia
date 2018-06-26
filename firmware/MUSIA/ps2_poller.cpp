@@ -19,22 +19,6 @@ void ps2_poller::configure() {
 	hspi1.Init.NSSPMode = SPI_NSS_PULSE_DISABLE;
 	HAL_SPI_Init(&hspi1);
 
-	hspi1.Instance = SPI2;
-	hspi2.Init.Mode = SPI_MODE_MASTER;
-	hspi2.Init.Direction = SPI_DIRECTION_2LINES;
-	hspi2.Init.DataSize = SPI_DATASIZE_8BIT;
-	hspi2.Init.CLKPolarity = SPI_POLARITY_LOW;
-	hspi2.Init.CLKPhase = SPI_PHASE_1EDGE;
-	hspi2.Init.NSS = SPI_NSS_SOFT;
-	hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_32;
-	hspi2.Init.FirstBit = SPI_FIRSTBIT_MSB;
-	hspi2.Init.TIMode = SPI_TIMODE_DISABLE;
-	hspi2.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-	hspi2.Init.CRCPolynomial = 7;
-	hspi2.Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
-	hspi2.Init.NSSPMode = SPI_NSS_PULSE_ENABLE;
-	HAL_SPI_Init(&hspi2);
-
 	// console SPI lines + ATT are disconnected from corresponding joystick lines
 	HAL_GPIO_WritePin(SW_CONSOLE_DISCONNECT_GPIO_Port, SW_CONSOLE_DISCONNECT_Pin, GPIO_PIN_RESET);   // SET = console disconnected
 		
