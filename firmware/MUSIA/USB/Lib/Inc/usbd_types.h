@@ -107,7 +107,7 @@ typedef const uint8_t USBD_SerialNumberType[USBD_SERIAL_BCD_SIZE];
 
 
 /** @brief USB device configuration structure */
-typedef struct
+typedef struct __packed
 {
     const char *Name;       /*!< String description of the configuration */
     uint16_t MaxCurrent_mA; /*!< Maximum current demand (2 .. 500 mA) */
@@ -132,7 +132,7 @@ typedef struct
 
 
 /** @brief USB Device descriptors structure */
-typedef struct
+typedef struct __packed
 {
     USBD_ConfigurationType Config;  /*!< Device configuration */
 
@@ -156,11 +156,11 @@ typedef struct
 #if (USBD_SERIAL_BCD_SIZE > 0)
     USBD_SerialNumberType *SerialNumber;/*!< Product serial number reference */
 #endif
-}USBD_DescriptionType;
+} USBD_DescriptionType;
 
 
 /** @brief USB endpoint handle structure */
-typedef struct
+typedef struct __packed
 {
     struct {
         uint8_t *Data;                  /*!< Current data for transfer */
@@ -225,7 +225,7 @@ typedef void            ( *USBD_IfEpCbkType )   ( struct _USBD_IfHandleType *itf
 
 
 /** @brief USB interface class callback (virtual functions) structure */
-typedef struct
+typedef struct __packed
 {
     USBD_IfDescCbkType  GetDescriptor;  /*!< Read the interface descriptor */
     USBD_IfStrCbkType   GetString;      /*!< Read the interface's string */
@@ -242,7 +242,7 @@ typedef struct
 
 
 /** @brief USB interface handle base structure */
-typedef struct _USBD_IfHandleType
+typedef struct __packed _USBD_IfHandleType 
 {
     struct _USBD_HandleType *Device;    /*!< Reference of the related USB Device */
     const  USBD_ClassType   *Class;     /*!< Reference of the class specific methods */
@@ -252,7 +252,7 @@ typedef struct _USBD_IfHandleType
 
 
 /** @brief USB Device handle structure */
-typedef struct _USBD_HandleType
+typedef struct __packed _USBD_HandleType 
 {
     const USBD_DescriptionType *Desc;       /*!< Reference of the device description */
     USB_SetupRequestType Setup;             /*!< Setup request is stored */

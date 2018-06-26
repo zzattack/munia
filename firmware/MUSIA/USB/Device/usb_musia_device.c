@@ -1,4 +1,4 @@
-#include "usb_device.h"
+#include "usb_musia_device.h"
 #include <usbd.h>
 #include <usbd_types.h>
 #include <usbd_hid.h>
@@ -13,11 +13,11 @@ extern USBD_HID_IfHandleType *const cfg_if;
 const USBD_DescriptionType hdev_cfg = {
 	.Vendor = {
 		.Name = "munia.io",
-		.ID = 0xFFFF, /* TODO placeholder */
+		.ID = 0x1209,
 	},
 	.Product = {
 		.Name = "MUSIA",
-		.ID = 0xFFFF, /* TODO placeholder */
+		.ID = 0x8844,
 		.Version.bcd = 0x010B,
 	},
 	.SerialNumber = (USBD_SerialNumberType*)DEVICE_ID_REG,

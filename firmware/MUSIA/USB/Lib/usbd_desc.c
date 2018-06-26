@@ -234,7 +234,7 @@ USBD_ReturnType USBD_GetDescriptor(USBD_HandleType *dev)
                     break;
 #endif
 
-                default:
+                default: 
                 {
                     const char* str = USBD_IfString(dev);
 
