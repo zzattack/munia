@@ -43,10 +43,11 @@
 #include "iwdg.h"
 #include "spi.h"
 #include "usart.h"
+#include "usb.h"
 #include "gpio.h"
 
 /* USER CODE BEGIN Includes */
-extern int musia_main();
+
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -112,7 +113,7 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-	  musia_main();
+
   }
   /* USER CODE END 3 */
 
