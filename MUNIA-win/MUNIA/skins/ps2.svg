@@ -1,155 +1,85 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1"
-	 id="ps2-controller" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:svg="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" inkscape:output_extension="org.inkscape.output.svg.inkscape" sodipodi:docname="ps2.svg" inkscape:version="0.92.3 (2405546, 2018-03-11)" sodipodi:version="0.32"
-	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0.8 318 242.4 150.6"
-	 style="enable-background:new 0.8 318 242.4 150.6;" xml:space="preserve">
-<style type="text/css">
-	.st0{fill:#7A7A7A;stroke:#000000;}
-	.st1{fill:#262626;stroke:#000000;}
-	.st2{fill:#3F3F3F;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;}
-	.st3{fill:#262626;}
-	.st4{fill:#333333;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;}
-	.st5{fill:#3F3F3F;}
-	.st6{fill:#E6E6E6;}
-	.st7{fill:#595959;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;}
-	.st8{fill:#5A5A5A;stroke:#454545;stroke-linecap:round;stroke-linejoin:round;}
-	.st9{fill:none;stroke:#FF01DB;}
-	.st10{fill:none;stroke:#00FF83;stroke-width:1.1416;}
-	.st11{fill:none;stroke:#FF0000;stroke-width:1.4583;stroke-linecap:round;stroke-linejoin:round;}
-	.st12{fill:none;stroke:#8243FB;}
-	.st13{fill:#333333;stroke:#000000;stroke-width:1.5652;stroke-linecap:round;stroke-linejoin:round;}
-	.st14{fill-opacity:0.5185;stroke:#000000;stroke-width:2.0282;stroke-linecap:round;stroke-linejoin:round;}
-	.st15{fill:#4D4D4D;fill-opacity:0.5185;stroke:#000000;stroke-width:2.3226;stroke-linecap:round;stroke-linejoin:round;}
-</style>
-<g id="triggers">
-	<path id="R2" inkscape:connector-curvature="0" sodipodi:nodetypes="ccscsc" class="st0" d="M176,327.7h33.2l-2.6-4.3
-		c-1.7-2.8-6.1-4.9-14-4.9s-12.3,2.1-14,4.9L176,327.7z"/>
-	<path id="L2" inkscape:connector-curvature="0" sodipodi:nodetypes="ccscsc" class="st0" d="M33.7,327.7h33.2l-2.6-4.3
-		c-1.7-2.8-6.1-4.9-14-4.9s-12.3,2.1-14,4.9L33.7,327.7z"/>
-	<g id="R1">
-		<path id="R1-trigger" inkscape:connector-curvature="0" sodipodi:nodetypes="cscsc" class="st1" d="M213.4,347.5
-			c-1.7-11-2.5-16.5-3.3-20.5c-0.8-4.1-7.7-6.1-17.6-6.1S175.8,323,175,327c-0.8,4.1-1.6,9.5-3.3,20.5"/>
-		<path id="text-R" inkscape:connector-curvature="0" d="M194.5,329.4c0.2,0.1,0.4,0.2,0.6,0.5c0.2,0.2,0.4,0.6,0.6,1l1.1,2.1h-1.1
-			l-1-2c-0.3-0.5-0.5-0.9-0.7-1c-0.2-0.2-0.6-0.3-1-0.3h-1.1v3.2h-1v-7.7h2.3c0.9,0,1.5,0.2,2,0.5c0.4,0.4,0.6,0.9,0.6,1.7
-			c0,0.5-0.1,0.9-0.3,1.2C195.3,329.1,194.9,329.3,194.5,329.4 M191.9,326.2v2.7h1.3c0.5,0,0.9-0.1,1.1-0.3c0.3-0.2,0.4-0.6,0.4-1
-			c0-0.4-0.1-0.8-0.4-1c-0.3-0.2-0.6-0.3-1.1-0.3H191.9"/>
-	</g>
-	<g id="L1">
-		<path id="L1-trigger" inkscape:connector-curvature="0" sodipodi:nodetypes="cscsc" class="st1" d="M71.1,347.5
-			c-1.7-11-2.5-16.5-3.3-20.5c-0.8-4.1-7.7-6.1-17.6-6.1S33.4,323,32.7,327c-0.8,4.1-1.6,9.5-3.3,20.5"/>
-		<path id="text-L" inkscape:connector-curvature="0" d="M48,325.3h1v6.8h3.7v0.9H48V325.3"/>
-	</g>
-</g>
-<g id="background" inkscape:label="Layer 1" inkscape:groupmode="layer">
-	<path id="back-base" inkscape:connector-curvature="0" sodipodi:nodetypes="ccccccccccccc" class="st2" d="M61.1,341.8
-		c-1.5,0-2.8,1.2-2.8,2.8v73.2c0,1.5,1.2,2.8,2.8,2.8h121.8c1.5,0,2.8-1.2,2.8-2.8v-73.2c0-1.5-1.2-2.8-2.8-2.8h-52.8
-		c-0.3,0.4-0.8,0.8-1.3,0.8h-14.3c-0.6,0-1-0.3-1.3-0.8H61.1z"/>
-	<path id="front-base" class="st3" d="M67.4,348.1h109.1c1.5,0,2.8,1.2,2.8,2.7v63.1c0,1.5-1.2,2.7-2.8,2.7H67.4
-		c-1.5,0-2.8-1.2-2.8-2.7v-63.1C64.7,349.3,65.9,348.1,67.4,348.1z"/>
-	<path id="leg-left" inkscape:connector-curvature="0" sodipodi:nodetypes="csscc" class="st1" d="M13.4,364.3
-		c-5.5,30.1-9.1,62.2-11.8,76.3c-4.2,22.1,32.8,40.7,46.8,15.2c10.6-19.4,22.7-44.2,22.7-44.2L13.4,364.3z"/>
-	<circle id="dpad-base" class="st4" cx="50.3" cy="373.7" r="37.9"/>
-	<path id="leg-right" inkscape:connector-curvature="0" sodipodi:nodetypes="csscc" class="st1" d="M230.6,364.3
-		c5.5,30.1,9.1,62.7,11.8,76.3c4.4,22.1-32.8,40.7-46.8,15.2c-10.6-19.4-22.7-44.2-22.7-44.2L230.6,364.3z"/>
-	<circle id="face-base-circle" class="st4" cx="193.7" cy="373.7" r="37.9"/>
-	<path id="face-buttons-base" inkscape:connector-curvature="0" class="st3" d="M185.9,345.7c-1.5,0-2.8,1.2-2.8,2.8v14.7h-14.7
-		c-1.5,0-2.8,1.2-2.8,2.8v15.6c0,1.5,1.2,2.8,2.8,2.8h14.7v14.7c0,1.5,1.2,2.8,2.8,2.8h15.6c1.5,0,2.7-1.2,2.8-2.8v-14.7H219
-		c1.5,0,2.8-1.2,2.8-2.8v-15.6c0-1.5-1.2-2.8-2.8-2.8h-14.7v-14.7c0-1.5-1.2-2.8-2.8-2.8H185.9z"/>
-	<path id="dpad-base_1_" inkscape:connector-curvature="0" class="st3" d="M42.3,345.2c-1.5,0-2.8,1.2-2.8,2.8v14.7H24.9
-		c-1.5,0-2.8,1.2-2.8,2.8V381c0,1.5,1.2,2.8,2.8,2.8h14.7v14.7c0,1.5,1.2,2.8,2.8,2.8h15.6c1.5,0,2.7-1.2,2.8-2.8v-14.7h14.7
-		c1.5,0,2.8-1.2,2.8-2.8v-15.6c0-1.5-1.2-2.8-2.8-2.8H60.7V348c0-1.5-1.2-2.8-2.8-2.8H42.3z"/>
-	<g id="dpad-outer" transform="translate(-259.50125,-472.9924)">
-		
-			<path id="dpad-outer-up" sodipodi:r1="8.4435501" sodipodi:r2="4.2217751" sodipodi:arg1="0" sodipodi:cy="514.41351" sodipodi:type="star" sodipodi:arg2="1.0471976" sodipodi:sides="3" sodipodi:cx="271.52805" inkscape:flatsided="true" inkscape:randomized="0" inkscape:rounded="0" class="st5" d="
-			M309.6,821.1l-3.8,3.6h7.6L309.6,821.1z"/>
-		
-			<path id="dpad-outer-down" sodipodi:r1="8.4435501" sodipodi:r2="4.2217751" sodipodi:arg1="0" sodipodi:cy="514.41351" sodipodi:type="star" sodipodi:arg2="1.0471976" sodipodi:sides="3" sodipodi:cx="271.52805" inkscape:flatsided="true" inkscape:randomized="0" inkscape:rounded="0" class="st5" d="
-			M309.6,871.2l-3.8-3.6h7.6L309.6,871.2z"/>
-		
-			<path id="dpad-outer-right" sodipodi:r1="8.4435501" sodipodi:r2="4.2217751" sodipodi:arg1="0" sodipodi:cy="514.41351" sodipodi:type="star" sodipodi:arg2="1.0471976" sodipodi:sides="3" sodipodi:cx="271.52805" inkscape:flatsided="true" inkscape:randomized="0" inkscape:rounded="0" class="st5" d="
-			M334.7,846.2l-3.6-3.8v7.6L334.7,846.2z"/>
-		
-			<path id="dpad-outer-left" sodipodi:r1="8.4435501" sodipodi:r2="4.2217751" sodipodi:arg1="0" sodipodi:cy="514.41351" sodipodi:type="star" sodipodi:arg2="1.0471976" sodipodi:sides="3" sodipodi:cx="271.52805" inkscape:flatsided="true" inkscape:randomized="0" inkscape:rounded="0" class="st5" d="
-			M284.6,846.2l3.6-3.8v7.6L284.6,846.2z"/>
-	</g>
-	<path id="text-select" inkscape:connector-curvature="0" class="st6" d="M94.1,368.5v0.4c-0.2-0.1-0.3-0.1-0.5-0.2
-		c-0.2,0-0.3-0.1-0.4-0.1c-0.2,0-0.4,0-0.6,0.1c-0.1,0.1-0.2,0.2-0.2,0.4c0,0.1,0,0.3,0.1,0.3c0.1,0.1,0.3,0.1,0.5,0.2l0.3,0.1
-		c0.3,0.1,0.6,0.2,0.7,0.3c0.2,0.2,0.2,0.4,0.2,0.6c0,0.3-0.1,0.6-0.3,0.7c-0.2,0.2-0.5,0.2-0.9,0.2c-0.2,0-0.3,0-0.5-0.1
-		c-0.2,0-0.4-0.1-0.6-0.2v-0.5c0.2,0.1,0.4,0.2,0.5,0.2c0.2,0.1,0.3,0.1,0.5,0.1c0.3,0,0.5-0.1,0.6-0.2c0.1-0.1,0.2-0.2,0.2-0.4
-		c0-0.2-0.1-0.3-0.2-0.4c-0.1-0.1-0.3-0.2-0.5-0.2l-0.3-0.1c-0.3-0.1-0.6-0.2-0.7-0.3c-0.2-0.1-0.2-0.3-0.2-0.6
-		c0-0.3,0.1-0.5,0.3-0.7c0.2-0.2,0.5-0.3,0.9-0.3c0.2,0,0.3,0,0.5,0C93.8,368.4,94,368.4,94.1,368.5 M95,368.4h2.1v0.4h-1.7v1h1.6
-		v0.4h-1.6v1.2h1.7v0.4H95V368.4 M97.9,368.4h0.5v2.9h1.6v0.4h-2.1V368.4 M100.5,368.4h2.1v0.4h-1.7v1h1.6v0.4h-1.6v1.2h1.7v0.4
-		h-2.1V368.4 M105.8,368.6v0.5c-0.2-0.1-0.3-0.2-0.5-0.3c-0.2-0.1-0.4-0.1-0.5-0.1c-0.4,0-0.7,0.1-0.9,0.3c-0.2,0.2-0.3,0.6-0.3,1
-		c0,0.4,0.1,0.8,0.3,1c0.2,0.2,0.5,0.3,0.9,0.3c0.2,0,0.4,0,0.5-0.1c0.2-0.1,0.3-0.2,0.5-0.3v0.5c-0.2,0.1-0.3,0.2-0.5,0.2
-		c-0.2,0.1-0.4,0.1-0.6,0.1c-0.5,0-0.9-0.2-1.2-0.5c-0.3-0.3-0.4-0.7-0.4-1.3c0-0.5,0.1-1,0.4-1.3c0.3-0.3,0.7-0.5,1.2-0.5
-		c0.2,0,0.4,0,0.6,0.1C105.5,368.4,105.7,368.5,105.8,368.6 M106.1,368.4h2.8v0.4h-1.2v2.9h-0.5v-2.9h-1.2V368.4"/>
-	<path id="text-start" inkscape:connector-curvature="0" class="st6" d="M137,368.5v0.4c-0.2-0.1-0.3-0.1-0.5-0.2
-		c-0.2,0-0.3-0.1-0.4-0.1c-0.2,0-0.4,0-0.6,0.1c-0.1,0.1-0.2,0.2-0.2,0.4c0,0.1,0,0.3,0.1,0.3c0.1,0.1,0.3,0.1,0.5,0.2l0.3,0.1
-		c0.3,0.1,0.6,0.2,0.7,0.3c0.2,0.2,0.2,0.4,0.2,0.6c0,0.3-0.1,0.6-0.3,0.7c-0.2,0.2-0.5,0.2-0.9,0.2c-0.2,0-0.3,0-0.5-0.1
-		c-0.2,0-0.4-0.1-0.6-0.2v-0.5c0.2,0.1,0.4,0.2,0.5,0.2c0.2,0.1,0.3,0.1,0.5,0.1c0.3,0,0.5-0.1,0.6-0.2c0.1-0.1,0.2-0.2,0.2-0.4
-		c0-0.2-0.1-0.3-0.2-0.4c-0.1-0.1-0.3-0.2-0.5-0.2l-0.3-0.1c-0.3-0.1-0.6-0.2-0.7-0.3c-0.2-0.1-0.2-0.3-0.2-0.6
-		c0-0.3,0.1-0.5,0.3-0.7c0.2-0.2,0.5-0.3,0.9-0.3c0.2,0,0.3,0,0.5,0C136.7,368.4,136.8,368.4,137,368.5 M137.4,368.4h2.8v0.4h-1.2
-		v2.9h-0.5v-2.9h-1.2V368.4 M141.5,368.8l-0.6,1.7h1.2L141.5,368.8 M141.2,368.4h0.5l1.3,3.3h-0.5l-0.3-0.9h-1.5l-0.3,0.9h-0.5
-		L141.2,368.4 M145,370.1c0.1,0,0.2,0.1,0.3,0.2c0.1,0.1,0.2,0.3,0.3,0.4l0.5,0.9h-0.5l-0.4-0.9c-0.1-0.2-0.2-0.4-0.3-0.4
-		c-0.1-0.1-0.2-0.1-0.4-0.1h-0.5v1.4h-0.5v-3.3h1c0.4,0,0.7,0.1,0.9,0.2s0.3,0.4,0.3,0.7c0,0.2,0,0.4-0.1,0.5
-		C145.4,370,145.2,370.1,145,370.1 M143.9,368.7v1.2h0.6c0.2,0,0.4,0,0.5-0.1c0.1-0.1,0.2-0.2,0.2-0.4s-0.1-0.3-0.2-0.4
-		c-0.1-0.1-0.3-0.1-0.5-0.1H143.9 M145.8,368.4h2.8v0.4h-1.2v2.9H147v-2.9h-1.2V368.4"/>
-</g>
-<g id="buttons">
-	<path id="btn-select" class="st7" d="M95.5,374.2h8.5c0.9,0,1.6,0.7,1.6,1.6v3.5c0,0.9-0.7,1.6-1.6,1.6h-8.5
-		c-0.9,0-1.6-0.7-1.6-1.6v-3.5C94,374.9,94.7,374.2,95.5,374.2z"/>
-	<path id="btn-start" inkscape:connector-curvature="0" sodipodi:nodetypes="csccsc" class="st7" d="M147.7,377.5l-8.5,3.3
-		c-0.8,0.3-1.6-0.7-1.6-1.6v-3.5c0-0.9,0.8-1.9,1.6-1.6L147.7,377.5z"/>
-	<g id="dpad" transform="translate(-259.50125,-472.9924)">
-		
-			<path id="dpad-right" inkscape:radius="1.1788157" sodipodi:type="inkscape:offset" inkscape:original="M 318.6875 524.46875 L 315.1875 528.90625 L 318.6875 533.375 L 326.8125 533.40625 L 326.8125 524.625 L 318.6875 524.46875 z " class="st8" d="
-			M319.1,840.6c-0.4,0-0.7,0.2-0.9,0.4l-3.5,4.4c-0.3,0.4-0.3,1,0,1.5l3.5,4.5c0.2,0.3,0.6,0.5,0.9,0.5l8.1,0c0.7,0,1.2-0.5,1.2-1.2
-			c0,0,0,0,0,0v-8.8c0-0.6-0.5-1.2-1.2-1.2L319.1,840.6z"/>
-		
-			<path id="dpad-left" inkscape:radius="1.1788157" sodipodi:type="inkscape:offset" inkscape:original="M 318.6875 524.46875 L 315.1875 528.90625 L 318.6875 533.375 L 326.8125 533.40625 L 326.8125 524.625 L 318.6875 524.46875 z " class="st8" d="
-			M300.2,840.5c0.4,0,0.7,0.2,0.9,0.4l3.5,4.4c0.3,0.4,0.3,1,0,1.5l-3.5,4.5c-0.2,0.3-0.6,0.5-0.9,0.5l-8.1,0
-			c-0.7,0-1.2-0.5-1.2-1.2c0,0,0,0,0,0v-8.8c0-0.6,0.5-1.2,1.2-1.2L300.2,840.5z"/>
-		
-			<path id="dpad_down" inkscape:radius="1.1788157" sodipodi:type="inkscape:offset" inkscape:original="M 318.6875 524.46875 L 315.1875 528.90625 L 318.6875 533.375 L 326.8125 533.40625 L 326.8125 524.625 L 318.6875 524.46875 z " class="st8" d="
-			M315.2,855.6c0-0.4-0.2-0.7-0.4-0.9l-4.4-3.5c-0.4-0.3-1-0.3-1.5,0l-4.5,3.5c-0.3,0.2-0.5,0.6-0.5,0.9l0,8.1
-			c0,0.7,0.5,1.2,1.2,1.2c0,0,0,0,0,0h8.8c0.6,0,1.2-0.5,1.2-1.2L315.2,855.6z"/>
-		
-			<path id="dpad-up" inkscape:radius="1.1788157" sodipodi:type="inkscape:offset" inkscape:original="M 318.6875 524.46875 L 315.1875 528.90625 L 318.6875 533.375 L 326.8125 533.40625 L 326.8125 524.625 L 318.6875 524.46875 z " class="st8" d="
-			M315.3,836.7c0,0.4-0.2,0.7-0.4,0.9l-4.4,3.5c-0.4,0.3-1,0.3-1.5,0l-4.5-3.5c-0.3-0.2-0.5-0.6-0.5-0.9l0-8.1
-			c0-0.7,0.5-1.2,1.2-1.2c0,0,0,0,0,0h8.8c0.6,0,1.2,0.5,1.2,1.2L315.3,836.7z"/>
-	</g>
-	<g id="face-buttons">
-		<g id="facebtn-square" transform="translate(-259.50125,-472.9924)">
-			<circle id="path3250" class="st8" cx="435.5" cy="846.7" r="8.2"/>
-			<rect id="rect3307" x="430.8" y="842" class="st9" width="9.4" height="9.4"/>
+<?xml version="1.0" encoding="iso-8859-1"?>
+<svg 
+	xmlns:dc="http://purl.org/dc/elements/1.1/" 
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+	xmlns:svg="http://www.w3.org/2000/svg" 
+	xmlns:cc="http://creativecommons.org/ns#" 
+	xmlns="http://www.w3.org/2000/svg" 
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	version="1.1" 
+	id="ps2-controller" x="0px" y="0px" width="242.5px" height="150.6px" 
+	viewBox="-305.2 396.7 242.5 150.6"
+	style="enable-background:new -305.2 396.7 242.5 150.6;" xml:space="preserve">
+	<g id="triggers">
+		<path id="L2" style="fill:#7A7A7A;stroke:#000000;" d="M-272.3,406.4h33.2l-2.6-4.3c-1.7-2.8-6.1-4.9-14-4.9s-12.3,2.1-14,4.9L-272.3,406.4z"/>
+		<path id="R2" style="fill:#7A7A7A;stroke:#000000;" d="M-130,406.4   h33.2l-2.6-4.3c-1.7-2.8-6.1-4.9-14-4.9s-12.3,2.1-14,4.9L-130,406.4z"/>
+		<g id="L1">
+			<path id="L1-trigger" style="fill:#262626;stroke:#000000;" d="M-234.9,426.2c-1.7-11-2.5-16.5-3.3-20.5c-0.8-4.1-7.7-6.1-17.6-6.1c-9.9,0-16.8,2.1-17.5,6.1c-0.8,4.1-1.6,9.5-3.3,20.5"/>
+			<path id="text-L" d="M-258,404h1v6.8h3.7v0.9h-4.7V404"/>
 		</g>
-		<g id="facebtn-triangle" transform="translate(-259.50125,-472.9924)">
-			<circle id="path3244" class="st8" cx="453.2" cy="829" r="8.2"/>
-			
-				<path id="path3309" sodipodi:r1="6.9132905" sodipodi:r2="3.4566453" sodipodi:arg1="0.52359878" sodipodi:cy="514.68372" sodipodi:type="star" sodipodi:arg2="1.5707963" sodipodi:sides="3" sodipodi:cx="449.3132" inkscape:flatsided="true" inkscape:randomized="0" inkscape:rounded="0" class="st10" d="
-				M458.5,832.4H448l5.2-9.1L458.5,832.4z"/>
-		</g>
-		<g id="facebtn-circle" transform="translate(-259.50125,-472.9924)">
-			<circle id="path3248" class="st8" cx="470.9" cy="846.7" r="8.2"/>
-			<circle id="path3311" class="st11" cx="470.9" cy="846.7" r="5.6"/>
-		</g>
-		<g id="facebtn-cross" transform="translate(-259.50125,-472.9924)">
-			<circle id="path3246" class="st8" cx="453.2" cy="864.4" r="8.2"/>
-			<path id="path3313" inkscape:connector-curvature="0" class="st12" d="M449,860.3l8.5,8.5 M457.5,860.3l-8.5,8.5"/>
+		<g id="R1">
+			<path id="R1-trigger" style="fill:#262626;stroke:#000000;" d="M-92.6,426.2c-1.7-11-2.5-16.5-3.3-20.5c-0.8-4.1-7.7-6.1-17.6-6.1s-16.7,2.1-17.5,6.1c-0.8,4.1-1.6,9.5-3.3,20.5"/>
+			<path id="text-R" d="M-111.5,408.1c0.2,0.1,0.4,0.2,0.6,0.5c0.2,0.2,0.4,0.6,0.6,1l1.1,2.1h-1.1    l-1-2c-0.3-0.5-0.5-0.9-0.7-1c-0.2-0.2-0.6-0.3-1-0.3h-1.1v3.2h-1v-7.7h2.3c0.9,0,1.5,0.2,2,0.5c0.4,0.4,0.6,0.9,0.6,1.7    c0,0.5-0.1,0.9-0.3,1.2C-110.7,407.8-111.1,408-111.5,408.1 M-114.1,404.9v2.7h1.3c0.5,0,0.9-0.1,1.1-0.3c0.3-0.2,0.4-0.6,0.4-1    s-0.1-0.8-0.4-1c-0.3-0.2-0.6-0.3-1.1-0.3h-1.3"/>
 		</g>
 	</g>
-</g>
-<g id="sticks">
-	<g id="stick-right" transform="translate(-259.50125,-472.9924)">
-		<circle id="stick-right-base" class="st13" cx="416.2" cy="883.5" r="24.1"/>
-		<circle id="stick-right-outer" class="st14" cx="416.2" cy="883.5" r="18.6"/>
-		<circle id="stick-right-inner" class="st15" cx="416.2" cy="883.5" r="16.2"/>
+
+	<g id="background">
+		<path id="back-base" style="fill:#3F3F3F;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;" d="M-244.9,420.5c-1.5,0-2.8,1.2-2.8,2.8v73.2c0,1.5,1.2,2.8,2.8,2.8h121.8c1.5,0,2.8-1.2,2.8-2.8v-73.2c0-1.5-1.2-2.8-2.8-2.8h-52.8   c-0.3,0.4-0.8,0.8-1.3,0.8h-14.3c-0.6,0-1-0.3-1.3-0.8H-244.9z"/>
+		<path id="front-base" style="fill:#262626;" d="M-238.6,426.8h109.1c1.5,0,2.8,1.2,2.8,2.7v63.1c0,1.5-1.2,2.7-2.8,2.7h-109.1   c-1.5,0-2.8-1.2-2.8-2.7v-63.1C-241.3,428-240.1,426.8-238.6,426.8z"/>
+		<path id="leg-left" style="fill:#262626;stroke:#000000;" d="M-292.6,443c-5.5,30.1-9.1,62.2-11.8,76.3c-4.2,22.1,32.8,40.7,46.8,15.2c10.6-19.4,22.7-44.2,22.7-44.2L-292.6,443z"/>
+		<circle id="dpad-base" style="fill:#333333;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;" cx="-255.7" cy="452.4" r="37.9"/>
+		<path id="leg-right" style="fill:#262626;stroke:#000000;" d="M-75.4,443c5.5,30.1,9.1,62.7,11.8,76.3c4.4,22.1-32.8,40.7-46.8,15.2c-10.6-19.4-22.7-44.2-22.7-44.2L-75.4,443z"/>
+		<circle id="face-base-circle" style="fill:#333333;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;" cx="-112.3" cy="452.4" r="37.9"/>
+		<path id="face-buttons-base" style="fill:#262626;" d="M-120.1,424.4c-1.5,0-2.8,1.2-2.8,2.8   v14.7h-14.7c-1.5,0-2.8,1.2-2.8,2.8v15.6c0,1.5,1.2,2.8,2.8,2.8h14.7v14.7c0,1.5,1.2,2.8,2.8,2.8h15.6c1.5,0,2.7-1.2,2.8-2.8v-14.7   H-87c1.5,0,2.8-1.2,2.8-2.8v-15.6c0-1.5-1.2-2.8-2.8-2.8h-14.7v-14.7c0-1.5-1.2-2.8-2.8-2.8H-120.1z"/>
+		<path id="dpad-base_1_" style="fill:#262626;" d="M-263.7,423.9c-1.5,0-2.8,1.2-2.8,2.8v14.7   h-14.6c-1.5,0-2.8,1.2-2.8,2.8v15.5c0,1.5,1.2,2.8,2.8,2.8h14.7v14.7c0,1.5,1.2,2.8,2.8,2.8h15.6c1.5,0,2.7-1.2,2.8-2.8v-14.7h14.7   c1.5,0,2.8-1.2,2.8-2.8v-15.6c0-1.5-1.2-2.8-2.8-2.8h-14.8v-14.6c0-1.5-1.2-2.8-2.8-2.8H-263.7z"/>
+		<g id="dpad-outer" transform="translate(-259.50125,-472.9924)">
+			<path id="dpad-outer-up" style="fill:#3F3F3F;" d="M3.6,899.8l-3.8,3.6h7.6L3.6,899.8z"/>
+			<path id="dpad-outer-down" style="fill:#3F3F3F;" d="M3.6,949.9l-3.8-3.6h7.6L3.6,949.9z"/>
+			<path id="dpad-outer-right" style="fill:#3F3F3F;" d="M28.7,924.9l-3.6-3.8v7.6L28.7,924.9z"/>
+			<path id="dpad-outer-left" style="fill:#3F3F3F;" d="M-21.4,924.9l3.6-3.8v7.6L-21.4,924.9z"/>
+		</g>
+		<path id="text-select" style="fill:#E6E6E6;" d="M-211.9,447.2v0.4c-0.2-0.1-0.3-0.1-0.5-0.2   c-0.2,0-0.3-0.1-0.4-0.1c-0.2,0-0.4,0-0.6,0.1c-0.1,0.1-0.2,0.2-0.2,0.4c0,0.1,0,0.3,0.1,0.3c0.1,0.1,0.3,0.1,0.5,0.2l0.3,0.1   c0.3,0.1,0.6,0.2,0.7,0.3c0.2,0.2,0.2,0.4,0.2,0.6c0,0.3-0.1,0.6-0.3,0.7c-0.2,0.2-0.5,0.2-0.9,0.2c-0.2,0-0.3,0-0.5-0.1   c-0.2,0-0.4-0.1-0.6-0.2v-0.5c0.2,0.1,0.4,0.2,0.5,0.2c0.2,0.1,0.3,0.1,0.5,0.1c0.3,0,0.5-0.1,0.6-0.2c0.1-0.1,0.2-0.2,0.2-0.4   c0-0.2-0.1-0.3-0.2-0.4c-0.1-0.1-0.3-0.2-0.5-0.2l-0.3-0.1c-0.3-0.1-0.6-0.2-0.7-0.3c-0.2-0.1-0.2-0.3-0.2-0.6   c0-0.3,0.1-0.5,0.3-0.7c0.2-0.2,0.5-0.3,0.9-0.3c0.2,0,0.3,0,0.5,0C-212.2,447.1-212,447.1-211.9,447.2 M-211,447.1h2.1v0.4h-1.7v1   h1.6v0.4h-1.6v1.2h1.7v0.4h-2.1V447.1 M-208.1,447.1h0.5v2.9h1.6v0.4h-2.1V447.1 M-205.5,447.1h2.1v0.4h-1.7v1h1.6v0.4h-1.6v1.2   h1.7v0.4h-2.1V447.1 M-200.2,447.3v0.5c-0.2-0.1-0.3-0.2-0.5-0.3c-0.2-0.1-0.4-0.1-0.5-0.1c-0.4,0-0.7,0.1-0.9,0.3   c-0.2,0.2-0.3,0.6-0.3,1s0.1,0.8,0.3,1c0.2,0.2,0.5,0.3,0.9,0.3c0.2,0,0.4,0,0.5-0.1c0.2-0.1,0.3-0.2,0.5-0.3v0.5   c-0.2,0.1-0.3,0.2-0.5,0.2c-0.2,0.1-0.4,0.1-0.6,0.1c-0.5,0-0.9-0.2-1.2-0.5c-0.3-0.3-0.4-0.7-0.4-1.3c0-0.5,0.1-1,0.4-1.3   s0.7-0.5,1.2-0.5c0.2,0,0.4,0,0.6,0.1C-200.5,447.1-200.3,447.2-200.2,447.3 M-199.9,447.1h2.8v0.4h-1.2v2.9h-0.5v-2.9h-1.2   L-199.9,447.1"/>
+		<path id="text-start" style="fill:#E6E6E6;" d="M-169,447.2v0.4c-0.2-0.1-0.3-0.1-0.5-0.2   c-0.2,0-0.3-0.1-0.4-0.1c-0.2,0-0.4,0-0.6,0.1c-0.1,0.1-0.2,0.2-0.2,0.4c0,0.1,0,0.3,0.1,0.3c0.1,0.1,0.3,0.1,0.5,0.2l0.3,0.1   c0.3,0.1,0.6,0.2,0.7,0.3c0.2,0.2,0.2,0.4,0.2,0.6c0,0.3-0.1,0.6-0.3,0.7c-0.2,0.2-0.5,0.2-0.9,0.2c-0.2,0-0.3,0-0.5-0.1   c-0.2,0-0.4-0.1-0.6-0.2v-0.5c0.2,0.1,0.4,0.2,0.5,0.2c0.2,0.1,0.3,0.1,0.5,0.1c0.3,0,0.5-0.1,0.6-0.2s0.2-0.2,0.2-0.4   c0-0.2-0.1-0.3-0.2-0.4c-0.1-0.1-0.3-0.2-0.5-0.2l-0.3-0.1c-0.3-0.1-0.6-0.2-0.7-0.3c-0.2-0.1-0.2-0.3-0.2-0.6   c0-0.3,0.1-0.5,0.3-0.7s0.5-0.3,0.9-0.3c0.2,0,0.3,0,0.5,0C-169.3,447.1-169.2,447.1-169,447.2 M-168.6,447.1h2.8v0.4h-1.2v2.9   h-0.5v-2.9h-1.2L-168.6,447.1 M-164.5,447.5l-0.6,1.7h1.2L-164.5,447.5 M-164.8,447.1h0.5l1.3,3.3h-0.5l-0.3-0.9h-1.5l-0.3,0.9   h-0.5L-164.8,447.1 M-161,448.8c0.1,0,0.2,0.1,0.3,0.2s0.2,0.3,0.3,0.4l0.5,0.9h-0.5l-0.4-0.9c-0.1-0.2-0.2-0.4-0.3-0.4   c-0.1-0.1-0.2-0.1-0.4-0.1h-0.5v1.4h-0.5V447h1c0.4,0,0.7,0.1,0.9,0.2s0.3,0.4,0.3,0.7c0,0.2,0,0.4-0.1,0.5   C-160.6,448.7-160.8,448.8-161,448.8 M-162.1,447.4v1.2h0.6c0.2,0,0.4,0,0.5-0.1s0.2-0.2,0.2-0.4s-0.1-0.3-0.2-0.4   c-0.1-0.1-0.3-0.1-0.5-0.1h-0.6 M-160.2,447.1h2.8v0.4h-1.2v2.9h-0.4v-2.9h-1.2V447.1"/>
 	</g>
-	<g id="stick-left" transform="translate(-259.50125,-472.9924)">
-		<circle id="stick-left-base" class="st13" cx="346.1" cy="883.5" r="24.1"/>
-		<circle id="stick-left-outer" class="st14" cx="346.1" cy="883.5" r="18.6"/>
-		<circle id="stick-left-inner" class="st15" cx="346.1" cy="883.5" r="16.2"/>
+
+	<g id="buttons">
+		<path id="btn-select" style="fill:#595959;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;" d="M-210.5,452.9h8.5   c0.9,0,1.6,0.7,1.6,1.6v3.5c0,0.9-0.7,1.6-1.6,1.6h-8.5c-0.9,0-1.6-0.7-1.6-1.6v-3.5C-212,453.6-211.3,452.9-210.5,452.9z"/>
+		<path id="btn-start" style="fill:#595959;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;" d="M-158.3,456.2l-8.5,3.3c-0.8,0.3-1.6-0.7-1.6-1.6v-3.5c0-0.9,0.8-1.9,1.6-1.6L-158.3,456.2z"/>
+		<g id="dpad" transform="translate(-259.50125,-472.9924)">		
+			<path id="dpad-right" style="fill:#5A5A5A;stroke:#454545;stroke-linecap:round;stroke-linejoin:round;" d="M13.1,919.3c-0.4,0-0.7,0.2-0.9,0.4l-3.5,4.4c-0.3,0.4-0.3,1,0,1.5l3.5,4.5c0.2,0.3,0.6,0.5,0.9,0.5h8.1c0.7,0,1.2-0.5,1.2-1.2    l0,0v-8.8c0-0.6-0.5-1.2-1.2-1.2L13.1,919.3z"/>
+			<path id="dpad-left" style="fill:#5A5A5A;stroke:#454545;stroke-linecap:round;stroke-linejoin:round;" d="M-5.8,919.2c0.4,0,0.7,0.2,0.9,0.4l3.5,4.4c0.3,0.4,0.3,1,0,1.5l-3.5,4.5c-0.2,0.3-0.6,0.5-0.9,0.5h-8.1c-0.7,0-1.2-0.5-1.2-1.2    l0,0v-8.8c0-0.6,0.5-1.2,1.2-1.2L-5.8,919.2z"/>
+			<path id="dpad_down" style="fill:#5A5A5A;stroke:#454545;stroke-linecap:round;stroke-linejoin:round;" d="M9.2,934.3c0-0.4-0.2-0.7-0.4-0.9l-4.4-3.5c-0.4-0.3-1-0.3-1.5,0l-4.5,3.5c-0.3,0.2-0.5,0.6-0.5,0.9v8.1c0,0.7,0.5,1.2,1.2,1.2    l0,0h8.8c0.6,0,1.2-0.5,1.2-1.2L9.2,934.3z"/>
+			<path id="dpad-up" style="fill:#5A5A5A;stroke:#454545;stroke-linecap:round;stroke-linejoin:round;" d="M9.3,915.4c0,0.4-0.2,0.7-0.4,0.9l-4.4,3.5c-0.4,0.3-1,0.3-1.5,0l-4.5-3.5c-0.3-0.2-0.5-0.6-0.5-0.9v-8.1c0-0.7,0.5-1.2,1.2-1.2    l0,0H8c0.6,0,1.2,0.5,1.2,1.2L9.3,915.4z"/>
+		</g>
+		<g id="face-buttons">
+			<g id="facebtn-square" transform="translate(-259.50125,-472.9924)">			
+				<circle id="path3250" style="fill:#5A5A5A;stroke:#454545;stroke-linecap:round;stroke-linejoin:round;" cx="129.5" cy="925.4" r="8.2"/>
+				<rect id="rect3307" x="124.8" y="920.7" style="fill:none;stroke:#FF01DB;" width="9.4" height="9.4"/>
+			</g>
+			<g id="facebtn-triangle" transform="translate(-259.50125,-472.9924)">
+				<circle id="path3244" style="fill:#5A5A5A;stroke:#454545;stroke-linecap:round;stroke-linejoin:round;" cx="147.2" cy="907.7" r="8.2"/>
+				<path id="path3309" style="fill:none;stroke:#00FF83;stroke-width:1.1416;" d="M152.5,911.1H142l5.2-9.1L152.5,911.1z"/>
+			</g>
+			<g id="facebtn-circle" transform="translate(-259.50125,-472.9924)">
+				<circle id="path3248" style="fill:#5A5A5A;stroke:#454545;stroke-linecap:round;stroke-linejoin:round;" cx="164.9" cy="925.4" r="8.2"/>
+				<circle id="path3311" style="fill:none;stroke:#FF0000;stroke-width:1.4583;stroke-linecap:round;stroke-linejoin:round;" cx="164.9" cy="925.4" r="5.6"/>
+			</g>
+			<g id="facebtn-cross" transform="translate(-259.50125,-472.9924)">
+				<circle id="path3246" style="fill:#5A5A5A;stroke:#454545;stroke-linecap:round;stroke-linejoin:round;" cx="147.2" cy="943.1" r="8.2"/>
+				<path id="path3313" style="fill:none;stroke:#8243FB;" d="M143,939l8.5,8.5 M151.5,939     l-8.5,8.5"/>
+			</g>
+		</g>
 	</g>
-</g>
+	<g id="sticks">
+		<g id="stick-right" transform="translate(-259.50125,-472.9924)">
+			<circle id="stick-right-base" style="fill:#333333;stroke:#000000;stroke-width:1.5652;stroke-linecap:round;stroke-linejoin:round;" cx="110.2" cy="962.2" r="24.1"/>
+			<circle id="stick-right-outer" style="fill-opacity:0.5185;stroke:#000000;stroke-width:2.0282;stroke-linecap:round;stroke-linejoin:round;" cx="110.2" cy="962.2" r="18.6"/>
+			<circle id="stick-right-inner" style="fill:#4D4D4D;fill-opacity:0.5185;stroke:#000000;stroke-width:2.3226;stroke-linecap:round;stroke-linejoin:round;" cx="110.2" cy="962.2" r="16.2"/>
+		</g>
+		<g id="stick-left" transform="translate(-259.50125,-472.9924)">
+			<circle id="stick-left-base" style="fill:#333333;stroke:#000000;stroke-width:1.5652;stroke-linecap:round;stroke-linejoin:round;" cx="40.1" cy="962.2" r="24.1"/>
+			<circle id="stick-left-outer" style="fill-opacity:0.5185;stroke:#000000;stroke-width:2.0282;stroke-linecap:round;stroke-linejoin:round;" cx="40.1" cy="962.2" r="18.6"/>
+			<circle id="stick-left-inner" style="fill:#4D4D4D;fill-opacity:0.5185;stroke:#000000;stroke-width:2.3226;stroke-linecap:round;stroke-linejoin:round;" cx="40.1" cy="962.2" r="16.2"/>
+		</g>
+	</g>
 </svg>
