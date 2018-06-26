@@ -1,8 +1,10 @@
 #pragma once
 
 #include <stdint.h>
+// extern USBD_HID_IfHandleType *const ps2controller_if;
 
 typedef struct {
+	uint8_t report_id;
 	uint8_t cross : 1;
 	uint8_t square : 1;
 	uint8_t circle : 1;
@@ -35,4 +37,3 @@ typedef struct {
 	uint8_t right_x;
 	uint8_t right_y;
 } ps2_hid_packet;
-
