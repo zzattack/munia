@@ -28,7 +28,10 @@ namespace MUNIA.Skins {
 					if (b.PressedTexture != -1) GL.DeleteTexture(b.PressedTexture);
 					if (b.Texture != -1) GL.DeleteTexture(b.Texture);
 				});
-				Sticks.ForEach(s => { if (s.Texture != -1) GL.DeleteTexture(s.Texture); });
+				Sticks.ForEach(s => {
+					if (s.Texture != -1) GL.DeleteTexture(s.Texture);
+					if (s.PressedTexture != -1) GL.DeleteTexture(s.PressedTexture);
+				});
 				Triggers.ForEach(t => { if (t.Texture != -1) GL.DeleteTexture(t.Texture); });
 				Buttons.Clear();
 				Sticks.Clear();
@@ -49,8 +52,8 @@ namespace MUNIA.Skins {
 						// match on name for compatibility reasons
 						if (devName == "NinHID SNES") Controllers.Add(ControllerType.SNES);
 						else if (devName == "NinHID N64") Controllers.Add(ControllerType.N64);
-                        else if (devName == "NinHID NGC") Controllers.Add(ControllerType.NGC);
-                    }
+						else if (devName == "NinHID NGC") Controllers.Add(ControllerType.NGC);
+					}
 
 					if (c.CustomAttributes.ContainsKey("device-type")) {
 						string devType = c.CustomAttributes["device-type"];
@@ -62,7 +65,28 @@ namespace MUNIA.Skins {
 					Name = c.CustomAttributes["skin-name"];
 				}
 
-				if (c.ContainsAttribute("button-id")) {
+				if (c.ContainsAttribute("stick-id")) {
+					var s = c as SvgVisualElement;
+					var stick = new Stick {
+						Id = int.Parse(c.CustomAttributes["stick-id"]),
+						HorizontalAxis = int.Parse(c.CustomAttributes["axis-h"]),
+						VerticalAxis = int.Parse(c.CustomAttributes["axis-v"]),
+						OffsetScale = float.Parse(c.CustomAttributes["offset-scale"], CultureInfo.InvariantCulture),
+						Z = c.ContainsAttribute("z-index") ? int.Parse(c.CustomAttributes["z-index"]) : 1,
+						ButtonId = c.ContainsAttribute("button-id") ? int.Parse(c.CustomAttributes["button-id"]) : -1,
+					};
+
+					bool pressed = stick.ButtonId != -1 && c.ContainsAttribute("button-state")
+						&& c.CustomAttributes["button-state"] == "pressed";
+					if (pressed) stick.Pressed = s;
+					else stick.Element = s;
+
+					stick.Deadzone = c.ContainsAttribute("deadzone") ? int.Parse(c.CustomAttributes["deadzone"]) : 0;
+
+					Sticks.Add(stick);
+				}
+
+				else if (c.ContainsAttribute("button-id")) {
 					var b = c as SvgVisualElement;
 					bool pressed = c.CustomAttributes["button-state"] == "pressed";
 					var button = new Button { Id = int.Parse(c.CustomAttributes["button-id"]) };
@@ -77,23 +101,10 @@ namespace MUNIA.Skins {
 					Buttons.Add(button);
 				}
 
-				else if (c.ContainsAttribute("stick-id")) {
-					var s = c as SvgVisualElement;
-					var stick = new Stick {
-						Id = int.Parse(c.CustomAttributes["stick-id"]),
-						Element = s,
-						HorizontalAxis = int.Parse(c.CustomAttributes["axis-h"]),
-						VerticalAxis = int.Parse(c.CustomAttributes["axis-v"]),
-						OffsetScale = float.Parse(c.CustomAttributes["offset-scale"], CultureInfo.InvariantCulture),
-						Z = c.ContainsAttribute("z-index") ? int.Parse(c.CustomAttributes["z-index"]) : 1
-					};
-					Sticks.Add(stick);
-				}
-
 				else if (c.ContainsAttribute("trigger-id")) {
 					var t = c as SvgVisualElement;
 
-					var trigger = new Trigger {Id = int.Parse(c.CustomAttributes["trigger-id"])};
+					var trigger = new Trigger { Id = int.Parse(c.CustomAttributes["trigger-id"]) };
 					trigger.Element = t;
 					trigger.Axis = int.Parse(c.CustomAttributes["trigger-axis"]);
 
@@ -102,21 +113,21 @@ namespace MUNIA.Skins {
 
 					if (c.ContainsAttribute("z-index"))
 						trigger.Z = int.Parse(c.CustomAttributes["z-index"]);
-					
+
 					if (c.ContainsAttribute("trigger-orientation"))
-						trigger.Orientation = (TriggerOrientation)Enum.Parse(typeof(TriggerOrientation), 
+						trigger.Orientation = (TriggerOrientation)Enum.Parse(typeof(TriggerOrientation),
 							c.CustomAttributes["trigger-orientation"], true);
-					
+
 					if (c.ContainsAttribute("trigger-type"))
-						trigger.Type = (TriggerType)Enum.Parse(typeof(TriggerType), 
+						trigger.Type = (TriggerType)Enum.Parse(typeof(TriggerType),
 							c.CustomAttributes["trigger-type"], true);
-					
+
 					if (c.ContainsAttribute("trigger-range"))
 						trigger.Range = Range.Parse(c.CustomAttributes["trigger-range"]);
 
 					if (c.ContainsAttribute("trigger-reverse"))
 						trigger.Reverse = IniFile.IniSection.TrueValues.Contains(c.CustomAttributes["trigger-reverse"].ToLowerInvariant());
-					
+
 					if (c.ContainsAttribute("trigger-inverse"))
 						trigger.Inverse = IniFile.IniSection.TrueValues.Contains(c.CustomAttributes["trigger-inverse"].ToLowerInvariant());
 
@@ -175,11 +186,15 @@ namespace MUNIA.Skins {
 			}
 		}
 		private void RenderStick(Stick stick) {
-			var r = stick.Bounds;
+			bool pressed = State != null && stick.PressedTexture != -1 && stick.ButtonId != -1 && State.Buttons[stick.ButtonId];
+			var r = pressed ? stick.PressedBounds : stick.Bounds;
 			float x, y;
+
 			if (State != null) {
 				x = State.Axes[stick.HorizontalAxis];
+				if (Math.Abs(x) < stick.Deadzone) x = 0;
 				y = State.Axes[stick.VerticalAxis];
+				if (Math.Abs(y) < stick.Deadzone) y = 0;
 			}
 			else {
 				x = y = 0f;
@@ -190,7 +205,8 @@ namespace MUNIA.Skins {
 			y *= img.Height / _dimensions.Height * stick.OffsetScale;
 			r.Offset(new PointF(x, y));
 
-			GL.BindTexture(TextureTarget.Texture2D, stick.Texture);
+			int texture = pressed && stick.PressedTexture != -1 ? stick.PressedTexture : stick.Texture;
+			GL.BindTexture(TextureTarget.Texture2D, texture);
 			TextureHelper.RenderTexture(r);
 		}
 
@@ -198,7 +214,7 @@ namespace MUNIA.Skins {
 			var r = trigger.Bounds;
 			float o = State?.Axes[trigger.Axis] ?? 0f;
 			o = trigger.Range.Clip(o);
-			
+
 			if (trigger.Type == TriggerType.Slide) {
 				SizeF img = GetCorrectedDimensions(new SizeF(_svgDocument.Width, _svgDocument.Height));
 				if (trigger.Orientation == TriggerOrientation.Vertical) {
@@ -212,7 +228,7 @@ namespace MUNIA.Skins {
 				GL.BindTexture(TextureTarget.Texture2D, trigger.Texture);
 				TextureHelper.RenderTexture(r);
 			}
-			
+
 			else if (trigger.Type == TriggerType.Bar) {
 				RectangleF crop = new RectangleF(PointF.Empty, new SizeF(1.0f, 1.0f));
 				float pressRate = (o - trigger.Range.LowerBound) / (trigger.Range.UpperBound - trigger.Range.LowerBound);
@@ -226,7 +242,7 @@ namespace MUNIA.Skins {
 					crop.Y = trigger.Reverse ^ trigger.Inverse ? 1.0f - pressRate : 0;
 					crop.Height = pressRate;
 				}
-				
+
 				// compensate texture size for crop rate
 				r.X += r.Width * crop.X;
 				r.Y += r.Height * crop.Y;
@@ -249,7 +265,8 @@ namespace MUNIA.Skins {
 				if (b.Element != null) b.Element.Visible = false;
 			}
 			foreach (var s in Sticks) {
-				s.Element.Visible = false;
+				if (s.Element != null) s.Element.Visible = false;
+				if (s.Pressed != null) s.Pressed.Visible = false;
 			}
 			foreach (var t in Triggers) {
 				t.Element.Visible = false;
@@ -292,6 +309,11 @@ namespace MUNIA.Skins {
 					stick.Texture = tb.Item1;
 					stick.Bounds = tb.Item2;
 				}
+				if (stick.Pressed != null) {
+					var tb = SvgElementToTexture(work, stick.Pressed);
+					stick.PressedTexture = tb.Item1;
+					stick.PressedBounds = tb.Item2;
+				}
 			}
 		}
 
@@ -300,7 +322,7 @@ namespace MUNIA.Skins {
 			var l = Unproject(bounds.Location);
 			var s = Unproject(new PointF(bounds.Right, bounds.Bottom));
 			var boundsScaled = RectangleF.FromLTRB(l.X, l.Y, s.X, s.Y);
-			boundsScaled.Inflate(2f, 2f); // small margin for rounding error
+			boundsScaled.Inflate(10f, 10f); // small margin for rounding error
 			boundsScaled.Intersect(new RectangleF(0f, 0f, work.Width, work.Height));
 			int ret = -1;
 			if (!boundsScaled.IsEmpty) {
@@ -335,7 +357,7 @@ namespace MUNIA.Skins {
 			if (e.Parent != null)
 				SetVisibleToRoot(e.Parent, visible);
 		}
-		
+
 		private PointF Project(PointF p, SizeF dim) {
 			float svgAR = _dimensions.Width / _dimensions.Height;
 			float imgAR = dim.Width / dim.Height;
@@ -426,6 +448,11 @@ namespace MUNIA.Skins {
 			public float OffsetScale;
 			public int HorizontalAxis;
 			public int VerticalAxis;
+			public int ButtonId = -1; // pressed only, released will not hide stick
+			public SvgVisualElement Pressed;
+			public int PressedTexture = -1;
+			public RectangleF PressedBounds;
+			public int Deadzone;
 		}
 
 		public enum TriggerType {
