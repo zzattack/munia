@@ -25,17 +25,47 @@ hal_spi_interface spi_ee(&hspi2, EE_CS_GPIO_Port, EE_CS_Pin);
 m25xx080 m25xx080(&spi_ee); // eeprom for configuration retaining
 eeprom ee(&m25xx080);
 
-spi_sniffer sniffer(&hspi1, &hspi2, &hdma_spi1_rx, &hdma_spi2_rx); // sniff on both spi lines configured as slave inputs
+spi_sniffer sniffer(&hspi2, &hspi1, &hdma_spi2_rx, &hdma_spi1_rx); // sniff on both spi lines configured as slave inputs
 ps2_poller poller(&spi_ps2); // polls on spi1 when not in sniffer mode
 ps2_state ps2State; // tracks controller state, read by USB and updated either by sniffer or poller
-usb_joystick usbJoy(&ps2State); // transmits USB HID packets containing ps2 state
+usb_joystick usbJoy; // transmits USB HID packets containing ps2 state
 
 extern TIM_HandleTypeDef htim3;
 
-void eeprom_select(spi_interface* spi_if);
+void sysInit();
 void applyConfig();
+void handleSnifferPacket();
+void handlePollerPacket();
+void eepromSelect(spi_interface* spi_if);
 
-void musia_init() {
+EXTERNC int musia_main(void) {
+	sysInit();
+	sys_printf("MUSIA started\n");
+	
+	spi_ee.setSelectHandler(eepromSelect);
+	ee.init(); // load eeprom
+	applyConfig();
+	
+	for (;;) {
+		HAL_IWDG_Refresh(&hiwdg);
+		
+		if (ee.data->mode == musia_mode::sniffer) {
+			sniffer.work();
+			handleSnifferPacket();
+		}
+		else {
+			poller.work();
+			handlePollerPacket();
+		}
+		
+		__WFI();
+		// USB is fully based off interrupts,
+		// poller is based off timer interrupt,
+		// sniffer is based off EXTI interrupt
+	}
+}
+
+void sysInit() {
 	// initialize HAL instances that we elected for CubeMX not to initialize
 	hspi1.Instance = SPI1;
 	hspi2.Instance = SPI2;
@@ -49,37 +79,103 @@ void musia_init() {
 	UsbDevice_Init();
 }
 
-EXTERNC int musia_main(void) {
-	musia_init();
-	sys_printf("MUSIA started\n");
-	HAL_GPIO_WritePin(EE_CS_GPIO_Port, EE_CS_Pin, GPIO_PIN_SET);   // SET = disabled
-	
-	spi_ee.setSelectHandler(eeprom_select);
-	// ee.init(); // load eeprom
-	
-	// ee.data->mode = musia_mode::poller;
-	ee.data->mode = musia_mode::sniffer;
-	applyConfig();
-
-	for (;;) {
-		HAL_IWDG_Refresh(&hiwdg);
-		if (ee.data->mode == musia_mode::sniffer) {
-			sniffer.work();
-			auto* upd = sniffer.getNewPacket();			
-			if (upd != nullptr) {
-				ps2State.update(upd->cmd, upd->data, upd->pktLength);
-				usbJoy.updateState();
-				upd->isNew = false;
-			}
-		}
-		else {
-			poller.work();
-		}
+void applyConfig() {
+	if (ee.data->mode == musia_mode::sniffer) {
+		poller.deInit();
+		sniffer.init();
+		sniffer.start();
+	}
+	else {
+		sniffer.deInit();
+		poller.init();
+		poller.start(polling_interval::poll25Hz);
 	}
 }
 
-void eeprom_select(spi_interface* spi_if) {
-	hspi2.Instance = SPI2;
+void handleSnifferPacket() {
+	static uint8_t resyncDetect = 0, resyncFail = 0;
+	static bool prevWasValid = false;
+	
+	auto* upd = sniffer.getNewPacket();			
+	if (upd == nullptr) return;
+			
+	bool validPacket = ps2State.update(upd->cmd, upd->data, upd->pktLength);
+	if (!validPacket) {
+		// sys_printf("INVALID PACKET RECEIVED, RESYNC CTR: %d\n", resyncDetect);
+		// ps2_state::print_packet(upd->cmd, upd->data, upd->pktLength);
+		resyncDetect++;
+		if (resyncDetect == 10) {
+			sniffer.resync(resyncFail > 10); 
+		}
+		else if (resyncDetect > 10) {
+			resyncDetect = 0; 
+			resyncFail++;
+		}
+	}
+	else {
+		if (!prevWasValid) sys_printf("Sniffer resynched successfully\n");
+		resyncDetect = 0;
+		resyncFail = 0;
+		usbJoy.updateState(&ps2State);
+	}
+	
+	upd->isNew = false;
+	prevWasValid = validPacket;
+}
+
+void handlePollerPacket() {
+	static uint8_t resyncDetect = 0, resyncFail = 0;
+	static bool prevWasValid = false;
+
+	auto* upd = poller.getNewPacket();			
+	if (upd == nullptr) return;
+			
+	bool validPacket = ps2State.update(upd->cmd, upd->data, upd->pktLength);
+	if (!validPacket) {
+		// sys_printf("INVALID PACKET RECEIVED, RESYNC CTR: %d\n", 0);
+		// ps2_state::print_packet(upd->cmd, upd->data, upd->pktLength);
+		resyncDetect++;
+		if (resyncDetect == 10) {
+			poller.resync(resyncFail > 10); 
+		}
+		else if (resyncDetect > 10) {
+			resyncDetect = 0; 
+			resyncFail++;
+		}
+	}
+	else {
+		if (!prevWasValid) sys_printf("Poller resynched successfully\n");
+		resyncDetect = 0;
+		resyncFail = 0;
+		usbJoy.updateState(&ps2State);
+	}
+	upd->isNew = false;
+	prevWasValid = validPacket;
+}
+
+void eepromSelect(spi_interface* spi_if) {
+	__HAL_RCC_SPI2_CLK_ENABLE();
+	
+	// configure SPI2 as master
+    /**SPI2 GPIO Configuration    
+    PB10     ------> SPI2_SCK
+    PB14     ------> SPI2_MISO
+    PB15     ------> SPI2_MOSI */
+	GPIO_InitTypeDef GPIO_InitStruct;
+	GPIO_InitStruct.Pin = GPIO_PIN_10;
+	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+	GPIO_InitStruct.Alternate = GPIO_AF5_SPI2;
+	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+	GPIO_InitStruct.Pin = GPIO_PIN_14 | GPIO_PIN_15;
+	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+	GPIO_InitStruct.Alternate = GPIO_AF0_SPI2;
+	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);    
+	
 	hspi2.Init.Mode = SPI_MODE_MASTER;
 	hspi2.Init.Direction = SPI_DIRECTION_2LINES;
 	hspi2.Init.DataSize = SPI_DATASIZE_8BIT;
@@ -96,23 +192,3 @@ void eeprom_select(spi_interface* spi_if) {
 	HAL_SPI_Init(&hspi2);
 }
 
-
-EXTERNC void Configurator_SetReport(uint16_t setupValue, uint8_t * data, uint16_t length) {
-	sys_printf("Configurator_SetReport\n");
-}
-EXTERNC void Configurator_GetReport(uint16_t setupValue) {
-	sys_printf("Configurator_GetReport\n");
-}
-
-void applyConfig() {
-	if (ee.data->mode == musia_mode::sniffer) {
-		poller.deInit();
-		sniffer.init();
-		sniffer.start();
-	}
-	else {
-		sniffer.deInit();
-		poller.init();
-		poller.start(polling_interval::poll25Hz);
-	}
-}
