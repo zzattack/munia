@@ -1,6 +1,6 @@
 #pragma once
 
-#include "joy_if.h"
+#include "ps2_controller_if.h"
 #include "ps2_state.h"
 
 class usb_joystick {

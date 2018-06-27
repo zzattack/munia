@@ -2,7 +2,7 @@
 #include <usbd_hid.h>
 #include <cstring>
 
-extern USBD_HID_IfHandleType *const joy_if;
+extern USBD_HID_IfHandleType *const ps2controller_if;
 
 usb_joystick::usb_joystick(ps2_state* state) {
 	this->state = state;	
@@ -93,5 +93,6 @@ void usb_joystick::updateState() {
 
 
 void usb_joystick::sendReport(ps2_hid_packet* pkt) {
-	USBD_HID_ReportIn(joy_if, (uint8_t*)pkt, sizeof(*pkt));
+	pkt->report_id = 1;
+	USBD_HID_ReportIn(ps2controller_if, (uint8_t*)pkt, sizeof(*pkt));
 }
