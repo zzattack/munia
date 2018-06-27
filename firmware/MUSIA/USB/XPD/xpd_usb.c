@@ -811,10 +811,10 @@ void USB_vIRQHandler(USB_HandleType * pxUSB)
     /* Handle suspend request */
     if ((usISTR & USB_ISTR_SUSP) != 0)
     {
+	    USB_FLAG_CLEAR(pxUSB, SUSP);
         /* Force low-power mode in the macrocell */
         SET_BIT(USB->CNTR.w, USB_CNTR_FSUSP | USB_CNTR_LPMODE);
 
-        USB_FLAG_CLEAR(pxUSB, SUSP);
 
         if (USB_FLAG_STATUS(pxUSB, WKUP) == 0)
         {
