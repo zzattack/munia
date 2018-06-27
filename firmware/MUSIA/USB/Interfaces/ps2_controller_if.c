@@ -367,8 +367,8 @@ __ALIGN_BEGIN static const uint8_t hid_rpt_ps2[] __ALIGN_END = {
 };
 
 
-static void PS2Controller_SetReport(uint16_t setupValue, uint8_t * data, uint16_t length);
-static void PS2Controller_GetReport(uint16_t setupValue);
+static void PS2Controller_SetReport(uint8_t reportId, uint8_t * data, uint16_t length);
+static void PS2Controller_GetReport(uint8_t reportId);
 
 const USBD_HID_AppType ps2controllerApp = {
 	.Name = "PS2 controller",
@@ -398,12 +398,9 @@ void USBSetDataEffect(uint8_t* hid_report_out, uint16_t length);
 void USBSetEffect(uint8_t* hid_report_out, uint16_t length);
 
 
-static void PS2Controller_SetReport(uint16_t setupValue, uint8_t* data, uint16_t length) {
-	usb_printf("PS2Controller_SetReport, setupValue: %04X, len %d, payload: ", setupValue, length);
+static void PS2Controller_SetReport(uint8_t reportId, uint8_t* data, uint16_t length) {
+	usb_printf("PS2Controller_SetReport, reportId: %02X, len %d, payload: ", reportId, length);
 	printf_payload(data, length); printf("\n");
-	
-	uint8_t reportId = data[0];
-	uint8_t reportId2 = setupValue & 0xFF;
 	
   //I get the set report, then i get the DATA !
   // THE DEVICE NOW NEEDS TO ALLOCATE THE EFFECT
@@ -425,7 +422,7 @@ static void PS2Controller_SetReport(uint16_t setupValue, uint8_t* data, uint16_t
 	switch (reportId) {
 	case 0x01: // report ID: 1, SET NEW EFFECT,APPLICATION DATA, etc , and now ?
 	   // NOW I CHECK THE REPORT TYPE ! INPUT? OUTPUT? FEATURE ? 
-
+/*
 		if ((setupValue >> 8) == 0x02) {
 			// FEATURE: activate effect
 			USBSetDataEffect(data, length);
@@ -433,7 +430,7 @@ static void PS2Controller_SetReport(uint16_t setupValue, uint8_t* data, uint16_t
 		if ((setupValue >> 8) == 0x03) {
 			// SetReport: save effect data
 			USBSetEffect(data, length);
-		} 
+		} */
 		break;
 	}
 }
