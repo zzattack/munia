@@ -5,9 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define CFG_CMD_READ  0x47        // if return length
+#define CFG_CMD_READ  0x47
 #define CFG_CMD_WRITE 0x44
-#define CFG_CMD_WRITE_LEGACY 0x46 // used with old menu structure
 #define CFG_CMD_ENTER_BL  0x48
 #define CFG_CMD_REPORT_SIZE 0x08
 
@@ -35,13 +34,18 @@ __ALIGN_BEGIN static const uint8_t hid_rpt_cfg[] __ALIGN_END = {
 	0xc0                             // END_COLLECTION   
 };
 
+extern void Configurator_SetReport(uint8_t reportId, uint8_t * data, uint16_t length);
+extern void Configurator_GetReport(uint8_t reportId);
+
 const USBD_HID_AppType cfgApp = {
 	.Name = "MUSIA config",
 	.Report = {
 		.Desc = hid_rpt_cfg,
 		.Length = sizeof(hid_rpt_cfg),
 		.IDs = 1, // IDs are used
-	},
+	},	
+	.SetReport = Configurator_SetReport,
+	.GetReport = Configurator_GetReport,
 };
 
 
