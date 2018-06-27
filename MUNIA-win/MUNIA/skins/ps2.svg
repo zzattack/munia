@@ -1,19 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg xmlns:munia="http://www.munia.io/namespaces/munia" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" viewBox="0 0 1280 800" height="800" width="1280" y="0px" x="0px" id="ps2-controller" version="1.1">
-	<title id="title194">ps2 controller</title>
 	<munia:info munia:device-type="PS2" munia:skin-name="PlayStation 2" />
-	<metadata id="metadata192">
-		<rdf:RDF>
-			<cc:Work rdf:about="">
-				<dc:format>image/svg+xml</dc:format>
-				<dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-				<dc:title>ps2 controller</dc:title>
-			</cc:Work>
-		</rdf:RDF>
-	</metadata>
-	<defs id="defs190" />
-	
-	
+
 	<g transform="matrix(5.27847,0,0,5.31172,1611.15,-2085.18)" id="triggers">
 		<path d="m -272.3,407.154 h 33.2 l -2.6,-4.3 c -1.7,-2.8 -6.1,-4.9 -14,-4.9 -7.9,0 -12.3,2.1 -14,4.9 z" style="display:inline;fill:#555;stroke:black" munia:z-index="-2" munia:button-state="released" munia:button-id="10" id="L2" />
 		<path d="m -272.3,407.154 h 33.2 l -2.6,-4.3 c -1.7,-2.8 -6.1,-4.9 -14,-4.9 -7.9,0 -12.3,2.1 -14,4.9 z" style="display:none;fill:#ccc;stroke:#f4f4f4" munia:z-index="-2" munia:button-state="pressed" munia:button-id="10" id="L2-hl" />
