@@ -115,6 +115,7 @@
     <ClInclude Include="..\EEPROM\eeprom_layout.h" />
     <ClInclude Include="..\EEPROM\hal_spi.h" />
     <ClInclude Include="..\EEPROM\spi_interface.h" />
+    <ClInclude Include="..\ps2_packet.h" />
     <ClInclude Include="..\usbd_pid.h" />
     <ClInclude Include="..\USB\Lib\Inc\hid_usage.h" />
     <ClInclude Include="..\usb_joystick.h" />

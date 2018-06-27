@@ -717,5 +717,8 @@
     <ClInclude Include="..\CubeMX\Inc\usart.h">
       <Filter>CubeMX</Filter>
     </ClInclude>
+    <ClInclude Include="..\ps2_packet.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
