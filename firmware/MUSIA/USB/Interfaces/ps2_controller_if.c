@@ -9,12 +9,11 @@
 
 //Class specific descriptor - HID
 __ALIGN_BEGIN static const uint8_t hid_rpt_ps2[] __ALIGN_END = {
-	0x05,	0x01,					// USAGE_PAGE (Generic Desktop)
-	0x09,	0x04,					// USAGE (Joystick)
-	0xa1,	0x01,					// COLLECTION (Application)
-    0x85 ,0x01,        //    Report ID 1
-
-	// a b x y start
+	0x05, 0x01,					// USAGE_PAGE (Generic Desktop)
+	0x09, 0x04,					// USAGE (Joystick)
+	0xa1, 0x01,					// COLLECTION (Application)
+    0x85, 0x01,						//    Report ID 1
+	// 12 buttons (4x face, l1/l2/r1/r2, start, select, lstick, rstick)
 	0x05,	0x09,					//   USAGE_PAGE (Button)
 	0x19,	0x01,					//   USAGE_MINIMUM (Button 1)
 	0x29,	0x0C,					//   USAGE_MAXIMUM (Button12)
@@ -23,7 +22,6 @@ __ALIGN_BEGIN static const uint8_t hid_rpt_ps2[] __ALIGN_END = {
 	0x95,	0x0C,					//   REPORT_COUNT (12)
 	0x75,	0x01,					//   REPORT_SIZE (1)
 	0x81,	0x02,					//   INPUT (Data,Var,Abs)
-
 
 	// hat
 	0x05,	0x01,					//   USAGE_PAGE(Generic Desktop)
@@ -50,7 +48,8 @@ __ALIGN_BEGIN static const uint8_t hid_rpt_ps2[] __ALIGN_END = {
 	0x81,	0x02,					//   INPUT (Data,Var,Abs)    
 	
 
-	
+	// remainig huuge descriptor is for a 'PID' physical interface
+	// so that we can have driverless force-feedback
 	
 	0x05,0x0F,			//    Usage Page Physical Interface
 	0x09,0x92,			//    Usage ES Playing
@@ -278,51 +277,7 @@ __ALIGN_BEGIN static const uint8_t hid_rpt_ps2[] __ALIGN_END = {
 	0x95,0x01,         //    Report Count 1
 	0x91,0x02,         //    Output (Variable)
 	0xC0     ,    //    End Collection
-	0x09,0x6E,    //    Usage Set Periodic Report
-	0xA1,0x02,    //    Collection Datalink
-	0x85,0x04,                   //    Report ID 4
-	0x09,0x22,                   //    Usage Effect Block Index
-	0x15,0x01,                   //    Logical Minimum 1
-	0x25,0x28,                   //    Logical Maximum 28h (40d)
-	0x35,0x01,                   //    Physical Minimum 1
-	0x45,0x28,                   //    Physical Maximum 28h (40d)
-	0x75,0x08,                   //    Report Size 8
-	0x95,0x01,                   //    Report Count 1
-	0x91,0x02,                   //    Output (Variable)
-	0x09,0x70,                   //   Usage Magnitude
-	0x15,0x00,                   //    Logical Minimum 0
-	0x26,0xFF,0x00,              //    Logical Maximum FFh (255d)
-	0x35,0x00,                   //    Physical Minimum 0
-	0x46,0x10,0x27,              //    Physical Maximum 2710h (10000d)
-	0x75,0x08,                   //    Report Size 8
-	0x95,0x01,                   //    Report Count 1
-	0x91,0x02,                   //    Output (Variable)
-	0x09,0x6F,                   //   Usage Offset
-	0x15,0x80,                   //    Logical Minimum 80h (-128d)
-	0x25,0x7F,                   //    Logical Maximum 7Fh (127d)
-	0x36,0xF0,0xD8,              //    Physical Minimum D8F0h (-10000d)
-	0x46,0x10,0x27,              //    Physical Maximum 2710h (10000d)
-	0x95,0x01,                   //    Report Count 1
-	0x91,0x02,                   //    Output (Variable)
-	0x09,0x71,                   //   Usage Phase
-	0x66,0x14,0x00,              //    Unit 14h (20d)
-	0x55,0xFE,                   //    Unit Exponent FEh (254d)
-	0x15,0x00,                   //    Logical Minimum 0
-	0x26,0xFF,0x00,              //    Logical Maximum FFh (255d)
-	0x35,0x00,                   //    Physical Minimum 0
-	0x47,0xA0,0x8C,0x00,0x00,    //    Physical Maximum 8CA0h (36000d)
-	0x91,0x02,                   //    Output (Variable)
-	0x09,0x72,                   //   Usage Period
-	0x26,0xFF,0x7F,              //    Logical Maximum 7FFFh (32767d)
-	0x46,0xFF,0x7F,              //    Physical Maximum 7FFFh (32767d)
-	0x66,0x03,0x10,              //    Unit 1003h (4099d)
-	0x55,0xFD,                   //    Unit Exponent FDh (253d)
-	0x75,0x10,                   //    Report Size 10h (16d)
-	0x95,0x01,                   //    Report Count 1
-	0x91,0x02,                   //    Output (Variable)
-	0x66,0x00,0x00,              //    Unit 0
-	0x55,0x00,                   //    Unit Exponent 0
-	0xC0     ,    // End Collection
+	
 	0x09,0x73,    //    Usage Set Constant Force Rep...
 	0xA1,0x02,    //    Collection Datalink
 	0x85,0x05,         //    Report ID 5
@@ -343,69 +298,8 @@ __ALIGN_BEGIN static const uint8_t hid_rpt_ps2[] __ALIGN_END = {
 	0x95,0x01,         //    Report Count 1
 	0x91,0x02,         //    Output (Variable)
 	0xC0     ,    //    End Collection
-	0x09,0x74,    //    Usage Set Ramp Force Report
-	0xA1,0x02,    //    Collection Datalink
-	0x85,0x06,         //    Report ID 6
-	0x09,0x22,         //    Usage Effect Block Index
-	0x15,0x01,         //    Logical Minimum 1
-	0x25,0x28,         //    Logical Maximum 28h (40d)
-	0x35,0x01,         //    Physical Minimum 1
-	0x45,0x28,         //    Physical Maximum 28h (40d)
-	0x75,0x08,         //    Report Size 8
-	0x95,0x01,         //    Report Count 1
-	0x91,0x02,         //    Output (Variable)
-	0x09,0x75,         //    Usage Ramp Start
-	0x09,0x76,         //    Usage Ramp End
-	0x15,0x80,         //    Logical Minimum 80h (-128d)
-	0x25,0x7F,         //    Logical Maximum 7Fh (127d)
-	0x36,0xF0,0xD8,    //    Physical Minimum D8F0h (-10000d)
-	0x46,0x10,0x27,    //    Physical Maximum 2710h (10000d)
-	0x75,0x08,         //    Report Size 8
-	0x95,0x02,         //    Report Count 2
-	0x91,0x02,         //    Output (Variable)
-	0xC0     ,    //    End Collection
-	0x09,0x68,    //    Usage Custom Force Data Rep...
-	0xA1,0x02,    //    Collection Datalink
-	0x85,0x07,         //    Report ID 7
-	0x09,0x22,         //    Usage Effect Block Index
-	0x15,0x01,         //    Logical Minimum 1
-	0x25,0x28,         //    Logical Maximum 28h (40d)
-	0x35,0x01,         //    Physical Minimum 1
-	0x45,0x28,         //    Physical Maximum 28h (40d)
-	0x75,0x08,         //    Report Size 8
-	0x95,0x01,         //    Report Count 1
-	0x91,0x02,         //    Output (Variable)
-	0x09,0x6C,         //    Usage Custom Force Data Offset
-	0x15,0x00,         //    Logical Minimum 0
-	0x26,0x10,0x27,    //    Logical Maximum 2710h (10000d)
-	0x35,0x00,         //    Physical Minimum 0
-	0x46,0x10,0x27,    //    Physical Maximum 2710h (10000d)
-	0x75,0x10,         //    Report Size 10h (16d)
-	0x95,0x01,         //    Report Count 1
-	0x91,0x02,         //    Output (Variable)
-	0x09,0x69,         //    Usage Custom Force Data
-	0x15,0x81,         //    Logical Minimum 81h (-127d)
-	0x25,0x7F,         //    Logical Maximum 7Fh (127d)
-	0x35,0x00,         //    Physical Minimum 0
-	0x46,0xFF,0x00,    //    Physical Maximum FFh (255d)
-	0x75,0x08,         //    Report Size 8
-	0x95,0x0C,         //    Report Count Ch (12d)
-	0x92,0x02,0x01,    //       Output (Variable, Buffered)
-	0xC0     ,    //    End Collection
-	0x09,0x66,    //    Usage Download Force Sample
-	0xA1,0x02,    //    Collection Datalink
-	0x85,0x08,         //    Report ID 8
-	0x05,0x01,         //    Usage Page Generic Desktop
-	0x09,0x30,         //    Usage X
-	0x09,0x31,         //    Usage Y
-	0x15,0x81,         //    Logical Minimum 81h (-127d)
-	0x25,0x7F,         //    Logical Maximum 7Fh (127d)
-	0x35,0x00,         //    Physical Minimum 0
-	0x46,0xFF,0x00,    //    Physical Maximum FFh (255d)
-	0x75,0x08,         //    Report Size 8
-	0x95,0x02,         //    Report Count 2
-	0x91,0x02,         //    Output (Variable)
-	0xC0     ,   //    End Collection
+
+	
 	0x05,0x0F,   //    Usage Page Physical Interface
 	0x09,0x77,   //    Usage Effect Operation Report
 	0xA1,0x02,   //    Collection Datalink
@@ -463,18 +357,6 @@ __ALIGN_BEGIN static const uint8_t hid_rpt_ps2[] __ALIGN_END = {
 	0x95,0x01,    //    Report Count 1
 	0x91,0x00,    //    Output
 	0xC0     ,    //    End Collection
-	0x09,0x7D,    //    Usage PID Pool Report
-	0xA1,0x02,    //    Collection Datalink
-	0x85,0x0D,         //    Report ID Dh (13d)
-	0x09,0x7E,         //    Usage RAM Pool Size
-	0x15,0x00,         //    Logical Minimum 0
-	0x26,0xFF,0x00,    //    Logical Maximum FFh (255d)
-	0x35,0x00,         //    Physical Minimum 0
-	0x46,0x10,0x27,    //    Physical Maximum 2710h (10000d)
-	0x75,0x08,         //    Report Size 8
-	0x95,0x01,         //    Report Count 1
-	0x91,0x02,         //    Output (Variable)
-	0xC0     ,            //    End Collection
 	
 
 	
