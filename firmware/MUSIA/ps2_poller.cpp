@@ -1,6 +1,7 @@
 #include "ps2_poller.h"
 #include "dma.h"
 #include <stm32f0xx_hal.h>
+#include <cstring>
 
 TIM_HandleTypeDef htim3;
 
@@ -9,24 +10,40 @@ ps2_poller::ps2_poller(hal_spi_interface* spi) {
 }
 
 void ps2_poller::init() {
+	__HAL_RCC_SPI1_CLK_ENABLE();
+	
+    /**SPI1 GPIO Configuration    
+    PA5     ------> SPI1_SCK
+    PA6     ------> SPI1_MISO
+    PA7     ------> SPI1_MOSI 
+    */
+	GPIO_InitTypeDef GPIO_InitStruct;
+	GPIO_InitStruct.Pin = GPIO_PIN_5 | GPIO_PIN_6 | GPIO_PIN_7;
+	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+	GPIO_InitStruct.Alternate = GPIO_AF0_SPI1;
+	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+	
+	
 	// console SPI lines + ATT are disconnected from corresponding joystick lines
 	HAL_GPIO_WritePin(SW_CONSOLE_DISCONNECT_GPIO_Port, SW_CONSOLE_DISCONNECT_Pin, GPIO_PIN_SET); // SET = console disconnected
 		
 	// enable pull-up on MISO line in case joystick is not connected
-	HAL_GPIO_WritePin(SW_PULLUP_ENABLE_GPIO_Port, SW_PULLUP_ENABLE_Pin, GPIO_PIN_RESET); // RESET = pull enabled
+	HAL_GPIO_WritePin(SW_PULLUP_ENABLE_GPIO_Port, SW_PULLUP_ENABLE_Pin, GPIO_PIN_RESET);
 		
 	// disconnect PS2 8V vibration motor power source
-	HAL_GPIO_WritePin(PS2_VIBR_EN_GPIO_Port, PS2_VIBR_EN_Pin, GPIO_PIN_RESET); // RESET = vibr mosfet disabled	
+	HAL_GPIO_WritePin(PS2_VIBR_EN_GPIO_Port, PS2_VIBR_EN_Pin, GPIO_PIN_RESET);
 		
 	// connect +5V from USB to joystick vibration motor
-	HAL_GPIO_WritePin(USB_VIBR_EN_GPIO_Port, USB_VIBR_EN_Pin, GPIO_PIN_SET); // SET = vibr mosfet enabled
+	HAL_GPIO_WritePin(USB_VIBR_EN_GPIO_Port, USB_VIBR_EN_Pin, GPIO_PIN_SET); 
 		
 	// connect joystick MISO to SPI1 MISO
-	HAL_GPIO_WritePin(SW_SNIFFER_CONSOLE_GPIO_Port, SW_SNIFFER_CONSOLE_Pin, GPIO_PIN_SET);  // SET = poller mode
+	HAL_GPIO_WritePin(SW_SNIFFER_CONSOLE_GPIO_Port, SW_SNIFFER_CONSOLE_Pin, GPIO_PIN_RESET);
 		
 	// disconnect joystick clock from SPI2 clock
-	HAL_GPIO_WritePin(SW_SPI_CLK_GPIO_Port, SW_SPI_CLK_Pin, GPIO_PIN_RESET);  // RESET = disconnected from ps2 clock
-		
+	HAL_GPIO_WritePin(SW_SPI_CLK_GPIO_Port, SW_SPI_CLK_Pin, GPIO_PIN_SET); 
+	
 	// setup SPI as master
 	auto hspi = spi->getHandle();
 	hspi->Init.Mode = SPI_MODE_MASTER;
@@ -43,19 +60,15 @@ void ps2_poller::init() {
 	hspi->Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
 	hspi->Init.NSSPMode = SPI_NSS_PULSE_DISABLE;
 	HAL_SPI_Init(hspi);
-	HAL_SPI_MspInit(hspi);
+	__HAL_SPI_ENABLE(hspi);
 	
 	// setup polling interval timer
 	this->freq = freq;
-	htim3.Instance = TIM3;
 	htim3.Init.Prescaler = 199; // handy divisor works for all freqs
 	htim3.Init.CounterMode = TIM_COUNTERMODE_DOWN;
 	htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
 	htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
 	htim3.Init.RepetitionCounter = 0;
-
-	// this scales nicely between all choosable frequencies
-	htim3.Init.Period = 240000 / (int)freq;
 
 	__HAL_RCC_TIM3_CLK_ENABLE();
 	HAL_NVIC_SetPriority(TIM3_IRQn, 0, 0);
@@ -66,11 +79,16 @@ void ps2_poller::init() {
 	sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
 	HAL_TIM_ConfigClockSource(&htim3, &sClockSourceConfig);
 	
-	// configure ATT and ACK pins as outputs
-	GPIO_InitTypeDef GPIO_InitStruct;
-	GPIO_InitStruct.Pin = JPS2_ATT_Pin | JPS2_ACK_Pin;
+	// configure ATT and ACK pins
+	GPIO_InitStruct.Pin = JPS2_ATT_Pin;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	HAL_GPIO_Init(JPS2_ATT_GPIO_Port, &GPIO_InitStruct);
+	
+	GPIO_InitStruct.Pin = JPS2_ACK_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+	GPIO_InitStruct.Pull = GPIO_PULLUP;
+	HAL_GPIO_Init(JPS2_ACK_GPIO_Port, &GPIO_InitStruct);
 }
 
 void ps2_poller::deInit() {
@@ -84,9 +102,11 @@ void ps2_poller::deInit() {
 }
 
 void ps2_poller::start(polling_interval freq) {	
+	this->freq = freq;
+	this->state = config_state::notInitialized;
+	htim3.Init.Period = 240000 / (int)freq;
+	HAL_TIM_Base_Init(&htim3);
 	// start timer and interrupts
-	spi->setCS();
-	HAL_GPIO_WritePin(JPS2_ACK_GPIO_Port, JPS2_ACK_Pin, GPIO_PIN_SET);
 	HAL_TIM_Base_Start_IT(&htim3);
 }
 
@@ -111,68 +131,200 @@ void ps2_poller::stop() {
 } while(0);
 
 
-void ps2_poller::spi_exchange(const uint8_t* w, uint8_t* r, uint16_t len) {
+#pragma GCC push_options
+#pragma GCC optimize ("O0")
+void ps2_poller::spiExchange(const uint8_t* w, uint8_t* r, uint16_t len) {
+	const uint8_t* payload = w;
+	const uint8_t* received = r;
+	uint16_t c = len;
+	
 	auto hspi = spi->getHandle();
-
-	// Ensure SPI is enabled
-	__HAL_SPI_ENABLE(hspi);
 	
 	// make controller attentive
 	spi->clearCS();
+		
+	// burn about 80us (scope aligned)
+	volatile uint32_t counter = 54;
+	while (counter--);	
 	
 	while (len--) {
 		// Fill output buffer with data
-		// *(__IO uint8_t *)&hspi->Instance->DR = *w++;
+		*(__IO uint8_t *)&hspi->Instance->DR = *w++;
 	
 		// Wait for transmission to complete
-		// SPI_WAIT_RX(hspi->Instance);
+		SPI_WAIT_RX(hspi->Instance);
 	
 		// update receive buffer
-		// *r++ = hspi->Instance->DR;
+		*r++ = hspi->Instance->DR;
 
 		// this should always clear right away
-		// SPI_WAIT_TX(hspi->Instance);
+		SPI_WAIT_TX(hspi->Instance);
 		
-		// delayUS_ASM(8);
-		HAL_GPIO_WritePin(JPS2_ACK_GPIO_Port, JPS2_ACK_Pin, GPIO_PIN_RESET);
-		delayUS_ASM(4);
-		HAL_GPIO_WritePin(JPS2_ACK_GPIO_Port, JPS2_ACK_Pin, GPIO_PIN_SET);
-		delayUS_ASM(4);
+		// burn about 12us (scope aligned)
+		volatile uint32_t counter = 24;
+		while (counter--);	
 	}
 	spi->setCS();	
+	
+	
+	/*ps2_printf("spi_exchange exchange:\n");
+	printf("\t --> "); printf_payload((char*)payload, c);
+	printf("\n\t <-- "); printf_payload((char*)received, c);
+	printf("\n");*/
+}
+#pragma GCC pop_options
+
+
+volatile bool pollNeeded = false;
+
+void ps2_poller::nextConfigState() {
+	state = (config_state)((int)state + 1);
+	configFailCount = 0;
 }
 
-static bool pollNeeded = false;
 void ps2_poller::work() {
-	if (!pollNeeded) return;
-	
+	if (!pollNeeded) return;	
 	
 	if (state < config_state::completed) {
-
+		
 		if (state == config_state::notInitialized) {
-			uint8_t payload[] = { 0x01, 0x43, 0x00, 0x01, 0x00 };
-			uint8_t rcvBuff[5];
-			spi_exchange(payload, rcvBuff, sizeof(payload));
-						
-			ps2_printf("enterConfigMode exchange:\n");
-			printf("\t --> "); printf_payload((char*)payload, 5);
-			printf("\n\t <-- "); printf_payload((char*)rcvBuff, 5);
-			printf("\n");			
+			uint8_t payload[] = { 0x01, 0x42, 0x00, 0xFF, 0xFF };
+			uint8_t rcvBuff[sizeof(payload)];
+			spiExchange(payload, rcvBuff, 5);			
+			if (rcvBuff[2] == 0x5a) {
+				ps2_printf("state notInitialized --> enterConfigMode\n");
+				nextConfigState();
+			}
+			else {
+				configFailCount++;
+				ps2_printf("enterConfigMode failed, return payload=");
+				printf_payload((char*)rcvBuff, sizeof(rcvBuff)); printf("\n");
+			}
 		}
 		
+		else if (state == config_state::enterConfigMode) {
+			uint8_t payload[] = { 0x01, 0x43, 0x00, 0x01, 0x00 };
+			uint8_t rcvBuff[sizeof(payload)];
+			spiExchange(payload, rcvBuff, sizeof(payload));
+			
+			if (rcvBuff[2] == 0x5A) {
+				nextConfigState();
+				ps2_printf("state enterConfigMode --> turnOnAnalog\n");
+			}
+			else {
+				configFailCount++;
+				ps2_printf("turnOnAnalog failed, return payload=");
+				printf_payload((char*)rcvBuff, sizeof(rcvBuff)); printf("\n");
+			}
+		}
+		
+		else if (state == config_state::turnOnAnalog) {
+			uint8_t payload[9] = { 0x01, 0x44, 0x00, 0x01, 0x03, 0x00, 0x00, 0x00, 0x00 };
+			uint8_t rcvBuff[sizeof(payload)];
+			spiExchange(payload, rcvBuff, sizeof(payload));
+			
+			if (rcvBuff[1] == 0xF3 && rcvBuff[2] == 0x5A) {
+				nextConfigState();
+				ps2_printf("state turnOnAnalog --> setupMotorMapping\n");
+			}
+			else {
+				configFailCount++;
+				ps2_printf("setupMotorMapping failed, return payload=");
+				printf_payload((char*)rcvBuff, sizeof(rcvBuff)); printf("\n");
+			}
+		}
+		
+		else if (state == config_state::setupMotorMapping) {
+			uint8_t payload[9] = { 0x01, 0x4D, 0x00, 0x00, 0x01, 0xFF, 0xFF, 0xFF, 0xFF };
+			uint8_t rcvBuff[sizeof(payload)];
+			spiExchange(payload, rcvBuff, sizeof(payload));
+			
+			if (rcvBuff[1] == 0xF3 && rcvBuff[2] == 0x5a && rcvBuff[4] == 0x01) {
+				nextConfigState();
+				ps2_printf("state setupMotorMapping --> enablePressureMappings\n");
+			}
+			else {
+				configFailCount++;
+				ps2_printf("enablePressureMappings failed, return payload=");
+				printf_payload((char*)rcvBuff, sizeof(rcvBuff)); printf("\n");
+			}
+		}
+		
+		else if (state == config_state::enablePressureMappings) {
+			uint8_t payload[9] = { 0x01, 0x4F, 0x00, 0xFF, 0xFF, 0x03, 0x00, 0x00, 0x00 };
+			uint8_t rcvBuff[sizeof(payload)];
+			spiExchange(payload, rcvBuff, sizeof(payload));
+			
+			if (rcvBuff[1] == 0xF3 && rcvBuff[2] == 0x5a && rcvBuff[8] == 0x5a) {
+				nextConfigState();
+				ps2_printf("state enablePressureMappings --> exitConfig\n");
+			 }
+			else {
+				configFailCount++;
+				ps2_printf("exitConfig failed, return payload=");
+				printf_payload((char*)rcvBuff, sizeof(rcvBuff)); printf("\n");
+			}
+		}
+		
+		else if (state == config_state::exitConfig) {
+			uint8_t payload[9] = { 0x01, 0x43, 0x00, 0x00, 0x5a, 0x5a, 0x5a, 0x5a, 0x5a };
+			uint8_t rcvBuff[sizeof(payload)];
+			spiExchange(payload, rcvBuff, sizeof(payload));
+			
+			if (rcvBuff[1] == 0xF3 && rcvBuff[2] == 0x5a) {
+				// show be completed now
+				nextConfigState();
+				ps2_printf("state exitConfig --> fully initialized\n");
+			}
+			else configFailCount++;
+		}
+		
+		if (configFailCount >= 5) {
+			resync(true); 
+			configFailCount = 0;
+		 }
 	}
 	
-	else if (pollNeeded) {
+	else {
 		poll();
-		pollNeeded = false;
-	}
+	 }
+	
+	pollNeeded = false;
 }
 
 void ps2_poller::poll() {
+	uint8_t motor_small = 0x00;
+	uint8_t motor_large = 0x00;
+	uint8_t payload[] = { 0x01, 0x42, 0x00, motor_small, motor_large };
 	
+	memcpy(this->pkt.cmd, payload, sizeof(payload));
+	spiExchange(pkt.cmd, pkt.data, 21);
+	pkt.pktLength = 21;
+	pkt.isNew = true;
+}
+
+void ps2_poller::resync(bool hard) {
+	if (hard) {
+		deInit();
+		HAL_Delay(2);
+		init();
+		start(this->freq);
+	}
+	else {	
+		// simply reinitializing should be enough
+		this->state = config_state::notInitialized;
+	}
+	ps2_printf("poller resync attempted!\n");
+}
+
+ps2_packet* ps2_poller::getNewPacket() {
+	if (pkt.isNew) return &pkt;
+	else return nullptr;
 }
 
 EXTERNC void TIM3_IRQHandler() {
 	__HAL_TIM_CLEAR_IT(&htim3, TIM_IT_UPDATE);
+	//__HAL_TIM_CLEAR_IT(&htim3, TIM_IT_UPDATE);
+	//__HAL_TIM_ENABLE(&htim3);
 	pollNeeded = true;
 }

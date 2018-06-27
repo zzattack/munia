@@ -1,6 +1,7 @@
 #pragma once
 
 #include "hal_spi.h"
+#include "ps2_packet.h"
 
 enum class polling_interval {
 	poll25Hz = 25,
@@ -11,8 +12,8 @@ enum class polling_interval {
 	poll120Hz = 120,
 };
 
-enum class config_state {
-	notInitialized,
+enum class config_state : int {
+	notInitialized = 0,
 	enterConfigMode,
 	turnOnAnalog,
 	setupMotorMapping,
@@ -23,11 +24,15 @@ enum class config_state {
 
 class ps2_poller {
 private:
+	ps2_packet pkt;
 	polling_interval freq;
 	config_state state = config_state::notInitialized;
+	uint8_t configFailCount = 0;
 	hal_spi_interface* spi;
+	
 	void poll();
-	void spi_exchange(const uint8_t* w, uint8_t* r, uint16_t len);
+	void spiExchange(const uint8_t* w, uint8_t* r, uint16_t len);
+	void nextConfigState();
 	
 public:	
 	ps2_poller(hal_spi_interface* spi);
@@ -37,6 +42,8 @@ public:
 	void deInit();
 	void start(polling_interval freq);
 	void stop();
-
 	void work();
+
+	ps2_packet* getNewPacket();
+	void resync(bool hard);
 };

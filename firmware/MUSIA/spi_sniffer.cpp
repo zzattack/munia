@@ -17,8 +17,7 @@ void spi_sniffer::init() {
 	
 	__HAL_RCC_SPI1_CLK_ENABLE();
 	__HAL_RCC_SPI2_CLK_ENABLE();
-	__HAL_RCC_GPIOA_CLK_ENABLE();
-	__HAL_RCC_GPIOB_CLK_ENABLE();
+	
 	
     /**SPI1 GPIO Configuration    
     PA5     ------> SPI1_SCK
@@ -112,18 +111,18 @@ void spi_sniffer::init() {
 	
 	// no pull-up on MISO line, console already has this
 	HAL_GPIO_WritePin(SW_PULLUP_ENABLE_GPIO_Port, SW_PULLUP_ENABLE_Pin, GPIO_PIN_SET); // SET = pull up disabled
-	
+
 	// disconnect USB +5v from joystick
-	HAL_GPIO_WritePin(USB_VIBR_EN_GPIO_Port, PS2_VIBR_EN_Pin, GPIO_PIN_RESET); // RESET = vibr mosfet disabled	
+	HAL_GPIO_WritePin(USB_VIBR_EN_GPIO_Port, USB_VIBR_EN_Pin, GPIO_PIN_RESET); // RESET = vibr mosfet disabled	
 
 	// connect PS2 8V vibration motor power source
-	HAL_GPIO_WritePin(PS2_VIBR_EN_GPIO_Port, USB_VIBR_EN_Pin, GPIO_PIN_SET); // SET = vibr mosfet enabled
+	HAL_GPIO_WritePin(PS2_VIBR_EN_GPIO_Port, PS2_VIBR_EN_Pin, GPIO_PIN_SET); // SET = vibr mosfet enabled
 	
 	// connect joystick MISO to SPI2 MOSI
-	HAL_GPIO_WritePin(SW_SPI_CLK_GPIO_Port, SW_SPI_CLK_Pin, GPIO_PIN_RESET); // RESET = sniffer mode
+	HAL_GPIO_WritePin(SW_SNIFFER_CONSOLE_GPIO_Port, SW_SNIFFER_CONSOLE_Pin, GPIO_PIN_SET); // SET = sniffer mode
 	
 	// connect joystick clock to SPI2 clock
-	HAL_GPIO_WritePin(SW_SNIFFER_CONSOLE_GPIO_Port, SW_SNIFFER_CONSOLE_Pin, GPIO_PIN_SET); // SET = sniffer mode
+	HAL_GPIO_WritePin(SW_SPI_CLK_GPIO_Port, SW_SPI_CLK_Pin, GPIO_PIN_RESET); // RESET = sniffer mode
 	
 	
 	// configure ATT pin to interrupt
@@ -144,17 +143,20 @@ void spi_sniffer::deInit() {
 	HAL_GPIO_DeInit(JPS2_ATT_GPIO_Port, JPS2_ATT_Pin);
 	HAL_GPIO_DeInit(JPS2_ACK_GPIO_Port, JPS2_ACK_Pin);
 
-	__HAL_RCC_SPI1_CLK_DISABLE();	
 	HAL_GPIO_DeInit(GPIOA, GPIO_PIN_5 | GPIO_PIN_6 | GPIO_PIN_7);
 	HAL_DMA_DeInit(hspiCmd->hdmarx);
+	HAL_SPI_DeInit(hspiCmd);
 	
-	__HAL_RCC_SPI2_CLK_DISABLE();
 	HAL_GPIO_DeInit(GPIOB, GPIO_PIN_10 | GPIO_PIN_14 | GPIO_PIN_15);
 	HAL_DMA_DeInit(hspiData->hdmarx);
+	HAL_SPI_DeInit(hspiData);
+	
+	__HAL_RCC_SPI1_CLK_DISABLE();
+	__HAL_RCC_SPI2_CLK_DISABLE();
 }
 
 
-void spi_sniffer::start() {
+void spi_sniffer::start() {	
 	HAL_NVIC_EnableIRQ(EXTI0_1_IRQn);   // on ATT pin
 	// setup DMA's but don't start them yet
 	HAL_SPI_Receive_DMA(hspiCmd, buffCmd, sizeof(buffCmd));
@@ -162,9 +164,10 @@ void spi_sniffer::start() {
 }
 
 void spi_sniffer::stop() {
-	HAL_NVIC_DisableIRQ(EXTI0_1_IRQn);	
+	HAL_NVIC_DisableIRQ(EXTI0_1_IRQn);
+	captureEnd();
 	HAL_SPI_DMAStop(hspiCmd);	
-	HAL_SPI_DMAStop(hspiData);
+	HAL_SPI_DMAStop(hspiData);	
 }
 
 void spi_sniffer::work() {
@@ -183,8 +186,8 @@ void spi_sniffer::work() {
 			pkt.cmd[i++] = buffData[dmaIdxData++];
 			if (dmaIdxData == sizeof(buffData)) dmaIdxData = 0;
 		}
-		// ASSERT(pkt.pktLength == i);
-		pkt.isNew = i > 0;
+		// minimum packet length is 5 and both cmd and data should be of equal length
+		pkt.isNew = i > 5 && pkt.pktLength == i;
 		captureAvailable = false;
 	}
 }
@@ -205,13 +208,50 @@ void spi_sniffer::captureEnd() {
 	captureAvailable = true;
 }
 
+#define WAIT_EDGE(PORT,PIN,TIMEOUT, EDGE) do { \
+	int to = TIMEOUT + HAL_GetTick(); \
+	while (HAL_GetTick() < to || HAL_GPIO_ReadPin(PORT, PIN) != EDGE); \
+	} while (0); 
+
+#define WAIT_RISING_EDGE(PORT,PIN,TIMEOUT)  WAIT_EDGE(PORT,PIN,TIMEOUT,GPIO_PIN_SET)
+#define WAIT_FALLING_EDGE(PORT,PIN,TIMEOUT)  WAIT_EDGE(PORT,PIN,TIMEOUT,GPIO_PIN_RESET)
+
+void spi_sniffer::resync(bool hard) {
+	stop();
+	
+	// wait for ATT to toggle, ending high, indicating console clock pauses
+	WAIT_RISING_EDGE(JPS2_ATT_GPIO_Port, JPS2_ATT_Pin, 10);
+	WAIT_FALLING_EDGE(JPS2_ATT_GPIO_Port, JPS2_ATT_Pin, 10);
+	WAIT_RISING_EDGE(JPS2_ATT_GPIO_Port, JPS2_ATT_Pin, 10);
+	// now is a good time to resync
+	
+	// disconnect SPI1 clock from console
+	HAL_GPIO_WritePin(SW_CONSOLE_DISCONNECT_GPIO_Port, SW_CONSOLE_DISCONNECT_Pin, GPIO_PIN_SET);
+	// disconnect SPI2 clock from joystick
+	HAL_GPIO_WritePin(SW_SPI_CLK_GPIO_Port, SW_SPI_CLK_Pin, GPIO_PIN_SET);
+	
+	// should have plenty of time to restart now
+	if (hard) {
+		// hard resync tells us to fully disable all of the SPI peripherals,
+		deInit();
+		init();
+	}
+	else {
+		// but usually just reconnecting the clocks is already enough
+		HAL_GPIO_WritePin(SW_CONSOLE_DISCONNECT_GPIO_Port, SW_CONSOLE_DISCONNECT_Pin, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(SW_SPI_CLK_GPIO_Port, SW_SPI_CLK_Pin, GPIO_PIN_RESET);
+	}
+	start();
+
+	ps2_printf("resync attempted!\n");
+}
+
+
 EXTERNC void EXTI0_1_IRQHandler() {
 	// when ATT pin toggles, this indicates either start or end of packet
-	bool att = HAL_GPIO_ReadPin(JPS2_ATT_GPIO_Port, JPS2_ATT_Pin);
-	
+	bool att = HAL_GPIO_ReadPin(JPS2_ATT_GPIO_Port, JPS2_ATT_Pin);	
 	static uint16_t idxDMA1 = 0;
-	static uint16_t idxDMA2 = 0;
-	
+	static uint16_t idxDMA2 = 0;	
 	if (!att) {
 		// start DMA sampling
 		gSniffer->captureStart();
@@ -220,6 +260,5 @@ EXTERNC void EXTI0_1_IRQHandler() {
 		// just completed
 		gSniffer->captureEnd();
 	}
-
 	__HAL_GPIO_EXTI_CLEAR_IT(JPS2_ATT_Pin);
 }

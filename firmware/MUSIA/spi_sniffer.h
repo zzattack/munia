@@ -1,13 +1,7 @@
 #pragma once
 
 #include <stm32f0xx_hal.h>
-
-struct ps2_packet {
-	bool isNew;
-	uint8_t pktLength;
-	uint8_t cmd[64];
-	uint8_t data[64];
-};
+#include "ps2_packet.h"
 
 class spi_sniffer {
 private:
@@ -32,4 +26,5 @@ public:
 	
 	void captureStart();
 	void captureEnd();
+	void resync(bool hard);
 };
