@@ -367,7 +367,7 @@ __ALIGN_BEGIN static const uint8_t hid_rpt_ps2[] __ALIGN_END = {
 };
 
 
-static void PS2Controller_SetReport(uint8_t reportId, uint8_t * data, uint16_t length);
+static void PS2Controller_SetReport(uint8_t * data, uint16_t length);
 static void PS2Controller_GetReport(uint8_t reportId);
 
 const USBD_HID_AppType ps2controllerApp = {
@@ -392,15 +392,14 @@ USBD_HID_IfHandleType hps2controller_if = {
 
 
 
-
-
 void USBSetDataEffect(uint8_t* hid_report_out, uint16_t length);
 void USBSetEffect(uint8_t* hid_report_out, uint16_t length);
 
 
-static void PS2Controller_SetReport(uint8_t reportId, uint8_t* data, uint16_t length) {
-	usb_printf("PS2Controller_SetReport, reportId: %02X, len %d, payload: ", reportId, length);
+static void PS2Controller_SetReport(uint8_t* data, uint16_t length) {
+	// usb_printf("PS2Controller_SetReport, reportId: %02X, len %d, payload: ", reportId, length);
 	printf_payload(data, length); printf("\n");
+	uint8_t reportId = data[0];
 	
   //I get the set report, then i get the DATA !
   // THE DEVICE NOW NEEDS TO ALLOCATE THE EFFECT
