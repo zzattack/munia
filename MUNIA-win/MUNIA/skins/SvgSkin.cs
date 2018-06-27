@@ -49,8 +49,8 @@ namespace MUNIA.Skins {
 						// match on name for compatibility reasons
 						if (devName == "NinHID SNES") Controllers.Add(ControllerType.SNES);
 						else if (devName == "NinHID N64") Controllers.Add(ControllerType.N64);
-						else if (devName == "NinHID NGC") Controllers.Add(ControllerType.NGC);
-					}
+                        else if (devName == "NinHID NGC") Controllers.Add(ControllerType.NGC);
+                    }
 
 					if (c.CustomAttributes.ContainsKey("device-type")) {
 						string devType = c.CustomAttributes["device-type"];
@@ -300,7 +300,7 @@ namespace MUNIA.Skins {
 			var l = Unproject(bounds.Location);
 			var s = Unproject(new PointF(bounds.Right, bounds.Bottom));
 			var boundsScaled = RectangleF.FromLTRB(l.X, l.Y, s.X, s.Y);
-			boundsScaled.Inflate(5f, 5f); // small margins
+			boundsScaled.Inflate(2f, 2f); // small margin for rounding error
 			boundsScaled.Intersect(new RectangleF(0f, 0f, work.Width, work.Height));
 			int ret = -1;
 			if (!boundsScaled.IsEmpty) {
@@ -392,10 +392,10 @@ namespace MUNIA.Skins {
 		public RectangleF CalcBounds(SvgElement x) {
 			var b = (x as ISvgBoundable).Bounds;
 			var points = new PointF[4];
-			points[0] = new PointF(b.Left, b.Top);
-			points[1] = new PointF(b.Right, b.Top);
-			points[2] = new PointF(b.Left, b.Bottom);
-			points[3] = new PointF(b.Right, b.Bottom);
+			points[0] = new PointF(b.Left - x.StrokeWidth / 2, b.Top - x.StrokeWidth / 2);
+			points[1] = new PointF(b.Right + x.StrokeWidth / 2, b.Top - x.StrokeWidth / 2);
+			points[2] = new PointF(b.Left - x.StrokeWidth / 2, b.Bottom + x.StrokeWidth / 2);
+			points[3] = new PointF(b.Right + x.StrokeWidth / 2, b.Bottom + x.StrokeWidth / 2);
 
 			// x = x.Parent;
 			while (x is SvgVisualElement) {
