@@ -4,8 +4,7 @@
 
 extern USBD_HID_IfHandleType *const ps2controller_if;
 
-usb_joystick::usb_joystick(ps2_state* state) {
-	this->state = state;	
+usb_joystick::usb_joystick() {
 }
 
 //http://www.microsoft.com/whdc/archive/hidgame.mspx
@@ -58,7 +57,7 @@ const uint8_t hat_lookup_ps2[16] = {
 	HAT_SWITCH_NULL, // 0b1111, // 3 at once
 };
 
-void usb_joystick::updateState() {
+void usb_joystick::updateState(ps2_state* state) {
 	ps2_hid_packet pkt;
 	pkt.ddown = state->dpad_down;
 	pkt.dup = state->dpad_up;

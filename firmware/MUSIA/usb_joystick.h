@@ -5,11 +5,10 @@
 
 class usb_joystick {
 private:
-	ps2_state* state;
 	ps2_hid_packet last_pkt;
 	
 public:	
-	usb_joystick(ps2_state* state);
-	void updateState();
+	usb_joystick();
+	void updateState(ps2_state* state);
 	void sendReport(ps2_hid_packet* pkt);
 };
