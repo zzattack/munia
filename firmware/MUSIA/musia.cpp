@@ -52,6 +52,7 @@ void musia_init() {
 EXTERNC int musia_main(void) {
 	musia_init();
 	sys_printf("MUSIA started\n");
+	HAL_GPIO_WritePin(EE_CS_GPIO_Port, EE_CS_Pin, GPIO_PIN_SET);   // SET = disabled
 	
 	spi_ee.setSelectHandler(eeprom_select);
 	// ee.init(); // load eeprom

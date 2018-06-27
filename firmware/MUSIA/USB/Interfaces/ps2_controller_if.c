@@ -438,6 +438,7 @@ static void PS2Controller_SetReport(uint8_t reportId, uint8_t* data, uint16_t le
 
 static void PS2Controller_GetReport(uint8_t reportId) {
 	usb_printf("PS2Controller_GetReport for reportId %02X\n", reportId);
+
 	uint8_t response[5];
 	switch (reportId) {
 	case 0x01:// INPUT REPORT

@@ -14,7 +14,11 @@ spi_sniffer::spi_sniffer(SPI_HandleTypeDef* hspiCmd, SPI_HandleTypeDef* hspiData
 void spi_sniffer::init() {
 	// ## configure switches to sniffer mode; master=console, slave=joystick; SPI1 & SPI2 configured as slave
 	// ## console MOSI connected to SPI1 MOSI, joystick connected to SPI2 MOSI
-		
+	
+	__HAL_RCC_SPI1_CLK_ENABLE();
+	__HAL_RCC_SPI2_CLK_ENABLE();
+	__HAL_RCC_GPIOA_CLK_ENABLE();
+	__HAL_RCC_GPIOB_CLK_ENABLE();
 	
     /**SPI1 GPIO Configuration    
     PA5     ------> SPI1_SCK
@@ -41,7 +45,6 @@ void spi_sniffer::init() {
 	hspiCmd->Init.TIMode = SPI_TIMODE_DISABLE;
 	hspiCmd->Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
 	hspiCmd->Init.NSSPMode = SPI_NSS_PULSE_DISABLE;
-	HAL_SPI_Init(hspiCmd);
 	
 		
 	// setup DMA
@@ -53,9 +56,12 @@ void spi_sniffer::init() {
 	hdmaCmd->Init.Mode = DMA_CIRCULAR;
 	hdmaCmd->Init.Priority = DMA_PRIORITY_HIGH;
 	HAL_DMA_Init(hdmaCmd);
-	__HAL_LINKDMA(hspiCmd, hdmarx, *hdmaCmd);
-		
-		
+	__HAL_LINKDMA(hspiCmd, hdmarx, *hdmaCmd);		
+	HAL_SPI_Init(hspiCmd);
+
+	
+	
+	
 	// configure SPI2 as receive-only slave
     /**SPI2 GPIO Configuration    
     PB10     ------> SPI2_SCK
@@ -86,7 +92,6 @@ void spi_sniffer::init() {
 	hspiData->Init.TIMode = SPI_TIMODE_DISABLE;
 	hspiData->Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
 	hspiData->Init.NSSPMode = SPI_NSS_PULSE_DISABLE;
-	HAL_SPI_Init(hspiData);
 	
 	
 	// setup DMA
@@ -99,6 +104,7 @@ void spi_sniffer::init() {
 	hdmaData->Init.Priority = DMA_PRIORITY_HIGH;
 	HAL_DMA_Init(hdmaData);
 	__HAL_LINKDMA(hspiData, hdmarx, *hdmaData);
+	HAL_SPI_Init(hspiData);
 	
 	
 	// console SPI lines + ATT are connected to joystick lines
@@ -141,16 +147,14 @@ void spi_sniffer::deInit() {
 	__HAL_RCC_SPI1_CLK_DISABLE();	
 	HAL_GPIO_DeInit(GPIOA, GPIO_PIN_5 | GPIO_PIN_6 | GPIO_PIN_7);
 	HAL_DMA_DeInit(hspiCmd->hdmarx);
+	
 	__HAL_RCC_SPI2_CLK_DISABLE();
 	HAL_GPIO_DeInit(GPIOB, GPIO_PIN_10 | GPIO_PIN_14 | GPIO_PIN_15);
 	HAL_DMA_DeInit(hspiData->hdmarx);
 }
 
+
 void spi_sniffer::start() {
-	__HAL_RCC_SPI1_CLK_ENABLE();
-	__HAL_RCC_SPI2_CLK_ENABLE();
-	__HAL_RCC_GPIOA_CLK_ENABLE();
-	__HAL_RCC_GPIOB_CLK_ENABLE();
 	HAL_NVIC_EnableIRQ(EXTI0_1_IRQn);   // on ATT pin
 	// setup DMA's but don't start them yet
 	HAL_SPI_Receive_DMA(hspiCmd, buffCmd, sizeof(buffCmd));

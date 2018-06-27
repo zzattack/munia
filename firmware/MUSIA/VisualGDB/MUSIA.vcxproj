@@ -48,7 +48,7 @@
       <AdditionalOptions />
       <CLanguageStandard />
       <CPPLanguageStandard />
-      <Optimization>O2</Optimization>
+      <Optimization>Os</Optimization>
       <InlineFunctions>true</InlineFunctions>
     </ClCompile>
     <Link>
