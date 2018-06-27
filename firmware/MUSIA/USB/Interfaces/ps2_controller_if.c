@@ -436,9 +436,8 @@ static void PS2Controller_SetReport(uint8_t reportId, uint8_t* data, uint16_t le
 }
 	
 
-static void PS2Controller_GetReport(uint16_t setupValue) {
-	usb_printf("PS2Controller_GetReport for setupValue %04X\n", setupValue);
-	uint8_t reportId = setupValue & 0xFF;
+static void PS2Controller_GetReport(uint8_t reportId) {
+	usb_printf("PS2Controller_GetReport for reportId %02X\n", reportId);
 
 	uint8_t response[5];
 	switch (reportId) {

@@ -2,8 +2,7 @@
 #include <cstdio>
 
 bool ps2_state::update(uint8_t* cmd, uint8_t* data, uint8_t pkt_len) {	
-
-	if (false) {
+	if (true) {
 		sys_printf("PS2 packet capture:\n");
 		printf("\t CMD:  ");
 		for (int i = 0; i < pkt_len; i++)

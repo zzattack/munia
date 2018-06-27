@@ -32,6 +32,7 @@ private:
 public:	
 	ps2_poller(hal_spi_interface* spi);
 
+	void configure(); // todo remove
 	void init();
 	void deInit();
 	void start(polling_interval freq);
