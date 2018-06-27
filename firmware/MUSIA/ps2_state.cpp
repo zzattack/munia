@@ -2,9 +2,36 @@
 #include <cstdio>
 
 bool ps2_state::update(uint8_t* cmd, uint8_t* data, uint8_t pkt_len) {	
-	if (pkt_len < 5) return false;
-	else if (cmd[0] != 0x01) return false;
-	else if (cmd[2] != 0x00 || data[2] != 0x5A) return false; // not understood
+
+	if (false) {
+		sys_printf("PS2 packet capture:\n");
+		printf("\t CMD:  ");
+		for (int i = 0; i < pkt_len; i++)
+			printf("%02X ", cmd[i]);
+		printf("\n\t DATA: ");
+		for (int i = 0; i < pkt_len; i++)
+			printf("%02X ", data[i]);
+		printf("\n");
+	}
+	
+	if (pkt_len < 5) {
+		ps2_printf("Capture empty packet, len=%\n", pkt_len);
+		return false;
+	}
+	else if (cmd[0] != 0x01) {
+		ps2_printf("Invalid packet: cmd[0] != 0x01\n");
+		printf("\t CMD:  ");
+		for (int i = 0; i < pkt_len; i++)
+			printf("%02X ", cmd[i]);
+		return false;
+	}
+	else if (cmd[2] != 0x00 || data[2] != 0x5A) {
+		ps2_printf("Invalid packet: cmd[2] != 0x00 || data[2] != 0x5A\n");
+		printf("\t CMD:  ");
+		for (int i = 0; i < pkt_len; i++)
+			printf("%02X ", cmd[i]);
+		return false; // not understood
+	}
 	
 	uint8_t numWords = data[1] & 0x0F;
 	if (pkt_len != 3 + numWords * 2) return false; // verify pkt len
