@@ -6,8 +6,9 @@ namespace MUNIA.Controllers {
 		None,
 		SNES,
 		N64,
-		NGC,
-		Unknown
+        NGC,
+        PS2,
+        Unknown
 	}
 
 	public static class ControllerFactory {
@@ -17,9 +18,11 @@ namespace MUNIA.Controllers {
 				return new MuniaSnes(null);
 			case ControllerType.N64:
 				return new MuniaN64(null);
-			case ControllerType.NGC:
-				return new MuniaNgc(null);
-			default:
+                case ControllerType.NGC:
+                return new MuniaNgc(null);
+                case ControllerType.PS2:
+                return new MusiaPS2(null);
+                default:
 				return null;
 			}
 		}

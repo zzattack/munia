@@ -41,12 +41,18 @@ namespace MUNIA.Controllers {
                 }
                 else if (device.ProductName == "NinHID N64" || device.MaxInputReportLength == 5) {
                     yield return new MuniaN64(device);
-				}
-				else if (device.ProductName == "NinHID SNES" || device.MaxInputReportLength == 3) {
-					yield return new MuniaSnes(device);
-				}
-			}
-		}
+                }
+                else if (device.ProductName == "NinHID SNES" || device.MaxInputReportLength == 3) {
+                    yield return new MuniaSnes(device);
+                }
+            }
+
+            foreach (var device in loader.GetDevices(0x1209, 0x8844)) {
+                if (device.ProductName == "PS2 controller" || (device.MaxInputReportLength == 7 && device.MaxOutputReportLength == 0x10)) {
+                    yield return new MusiaPS2(device);
+                }
+            }
+        }
 		public static MuniaController GetByName(string deviceName) {
 			return ListDevices().FirstOrDefault(c => c.HidDevice.ProductName == deviceName);
 		}

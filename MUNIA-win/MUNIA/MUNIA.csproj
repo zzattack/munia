@@ -76,6 +76,7 @@
     <Compile Include="Controllers\ArduinoN64.cs" />
     <Compile Include="Controllers\ArduinoNgc.cs" />
     <Compile Include="Controllers\ArduinoSnes.cs" />
+    <Compile Include="Controllers\MusiaPS2.cs" />
     <Compile Include="Forms\AboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
