@@ -19,3 +19,4 @@ licenses.licx
 .nuget
 Makefile-genesis.properties
 ~$*.docx
+.vs

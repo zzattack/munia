@@ -29,3 +29,5 @@ disassembly
 .vs
 VisualGDB
 /datasheets
+/firmware/MUSIA/Inc
+/firmware/MUSIA/Src
