@@ -15,4 +15,5 @@ public:
 	void clearCS();
 	uint8_t writeSPI(uint8_t c);
 	void writeSPI(const uint8_t* txBuff, uint8_t* rxBuff, uint16_t size);
+	SPI_HandleTypeDef* getHandle();
 };

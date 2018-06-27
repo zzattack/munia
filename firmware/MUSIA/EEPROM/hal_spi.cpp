@@ -1,5 +1,4 @@
 #include "hal_spi.h"
-#include "spi.h"
 
 hal_spi_interface::hal_spi_interface(SPI_HandleTypeDef* hspi, GPIO_TypeDef* gpio, uint16_t gpio_pin)
 	: hspi(hspi), gpio(gpio), gpio_pin(gpio_pin) {
@@ -41,3 +40,5 @@ void hal_spi_interface::writeSPI(const uint8_t* txBuff, uint8_t* rxBuff, uint16_
 	if (txDel) delete[] tx;
 	if (rxDel) delete[] rx;
 }
+
+SPI_HandleTypeDef* hal_spi_interface::getHandle() { return this->hspi; } 
