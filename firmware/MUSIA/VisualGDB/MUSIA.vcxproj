@@ -42,17 +42,21 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|VisualGDB'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\Inc;..\USB;..;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>DEBUG=1;DEBUG_DEFAULT_INTERRUPT_HANDLERS=0;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Optimization>Os</Optimization>
-      <InlineFunctions>true</InlineFunctions>
+      <AdditionalIncludeDirectories>..;../EEPROM;../CubeMX/Inc;../USB;../USB/Device;../USB/Interfaces;../USB/Lib/Inc;../USB/XPD;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>DEBUG=1;DEBUG_DEFAULT_INTERRUPT_HANDLERS=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
       <ForcedIncludeFiles>..\retarget.h</ForcedIncludeFiles>
+      <AdditionalOptions />
+      <CLanguageStandard />
+      <CPPLanguageStandard />
+      <Optimization>O2</Optimization>
+      <InlineFunctions>true</InlineFunctions>
     </ClCompile>
     <Link>
       <AdditionalLinkerInputs>;%(Link.AdditionalLinkerInputs)</AdditionalLinkerInputs>
       <LibrarySearchDirectories>;%(Link.LibrarySearchDirectories)</LibrarySearchDirectories>
       <AdditionalLibraryNames>;%(Link.AdditionalLibraryNames)</AdditionalLibraryNames>
       <LinkerScript />
+      <AdditionalOptions />
     </Link>
     <ToolchainSettingsContainer>
       <InstructionSet>THUMB</InstructionSet>
@@ -61,9 +65,11 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|VisualGDB'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\Inc;..\USB;..;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..;../EEPROM;../CubeMX/Inc;../USB;../USB/Device;../USB/Interfaces;../USB/Lib/Inc;../USB/XPD;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG=1;RELEASE=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
       <ForcedIncludeFiles>..\retarget.h</ForcedIncludeFiles>
+      <Optimization>Os</Optimization>
+      <LinkTimeOptimization>true</LinkTimeOptimization>
     </ClCompile>
     <Link>
       <AdditionalLinkerInputs>;%(Link.AdditionalLinkerInputs)</AdditionalLinkerInputs>
@@ -78,58 +84,39 @@
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
   <ItemGroup>
-    <ClCompile Include="..\config.cpp" />
+    <ClCompile Include="..\CubeMX\Src\dma.c" />
+    <ClCompile Include="..\CubeMX\Src\gpio.c" />
+    <ClCompile Include="..\CubeMX\Src\iwdg.c" />
+    <ClCompile Include="..\CubeMX\Src\main.c" />
+    <ClCompile Include="..\CubeMX\Src\stm32f0xx_hal_msp.c" />
+    <ClCompile Include="..\CubeMX\Src\stm32f0xx_it.c" />
+    <ClCompile Include="..\CubeMX\Src\system_stm32f0xx.c" />
+    <ClCompile Include="..\CubeMX\Src\usart.c" />
+    <ClCompile Include="..\EEPROM\25xx080.cpp" />
+    <ClCompile Include="..\EEPROM\crc.c" />
+    <ClCompile Include="..\EEPROM\eeprom.cpp" />
+    <ClCompile Include="..\EEPROM\hal_spi.cpp" />
     <ClCompile Include="..\musia.cpp" />
     <ClCompile Include="..\ps2_poller.cpp" />
     <ClCompile Include="..\ps2_state.cpp" />
     <ClCompile Include="..\retarget.c" />
     <ClCompile Include="..\spi_sniffer.cpp" />
-    <ClCompile Include="..\Src\dma.c" />
-    <ClCompile Include="..\Src\gpio.c" />
-    <ClCompile Include="..\Src\iwdg.c" />
-    <ClCompile Include="..\Src\main.c" />
-    <ClCompile Include="..\Src\spi.c" />
-    <ClCompile Include="..\Src\stm32f0xx_hal_msp.c" />
-    <ClCompile Include="..\Src\stm32f0xx_it.c" />
-    <ClCompile Include="..\Src\system_stm32f0xx.c" />
-    <ClCompile Include="..\Src\usart.c" />
-    <ClCompile Include="..\USB\bsp_glue.c" />
-    <ClCompile Include="..\USB\configurator_if.c" />
-    <ClCompile Include="..\USB\joy_if.c" />
-    <ClCompile Include="..\USB\usbd.c" />
-    <ClCompile Include="..\USB\usbd_ctrl.c" />
-    <ClCompile Include="..\USB\usbd_desc.c" />
-    <ClCompile Include="..\USB\usbd_ep.c" />
-    <ClCompile Include="..\USB\usbd_hid.c" />
-    <ClCompile Include="..\USB\usbd_if.c" />
-    <ClCompile Include="..\USB\usbd_utils.c" />
-    <ClCompile Include="..\USB\usb_device.c" />
-    <ClCompile Include="..\USB\xpd_usb.c" />
     <ClCompile Include="..\usb_joystick.cpp" />
-    <ClInclude Include="..\USB\configurator_if.h" />
-    <ClInclude Include="..\USB\joy_if.h" />
-    <ClInclude Include="..\USB\hid_report.h" />
-    <ClInclude Include="..\USB\hid_usage_power.h" />
-    <ClInclude Include="..\USB\hid_usage_sensor.h" />
-    <ClInclude Include="..\USB\usbd.h" />
-    <ClInclude Include="..\USB\usbd_config.h" />
-    <ClInclude Include="..\USB\usb_device.h" />
-    <ClInclude Include="..\USB\usbd_hid.h" />
-    <ClInclude Include="..\USB\usbd_internal.h" />
-    <ClInclude Include="..\USB\usbd_pd_def.h" />
-    <ClInclude Include="..\USB\usbd_pd_if.h" />
-    <ClInclude Include="..\USB\usbd_private.h" />
-    <ClInclude Include="..\USB\usbd_types.h" />
-    <ClInclude Include="..\USB\usbd_utils.h" />
-    <ClInclude Include="..\USB\usb_types.h" />
-    <ClInclude Include="..\USB\xpd_common.h" />
-    <ClInclude Include="..\USB\xpd_config.h" />
-    <ClInclude Include="..\USB\xpd_rcc.h" />
-    <ClInclude Include="..\USB\xpd_rcc_pc.h" />
-    <ClInclude Include="..\USB\xpd_syscfg.h" />
-    <ClInclude Include="..\USB\xpd_usb.h" />
-    <ClInclude Include="..\USB\xpd_usb_wrapper.h" />
-    <ClInclude Include="..\USB\xpd_utils.h" />
+    <ClInclude Include="..\CubeMX\Inc\dma.h" />
+    <ClInclude Include="..\CubeMX\Inc\gpio.h" />
+    <ClInclude Include="..\CubeMX\Inc\iwdg.h" />
+    <ClInclude Include="..\CubeMX\Inc\main.h" />
+    <ClInclude Include="..\CubeMX\Inc\stm32f0xx_hal_conf.h" />
+    <ClInclude Include="..\CubeMX\Inc\stm32f0xx_it.h" />
+    <ClInclude Include="..\CubeMX\Inc\usart.h" />
+    <ClInclude Include="..\EEPROM\25xx080.h" />
+    <ClInclude Include="..\EEPROM\crc.h" />
+    <ClInclude Include="..\EEPROM\eeprom.h" />
+    <ClInclude Include="..\EEPROM\eeprom_layout.h" />
+    <ClInclude Include="..\EEPROM\hal_spi.h" />
+    <ClInclude Include="..\EEPROM\spi_interface.h" />
+    <ClInclude Include="..\usbd_pid.h" />
+    <ClInclude Include="..\USB\Lib\Inc\hid_usage.h" />
     <ClInclude Include="..\usb_joystick.h" />
     <None Include="stm32.props" />
     <ClCompile Include="$(BSP_ROOT)\STM32F0xxxx\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal.c" />
@@ -189,14 +176,6 @@
     <ClCompile Include="$(BSP_ROOT)\STM32F0xxxx\STM32F0xx_HAL_Driver\Src\stm32f0xx_ll_usart.c" />
     <ClCompile Include="$(BSP_ROOT)\STM32F0xxxx\STM32F0xx_HAL_Driver\Src\stm32f0xx_ll_utils.c" />
     <ClInclude Include="..\config.h" />
-    <ClInclude Include="..\Inc\dma.h" />
-    <ClInclude Include="..\Inc\gpio.h" />
-    <ClInclude Include="..\Inc\iwdg.h" />
-    <ClInclude Include="..\Inc\main.h" />
-    <ClInclude Include="..\Inc\spi.h" />
-    <ClInclude Include="..\Inc\stm32f0xx_hal_conf.h" />
-    <ClInclude Include="..\Inc\stm32f0xx_it.h" />
-    <ClInclude Include="..\Inc\usart.h" />
     <ClInclude Include="..\musia.h" />
     <ClInclude Include="..\ps2_poller.h" />
     <ClInclude Include="..\ps2_state.h" />
@@ -292,5 +271,39 @@
     <None Include="MUSIA-Release.vgdbsettings" />
     <None Include="stm32.xml" />
     <ClCompile Include="$(BSP_ROOT)\STM32F0xxxx\StartupFiles\startup_stm32f042x6.c" />
+    <ClCompile Include="..\USB\Device\bsp_glue.c" />
+    <ClCompile Include="..\USB\Device\usb_musia_device.c" />
+    <ClInclude Include="..\USB\Device\usbd_config.h" />
+    <ClInclude Include="..\USB\Device\usb_musia_device.h" />
+    <ClCompile Include="..\USB\Interfaces\configurator_if.c" />
+    <ClCompile Include="..\USB\Interfaces\ps2_controller_if.c" />
+    <ClInclude Include="..\USB\Interfaces\configurator_if.h" />
+    <ClInclude Include="..\USB\Interfaces\ps2_controller_if.h" />
+    <ClCompile Include="..\USB\Lib\usbd.c" />
+    <ClCompile Include="..\USB\Lib\usbd_ctrl.c" />
+    <ClCompile Include="..\USB\Lib\usbd_desc.c" />
+    <ClCompile Include="..\USB\Lib\usbd_ep.c" />
+    <ClCompile Include="..\USB\Lib\usbd_hid.c" />
+    <ClCompile Include="..\USB\Lib\usbd_if.c" />
+    <ClCompile Include="..\USB\Lib\usbd_utils.c" />
+    <ClInclude Include="..\USB\Lib\Inc\hid_report.h" />
+    <ClInclude Include="..\USB\Lib\Inc\usbd.h" />
+    <ClInclude Include="..\USB\Lib\Inc\usbd_hid.h" />
+    <ClInclude Include="..\USB\Lib\Inc\usbd_internal.h" />
+    <ClInclude Include="..\USB\Lib\Inc\usbd_pd_def.h" />
+    <ClInclude Include="..\USB\Lib\Inc\usbd_pd_if.h" />
+    <ClInclude Include="..\USB\Lib\Inc\usbd_private.h" />
+    <ClInclude Include="..\USB\Lib\Inc\usbd_types.h" />
+    <ClInclude Include="..\USB\Lib\Inc\usbd_utils.h" />
+    <ClInclude Include="..\USB\Lib\Inc\usb_types.h" />
+    <ClCompile Include="..\USB\XPD\xpd_usb.c" />
+    <ClInclude Include="..\USB\XPD\xpd_common.h" />
+    <ClInclude Include="..\USB\XPD\xpd_config.h" />
+    <ClInclude Include="..\USB\XPD\xpd_rcc.h" />
+    <ClInclude Include="..\USB\XPD\xpd_rcc_pc.h" />
+    <ClInclude Include="..\USB\XPD\xpd_syscfg.h" />
+    <ClInclude Include="..\USB\XPD\xpd_usb.h" />
+    <ClInclude Include="..\USB\XPD\xpd_usb_wrapper.h" />
+    <ClInclude Include="..\USB\XPD\xpd_utils.h" />
   </ItemGroup>
 </Project>
