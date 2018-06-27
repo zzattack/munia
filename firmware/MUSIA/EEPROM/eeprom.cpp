@@ -19,11 +19,15 @@ void eeprom::init() {
 	uint16_t calculated_crc = crc16(eepBuf, 0, EEPROM_SIZE);
 
 	if (stored_crc != calculated_crc) {
+		sys_printf("EEPROM reset\n");
 		reset();
 	}
+	else sys_printf("EEPROM has valid CRC 0x%04X\n", calculated_crc);
 }
 
 void eeprom::sync() {
+	sys_printf("eeprom::sync();\n");
+	
 	_if->getInterface()->select();
 	uint16_t stored_crc;
 	_if->read(0x000, reinterpret_cast<uint8_t*>(&stored_crc), 2);
@@ -48,24 +52,3 @@ void eeprom::reset() {
 	memcpy(this->eepBuf, &FactoryEEPROM, sizeof(FactoryEEPROM));
 	sync();
 }
-
-
-uint16_t ptpHoldOffValues[] = {
-	1,
-	50,
-	100,
-	150,
-	200,
-	250,
-	300,
-	350,
-	400,
-	450,
-	500,
-	600,
-	800,
-	1000,
-	1200,
-	1500,
-};
-
