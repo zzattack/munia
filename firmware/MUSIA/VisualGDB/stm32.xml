@@ -22,7 +22,7 @@
       </KeyValue>
       <KeyValue>
         <Key>com.sysprogs.toolchainoptions.arm.libnosys</Key>
-        <Value />
+        <Value>--specs=nosys.specs</Value>
       </KeyValue>
     </Entries>
   </MCUProperties>
@@ -39,7 +39,7 @@
       </KeyValue>
       <KeyValue>
         <Key>com.sysprogs.bspoptions.stm32.usb.devclass</Key>
-        <Value>CustomHID</Value>
+        <Value>HID</Value>
       </KeyValue>
       <KeyValue>
         <Key>com.sysprogs.bspoptions.stm32.usb.speed</Key>
