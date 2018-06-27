@@ -3,15 +3,12 @@
 #include <string.h>
 
 
-uint8_t eepBuf[EEPROM_SIZE];
-EELayout* eepData;
-
 eeprom::eeprom(m25xx080* interface) : _if(interface) {
+	this->data = (EELayout*)this->eepBuf;
 }
 
 void eeprom::init() {
 	_if->getInterface()->select();
-	eepData = (EELayout*)eepBuf;
 
 	// first 2 uint8_ts is EEPROM checksum
 	uint16_t stored_crc;
@@ -48,7 +45,7 @@ void eeprom::fixChecksum() {
 }
 
 void eeprom::reset() {
-	memcpy(eepData, &FactoryEEPROM, sizeof(FactoryEEPROM));
+	memcpy(this->eepBuf, &FactoryEEPROM, sizeof(FactoryEEPROM));
 	sync();
 }
 
