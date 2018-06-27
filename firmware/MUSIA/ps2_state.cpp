@@ -1,24 +1,25 @@
 #include "ps2_state.h"
 #include <cstdio>
 
-bool ps2_state::update(uint8_t* cmd, uint8_t* data, uint8_t pkt_len) {	
-	if (true) {
-		sys_printf("PS2 packet capture:\n");
-		printf("\t CMD:  ");
-		for (int i = 0; i < pkt_len; i++)
-			printf("%02X ", cmd[i]);
-		printf("\n\t DATA: ");
-		for (int i = 0; i < pkt_len; i++)
-			printf("%02X ", data[i]);
-		printf("\n");
-	}
-	
+void ps2_state::print_packet(uint8_t* cmd, uint8_t* data, uint8_t pkt_len) {
+	sys_printf("PS2 packet capture, len: %d:\n", pkt_len);
+	printf("\t CMD:  ");
+	for (int i = 0; i < pkt_len; i++)
+		printf("%02X ", cmd[i]);
+	printf("\n\t DATA: ");
+	for (int i = 0; i < pkt_len; i++)
+		printf("%02X ", data[i]);
+	printf("\n");
+}
+
+bool ps2_state::update(uint8_t* cmd, uint8_t* data, uint8_t pkt_len) {
 	if (pkt_len < 5) {
-		ps2_printf("Capture empty packet, len=%\n", pkt_len);
+		ps2_printf("Capture empty packet, len=%d\n", pkt_len);
 		return false;
 	}
 	else if (cmd[0] != 0x01) {
 		ps2_printf("Invalid packet: cmd[0] != 0x01\n", pkt_len);
+		print_packet(cmd, data, pkt_len);
 		return false;
 	}
 	else if (cmd[2] != 0x00 || data[2] != 0x5A) {
@@ -32,7 +33,7 @@ bool ps2_state::update(uint8_t* cmd, uint8_t* data, uint8_t pkt_len) {
 	uint8_t cmdId = cmd[1];
 	if (cmdId == 0x42) return updatePoll(&data[3], numWords * 2);
 	else if (cmdId == 0x43) return updateConfig(cmd, data, numWords * 2);
-	else {
+	else {/*
 		sys_printf("Unknown command %02X:\n", cmdId);
 		printf("\t CMD:  ");
 		for (int i = 0; i < pkt_len; i++)
@@ -40,10 +41,11 @@ bool ps2_state::update(uint8_t* cmd, uint8_t* data, uint8_t pkt_len) {
 		printf("\n\t DATA: ");
 		for (int i = 0; i < pkt_len; i++)
 			printf("%02X ", data[i]);
-		printf("\n");
+		printf("\n");*/
+		return (cmdId & 0x40) == 0x40;
 	}
-	return false;
 }
+
 bool ps2_state::updatePoll(uint8_t* data, int len) {
 	device_mode deviceMode = static_cast<device_mode>(data[1] >> 4);
 
@@ -111,6 +113,7 @@ bool ps2_state::updatePoll(uint8_t* data, int len) {
 }
 
 bool ps2_state::updateConfig(uint8_t* cmd, uint8_t* data, int len) {
+	/*
 	sys_printf("updateConfig, with \n");
 	printf("\t CMD:  ");
 	for (int i = 0; i < len; i++)
@@ -118,9 +121,9 @@ bool ps2_state::updateConfig(uint8_t* cmd, uint8_t* data, int len) {
 	printf("\n\t DATA: ");
 	for (int i = 0; i < len; i++)
 		printf("%02X ", data[i]);
-	printf("\n");
+	printf("\n")*/;
 
-	return false;
+	return true;
 }
 
 

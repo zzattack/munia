@@ -42,4 +42,5 @@ public:
 	bool update(uint8_t* cmd, uint8_t* data, uint8_t pkt_len);
 	bool updatePoll(uint8_t* data, int len);
 	bool updateConfig(uint8_t* cmd, uint8_t* data, int len);
+	static void print_packet(uint8_t* cmd, uint8_t* data, uint8_t pkt_len);
 };
