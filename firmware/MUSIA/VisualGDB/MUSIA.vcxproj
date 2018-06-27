@@ -48,7 +48,7 @@
       <AdditionalOptions />
       <CLanguageStandard />
       <CPPLanguageStandard />
-      <Optimization>O2</Optimization>
+      <Optimization>Os</Optimization>
       <InlineFunctions>true</InlineFunctions>
     </ClCompile>
     <Link>
@@ -88,7 +88,6 @@
     <ClCompile Include="..\CubeMX\Src\gpio.c" />
     <ClCompile Include="..\CubeMX\Src\iwdg.c" />
     <ClCompile Include="..\CubeMX\Src\main.c" />
-    <ClCompile Include="..\CubeMX\Src\spi.c" />
     <ClCompile Include="..\CubeMX\Src\stm32f0xx_hal_msp.c" />
     <ClCompile Include="..\CubeMX\Src\stm32f0xx_it.c" />
     <ClCompile Include="..\CubeMX\Src\system_stm32f0xx.c" />

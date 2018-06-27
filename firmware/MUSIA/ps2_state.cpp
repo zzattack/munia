@@ -18,17 +18,11 @@ bool ps2_state::update(uint8_t* cmd, uint8_t* data, uint8_t pkt_len) {
 		return false;
 	}
 	else if (cmd[0] != 0x01) {
-		ps2_printf("Invalid packet: cmd[0] != 0x01\n");
-		printf("\t CMD:  ");
-		for (int i = 0; i < pkt_len; i++)
-			printf("%02X ", cmd[i]);
+		ps2_printf("Invalid packet: cmd[0] != 0x01\n", pkt_len);
 		return false;
 	}
 	else if (cmd[2] != 0x00 || data[2] != 0x5A) {
 		ps2_printf("Invalid packet: cmd[2] != 0x00 || data[2] != 0x5A\n");
-		printf("\t CMD:  ");
-		for (int i = 0; i < pkt_len; i++)
-			printf("%02X ", cmd[i]);
 		return false; // not understood
 	}
 	

@@ -646,9 +646,6 @@
     <ClCompile Include="..\CubeMX\Src\usart.c">
       <Filter>CubeMX</Filter>
     </ClCompile>
-    <ClCompile Include="..\CubeMX\Src\spi.c">
-      <Filter>CubeMX</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\config.h">
