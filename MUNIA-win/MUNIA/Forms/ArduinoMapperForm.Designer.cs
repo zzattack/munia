@@ -128,6 +128,7 @@
 			this.Controls.Add(this.gb);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "ArduinoMapperForm";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Arduino mapper";
 			this.gb.ResumeLayout(false);
 			this.gb.PerformLayout();

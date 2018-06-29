@@ -186,6 +186,7 @@
 			this.Controls.Add(this.rtbHelp);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "BootloaderForm";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "MUNIA Bootloader";
 			this.toolStrip.ResumeLayout(false);
 			this.toolStrip.PerformLayout();

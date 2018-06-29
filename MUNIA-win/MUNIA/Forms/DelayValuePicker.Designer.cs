@@ -135,6 +135,7 @@
 			this.Controls.Add(this.BtnAccept);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "DelayValuePicker";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Delay picker";
 			this.gb.ResumeLayout(false);
 			this.gb.PerformLayout();
