@@ -100,7 +100,7 @@ namespace MUNIA.Forms {
 		}
 
 		private void tsbEnterBootloader_Click(object sender, EventArgs e) {
-			var dev = MuniaController.GetConfigInterface();
+			var dev = MuniaController.GetMuniaConfigInterfaces().FirstOrDefault();
 			if (dev == null) {
 				MessageBox.Show("Interface not found");
 				return;
