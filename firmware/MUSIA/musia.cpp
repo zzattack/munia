@@ -73,6 +73,9 @@ void sysInit() {
 	hdma_spi1_rx.Instance = DMA1_Channel2;
 	hdma_spi2_rx.Instance = DMA1_Channel4;
 	
+	HAL_NVIC_DisableIRQ(USB_IRQn); 
+	__HAL_RCC_USB_FORCE_RESET();
+	__HAL_RCC_USB_RELEASE_RESET();
 	__HAL_RCC_USB_CLK_ENABLE();
 	NVIC_SetPriority(USB_IRQn, 0);
 	NVIC_EnableIRQ(USB_IRQn);
