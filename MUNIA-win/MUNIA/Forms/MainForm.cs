@@ -274,39 +274,38 @@ namespace MUNIA.Forms {
 		}
 
 		private void tsmiMuniaSettings_Click(object sender, EventArgs e) {
-			var dev = MuniaController.GetConfigInterface();
-			if (dev == null) {
-				MessageBox.Show("MUNIA config interface not found. This typically has one of three causes:\r\n  MUNIA isn't plugged in\r\n  MUNIA is currently in bootloader mode\r\n  Installed firmware doesn't implement this feature yet. Upgrade using the instructions at http://munia.io/fw",
+			var devs = MuniaController.GetConfigInterfaces().ToList();
+
+			if (!devs.Any()) {
+				MessageBox.Show("No config interfaces not found. This typically has one of three causes:\r\n  MUNIA isn't plugged in\r\n  MUNIA is currently in bootloader mode\r\n  Installed firmware doesn't implement this feature yet. Upgrade using the instructions at http://munia.io/fw",
 					"Not possible", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
-			HidStream stream;
-			if (dev.TryOpen(out stream)) {
-				try {
-					byte[] buff = new byte[9];
-					buff[0] = 0;
-					buff[1] = 0x47;  // CFG_CMD_READ
-					stream.Write(buff, 0, 9);
-					stream.Read(buff, 0, 9);
 
-					var settings = new MUNIA.MuniaDeviceInfo();
-					if (settings.Parse(buff)) {
-						if (settings.IsLegacy) {
-							var dlg = new MuniaSettingsDialog(stream, settings);
-							dlg.ShowDialog(this);
-						}
-						else {
-							var dlg = new MuniaSettingsDialog(stream, settings);
-							dlg.ShowDialog(this);
-						}
-					}
-					else throw new InvalidOperationException("Invalid settings container received from MUNIA device: " + string.Join(" ", buff.Select(x => x.ToString("X2"))));
+			ConfigInterface intf = null;
+			if (devs.Count() == 1) intf = devs.First();
+			else {
+				var pickerDlg = new DevicePicker(devs);
+				if (pickerDlg.ShowDialog() == DialogResult.OK)
+					intf = pickerDlg.ChosenDevice;
+			}
+			try {
+				if (intf is MuniaConfigInterface mnci) {
+					var dlg = new MuniaSettingsDialog(mnci);
+					dlg.ShowDialog(this);
 				}
-
-				catch (Exception exc) {
-					MessageBox.Show("An error occurred while retrieving information from the MUNIA device:\r\n\r\n" + exc,
-						"Unknown error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				else if (intf is MusiaConfigInterface msci) {
+					var dlg = new MusiaSettingsDialog(msci);
+					dlg.ShowDialog(this);
 				}
+			}
+			catch (InvalidOperationException exc) {
+				MessageBox.Show(this, "An error occurred while retrieving information from the MUNIA device:\r\n\r\n" + exc.InnerException,
+					"Unknown error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
+			catch (TimeoutException exc) {
+				MessageBox.Show(this, "A timeout occurred while retrieving information from the MUNIA device:\r\n\r\n" + exc.InnerException,
+					"Timeout", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 		}
 

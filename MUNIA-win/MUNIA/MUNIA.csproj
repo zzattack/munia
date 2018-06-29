@@ -76,6 +76,7 @@
     <Compile Include="Controllers\ArduinoN64.cs" />
     <Compile Include="Controllers\ArduinoNgc.cs" />
     <Compile Include="Controllers\ArduinoSnes.cs" />
+    <Compile Include="Controllers\ConfigInterface.cs" />
     <Compile Include="Controllers\MusiaPS2.cs" />
     <Compile Include="Forms\AboutBox.cs">
       <SubType>Form</SubType>
@@ -101,7 +102,20 @@
     <Compile Include="Controllers\ArduinoController.cs" />
     <Compile Include="Controllers\BufferedController.cs" />
     <Compile Include="Controllers\IController.cs" />
-    <Compile Include="MuniaSettings.cs" />
+    <Compile Include="Controllers\MusiaDeviceInfo.cs" />
+    <Compile Include="Forms\DevicePicker.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DevicePicker.Designer.cs">
+      <DependentUpon>DevicePicker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\MusiaSettingsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MusiaSettingsDialog.Designer.cs">
+      <DependentUpon>MusiaSettingsDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controllers\MuniaDeviceInfo.cs" />
     <Compile Include="Util\ExtensionMethods.cs" />
     <Compile Include="Util\CircularBuffer.cs" />
     <Compile Include="Forms\DelayValuePicker.cs">
@@ -166,6 +180,9 @@
       <LastGenOutput>BootloaderForm1.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DevicePicker.resx">
+      <DependentUpon>DevicePicker.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\DelayValuePicker.resx">
       <DependentUpon>DelayValuePicker.cs</DependentUpon>
     </EmbeddedResource>
@@ -174,6 +191,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MuniaSettingsDialog.resx">
       <DependentUpon>MuniaSettingsDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MusiaSettingsDialog.resx">
+      <DependentUpon>MusiaSettingsDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -25,6 +25,7 @@
 		private void InitializeComponent() {
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MuniaSettingsDialog));
 			this.gbMunia = new System.Windows.Forms.GroupBox();
+			this.lblDeviceType = new System.Windows.Forms.Label();
 			this.tbMCURevision = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.tbMCUId = new System.Windows.Forms.TextBox();
@@ -66,7 +67,6 @@
 			this.rbNgcConsole = new System.Windows.Forms.RadioButton();
 			this.btnAccept = new System.Windows.Forms.Button();
 			this.btnCancel = new System.Windows.Forms.Button();
-			this.lblDeviceType = new System.Windows.Forms.Label();
 			this.gbMunia.SuspendLayout();
 			this.gbSettings.SuspendLayout();
 			this.pnlOutput.SuspendLayout();
@@ -101,10 +101,17 @@
 			this.gbMunia.TabStop = false;
 			this.gbMunia.Text = "MUNIA Info";
 			// 
+			// lblDeviceType
+			// 
+			this.lblDeviceType.AutoSize = true;
+			this.lblDeviceType.Location = new System.Drawing.Point(24, 20);
+			this.lblDeviceType.Name = "lblDeviceType";
+			this.lblDeviceType.Size = new System.Drawing.Size(70, 13);
+			this.lblDeviceType.TabIndex = 16;
+			this.lblDeviceType.Text = "Device type: ";
+			// 
 			// tbMCURevision
 			// 
-			this.tbMCURevision.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
 			this.tbMCURevision.Enabled = false;
 			this.tbMCURevision.Location = new System.Drawing.Point(242, 62);
 			this.tbMCURevision.Name = "tbMCURevision";
@@ -123,8 +130,6 @@
 			// 
 			// tbMCUId
 			// 
-			this.tbMCUId.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
 			this.tbMCUId.Enabled = false;
 			this.tbMCUId.Location = new System.Drawing.Point(113, 62);
 			this.tbMCUId.Name = "tbMCUId";
@@ -143,8 +148,6 @@
 			// 
 			// tbHardware
 			// 
-			this.tbHardware.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
 			this.tbHardware.Enabled = false;
 			this.tbHardware.Location = new System.Drawing.Point(242, 40);
 			this.tbHardware.Name = "tbHardware";
@@ -163,8 +166,6 @@
 			// 
 			// tbFirmware
 			// 
-			this.tbFirmware.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
 			this.tbFirmware.Enabled = false;
 			this.tbFirmware.Location = new System.Drawing.Point(113, 40);
 			this.tbFirmware.Name = "tbFirmware";
@@ -538,15 +539,6 @@
 			this.btnCancel.Text = "&Cancel";
 			this.btnCancel.UseVisualStyleBackColor = true;
 			// 
-			// lblDeviceType
-			// 
-			this.lblDeviceType.AutoSize = true;
-			this.lblDeviceType.Location = new System.Drawing.Point(24, 20);
-			this.lblDeviceType.Name = "lblDeviceType";
-			this.lblDeviceType.Size = new System.Drawing.Size(70, 13);
-			this.lblDeviceType.TabIndex = 16;
-			this.lblDeviceType.Text = "Device type: ";
-			// 
 			// MuniaSettingsDialog
 			// 
 			this.AcceptButton = this.btnAccept;
@@ -561,6 +553,7 @@
 			this.MaximizeBox = false;
 			this.MinimumSize = new System.Drawing.Size(337, 251);
 			this.Name = "MuniaSettingsDialog";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "MUNIA Device Configuration";
 			this.gbMunia.ResumeLayout(false);
 			this.gbMunia.PerformLayout();

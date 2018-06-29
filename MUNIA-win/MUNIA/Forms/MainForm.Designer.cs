@@ -30,7 +30,7 @@ namespace MUNIA.Forms {
 			this.tsmiControllers = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiOptions = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiSetWindowSize = new System.Windows.Forms.ToolStripMenuItem();
-			this.tsmiMuniaSettings = new System.Windows.Forms.ToolStripMenuItem();
+			this.tsmiDeviceConfig = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiFirmware = new System.Windows.Forms.ToolStripMenuItem();
 			this.setCaptureLagCompensationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.mapArduinoDevicesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -69,7 +69,7 @@ namespace MUNIA.Forms {
 			// 
 			this.tsmiOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsmiSetWindowSize,
-            this.tsmiMuniaSettings,
+            this.tsmiDeviceConfig,
             this.tsmiFirmware,
             this.setCaptureLagCompensationToolStripMenuItem,
             this.mapArduinoDevicesToolStripMenuItem});
@@ -84,18 +84,18 @@ namespace MUNIA.Forms {
 			this.tsmiSetWindowSize.Text = "Set &window size";
 			this.tsmiSetWindowSize.Click += new System.EventHandler(this.tsmiSetWindowSize_Click);
 			// 
-			// tsmiMuniaSettings
+			// tsmiDeviceConfig
 			// 
-			this.tsmiMuniaSettings.Name = "tsmiMuniaSettings";
-			this.tsmiMuniaSettings.Size = new System.Drawing.Size(188, 22);
-			this.tsmiMuniaSettings.Text = "&MUNIA &config";
-			this.tsmiMuniaSettings.Click += new System.EventHandler(this.tsmiMuniaSettings_Click);
+			this.tsmiDeviceConfig.Name = "tsmiDeviceConfig";
+			this.tsmiDeviceConfig.Size = new System.Drawing.Size(188, 22);
+			this.tsmiDeviceConfig.Text = "Device &config";
+			this.tsmiDeviceConfig.Click += new System.EventHandler(this.tsmiMuniaSettings_Click);
 			// 
 			// tsmiFirmware
 			// 
 			this.tsmiFirmware.Name = "tsmiFirmware";
 			this.tsmiFirmware.Size = new System.Drawing.Size(188, 22);
-			this.tsmiFirmware.Text = "MUNIA &firmware";
+			this.tsmiFirmware.Text = "Firmware &updating";
 			this.tsmiFirmware.Click += new System.EventHandler(this.tsmiFirmware_Click);
 			// 
 			// setCaptureLagCompensationToolStripMenuItem
@@ -220,7 +220,7 @@ namespace MUNIA.Forms {
 		private System.Windows.Forms.ToolStripStatusLabel lblFill;
 		private System.Windows.Forms.ToolStripProgressBar pbProgress;
 		private System.Windows.Forms.ToolStripStatusLabel lblSkins;
-		private System.Windows.Forms.ToolStripMenuItem tsmiMuniaSettings;
+		private System.Windows.Forms.ToolStripMenuItem tsmiDeviceConfig;
 		private System.Windows.Forms.ToolStripMenuItem tsmiFirmware;
 		private System.Windows.Forms.ToolStripMenuItem setCaptureLagCompensationToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem mapArduinoDevicesToolStripMenuItem;

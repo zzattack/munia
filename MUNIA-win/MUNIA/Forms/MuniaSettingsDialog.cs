@@ -1,68 +1,91 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Forms;
 using HidSharp;
+using MUNIA.Controllers;
 
 namespace MUNIA.Forms {
 	public partial class MuniaSettingsDialog : Form {
-		private readonly HidStream _hidStream;
-		private readonly MuniaDeviceInfo _deviceInfo;
+		private readonly MuniaConfigInterface _intf;
+		private MuniaDeviceInfo _deviceInfo;
 
-		public MuniaSettingsDialog() {
+		private MuniaSettingsDialog() {
 			InitializeComponent();
 		}
 
-		public MuniaSettingsDialog(HidStream hidStream, MuniaDeviceInfo deviceInfo) : this() {
-			this._hidStream = hidStream;
-			_deviceInfo = deviceInfo;
-			lblDeviceType.Text += deviceInfo.DevType.ToString();
+		public MuniaSettingsDialog(MuniaConfigInterface intf) : this() {
+			_intf = intf;
+			using (HidStream stream = intf.Open()) {
+				byte[] buff = new byte[9];
+				buff[0] = 0;
+				buff[1] = 0x47; // CFG_CMD_READ
+				stream.Write(buff, 0, 9);
+				stream.Read(buff, 0, 9);
 
+				var deviceInfo = new MuniaDeviceInfo();
+				if (deviceInfo.Parse(buff)) {
+					LoadDeviceInfo(deviceInfo);
+				}
+				else {
+					throw new InvalidOperationException("Invalid settings container received from MUNIA device: " +
+						string.Join(" ", buff.Select(x => x.ToString("X2"))));
+				}
+			}
+		}
+
+		private void LoadDeviceInfo(MuniaDeviceInfo deviceInfo) {
+			_deviceInfo = deviceInfo;
 			_blockRecurse = true;
-			if (_deviceInfo.IsLegacy) {
-				if (_deviceInfo.SNES == MuniaDeviceInfo.SnesMode.SNES_MODE_NGC) rbSnesNgc.Checked = true;
-				else if (_deviceInfo.SNES == MuniaDeviceInfo.SnesMode.SNES_MODE_PC) rbSnesPC.Checked = true;
+
+			tbFirmware.Text = $"{deviceInfo.VersionMajor}.{deviceInfo.VersionMinor}";
+			tbHardware.Text = "rev" + deviceInfo.HardwareRevision;
+			tbMCUId.Text = "0x" + deviceInfo.DeviceID.ToString("x4");
+			tbMCURevision.Text = deviceInfo.HardwareRevision.ToString();
+
+			lblDeviceType.Text += deviceInfo.DevType.ToString();
+			if (deviceInfo.IsLegacy) {
+				if (deviceInfo.SNES == MuniaDeviceInfo.SnesMode.SNES_MODE_NGC) rbSnesNgc.Checked = true;
+				else if (deviceInfo.SNES == MuniaDeviceInfo.SnesMode.SNES_MODE_PC) rbSnesPC.Checked = true;
 				else rbSnesConsole.Checked = true;
-				if (_deviceInfo.N64 == MuniaDeviceInfo.N64Mode.N64_MODE_N64) rbN64Console.Checked = true;
+				if (deviceInfo.N64 == MuniaDeviceInfo.N64Mode.N64_MODE_N64) rbN64Console.Checked = true;
 				else rbN64PC.Checked = true;
-				if (_deviceInfo.NGC == MuniaDeviceInfo.NGCMode.NGC_MODE_NGC) rbNgcConsole.Checked = true;
+				if (deviceInfo.NGC == MuniaDeviceInfo.NGCMode.NGC_MODE_NGC) rbNgcConsole.Checked = true;
 				else rbNgcPC.Checked = true;
 			}
 			else {
-				if (_deviceInfo.DevType == MuniaDeviceInfo.DeviceType.MuniaOriginal) {
+				if (deviceInfo.DevType == MuniaDeviceInfo.DeviceType.MuniaOriginal) {
 					// munia revision 2
-					if (_deviceInfo.Output == MuniaDeviceInfo.OutputMode.PC) {
+					if (deviceInfo.Output == MuniaDeviceInfo.OutputMode.PC) {
 						rbOutputPC.Checked = true;
-						ckbNGC.Checked = _deviceInfo.Inputs.HasFlag(MuniaDeviceInfo.InputSources.NGC);
-						ckbN64.Checked = _deviceInfo.Inputs.HasFlag(MuniaDeviceInfo.InputSources.N64);
-						ckbSNES.Checked = _deviceInfo.Inputs.HasFlag(MuniaDeviceInfo.InputSources.SNES);
+						ckbNGC.Checked = deviceInfo.Inputs.HasFlag(MuniaDeviceInfo.InputSources.NGC);
+						ckbN64.Checked = deviceInfo.Inputs.HasFlag(MuniaDeviceInfo.InputSources.N64);
+						ckbSNES.Checked = deviceInfo.Inputs.HasFlag(MuniaDeviceInfo.InputSources.SNES);
 					}
 					else {
-						rbOutputNGC.Checked = _deviceInfo.Output == MuniaDeviceInfo.OutputMode.NGC;
-						rbOutputN64.Checked = _deviceInfo.Output == MuniaDeviceInfo.OutputMode.N64;
-						rbOutputSNES.Checked = _deviceInfo.Output == MuniaDeviceInfo.OutputMode.SNES;
-						rbInputNGC.Checked = _deviceInfo.Inputs.HasFlag(MuniaDeviceInfo.InputSources.NGC);
-						rbInputN64.Checked = _deviceInfo.Inputs.HasFlag(MuniaDeviceInfo.InputSources.N64);
-						rbInputSNES.Checked = _deviceInfo.Inputs.HasFlag(MuniaDeviceInfo.InputSources.SNES);
+						rbOutputNGC.Checked = deviceInfo.Output == MuniaDeviceInfo.OutputMode.NGC;
+						rbOutputN64.Checked = deviceInfo.Output == MuniaDeviceInfo.OutputMode.N64;
+						rbOutputSNES.Checked = deviceInfo.Output == MuniaDeviceInfo.OutputMode.SNES;
+						rbInputNGC.Checked = deviceInfo.Inputs.HasFlag(MuniaDeviceInfo.InputSources.NGC);
+						rbInputN64.Checked = deviceInfo.Inputs.HasFlag(MuniaDeviceInfo.InputSources.N64);
+						rbInputSNES.Checked = deviceInfo.Inputs.HasFlag(MuniaDeviceInfo.InputSources.SNES);
 					}
 				}
-				else if (_deviceInfo.DevType == MuniaDeviceInfo.DeviceType.MuniaNgc) {
+				else if (deviceInfo.DevType == MuniaDeviceInfo.DeviceType.MuniaNgc) {
 					// MUNIA-NGC
-					if (_deviceInfo.Output == MuniaDeviceInfo.OutputMode.PC)
+					if (deviceInfo.Output == MuniaDeviceInfo.OutputMode.PC)
 						rbOutputPC.Checked = true;
 					else
 						rbOutputNGC.Checked = true;
 					ckbNGC.Checked = true;
 				}
 			}
+
 			_blockRecurse = false;
 			UpdateUI();
-
-			tbFirmware.Text = $"{deviceInfo.VersionMajor}.{deviceInfo.VersionMinor}";
-			tbHardware.Text = "rev" + deviceInfo.HardwareRevision;
-			tbMCUId.Text = "0x" + deviceInfo.DeviceID.ToString("x4");
-			tbMCURevision.Text = deviceInfo.HardwareRevision.ToString();
 		}
 
 		private bool _blockRecurse;
+
 		private void UpdateUI() {
 			if (_blockRecurse) return;
 			_blockRecurse = true;
@@ -123,7 +146,7 @@ namespace MUNIA.Forms {
 					rbInputSNES.Enabled = false;
 					rbInputSNES.Checked = false;
 				}
-				
+
 			}
 
 			_blockRecurse = false;
@@ -169,7 +192,8 @@ namespace MUNIA.Forms {
 			}
 			var report = _deviceInfo.ToWriteReport();
 			try {
-				_hidStream.Write(report, 0, report.Length);
+				using (var stream = _intf.Open())
+					stream.Write(report, 0, report.Length);
 				MessageBox.Show("Config updated successfully", "Success");
 			}
 			catch {
