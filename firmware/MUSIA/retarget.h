@@ -23,7 +23,7 @@ EXTERNC int _read(int fd, char* ptr, int len);
 #define spi_printf(x, ...) sync_printf_pfx("SPI", x, ##__VA_ARGS__)
 #define hal_printf(x, ...) sync_printf_pfx("HAL", x, ##__VA_ARGS__)
 #define sys_printf(x, ...) sync_printf_pfx("SYS", x, ##__VA_ARGS__)
-#define ps2_printf(x, ...) sync_printf_pfx("PS2", x, ##__VA_ARGS__)
+#define ps2_printf(x, ...) // sync_printf_pfx("PS2", x, ##__VA_ARGS__)
 #define usb_printf(x, ...) sync_printf_pfx("USB", x, ##__VA_ARGS__)
 #else
 #define spi_printf(x, ...)
