@@ -98,16 +98,6 @@ typedef union _CONSTANT_FORCE_BLOCK {
 } CONSTANT_FORCE_BLOCK; // only for constant force. idk, maybe change later.
  
 
-typedef union _RAMP_FORCE_BLOCK {
-	struct {
-		uint8_t ramp_start;
-		uint8_t ramp_end;
-	} ramp_force_block_parameters;
-
-	uint8_t val[2];
-} RAMP_FORCE_BLOCK; // same a constant force, only 1 effect uses it, and it needs only 1 structure.
-
-
 typedef union _EFFECT_OPERATIONS {
 	struct {
 		uint8_t op_effect_start;
