@@ -60,7 +60,7 @@ void SystemClock_Config(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
-
+void bootloaderSwitcher();
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
@@ -75,7 +75,7 @@ void SystemClock_Config(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+	bootloaderSwitcher();
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
