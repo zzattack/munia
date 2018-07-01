@@ -488,9 +488,6 @@
     <None Include="stm32.xml">
       <Filter>VisualGDB settings</Filter>
     </None>
-    <ClCompile Include="$(BSP_ROOT)\STM32F0xxxx\StartupFiles\startup_stm32f042x6.c">
-      <Filter>Source files\Device-specific files</Filter>
-    </ClCompile>
     <ClCompile Include="..\USB\Device\bsp_glue.c">
       <Filter>USB\Device</Filter>
     </ClCompile>
@@ -587,6 +584,9 @@
     <ClInclude Include="..\USB\XPD\xpd_utils.h">
       <Filter>USB\XPD</Filter>
     </ClInclude>
+    <ClCompile Include="$(BSP_ROOT)\STM32F0xxxx\StartupFiles\startup_stm32f072xb.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\ps2_poller.cpp">
@@ -645,6 +645,9 @@
     </ClCompile>
     <ClCompile Include="..\CubeMX\Src\usart.c">
       <Filter>CubeMX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bootloader_helper.c">
+      <Filter>Source files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -718,6 +721,12 @@
       <Filter>CubeMX</Filter>
     </ClInclude>
     <ClInclude Include="..\ps2_packet.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\USB\Lib\Inc\usbd_dfu.h">
+      <Filter>USB\Lib\Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\bootloader_helper.h">
       <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>
