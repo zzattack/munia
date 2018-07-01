@@ -94,14 +94,16 @@ void ps2_poller::init() {
 void ps2_poller::deInit() {
 	stop();
 	__HAL_RCC_TIM3_CLK_DISABLE();
+	__HAL_RCC_SPI1_CLK_DISABLE();
 	HAL_NVIC_DisableIRQ(TIM3_IRQn);
 	HAL_TIM_Base_DeInit(&htim3);	
 	
 	HAL_GPIO_DeInit(JPS2_ATT_GPIO_Port, JPS2_ATT_Pin);
 	HAL_GPIO_DeInit(JPS2_ACK_GPIO_Port, JPS2_ACK_Pin);
+	HAL_SPI_DeInit(spi->getHandle());
 }
 
-void ps2_poller::start(polling_interval freq) {	
+void ps2_poller::start(polling_freq freq) {	
 	this->freq = freq;
 	this->state = config_state::notInitialized;
 	htim3.Init.Period = 240000 / (int)freq;
@@ -140,28 +142,31 @@ void ps2_poller::spiExchange(const uint8_t* w, uint8_t* r, uint16_t len) {
 	
 	auto hspi = spi->getHandle();
 	
+	// Wait for pending transmission to complete
+	SPI_WAIT_TX(hspi->Instance);
+	__IO uint8_t discard = hspi->Instance->DR; // discard if pending read
+	
 	// make controller attentive
 	spi->clearCS();
 		
 	// burn about 80us (scope aligned)
-	volatile uint32_t counter = 54;
+	volatile uint32_t counter = 58;
 	while (counter--);	
 	
 	while (len--) {
 		// Fill output buffer with data
 		*(__IO uint8_t *)&hspi->Instance->DR = *w++;
 	
-		// Wait for transmission to complete
+		// Wait for transmission to complete, then read was was simultaneously received
+		SPI_WAIT_TX(hspi->Instance);
+		// this should always clear right away
 		SPI_WAIT_RX(hspi->Instance);
-	
+		
 		// update receive buffer
 		*r++ = hspi->Instance->DR;
-
-		// this should always clear right away
-		SPI_WAIT_TX(hspi->Instance);
 		
 		// burn about 12us (scope aligned)
-		volatile uint32_t counter = 24;
+		volatile uint32_t counter = 32;
 		while (counter--);	
 	}
 	spi->setCS();	
@@ -306,7 +311,7 @@ void ps2_poller::poll() {
 void ps2_poller::resync(bool hard) {
 	if (hard) {
 		deInit();
-		HAL_Delay(2);
+		HAL_Delay(5);
 		init();
 		start(this->freq);
 	}
@@ -324,7 +329,5 @@ ps2_packet* ps2_poller::getNewPacket() {
 
 EXTERNC void TIM3_IRQHandler() {
 	__HAL_TIM_CLEAR_IT(&htim3, TIM_IT_UPDATE);
-	//__HAL_TIM_CLEAR_IT(&htim3, TIM_IT_UPDATE);
-	//__HAL_TIM_ENABLE(&htim3);
 	pollNeeded = true;
 }
