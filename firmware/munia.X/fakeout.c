@@ -320,13 +320,6 @@ void n64_to_ngc() {
     packets.ngc_avail = true;    
 }
 
-// Create NGC packet from NGC MKDD data
-void mkdd_to_ngc() {
-    // basically this just enforces R trigger press
-    joydata_ngc_raw.r |= joydata_ngc_raw.right_trig > 50;
-    packets.ngc_avail = true;    
-}
-
 void ngc_to_snes() {
     joydata_snes_raw.a = 0;
     packets.snes_avail = true;

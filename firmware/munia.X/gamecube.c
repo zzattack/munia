@@ -50,12 +50,7 @@ void ngc_tasks() {
                 ngc_to_snes();
                 fake_unpack((uint8_t*)&joydata_snes_raw, sizeof(snes_packet_t));
             }
-                        
-            else if (config.input_sources & input_mkdd && config.output_mode == output_ngc) {
-                mkdd_to_ngc();
-                fake_unpack((uint8_t*)&joydata_ngc_raw, sizeof(ngc_packet_t));
-            }
-
+            
             if (USB_READY && !HIDTxHandleBusy(USBInHandleNGC)) {
                 // dbgs("ngc_joydata_createhid()\n");
                 ngc_joydata_createhid();

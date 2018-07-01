@@ -28,8 +28,8 @@ enum __menu_command {
 
 // this is where the input is redirected to
 const char* menu_sub_items[][5] = {
-    {"NGC ", "N64 ", "SNES", "PC ", NULL},  // MENU_PAGE_OUTPUT,
-    {"NGC ", "N64 ", "SNES", "MKDD", NULL },        // MENU_PAGE_PC_INPUTS,
+    {"NGC ", "N64 ", "SNES", "PC ", NULL},  // MENU_PAGE_NGC,
+    {"NGC ", "N64 ", "SNES", NULL },        // MENU_PAGE_PC_INPUTS,
     {"NGC ", "N64",  "SNES", NULL },        // MENU_PAGE_INPUT,
     {"A:Ok ", " B:Cancel", NULL },          // MENU_PAGE_CONFIRM,
 };

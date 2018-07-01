@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 typedef enum { output_ngc, output_n64, output_snes, output_pc } output_t;
-typedef enum { input_ngc = 1, input_n64 = 2, input_snes = 4, input_mkdd = 8 } input_t;
+typedef enum { input_ngc = 1, input_n64 = 2, input_snes = 4 } input_t;
 typedef struct {
     output_t output_mode;
     union {

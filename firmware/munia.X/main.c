@@ -217,8 +217,7 @@ void save_config() {
 void apply_config() {
     // validate
     if (config.output_mode > output_pc) config.output_mode = output_pc;
-    config.input_sources &= 0b1111;
-    
+    config.input_sources &= 0b111;
     // only take interrupt event from the console we're outputting to
     IOCCbits.IOCC0 = config.output_mode == output_ngc;
     IOCCbits.IOCC1 = config.output_mode == output_n64;
@@ -227,7 +226,7 @@ void apply_config() {
     // redirect joysticks we're not sampling to their console
     // switch position = 0 --> connected to our fake output,
     //                   1 --> connected to joystick
-    SWITCH1 = (IOCCbits.IOCC0 || !config.input_ngc) && !input_mkdd;
+    SWITCH1 = IOCCbits.IOCC0 || !config.input_ngc;
     SWITCH2 = IOCCbits.IOCC1 || !config.input_n64;
     SWITCH3 = IOCCbits.IOCC7 || !config.input_snes;
 }
