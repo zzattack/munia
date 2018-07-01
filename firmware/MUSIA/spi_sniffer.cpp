@@ -166,23 +166,35 @@ void spi_sniffer::start() {
 void spi_sniffer::stop() {
 	HAL_NVIC_DisableIRQ(EXTI0_1_IRQn);
 	captureEnd();
+	captureAvailable = false;
+	pkt.isNew = false;
 	HAL_SPI_DMAStop(hspiCmd);	
 	HAL_SPI_DMAStop(hspiData);	
 }
 
 void spi_sniffer::work() {
-	if (captureAvailable) {		
-		uint32_t pos = __HAL_DMA_GET_COUNTER(hspiCmd->hdmarx);
-		int i = 0;
-		while (dmaIdxCmd != sizeof(buffCmd) - pos) {
+	if (captureAvailable) {
+
+		uint32_t pos = __HAL_DMA_GET_COUNTER(hspiCmd->hdmarx), i = 0;
+		// if too much data in buffer, discard
+		int tgtIdxCmd = sizeof(buffCmd) - pos;
+		int dataCount = dmaIdxCmd < tgtIdxCmd ? tgtIdxCmd - dmaIdxCmd : tgtIdxCmd + sizeof(buffCmd) - dmaIdxCmd;
+		if (dataCount > sizeof(pkt.cmd)) dmaIdxCmd = tgtIdxCmd;
+
+		while (dmaIdxCmd != tgtIdxCmd) {
 			pkt.data[i++] = buffCmd[dmaIdxCmd++];
 			if (dmaIdxCmd == sizeof(buffCmd)) dmaIdxCmd = 0;
 		}
 		pkt.pktLength = i;
+
 				
-		pos = __HAL_DMA_GET_COUNTER(hspiData->hdmarx);
-		i = 0;
-		while (dmaIdxData != sizeof(buffData) - pos) {
+		pos = __HAL_DMA_GET_COUNTER(hspiData->hdmarx); i = 0;
+		// if too much data in buffer, discard
+		int tgtIdxData = sizeof(buffData) - pos;
+		dataCount = dmaIdxData < tgtIdxData ? tgtIdxData - dmaIdxData : tgtIdxData + sizeof(buffData) - dmaIdxData;
+		if (dataCount > sizeof(pkt.data)) dmaIdxData = tgtIdxData;
+
+		while (dmaIdxData != tgtIdxData) {
 			pkt.cmd[i++] = buffData[dmaIdxData++];
 			if (dmaIdxData == sizeof(buffData)) dmaIdxData = 0;
 		}
