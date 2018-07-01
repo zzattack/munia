@@ -300,12 +300,16 @@ namespace MUNIA.Forms {
 				}
 			}
 			catch (InvalidOperationException exc) {
-				MessageBox.Show(this, "An error occurred while retrieving information from the MUNIA device:\r\n\r\n" + exc.InnerException,
-					"Unknown error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MessageBox.Show(this, "An error occurred while retrieving information from the MUNIA device:\r\n\r\n",
+					"Invalid error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 			catch (TimeoutException exc) {
-				MessageBox.Show(this, "A timeout occurred while retrieving information from the MUNIA device:\r\n\r\n" + exc.InnerException,
+				MessageBox.Show(this, "A timeout occurred while retrieving information from the MUNIA device:\r\n\r\n",
 					"Timeout", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
+			catch (Exception exc) {
+				MessageBox.Show(this, "An unknown error occurred while retrieving information from the MUNIA device:\r\n\r\n" + exc.InnerException,
+					"Unknown error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 		}
 

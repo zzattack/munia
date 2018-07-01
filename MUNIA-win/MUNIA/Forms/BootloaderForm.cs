@@ -11,25 +11,28 @@ using MUNIA.Properties;
 
 namespace MUNIA.Forms {
 	public partial class BootloaderForm : Form {
-		private readonly HidDeviceLoader _loader = new HidDeviceLoader();
 		private HidDevice _blDevice;
 		private HidBootloader _blInterface;
 		private IntelHexFile _hexFile;
-		const int VID = 0x04D8;
-		const int PID_BL = 0x003c;
-		const int PID_MUNIA = 0x0058;
+		private const int VID_LEGACY= 0x04D8;
+		private const int PID_MUNIA_LEGACY = 0x0058;
+		private const int PID_BL = 0x003c;
+		private const int VID = 0x1209;
+		private const int PID_MUNIA = 0x0058;
 
 		public BootloaderForm() {
 			InitializeComponent();
-			UsbNotification.DeviceArrival += UsbDeviceListChanged;
-			UsbNotification.DeviceRemovalComplete += UsbDeviceListChanged;
+			DeviceList.Local.Changed += UsbDeviceListChanged;
 			UpdateUI();
 		}
+
 
 		private void UpdateUI() {
 			// enter bootloader button is enabled if vid/pid of MUNIA
 			// is observed, if so all other functions are disabled
-			var muniaInterfaces = _loader.GetDevices(VID, PID_MUNIA);
+			var muniaInterfaces = DeviceList.Local.GetHidDevices(VID, PID_MUNIA)
+				.Union(DeviceList.Local.GetHidDevices(VID_LEGACY, PID_MUNIA_LEGACY));
+
 			if (muniaInterfaces.Count() > 1) {
 				// munia detected, so it's not in BL, but we can send a packet to request this
 				tsbLoadHex.Enabled = tsbProgram.Enabled = tsbReset.Enabled = false;
@@ -58,7 +61,7 @@ namespace MUNIA.Forms {
 
 			// if no device selected, see if we can find one
 			if (_blDevice == null) {
-				_blDevice = _loader.GetDeviceOrDefault(VID, PID_BL);
+				_blDevice = DeviceList.Local.GetHidDeviceOrNull(VID, PID_BL);
 				blDeviceOk = _blDevice != null && _blDevice.TryOpen(out s);
 				if (blDeviceOk) {
 					s.Dispose();
@@ -95,8 +98,9 @@ namespace MUNIA.Forms {
 			}
 		}
 
-		private void UsbDeviceListChanged(object sender, UsbNotificationEventArgs args) {
+		private void UsbDeviceListChanged(object sender, DeviceListChangedEventArgs e) {
 			UpdateUI();
+
 		}
 
 		private void tsbEnterBootloader_Click(object sender, EventArgs e) {
