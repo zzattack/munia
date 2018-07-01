@@ -43,8 +43,10 @@ int sync_printf_pfx(const char* prefix, const char* format, ...) {
 	return v;
 }
 
-EXTERNC void printf_payload(const char* x, int len) {	
+EXTERNC void printf_payload(const char* x, int len) {
+#ifdef DEBUG
 	while (len--) sync_printf("%02x ", *x++);
+#endif
 }
 
 #ifndef FAST_SEMIHOSTING_PROFILER_DRIVER
