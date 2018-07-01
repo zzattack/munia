@@ -5,11 +5,12 @@
 #include "usb_joystick.h"
 #include "hal_spi.h"
 #include <stm32f0xx_hal.h>
+#include <algorithm>
+#include <cstring>
 
 #include "usb_musia_device.h"
 #include "ps2_controller_if.h"
 #include "configurator_if.h"
-
 #include "iwdg.h"
 #include "usart.h"
 #include "eeprom.h"
@@ -30,13 +31,17 @@ ps2_poller poller(&spi_ps2); // polls on spi1 when not in sniffer mode
 ps2_state ps2State; // tracks controller state, read by USB and updated either by sniffer or poller
 usb_joystick usbJoy; // transmits USB HID packets containing ps2 state
 
+bool configUpdatePending = false;
 extern TIM_HandleTypeDef htim3;
 
 void sysInit();
 void applyConfig();
+bool validateConfig();
 void handleSnifferPacket();
 void handlePollerPacket();
 void eepromSelect(spi_interface* spi_if);
+void eepromDeselect(spi_interface* spi_if);
+
 
 EXTERNC int musia_main(void) {
 	sysInit();
@@ -48,8 +53,14 @@ EXTERNC int musia_main(void) {
 	
 	for (;;) {
 		HAL_IWDG_Refresh(&hiwdg);
-		
-		if (ee.data->mode == musia_mode::sniffer) {
+
+		if (configUpdatePending) {
+			validateConfig();
+			ee.sync();
+			applyConfig();
+			configUpdatePending = false;
+		}
+		else if (ee.data->mode == MODE_SNIFFER) {
 			sniffer.work();
 			handleSnifferPacket();
 		}
@@ -82,16 +93,39 @@ void sysInit() {
 	UsbDevice_Init();
 }
 
+bool validateConfig() {
+	ee.data->allowVibrate &= 0x01;
+	ee.data->mode = (musia_mode)((int)(ee.data->mode) & 0x01);
+	if (ee.data->pollFreq != 25  && ee.data->pollFreq != 30 &&
+		ee.data->pollFreq != 50 	&& ee.data->pollFreq != 60 &&
+		ee.data->pollFreq != 100 && ee.data->pollFreq != 120) {
+		
+		ee.data->pollFreq = 60;
+		return true;
+	}
+
+	return false;
+}
+
 void applyConfig() {
-	if (ee.data->mode == musia_mode::sniffer) {
+	// eeprom config was updated
+	sys_printf("Applying new configuration\n");
+	
+	static musia_mode current_mode = MODE_INVALID;
+	if (current_mode == MODE_SNIFFER)
+		sniffer.deInit();
+	if (current_mode == MODE_POLLER)
 		poller.deInit();
+		
+	if (ee.data->mode == MODE_SNIFFER) {
 		sniffer.init();
 		sniffer.start();
+		current_mode = MODE_SNIFFER;
 	}
 	else {
-		sniffer.deInit();
 		poller.init();
-		poller.start(polling_interval::poll25Hz);
+		poller.start(static_cast<polling_freq>(ee.data->pollFreq));
+		current_mode = MODE_SNIFFER;
 	}
 }
 
@@ -157,8 +191,10 @@ void handlePollerPacket() {
 }
 
 void eepromSelect(spi_interface* spi_if) {
+	hal_spi_interface* hintf = (hal_spi_interface*)spi_if;
+	auto intf = hintf->getHandle();
 	__HAL_RCC_SPI2_CLK_ENABLE();
-	
+
 	// configure SPI2 as master
     /**SPI2 GPIO Configuration    
     PB10     ------> SPI2_SCK
@@ -179,19 +215,32 @@ void eepromSelect(spi_interface* spi_if) {
 	GPIO_InitStruct.Alternate = GPIO_AF0_SPI2;
 	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);    
 	
-	hspi2.Init.Mode = SPI_MODE_MASTER;
-	hspi2.Init.Direction = SPI_DIRECTION_2LINES;
-	hspi2.Init.DataSize = SPI_DATASIZE_8BIT;
-	hspi2.Init.CLKPolarity = SPI_POLARITY_LOW;
-	hspi2.Init.CLKPhase = SPI_PHASE_1EDGE;
-	hspi2.Init.NSS = SPI_NSS_SOFT;
-	hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_64;
-	hspi2.Init.FirstBit = SPI_FIRSTBIT_MSB;
-	hspi2.Init.TIMode = SPI_TIMODE_DISABLE;
-	hspi2.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-	hspi2.Init.CRCPolynomial = 7;
-	hspi2.Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
-	hspi2.Init.NSSPMode = SPI_NSS_PULSE_ENABLE;
-	HAL_SPI_Init(&hspi2);
+	intf->Init.Mode = SPI_MODE_MASTER;
+	intf->Init.Direction = SPI_DIRECTION_2LINES;
+	intf->Init.DataSize = SPI_DATASIZE_8BIT;
+	intf->Init.CLKPolarity = SPI_POLARITY_LOW;
+	intf->Init.CLKPhase = SPI_PHASE_1EDGE;
+	intf->Init.NSS = SPI_NSS_SOFT;
+	intf->Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_64;
+	intf->Init.FirstBit = SPI_FIRSTBIT_MSB;
+	intf->Init.TIMode = SPI_TIMODE_DISABLE;
+	intf->Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+	intf->Init.CRCPolynomial = 7;
+	intf->Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
+	intf->Init.NSSPMode = SPI_NSS_PULSE_ENABLE;
+	HAL_SPI_Init(intf);
 }
 
+void eepromDeselect(spi_interface* spi_if) {	
+	hal_spi_interface* hintf = (hal_spi_interface*)spi_if;
+	auto intf = hintf->getHandle();
+	HAL_SPI_DeInit(intf);
+}
+
+EXTERNC void setEEPROMConfig(const uint8_t* buffer) {
+	memcpy(ee.eepBuf, buffer, EEPROM_SIZE);
+	configUpdatePending = true;
+}
+EXTERNC void getEEPROMConfig(uint8_t* buffer, uint8_t buffSize) {
+	memcpy(buffer, ee.eepBuf, std::min((uint8_t)EEPROM_SIZE, buffSize));
+}
