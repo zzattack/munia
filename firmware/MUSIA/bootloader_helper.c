@@ -7,7 +7,12 @@
 #define BOOTLOADER_MAGIC_TOKEN 0xDEADBEEF  // :D
  
 //Value taken from CD00167594.pdf page 35, system memory start.
+
+#if defined(STM32F072xB)
+#define BOOTLOADER_START_ADDR 0x1FFFC800
+#elif defined(STM32F042x6)
 #define BOOTLOADER_START_ADDR 0x1FFFC400 //for ST32F042
+#endif
 
 //This is the first thing the micro runs after startup_stm32f0xx.s
 //Only the SRAM is initialized at this point
@@ -48,7 +53,7 @@ void bootloaderSwitcher() {
 	}
 }
 
-void RebootToBootloader() {
+void rebootToBootloader() {
 	//call this at any time to initiate a reboot into bootloader
 	*BOOTLOADER_MAGIC_ADDR = BOOTLOADER_MAGIC_TOKEN;
 	NVIC_SystemReset();
