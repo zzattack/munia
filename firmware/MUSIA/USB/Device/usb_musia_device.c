@@ -25,7 +25,7 @@ const USBD_DescriptionType hdev_cfg = {
 		.Name = "MUSIA",
 		.MaxCurrent_mA = 500,
 		.RemoteWakeup = 0,
-		.SelfPowered = 1,
+		.SelfPowered = 0,
 	},
 }, *const dev_cfg = &hdev_cfg;
 
