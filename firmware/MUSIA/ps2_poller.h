@@ -3,7 +3,7 @@
 #include "hal_spi.h"
 #include "ps2_packet.h"
 
-enum class polling_interval {
+enum class polling_freq {
 	poll25Hz = 25,
 	poll30Hz = 30,
 	poll50Hz = 50,
@@ -25,7 +25,7 @@ enum class config_state : int {
 class ps2_poller {
 private:
 	ps2_packet pkt;
-	polling_interval freq;
+	polling_freq freq;
 	config_state state = config_state::notInitialized;
 	uint8_t configFailCount = 0;
 	hal_spi_interface* spi;
@@ -40,7 +40,7 @@ public:
 	void configure(); // todo remove
 	void init();
 	void deInit();
-	void start(polling_interval freq);
+	void start(polling_freq freq);
 	void stop();
 	void work();
 
