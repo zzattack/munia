@@ -72,7 +72,8 @@ void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOC, USB_VIBR_EN_Pin|PS2_VIBR_EN_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, LED1_Pin|LED2_Pin|LED3_Pin|EE_CS_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, LED1_Pin | LED2_Pin | LED3_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOA, EE_CS_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, SW_CONSOLE_DISCONNECT_Pin|SW_SPI_CLK_Pin, GPIO_PIN_RESET);
