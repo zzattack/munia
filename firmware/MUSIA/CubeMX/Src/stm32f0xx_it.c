@@ -36,12 +36,14 @@
 #include "stm32f0xx_it.h"
 
 /* USER CODE BEGIN 0 */
+extern uint8_t tim1Expired;
 
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
 extern DMA_HandleTypeDef hdma_spi1_rx;
 extern DMA_HandleTypeDef hdma_spi2_rx;
+extern TIM_HandleTypeDef htim1;
 
 /******************************************************************************/
 /*            Cortex-M0 Processor Interruption and Exception Handlers         */ 
@@ -128,6 +130,23 @@ void SysTick_Handler(void)
 /* For the available peripheral interrupt handler names,                      */
 /* please refer to the startup file (startup_stm32f0xx.s).                    */
 /******************************************************************************/
+
+/**
+* @brief This function handles TIM1 break, update, trigger and commutation interrupts.
+*/
+void TIM1_BRK_UP_TRG_COM_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM1_BRK_UP_TRG_COM_IRQn 0 */
+  #if 0
+  /* USER CODE END TIM1_BRK_UP_TRG_COM_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim1);
+  /* USER CODE BEGIN TIM1_BRK_UP_TRG_COM_IRQn 1 */
+  #endif
+  
+	__HAL_TIM_CLEAR_IT(&htim1, TIM_IT_UPDATE);
+	tim1Expired++;
+  /* USER CODE END TIM1_BRK_UP_TRG_COM_IRQn 1 */
+}
 
 /**
 * @brief This function handles DMA1 channel 2 and 3 interrupts.

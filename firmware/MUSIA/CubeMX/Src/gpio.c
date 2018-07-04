@@ -64,23 +64,25 @@ void MX_GPIO_Init(void)
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOC_CLK_ENABLE();
+  __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
-  __HAL_RCC_GPIOF_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOC, USB_VIBR_EN_Pin|PS2_VIBR_EN_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, LED1_Pin | LED2_Pin | LED3_Pin, GPIO_PIN_SET);
-  HAL_GPIO_WritePin(GPIOA, EE_CS_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, LED1_Pin|LED2_Pin|LED3_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, SW_CONSOLE_DISCONNECT_Pin|SW_SPI_CLK_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, SW_CONSOLE_DISCONNECT_Pin|LED_ORANGE_Pin|LED_GREEN_Pin|SW_SNIFFER_CONSOLE_Pin 
+                          |SW_PULLUP_ENABLE_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, LED_ORANGE_Pin|LED_GREEN_Pin|SW_SNIFFER_CONSOLE_Pin|SW_PULLUP_ENABLE_Pin 
-                          |EE_CSB3_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(EE_CS_GPIO_Port, EE_CS_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(SW_SPI_CLK_GPIO_Port, SW_SPI_CLK_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pins : PCPin PCPin */
   GPIO_InitStruct.Pin = USB_VIBR_EN_Pin|PS2_VIBR_EN_Pin;
@@ -109,9 +111,9 @@ void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PBPin PBPin PBPin PBPin 
-                           PBPin PBPin PBPin */
+                           PBPin PBPin */
   GPIO_InitStruct.Pin = SW_CONSOLE_DISCONNECT_Pin|LED_ORANGE_Pin|LED_GREEN_Pin|SW_SNIFFER_CONSOLE_Pin 
-                          |SW_PULLUP_ENABLE_Pin|EE_CSB3_Pin|SW_SPI_CLK_Pin;
+                          |SW_PULLUP_ENABLE_Pin|SW_SPI_CLK_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
