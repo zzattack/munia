@@ -95,6 +95,10 @@ void Configurator_SetReport(uint8_t* data, uint16_t length) {
 	if (reportId == CFG_CMD_WRITE) {
 		setEEPROMConfig(&data[1]);
 	}
+	if (reportId == HID_DETACH) {
+		// no point in confirming success, DFuSeDemo doesn't listen for it anyway
+		rebootToBootloader();
+	}
 
 	// re-arm endpoint
 	USBD_HID_ReportOut(configurator_if, cfgBuff, sizeof(cfgBuff));
@@ -106,11 +110,7 @@ void Configurator_GetReport(uint8_t reportId) {
 	uint8_t resp[9];
 	resp[0] = reportId;
 
-	if (reportId == HID_DETACH) {
-		// no point in confirming success, DFuSeDemo doesn't listen for it anyway
-		rebootToBootloader();
-	}
-	else if (reportId == CFG_CMD_READ) {
+	if (reportId == CFG_CMD_READ) {
 		getEEPROMConfig(&resp[1], sizeof(cfg_read_report_t));
 	}
 	else if (reportId == CFG_CMD_INFO) {

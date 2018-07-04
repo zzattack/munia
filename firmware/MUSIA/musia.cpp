@@ -7,6 +7,7 @@
 #include <stm32f0xx_hal.h>
 #include <algorithm>
 #include <cstring>
+#include "tim.h"
 
 #include "usb_musia_device.h"
 #include "ps2_controller_if.h"
@@ -33,6 +34,8 @@ usb_joystick usbJoy; // transmits USB HID packets containing ps2 state
 
 bool configUpdatePending = false;
 extern TIM_HandleTypeDef htim3;
+uint8_t tim1Expired;
+bool packetObserved = false;
 
 void sysInit();
 void applyConfig();
@@ -68,6 +71,12 @@ EXTERNC int musia_main(void) {
 			poller.work();
 			handlePollerPacket();
 		}
+
+		if (tim1Expired) {
+			HAL_GPIO_WritePin(LED_ORANGE_GPIO_Port, LED_ORANGE_Pin, packetObserved ? GPIO_PIN_SET : GPIO_PIN_RESET);
+			packetObserved = false;
+			tim1Expired = false;
+		}
 		
 		__WFI();
 		// USB is fully based off interrupts,
@@ -91,6 +100,12 @@ void sysInit() {
 	NVIC_SetPriority(USB_IRQn, 0);
 	NVIC_EnableIRQ(USB_IRQn);
 	UsbDevice_Init();
+	
+	// start timer and interrupts
+	HAL_TIM_Base_Start_IT(&htim1);
+
+	// set green led
+	HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_SET);
 }
 
 bool validateConfig() {
@@ -137,6 +152,8 @@ void handleSnifferPacket() {
 	if (upd == nullptr) return;
 			
 	bool validPacket = ps2State.update(upd->cmd, upd->data, upd->pktLength);
+	packetObserved |= validPacket;
+
 	if (!validPacket) {
 		// sys_printf("INVALID PACKET RECEIVED, RESYNC CTR: %d\n", resyncDetect);
 		// ps2_state::print_packet(upd->cmd, upd->data, upd->pktLength);
@@ -168,6 +185,8 @@ void handlePollerPacket() {
 	if (upd == nullptr) return;
 			
 	bool validPacket = ps2State.update(upd->cmd, upd->data, upd->pktLength);
+	packetObserved |= validPacket;
+
 	if (!validPacket) {
 		// sys_printf("INVALID PACKET RECEIVED, RESYNC CTR: %d\n", 0);
 		// ps2_state::print_packet(upd->cmd, upd->data, upd->pktLength);

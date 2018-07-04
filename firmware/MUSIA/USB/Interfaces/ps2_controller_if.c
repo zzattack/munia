@@ -6,6 +6,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+
+static void PS2Controller_Init();
+static void PS2Controller_SetReport(uint8_t * data, uint16_t length);
+static void PS2Controller_GetReport(uint8_t reportId);
+
 //Class specific descriptor - HID
 __ALIGN_BEGIN static const uint8_t hid_rpt_ps2[] __ALIGN_END = {
 	0x05, 0x01,						// USAGE_PAGE (Generic Desktop)
@@ -46,121 +51,123 @@ __ALIGN_BEGIN static const uint8_t hid_rpt_ps2[] __ALIGN_END = {
 	0x81, 0x02,						//     INPUT (Data,Var,Abs)    
 	
 
+	#ifdef WITH_FF
 	// remainig huuge descriptor is for a 'PID' physical interface
 	// so that we can have driverless force-feedback
-	0x05, 0x0F,						//    Usage Page Physical Interface
-	0x09, 0x92,						//      Usage ES Playing
-	0xA1, 0x02,						//      Collection Datalink
-	0x85, 0x02,						//        Report ID 2
+	0x05, 0x0F,						//   Usage Page Physical Interface
+	0x09, 0x92,						//     Usage ES Playing
+	0xA1, 0x02,						//     Collection Datalink
+	0x85, 0x02,						//       Report ID 2
 	0x09, 0x9F,						//	       Usage DS Device is Reset
-	0x09, 0xA0,						//	        Usage DS Device is Pause
-	0x09, 0xA4,						//	        Usage Actuator Power
-	0x09, 0xA5,						//	        Usage Undefined
-	0x09, 0xA6,						//	        Usage Undefined
-	0x15, 0x00,						//	        Logical Minimum 0
-	0x25, 0x01,						//	        Logical Maximum 1
-	0x35, 0x00,						//	        Physical Minimum 0
-	0x45, 0x01,						//	        Physical Maximum 1
-	0x75, 0x01,						//	        Report Size 1
-	0x95, 0x05,						//	        Report Count 5
-	0x81, 0x02,						//	        Input (Variable)
-	0x95, 0x03,						//	        Report Count 3
-	0x75, 0x01,						//	        Report Size 1
-	0x81, 0x03,						//	        Input (Constant, Variable)
-	0x09, 0x94,						//	      Usage PID Device Control
-	0x15, 0x00,						//	        Logical Minimum 0
-	0x25, 0x01,						//	        Logical Maximum 1
-	0x35, 0x00,						//	        Physical Minimum 0
-	0x45, 0x01,						//	        Physical Maximum 1
-	0x75, 0x01,						//	        Report Size 1
-	0x95, 0x01,						//	        Report Count 1
-	0x81, 0x02,						//	        Input (Variable)
-	0x09, 0x22,						//	      Usage Effect Block Index
-	0x15, 0x01,						//	        Logical Minimum 1
-	0x25, 0x28,						//	        Logical Maximum 28h (40d)
-	0x35, 0x01,						//	        Physical Minimum 1
-	0x45, 0x28,						//	        Physical Maximum 28h (40d)
-	0x75, 0x07,						//	        Report Size 7
-	0x95, 0x01,						//	        Report Count 1
-	0x81, 0x02,						//	        Input (Variable)
-	0xC0,							//      End Collection
+	0x09, 0xA0,						//	       Usage DS Device is Pause
+	0x09, 0xA4,						//	       Usage Actuator Power
+	0x09, 0xA5,						//	       Usage Undefined
+	0x09, 0xA6,						//	       Usage Undefined
+	0x15, 0x00,						//	       Logical Minimum 0
+	0x25, 0x01,						//	       Logical Maximum 1
+	0x35, 0x00,						//	       Physical Minimum 0
+	0x45, 0x01,						//	       Physical Maximum 1
+	0x75, 0x01,						//	       Report Size 1
+	0x95, 0x05,						//	       Report Count 5
+	0x81, 0x02,						//	       Input (Variable)
+	0x95, 0x03,						//	       Report Count 3
+	0x75, 0x01,						//	       Report Size 1
+	0x81, 0x03,						//	       Input (Constant, Variable)
+	0x09, 0x94,						//	     Usage PID Device Control
+	0x15, 0x00,						//	       Logical Minimum 0
+	0x25, 0x01,						//	       Logical Maximum 1
+	0x35, 0x00,						//	       Physical Minimum 0
+	0x45, 0x01,						//	       Physical Maximum 1
+	0x75, 0x01,						//	       Report Size 1
+	0x95, 0x01,						//	       Report Count 1
+	0x81, 0x02,						//	       Input (Variable)
+	0x09, 0x22,						//	     Usage Effect Block Index
+	0x15, 0x01,						//	       Logical Minimum 1
+	0x25, 0x28,						//	       Logical Maximum 28h (40d)
+	0x35, 0x01,						//	       Physical Minimum 1
+	0x45, 0x28,						//	       Physical Maximum 28h (40d)
+	0x75, 0x07,						//	       Report Size 7
+	0x95, 0x01,						//	       Report Count 1
+	0x81, 0x02,						//	       Input (Variable)
+	0xC0,							//     End Collection
 
 
-	0x09, 0x21,						//      Usage Set Effect Report
-	0xA1, 0x02,						//      Collection Datalink
-	0x85, 0x01,						//        Report ID 1
-	0x09, 0x22,						//          Usage Effect Block Index
-	0x15, 0x01,						//            Logical Minimum 1
-	0x25, 0x28,						//            Logical Maximum 28h (40d)
-	0x35, 0x01,						//            Physical Minimum 1
-	0x45, 0x28,						//            Physical Maximum 28h (40d)
-	0x75, 0x08,						//            Report Size 8
-	0x95, 0x01,						//            Report Count 1
-	0x91, 0x02,						//            Output (Variable)
-	0x09, 0x25,						//            Usage Effect Type
-	0xA1, 0x02,						//      Collection Datalink
-	0x09, 0x26,						//        Usage ET Constant Force
-	0x09, 0x27,						//        Usage ET Ramp
-	0x09, 0x30,						//        Usage ET Square
-	0x09, 0x31,						//        Usage ET Sine
-	0x09, 0x32,						//        Usage ET Triangle
-	0x09, 0x33,						//        Usage ET Sawtooth Up
-	0x09, 0x34,						//        Usage ET Sawtooth Down
-	0x09, 0x40,						//        Usage ET Spring
-	0x09, 0x41,						//        Usage ET Damper
-	0x09, 0x42,						//        Usage ET Inertia
-	0x09, 0x43,						//        Usage ET Friction
-	0x09, 0x28,						//        Usage ET Custom Force Data
-	0x25, 0x0C,						//          Logical Maximum Ch (12d)
-	0x15, 0x01,						//          Logical Minimum 1
-	0x35, 0x01,						//          Physical Minimum 1
-	0x45, 0x0C,						//          Physical Maximum Ch (12d)
+	0x09, 0x21,						//     Usage Set Effect Report
+	0xA1, 0x02,						//     Collection Datalink
+	0x85, 0x01,						//       Report ID 1
+	0x09, 0x22,						//         Usage Effect Block Index
+	0x15, 0x01,						//           Logical Minimum 1
+	0x25, 0x28,						//           Logical Maximum 28h (40d)
+	0x35, 0x01,						//           Physical Minimum 1
+	0x45, 0x28,						//           Physical Maximum 28h (40d)
+	0x75, 0x08,						//           Report Size 8
+	0x95, 0x01,						//           Report Count 1
+	0x91, 0x02,						//           Output (Variable)	
+	0x09, 0x25,						//         Usage (Effect Type)
+	0xA1, 0x02,						//         Collection Datalink
+	0x09, 0x26,						//           Usage ET Constant Force
+	0x09, 0x27,						//           Usage ET Ramp
+	0x09, 0x30,						//           Usage ET Square
+	//0x09, 0x31,					//           Usage ET Sine
+	//0x09, 0x32,					//           Usage ET Triangle
+	//0x09, 0x33,					//           Usage ET Sawtooth Up
+	//0x09, 0x34,					//           Usage ET Sawtooth Down
+	//0x09, 0x40,					//           Usage ET Spring
+	//0x09, 0x41,					//           Usage ET Damper
+	//0x09, 0x42,					//           Usage ET Inertia
+	//0x09, 0x43,					//           Usage ET Friction
+	//0x09, 0x28,					//           Usage ET Custom Force Data
+	0x25, 0x0C,						//             Logical Maximum Ch (12d)
+	0x15, 0x01,						//             Logical Minimum 1
+	0x35, 0x01,						//             Physical Minimum 1
+	0x45, 0x0C,						//             Physical Maximum Ch (12d)
+	0x75, 0x08,						//             Report Size 8
+	0x95, 0x01,						//             Report Count 1
+	0x91, 0x00,						//             Output
+	0xC0,							//         End Collection
+	0x09, 0x50,						//         Usage Duration
+	0x09, 0x54,						//         Usage Trigger Repeat Interval
+	0x09, 0x51,						//         Usage Sample Period
+	0x15, 0x00,						//           Logical Minimum 0
+	0x26, 0xFF, 0x7F,				//           Logical Maximum 7FFFh (32767d)
+	0x35, 0x00,						//           Physical Minimum 0
+	0x46, 0xFF, 0x7F,				//           Physical Maximum 7FFFh (32767d)
+	0x66, 0x03, 0x10,				//           Unit 1003h (4099d)
+	0x55, 0xFD,						//           Unit Exponent FDh (253d)
+	0x75, 0x10,						//           Report Size 10h (16d)
+	0x95, 0x03,						//           Report Count 3
+	0x91, 0x02,						//           Output (Variable)
+	0x55, 0x00,						//           Unit Exponent 0
+	0x66, 0x00, 0x00,				//           Unit 0
+	0x09, 0x52,						//        Usage Gain
+	0x15, 0x00,						//          Logical Minimum 0
+	0x26, 0xFF, 0x00,				//          Logical Maximum FFh (255d)
+	0x35, 0x00,						//          Physical Minimum 0
+	0x46, 0x10, 0x27,				//          Physical Maximum 2710h (10000d)
 	0x75, 0x08,						//          Report Size 8
 	0x95, 0x01,						//          Report Count 1
-	0x91, 0x00,						//          Output
-	0xC0,							//      End Collection
+	0x91, 0x02,						//          Output (Variable)
+	0x09, 0x53,						//        Usage Trigger Button
+	0x15, 0x01,						//          Logical Minimum 1
+	0x25, 0x08,						//          Logical Maximum 8
+	0x35, 0x01,						//          Physical Minimum 1
+	0x45, 0x08,						//          Physical Maximum 8
+	0x75, 0x08,						//          Report Size 8
+	0x95, 0x01,						//          Report Count 1
+	0x91, 0x02,						//          Output (Variable)
+	0x09, 0x55,						//        Usage Axes Enable
+	0xA1, 0x02,						//        Collection Datalink
+	0x05, 0x01,						//          Usage Page Generic Desktop
+	0x09, 0x30,						//            Usage X
+	0x09, 0x31,						//            Usage Y
+	0x15, 0x00,						//              Logical Minimum 0
+	0x25, 0x01,						//              Logical Maximum 1
+	0x75, 0x01,						//              Report Size 1
+	0x95, 0x02,						//              Report Count 2
+	0x91, 0x02,						//              Output (Variable)
+	0xC0,							//        End Collection
 
-	0x09, 0x50,						//    Usage Duration
-	0x09, 0x54,						//    Usage Trigger Repeat Interval
-	0x09, 0x51,						//    Usage Sample Period
-	0x15, 0x00,						//      Logical Minimum 0
-	0x26, 0xFF, 0x7F,				//      Logical Maximum 7FFFh (32767d)
-	0x35, 0x00,						//      Physical Minimum 0
-	0x46, 0xFF, 0x7F,				//      Physical Maximum 7FFFh (32767d)
-	0x66, 0x03, 0x10,				//      Unit 1003h (4099d)
-	0x55, 0xFD,						//      Unit Exponent FDh (253d)
-	0x75, 0x10,						//      Report Size 10h (16d)
-	0x95, 0x03,						//      Report Count 3
-	0x91, 0x02,						//      Output (Variable)
-	0x55, 0x00,						//      Unit Exponent 0
-	0x66, 0x00, 0x00,				//      Unit 0
-	0x09, 0x52,						//    Usage Gain
-	0x15, 0x00,						//      Logical Minimum 0
-	0x26, 0xFF, 0x00,				//      Logical Maximum FFh (255d)
-	0x35, 0x00,						//      Physical Minimum 0
-	0x46, 0x10, 0x27,				//      Physical Maximum 2710h (10000d)
-	0x75, 0x08,						//      Report Size 8
-	0x95, 0x01,						//      Report Count 1
-	0x91, 0x02,						//      Output (Variable)
-	0x09, 0x53,						//    Usage Trigger Button
-	0x15, 0x01,						//      Logical Minimum 1
-	0x25, 0x08,						//      Logical Maximum 8
-	0x35, 0x01,						//      Physical Minimum 1
-	0x45, 0x08,						//      Physical Maximum 8
-	0x75, 0x08,						//      Report Size 8
-	0x95, 0x01,						//      Report Count 1
-	0x91, 0x02,						//      Output (Variable)
-	0x09, 0x55,						//    Usage Axes Enable
-	0xA1, 0x02,						//      Collection Datalink
-	0x05, 0x01,						//        Usage Page Generic Desktop
-	0x09, 0x30,						//          Usage X
-	0x09, 0x31,						//          Usage Y
-	0x15, 0x00,						//            Logical Minimum 0
-	0x25, 0x01,						//            Logical Maximum 1
-	0x75, 0x01,						//            Report Size 1
-	0x95, 0x02,						//            Report Count 2
-	0x91, 0x02,						//            Output (Variable)
-	0xC0,							//      End Collection
+
 	0x05, 0x0F,						//    Usage Page Physical Interface
 	0x09, 0x56,						//    Usage Direction Enable
 	0x95, 0x01,						//    Report Count 1
@@ -621,15 +628,13 @@ __ALIGN_BEGIN static const uint8_t hid_rpt_ps2[] __ALIGN_END = {
 	0x75, 0x06,						//    Report Size 6
 	0x95, 0x01,						//    Report Count 1
 	0xB1, 0x03,						//    Feature (Constant, Variable)
-	0xC0,    //    End Collection
-   
-	0xC0,    //    End Collection
+	0xC0,    //    End Collection (Datalink)
+   #endif
+
+
+	0xC0,    //    End Collection (Application)
 };
 
-
-static void PS2Controller_Init();
-static void PS2Controller_SetReport(uint8_t * data, uint16_t length);
-static void PS2Controller_GetReport(uint8_t reportId);
 
 const USBD_HID_AppType ps2controllerApp = {
 	.Name = "MUSIA PS2 controller",
@@ -654,9 +659,6 @@ USBD_HID_IfHandleType hps2controller_if = {
 
 
 
-void USBSetDataEffect(uint8_t* hid_report_out, uint16_t length);
-void USBSetEffect(uint8_t* hid_report_out, uint16_t length);
-
 uint8_t ps2Buff[32];
 static void PS2Controller_Init() {
 	USBD_HID_ReportOut(&hps2controller_if, ps2Buff, 16);
@@ -664,6 +666,8 @@ static void PS2Controller_Init() {
 
 
 static uint8_t currentEffectIdx;
+void USBSetDataEffect(uint8_t* hid_report_out, uint16_t length);
+void USBSetEffect(uint8_t* hid_report_out, uint16_t length);
 
 // Output Report IDs for various functions
 #define REPORT_SET_EFFECT			0x01
@@ -690,6 +694,8 @@ static void PS2Controller_SetReport(uint8_t* data, uint16_t length) {
 	usb_printf("PS2Controller_SetReport() reportId=%d, data=", reportId); printf_payload(data, length); printf("\n"); 
 	
 	
+	#ifdef WITH_FF
+
 	switch (reportId) {
 	case REPORT_CREATE_EFFECT:
 		currentEffectIdx = data[1];
@@ -758,15 +764,15 @@ static void PS2Controller_SetReport(uint8_t* data, uint16_t length) {
 
 		break;
 	}
-
+	#endif
 
 	USBD_HID_ReportOut(&hps2controller_if, ps2Buff, 16);
 }
-	
 
 static void PS2Controller_GetReport(uint8_t reportId) {
 	usb_printf("PS2Controller_GetReport for reportId %02X\n", reportId);
 
+	#ifdef WITH_FF
 	uint8_t response[8];
 	uint8_t responseLen = 0;
 	char error = 1;
@@ -804,4 +810,6 @@ static void PS2Controller_GetReport(uint8_t reportId) {
 
 	if (responseLen)
 		USBD_HID_ReportIn(ps2controller_if, response, responseLen);
+	
+	#endif
 }
