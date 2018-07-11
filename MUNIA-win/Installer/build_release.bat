@@ -1,4 +1,4 @@
-set MSBUILD="%PROGRAMFILES(X86)%\MSBuild\14.0\Bin\msbuild.exe"
+set MSBUILD="C:\Windows\Microsoft.Net\Framework\v4.0.30319\MSBuild.exe"
 set MAKENSIS="%PROGRAMFILES(X86)%\nsis\makensis.exe"
 
 cd ..
