@@ -67,7 +67,7 @@ const USBD_HID_AppType cfgApp = {
 	.Report = {
 		.Desc = hid_rpt_cfg,
 		.Length = sizeof(hid_rpt_cfg),
-		.IDs = 0,//1,
+		.IDs = 1,
 	},
 	.Init = Configurator_Init,
 	.SetReport = Configurator_SetReport,
