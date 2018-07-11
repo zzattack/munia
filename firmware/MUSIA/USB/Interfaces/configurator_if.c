@@ -66,8 +66,7 @@ const USBD_HID_AppType cfgApp = {
 	.Name = "MUSIA config",
 	.Report = {
 		.Desc = hid_rpt_cfg,
-		.Length = sizeof(hid_rpt_cfg),
-	},
+		.Length = sizeof(hid_rpt_cfg),	},
 	.Init = Configurator_Init,
 	.SetReport = Configurator_SetReport,
 	.GetReport = Configurator_GetReport,

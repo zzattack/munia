@@ -63,7 +63,7 @@
       <AdditionalOptions />
       <CLanguageStandard />
       <CPPLanguageStandard />
-      <Optimization>Os</Optimization>
+      <Optimization>O0</Optimization>
       <InlineFunctions>true</InlineFunctions>
     </ClCompile>
     <Link>

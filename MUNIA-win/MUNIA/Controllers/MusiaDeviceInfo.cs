@@ -40,17 +40,14 @@ namespace MUNIA.Controllers {
 		public bool AllowVibrate { get; set; }
 
 		public bool Parse(byte[] info, byte[] config) {
-			if (info[0] != MusiaDeviceInfo.CFG_CMD_INFO) return false;
-			if (config[0] != MusiaDeviceInfo.CFG_CMD_READ) return false;
+			DeviceType = BitConverter.ToUInt32(info, 0);
+			VersionMajor = info[4] & 0x0F;
+			HardwareRevision = info[4] >> 4;
+			VersionMinor = info[5];
 
-			DeviceType = BitConverter.ToUInt32(info, 1);
-			VersionMajor = info[5] & 0x0F;
-			HardwareRevision = info[5] >> 4;
-			VersionMinor = info[6];
-
-			Output = (OutputMode)config[1];
-			AllowVibrate = config[2] != 0;
-			PollingFrequency = (PollingFrequencySetting)config[3];
+			Output = (OutputMode)config[0];
+			AllowVibrate = config[1] != 0;
+			PollingFrequency = (PollingFrequencySetting)config[2];
 
 			return true;
 		}

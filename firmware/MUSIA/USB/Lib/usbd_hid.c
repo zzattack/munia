@@ -410,7 +410,7 @@ static void hid_dataStage(USBD_HID_IfHandleType *itf)
         if ((dev->Setup.Value & 0xFF) != 0)
         {
             /* First byte is report ID from setup */
-            data += 3;
+            data += 4;
             data[0] = (uint8_t)dev->Setup.Value;
             len++;
         }
