@@ -8,11 +8,8 @@
  
 //Value taken from CD00167594.pdf page 35, system memory start.
 
-#if defined(STM32F072xB)
-#define BOOTLOADER_START_ADDR 0x1FFFC800
-#elif defined(STM32F042x6)
-#define BOOTLOADER_START_ADDR 0x1FFFC400 //for ST32F042
-#endif
+#define BOOTLOADER_START_ADDR_072 0x1FFFC800
+#define BOOTLOADER_START_ADDR_042 0x1FFFC400 //for ST32F042
 
 //This is the first thing the micro runs after startup_stm32f0xx.s
 //Only the SRAM is initialized at this point
@@ -43,6 +40,9 @@ void bootloaderSwitcher() {
 		HAL_IWDG_Init(&hiwdg);
 				
 		// jump into bootloader ROM
+		const uint32_t BOOTLOADER_START_ADDR = ((DBGMCU->IDCODE & 0xFFF) == 0x448) 
+			? BOOTLOADER_START_ADDR_072 : BOOTLOADER_START_ADDR_042;
+
 		jumpaddr = *(__IO uint32_t*)(BOOTLOADER_START_ADDR + 4);
 		void(*bootloader)(void) = (void(*)(void)) jumpaddr;
 		__set_MSP(*(__IO uint32_t*) BOOTLOADER_START_ADDR); // bye bye
