@@ -49,11 +49,13 @@ Taken from the SNES skin `snes-light-blue.svg` skin that ships with the software
 
 
 ### Sticks
-Sticks refer to the control sticks that made their appearance in the 5th generation of videogame consoles. They are typically represented as a graphic that moves its vertical and horizontal position relative to a resting point. The MUNIA software implements to following attributes for specifying how these are to be rendered:
+Sticks refer to the control sticks that made their appearance in the 5th generation of videogame consoles. They are typically represented as a graphic that moves its vertical and horizontal position relative to a resting point. Sticks may also be pressable in which case you should define the button-id and button-state attributes if you want to use a different graphic for the stick depending on whether or not it is pressed. The MUNIA software implements to following attributes for specifying how these are to be rendered:
 
 * `munia:stick-id="id"`: indicates that this element is to be considered a stick, and assigns an id to it. The id should be any unique integer number.
 * `munia:axis-h="h" munia:axis-v="v": id's of the horizontal and vertical movement axes respectively. Refer to last section.
 * `munia:offset-scale="f.f"`: a real/floating-point number indicating how far the stick moves away from its center. Good values are easily determined through trial and error. Typically a number between 0.5-2.0 should work well.
+* `munia:button-id="x"`: see Buttons/dpad section above
+* `munia:button-state="x"`: see Buttons/dpad section above. When using different graphics depending on the press-state, you should define the svg node describing the graphic twice; once for the pressed state and once for released. The graphic itself may of course differ in color, shape or structure.
 * `munia:z-order="x"`: see Layering section above
 
 #### Example
