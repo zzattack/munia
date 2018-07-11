@@ -11,6 +11,7 @@ using HidSharp;
 using MUNIA.Controllers;
 using MUNIA.Interop;
 using MUNIA.Skins;
+using MUNIA.Util;
 using OpenTK.Graphics.OpenGL;
 
 namespace MUNIA.Forms {
@@ -35,6 +36,8 @@ namespace MUNIA.Forms {
 
 		private void MainForm_Shown(object sender, EventArgs e) {
 			ConfigManager.Load();
+
+			tsmiBackgroundTransparent.Checked = ConfigManager.BackgroundColor.A == 0;
 			BuildMenu();
 			ActivateConfig(ConfigManager.GetActiveController(), ConfigManager.ActiveSkin);
 
@@ -98,6 +101,11 @@ namespace MUNIA.Forms {
 					this.Size = wsz - glControl.Size + this.Size;
 				else
 					ConfigManager.WindowSizes[skin] = glControl.Size;
+			}
+
+			// load available remaps
+			if (skin is SvgSkin svg && ConfigManager.Remaps.ContainsKey(svg)) {
+				var remaps = ConfigManager.Remaps[svg];
 			}
 
 			UpdateController();
@@ -190,7 +198,7 @@ namespace MUNIA.Forms {
 		#region update checking/performing
 
 		private void tsmiCheckUpdates_Click(object sender, EventArgs e) {
-			statusStrip1.Visible = true;
+			status.Visible = true;
 			PerformUpdateCheck(true);
 		}
 
@@ -341,14 +349,40 @@ namespace MUNIA.Forms {
 			}
 		}
 
-		private void glControl_MouseClick(object sender, MouseEventArgs args) {
-			if (args.Button == MouseButtons.Right) {
-				var dlg = new ColorDialog();
-				if (dlg.ShowDialog() == DialogResult.OK)
-					ConfigManager.BackgroundColor = dlg.Color;
+		private void tsmiRemapSkin_Click(object sender, EventArgs e) {
+			if (ConfigManager.ActiveSkin is SvgSkin svg) {
+				var remapForm = new SkinRemapperForm(svg.Path);
+				remapForm.ShowDialog();
+				svg.ApplyRemap(remapForm.Remap);
+				Render();
 			}
 		}
 
+		private void glControl_MouseClick(object sender, MouseEventArgs args) {
+			if (args.Button == MouseButtons.Right) {
+				popup.Show(glControl, args.Location);
+			}
+		}
+		
+		private void tsmiBackgroundChange_Click(object sender, EventArgs e) {
+			var dlg = new ColorDialog2 { Color = ConfigManager.BackgroundColor };
+			var colorBackup = ConfigManager.BackgroundColor;
+			dlg.ColorChanged += (o, eventArgs) => {
+				// retain transparency
+				ConfigManager.BackgroundColor = Color.FromArgb(colorBackup.A, dlg.Color);
+				Render();
+			};
+			if (dlg.ShowDialog() != DialogResult.OK) {
+				ConfigManager.BackgroundColor = colorBackup;
+			}
+		}
+
+		private void tsmiBackgroundTransparent_Click(object sender, EventArgs e) {
+			// flip transparency
+			ConfigManager.BackgroundColor = Color.FromArgb(255 - ConfigManager.BackgroundColor.A, ConfigManager.BackgroundColor);
+			tsmiBackgroundTransparent.Checked = ConfigManager.BackgroundColor.A == 0;
+			Render();
+		}
 	}
 
 }

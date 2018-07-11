@@ -25,8 +25,9 @@ namespace MUNIA.Forms {
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+			this.menu = new System.Windows.Forms.MenuStrip();
 			this.tsmiControllers = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiOptions = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiSetWindowSize = new System.Windows.Forms.ToolStripMenuItem();
@@ -34,30 +35,40 @@ namespace MUNIA.Forms {
 			this.tsmiFirmware = new System.Windows.Forms.ToolStripMenuItem();
 			this.setCaptureLagCompensationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.mapArduinoDevicesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.tsmiRemapSkin = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiHelp = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiCheckUpdates = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiAbout = new System.Windows.Forms.ToolStripMenuItem();
 			this.glControl = new OpenTK.GLControl();
-			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+			this.status = new System.Windows.Forms.StatusStrip();
 			this.lblSkins = new System.Windows.Forms.ToolStripStatusLabel();
 			this.lblFill = new System.Windows.Forms.ToolStripStatusLabel();
 			this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
 			this.pbProgress = new System.Windows.Forms.ToolStripProgressBar();
-			this.menuStrip1.SuspendLayout();
-			this.statusStrip1.SuspendLayout();
+			this.tooltip = new System.Windows.Forms.ToolTip(this.components);
+			this.popup = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.tsmiBackgroundColor = new System.Windows.Forms.ToolStripMenuItem();
+			this.tsmiBackgroundChange = new System.Windows.Forms.ToolStripMenuItem();
+			this.tsmiBackgroundTransparent = new System.Windows.Forms.ToolStripMenuItem();
+			this.tsmiManage = new System.Windows.Forms.ToolStripMenuItem();
+			this.tsmiManageThemes = new System.Windows.Forms.ToolStripMenuItem();
+			this.tsSep = new System.Windows.Forms.ToolStripSeparator();
+			this.menu.SuspendLayout();
+			this.status.SuspendLayout();
+			this.popup.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// menuStrip1
+			// menu
 			// 
-			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.menu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsmiControllers,
             this.tsmiOptions,
             this.tsmiHelp});
-			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-			this.menuStrip1.Name = "menuStrip1";
-			this.menuStrip1.Size = new System.Drawing.Size(577, 24);
-			this.menuStrip1.TabIndex = 1;
-			this.menuStrip1.Text = "menuStrip1";
+			this.menu.Location = new System.Drawing.Point(0, 0);
+			this.menu.Name = "menu";
+			this.menu.Size = new System.Drawing.Size(577, 24);
+			this.menu.TabIndex = 1;
+			this.menu.Text = "menuStrip1";
 			// 
 			// tsmiControllers
 			// 
@@ -72,7 +83,8 @@ namespace MUNIA.Forms {
             this.tsmiDeviceConfig,
             this.tsmiFirmware,
             this.setCaptureLagCompensationToolStripMenuItem,
-            this.mapArduinoDevicesToolStripMenuItem});
+            this.mapArduinoDevicesToolStripMenuItem,
+            this.tsmiRemapSkin});
 			this.tsmiOptions.Name = "tsmiOptions";
 			this.tsmiOptions.Size = new System.Drawing.Size(61, 20);
 			this.tsmiOptions.Text = "&Options";
@@ -112,6 +124,13 @@ namespace MUNIA.Forms {
 			this.mapArduinoDevicesToolStripMenuItem.Text = "Map arduino devices";
 			this.mapArduinoDevicesToolStripMenuItem.Click += new System.EventHandler(this.tsmiMapArduinoDevicesClick);
 			// 
+			// tsmiRemapSkin
+			// 
+			this.tsmiRemapSkin.Name = "tsmiRemapSkin";
+			this.tsmiRemapSkin.Size = new System.Drawing.Size(188, 22);
+			this.tsmiRemapSkin.Text = "Remap skin";
+			this.tsmiRemapSkin.Click += new System.EventHandler(this.tsmiRemapSkin_Click);
+			// 
 			// tsmiHelp
 			// 
 			this.tsmiHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -143,22 +162,23 @@ namespace MUNIA.Forms {
 			this.glControl.Name = "glControl";
 			this.glControl.Size = new System.Drawing.Size(577, 336);
 			this.glControl.TabIndex = 0;
+			this.tooltip.SetToolTip(this.glControl, "Right click for theming options.");
 			this.glControl.VSync = false;
 			this.glControl.Load += new System.EventHandler(this.glControl_Load);
 			this.glControl.MouseClick += new System.Windows.Forms.MouseEventHandler(this.glControl_MouseClick);
 			// 
-			// statusStrip1
+			// status
 			// 
-			this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.status.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lblSkins,
             this.lblFill,
             this.lblStatus,
             this.pbProgress});
-			this.statusStrip1.Location = new System.Drawing.Point(0, 360);
-			this.statusStrip1.Name = "statusStrip1";
-			this.statusStrip1.Size = new System.Drawing.Size(577, 22);
-			this.statusStrip1.TabIndex = 2;
-			this.statusStrip1.Text = "statusStrip";
+			this.status.Location = new System.Drawing.Point(0, 360);
+			this.status.Name = "status";
+			this.status.Size = new System.Drawing.Size(577, 22);
+			this.status.TabIndex = 2;
+			this.status.Text = "statusStrip";
 			// 
 			// lblSkins
 			// 
@@ -183,31 +203,94 @@ namespace MUNIA.Forms {
 			this.pbProgress.Size = new System.Drawing.Size(100, 16);
 			this.pbProgress.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
 			// 
+			// tooltip
+			// 
+			this.tooltip.AutoPopDelay = 3000;
+			this.tooltip.InitialDelay = 500;
+			this.tooltip.ReshowDelay = 100;
+			// 
+			// popup
+			// 
+			this.popup.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsmiBackgroundColor,
+            this.tsmiManage});
+			this.popup.Name = "popup";
+			this.popup.Size = new System.Drawing.Size(181, 70);
+			// 
+			// tsmiBackgroundColor
+			// 
+			this.tsmiBackgroundColor.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsmiBackgroundChange,
+            this.tsmiBackgroundTransparent});
+			this.tsmiBackgroundColor.Name = "tsmiBackgroundColor";
+			this.tsmiBackgroundColor.Size = new System.Drawing.Size(180, 22);
+			this.tsmiBackgroundColor.Text = "&Background color";
+			// 
+			// tsmiBackgroundChange
+			// 
+			this.tsmiBackgroundChange.Name = "tsmiBackgroundChange";
+			this.tsmiBackgroundChange.Size = new System.Drawing.Size(180, 22);
+			this.tsmiBackgroundChange.Text = "&Change";
+			this.tsmiBackgroundChange.Click += new System.EventHandler(this.tsmiBackgroundChange_Click);
+			// 
+			// tsmiBackgroundTransparent
+			// 
+			this.tsmiBackgroundTransparent.Checked = true;
+			this.tsmiBackgroundTransparent.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.tsmiBackgroundTransparent.Name = "tsmiBackgroundTransparent";
+			this.tsmiBackgroundTransparent.Size = new System.Drawing.Size(180, 22);
+			this.tsmiBackgroundTransparent.Text = "&Transparent";
+			this.tsmiBackgroundTransparent.ToolTipText = "If checked, background will have an alpha channel of 0 allowing OBS to blend the " +
+    "background with overlapping content.\r\nIn your OBS scene, use a game capture sour" +
+    "ce with transparency enabled.";
+			this.tsmiBackgroundTransparent.Click += new System.EventHandler(this.tsmiBackgroundTransparent_Click);
+			// 
+			// tsmiManage
+			// 
+			this.tsmiManage.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsSep,
+            this.tsmiManageThemes});
+			this.tsmiManage.Name = "tsmiManage";
+			this.tsmiManage.Size = new System.Drawing.Size(180, 22);
+			this.tsmiManage.Text = "Color &remapping";
+			// 
+			// tsmiManageThemes
+			// 
+			this.tsmiManageThemes.Name = "tsmiManageThemes";
+			this.tsmiManageThemes.Size = new System.Drawing.Size(180, 22);
+			this.tsmiManageThemes.Text = "&Manage themes";
+			// 
+			// tsSep
+			// 
+			this.tsSep.Name = "tsSep";
+			this.tsSep.Size = new System.Drawing.Size(177, 6);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(577, 382);
 			this.Controls.Add(this.glControl);
-			this.Controls.Add(this.statusStrip1);
-			this.Controls.Add(this.menuStrip1);
+			this.Controls.Add(this.status);
+			this.Controls.Add(this.menu);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.MainMenuStrip = this.menuStrip1;
+			this.MainMenuStrip = this.menu;
 			this.Name = "MainForm";
 			this.Text = "MUNIA";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
 			this.Shown += new System.EventHandler(this.MainForm_Shown);
-			this.menuStrip1.ResumeLayout(false);
-			this.menuStrip1.PerformLayout();
-			this.statusStrip1.ResumeLayout(false);
-			this.statusStrip1.PerformLayout();
+			this.menu.ResumeLayout(false);
+			this.menu.PerformLayout();
+			this.status.ResumeLayout(false);
+			this.status.PerformLayout();
+			this.popup.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
         }
 
         #endregion
-        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.MenuStrip menu;
         private System.Windows.Forms.ToolStripMenuItem tsmiControllers;
         private GLControl glControl;
 		private System.Windows.Forms.ToolStripMenuItem tsmiOptions;
@@ -215,7 +298,7 @@ namespace MUNIA.Forms {
 		private System.Windows.Forms.ToolStripMenuItem tsmiHelp;
 		private System.Windows.Forms.ToolStripMenuItem tsmiCheckUpdates;
 		private System.Windows.Forms.ToolStripMenuItem tsmiAbout;
-		private System.Windows.Forms.StatusStrip statusStrip1;
+		private System.Windows.Forms.StatusStrip status;
 		private System.Windows.Forms.ToolStripStatusLabel lblStatus;
 		private System.Windows.Forms.ToolStripStatusLabel lblFill;
 		private System.Windows.Forms.ToolStripProgressBar pbProgress;
@@ -224,6 +307,15 @@ namespace MUNIA.Forms {
 		private System.Windows.Forms.ToolStripMenuItem tsmiFirmware;
 		private System.Windows.Forms.ToolStripMenuItem setCaptureLagCompensationToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem mapArduinoDevicesToolStripMenuItem;
+		private System.Windows.Forms.ToolTip tooltip;
+		private System.Windows.Forms.ToolStripMenuItem tsmiRemapSkin;
+		private System.Windows.Forms.ContextMenuStrip popup;
+		private System.Windows.Forms.ToolStripMenuItem tsmiBackgroundColor;
+		private System.Windows.Forms.ToolStripMenuItem tsmiManage;
+		private System.Windows.Forms.ToolStripMenuItem tsmiManageThemes;
+		private System.Windows.Forms.ToolStripMenuItem tsmiBackgroundChange;
+		private System.Windows.Forms.ToolStripMenuItem tsmiBackgroundTransparent;
+		private System.Windows.Forms.ToolStripSeparator tsSep;
 	}
 }
 
