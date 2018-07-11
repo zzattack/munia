@@ -18,7 +18,7 @@ __ALIGN_BEGIN static const uint8_t hid_rpt_ps2[] __ALIGN_END = {
 	0xa1, 0x01,						// COLLECTION (Application)
 									// 12 buttons (4x face, l1/l2/r1/r2, start, select, lstick, rstick)
 
-    0x85, 0x01,						// Report ID 1
+    // 0x85, 0x01,						// Report ID 1
 	0x05, 0x09,						//   USAGE_PAGE (Button)
 	0x19, 0x01,						//     USAGE_MINIMUM (Button 1)
 	0x29, 0x0C,						//     USAGE_MAXIMUM (Button12)
@@ -639,10 +639,9 @@ __ALIGN_BEGIN static const uint8_t hid_rpt_ps2[] __ALIGN_END = {
 const USBD_HID_AppType ps2controllerApp = {
 	.Name = "MUSIA PS2 controller",
 	.Report = {
-	.Desc = hid_rpt_ps2,
-	.Length = sizeof(hid_rpt_ps2),
-	.IDs = 1,	
-},
+		.Desc = hid_rpt_ps2,
+		.Length = sizeof(hid_rpt_ps2),
+	},
 	.Init = PS2Controller_Init,
 	.SetReport = PS2Controller_SetReport,
 	.GetReport = PS2Controller_GetReport,
