@@ -45,7 +45,6 @@ void UsbDevice_Init() {
 
 	/* All fields of Config have to be properly set up */
 	ps2controller_if->Config.InEp.Num = 0x81;
-	ps2controller_if->Config.OutEp.Num = 0x01;
 	configurator_if->Config.InEp.Num = 0x82;
 	configurator_if->Config.OutEp.Num = 0x02;
 
