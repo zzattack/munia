@@ -112,9 +112,6 @@ void spi_sniffer::init() {
 	// no pull-up on MISO line, console already has this
 	HAL_GPIO_WritePin(SW_PULLUP_ENABLE_GPIO_Port, SW_PULLUP_ENABLE_Pin, GPIO_PIN_SET); // SET = pull up disabled
 
-	// disconnect USB +5v from joystick
-	HAL_GPIO_WritePin(USB_VIBR_EN_GPIO_Port, USB_VIBR_EN_Pin, GPIO_PIN_RESET); // RESET = vibr mosfet disabled	
-
 	// connect PS2 8V vibration motor power source
 	HAL_GPIO_WritePin(PS2_VIBR_EN_GPIO_Port, PS2_VIBR_EN_Pin, GPIO_PIN_SET); // SET = vibr mosfet enabled
 	

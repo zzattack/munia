@@ -49,8 +49,6 @@
 
 /* Private define ------------------------------------------------------------*/
 
-#define USB_VIBR_EN_Pin GPIO_PIN_14
-#define USB_VIBR_EN_GPIO_Port GPIOC
 #define PS2_VIBR_EN_Pin GPIO_PIN_15
 #define PS2_VIBR_EN_GPIO_Port GPIOC
 #define JPS2_ATT_Pin GPIO_PIN_0

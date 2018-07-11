@@ -35,9 +35,6 @@ void ps2_poller::init() {
 	// disconnect PS2 8V vibration motor power source
 	HAL_GPIO_WritePin(PS2_VIBR_EN_GPIO_Port, PS2_VIBR_EN_Pin, GPIO_PIN_RESET);
 		
-	// connect +5V from USB to joystick vibration motor
-	HAL_GPIO_WritePin(USB_VIBR_EN_GPIO_Port, USB_VIBR_EN_Pin, GPIO_PIN_SET); 
-		
 	// connect joystick MISO to SPI1 MISO
 	HAL_GPIO_WritePin(SW_SNIFFER_CONSOLE_GPIO_Port, SW_SNIFFER_CONSOLE_Pin, GPIO_PIN_RESET);
 		
