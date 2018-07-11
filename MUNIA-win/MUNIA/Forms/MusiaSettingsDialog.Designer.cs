@@ -26,6 +26,8 @@
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MusiaSettingsDialog));
 			this.lblDeviceType = new System.Windows.Forms.Label();
 			this.gbMunia = new System.Windows.Forms.GroupBox();
+			this.tbMicroController = new System.Windows.Forms.TextBox();
+			this.lblMicrocontroller = new System.Windows.Forms.Label();
 			this.tbMCUId = new System.Windows.Forms.TextBox();
 			this.lblDeviceSerial = new System.Windows.Forms.Label();
 			this.tbHardware = new System.Windows.Forms.TextBox();
@@ -34,15 +36,12 @@
 			this.lblFirmwareVersion = new System.Windows.Forms.Label();
 			this.gbSettings = new System.Windows.Forms.GroupBox();
 			this.lblPollingFrequency = new System.Windows.Forms.Label();
-			this.ckbRumble = new System.Windows.Forms.CheckBox();
 			this.cbPollingFrequency = new System.Windows.Forms.ComboBox();
 			this.label3 = new System.Windows.Forms.Label();
 			this.rbOutputPC = new System.Windows.Forms.RadioButton();
 			this.rbOutputPS2 = new System.Windows.Forms.RadioButton();
 			this.btnCancel = new System.Windows.Forms.Button();
 			this.btnAccept = new System.Windows.Forms.Button();
-			this.tbMicroController = new System.Windows.Forms.TextBox();
-			this.lblMicrocontroller = new System.Windows.Forms.Label();
 			this.gbMunia.SuspendLayout();
 			this.gbSettings.SuspendLayout();
 			this.SuspendLayout();
@@ -73,10 +72,28 @@
 			this.gbMunia.Controls.Add(this.gbSettings);
 			this.gbMunia.Location = new System.Drawing.Point(12, 12);
 			this.gbMunia.Name = "gbMunia";
-			this.gbMunia.Size = new System.Drawing.Size(312, 225);
+			this.gbMunia.Size = new System.Drawing.Size(312, 202);
 			this.gbMunia.TabIndex = 6;
 			this.gbMunia.TabStop = false;
 			this.gbMunia.Text = "MUNIA Info";
+			// 
+			// tbMicroController
+			// 
+			this.tbMicroController.Enabled = false;
+			this.tbMicroController.Location = new System.Drawing.Point(113, 84);
+			this.tbMicroController.Name = "tbMicroController";
+			this.tbMicroController.ReadOnly = true;
+			this.tbMicroController.Size = new System.Drawing.Size(179, 20);
+			this.tbMicroController.TabIndex = 18;
+			// 
+			// lblMicrocontroller
+			// 
+			this.lblMicrocontroller.AutoSize = true;
+			this.lblMicrocontroller.Location = new System.Drawing.Point(21, 87);
+			this.lblMicrocontroller.Name = "lblMicrocontroller";
+			this.lblMicrocontroller.Size = new System.Drawing.Size(76, 13);
+			this.lblMicrocontroller.TabIndex = 17;
+			this.lblMicrocontroller.Text = "Microcontroller";
 			// 
 			// tbMCUId
 			// 
@@ -135,14 +152,13 @@
 			// gbSettings
 			// 
 			this.gbSettings.Controls.Add(this.lblPollingFrequency);
-			this.gbSettings.Controls.Add(this.ckbRumble);
 			this.gbSettings.Controls.Add(this.cbPollingFrequency);
 			this.gbSettings.Controls.Add(this.label3);
 			this.gbSettings.Controls.Add(this.rbOutputPC);
 			this.gbSettings.Controls.Add(this.rbOutputPS2);
 			this.gbSettings.Location = new System.Drawing.Point(15, 118);
 			this.gbSettings.Name = "gbSettings";
-			this.gbSettings.Size = new System.Drawing.Size(291, 89);
+			this.gbSettings.Size = new System.Drawing.Size(291, 70);
 			this.gbSettings.TabIndex = 15;
 			this.gbSettings.TabStop = false;
 			this.gbSettings.Text = "Settings";
@@ -155,16 +171,6 @@
 			this.lblPollingFrequency.Size = new System.Drawing.Size(88, 13);
 			this.lblPollingFrequency.TabIndex = 8;
 			this.lblPollingFrequency.Text = "Polling frequency";
-			// 
-			// ckbRumble
-			// 
-			this.ckbRumble.AutoSize = true;
-			this.ckbRumble.Location = new System.Drawing.Point(18, 64);
-			this.ckbRumble.Name = "ckbRumble";
-			this.ckbRumble.Size = new System.Drawing.Size(164, 17);
-			this.ckbRumble.TabIndex = 7;
-			this.ckbRumble.Text = "Vibration feedback over USB";
-			this.ckbRumble.UseVisualStyleBackColor = true;
 			// 
 			// cbPollingFrequency
 			// 
@@ -214,7 +220,7 @@
 			// 
 			this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.btnCancel.Location = new System.Drawing.Point(168, 242);
+			this.btnCancel.Location = new System.Drawing.Point(168, 219);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(75, 23);
 			this.btnCancel.TabIndex = 7;
@@ -225,7 +231,7 @@
 			// 
 			this.btnAccept.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnAccept.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.btnAccept.Location = new System.Drawing.Point(249, 242);
+			this.btnAccept.Location = new System.Drawing.Point(249, 219);
 			this.btnAccept.Name = "btnAccept";
 			this.btnAccept.Size = new System.Drawing.Size(75, 23);
 			this.btnAccept.TabIndex = 8;
@@ -233,31 +239,13 @@
 			this.btnAccept.UseVisualStyleBackColor = true;
 			this.btnAccept.Click += new System.EventHandler(this.btnAccept_Click);
 			// 
-			// tbMicroController
-			// 
-			this.tbMicroController.Enabled = false;
-			this.tbMicroController.Location = new System.Drawing.Point(113, 84);
-			this.tbMicroController.Name = "tbMicroController";
-			this.tbMicroController.ReadOnly = true;
-			this.tbMicroController.Size = new System.Drawing.Size(179, 20);
-			this.tbMicroController.TabIndex = 18;
-			// 
-			// lblMicrocontroller
-			// 
-			this.lblMicrocontroller.AutoSize = true;
-			this.lblMicrocontroller.Location = new System.Drawing.Point(21, 87);
-			this.lblMicrocontroller.Name = "lblMicrocontroller";
-			this.lblMicrocontroller.Size = new System.Drawing.Size(76, 13);
-			this.lblMicrocontroller.TabIndex = 17;
-			this.lblMicrocontroller.Text = "Microcontroller";
-			// 
 			// MusiaSettingsDialog
 			// 
 			this.AcceptButton = this.btnAccept;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.btnCancel;
-			this.ClientSize = new System.Drawing.Size(336, 277);
+			this.ClientSize = new System.Drawing.Size(336, 254);
 			this.Controls.Add(this.gbMunia);
 			this.Controls.Add(this.btnCancel);
 			this.Controls.Add(this.btnAccept);
@@ -287,7 +275,6 @@
 		private System.Windows.Forms.GroupBox gbSettings;
 		private System.Windows.Forms.Button btnCancel;
 		private System.Windows.Forms.Button btnAccept;
-		private System.Windows.Forms.CheckBox ckbRumble;
 		private System.Windows.Forms.ComboBox cbPollingFrequency;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.RadioButton rbOutputPC;

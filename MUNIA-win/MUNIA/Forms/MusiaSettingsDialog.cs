@@ -49,14 +49,11 @@ namespace MUNIA.Forms {
 			rbOutputPS2.Checked = deviceInfo.Output == MusiaDeviceInfo.OutputMode.PS2;
 			rbOutputPC.Checked = deviceInfo.Output == MusiaDeviceInfo.OutputMode.PC;
 			cbPollingFrequency.SelectedItem = deviceInfo.PollingFrequency;
-			ckbRumble.Checked = deviceInfo.AllowVibrate;
 		}
 
 		private void btnAccept_Click(object sender, EventArgs e) {
 			_deviceInfo.Output = rbOutputPC.Checked ? MusiaDeviceInfo.OutputMode.PC : MusiaDeviceInfo.OutputMode.PS2;
 			_deviceInfo.PollingFrequency = (MusiaDeviceInfo.PollingFrequencySetting)cbPollingFrequency.SelectedItem;
-			_deviceInfo.AllowVibrate = ckbRumble.Checked;
-
 			try {
 				using (HidStream stream = _intf.Open()) {
 					var report = _deviceInfo.ToWriteReport();

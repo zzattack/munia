@@ -14,7 +14,7 @@ namespace MUNIA.Controllers {
 
         protected override bool Parse(byte[] ev) {
             byte reportId = ev[0];
-            if (reportId != 1) return false;
+            if (reportId > 1) return false;
 
             // cross square circle triangle select start lstick rstick
             int i = 0, mask = 0x01;

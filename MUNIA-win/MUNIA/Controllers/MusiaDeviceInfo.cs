@@ -37,7 +37,6 @@ namespace MUNIA.Controllers {
 		};
 
 		public PollingFrequencySetting PollingFrequency { get; set; }
-		public bool AllowVibrate { get; set; }
 
 		public bool Parse(byte[] info, byte[] config) {
 			DeviceType = BitConverter.ToUInt32(info, 0);
@@ -46,7 +45,6 @@ namespace MUNIA.Controllers {
 			VersionMinor = info[5];
 
 			Output = (OutputMode)config[0];
-			AllowVibrate = config[1] != 0;
 			PollingFrequency = (PollingFrequencySetting)config[2];
 
 			return true;
@@ -56,7 +54,7 @@ namespace MUNIA.Controllers {
 			byte[] report = new byte[9];
 			report[0] = CFG_CMD_WRITE;
 			report[1] = (byte)(Output == OutputMode.PS2 ? 0 : 1);
-			report[2] = (byte)(AllowVibrate ? 1 : 0);
+			report[2] = 0; // was rumble allowed
 			report[3] = (byte)PollingFrequency;
 			return report;
 		}
