@@ -92,6 +92,5 @@ void usb_joystick::updateState(ps2_state* state) {
 
 
 void usb_joystick::sendReport(ps2_hid_packet* pkt) {
-	pkt->report_id = 1;
 	USBD_HID_ReportIn(ps2controller_if, (uint8_t*)pkt, sizeof(*pkt));
 }

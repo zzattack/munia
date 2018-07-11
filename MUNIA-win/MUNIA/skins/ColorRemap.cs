@@ -6,7 +6,7 @@ using System.Xml;
 using MUNIA.Skins;
 using Svg;
 
-namespace MUNIA.skins {
+namespace MUNIA.Skins {
 	public class ColorRemap {
 		public string Name { get; set; }
 		private List<GroupedSvgElems> _groups = new List<GroupedSvgElems>();

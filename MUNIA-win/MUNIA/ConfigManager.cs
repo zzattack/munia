@@ -8,7 +8,6 @@ using System.Windows.Forms;
 using System.Xml;
 using MUNIA.Controllers;
 using MUNIA.Forms;
-using MUNIA.skins;
 using MUNIA.Skins;
 
 namespace MUNIA {

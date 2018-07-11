@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using MUNIA.Controllers;
-using MUNIA.skins;
 using MUNIA.Util;
 using OpenTK.Graphics.OpenGL;
 using Svg;
