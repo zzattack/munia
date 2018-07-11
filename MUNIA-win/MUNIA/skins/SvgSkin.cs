@@ -4,24 +4,26 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using MUNIA.Controllers;
+using MUNIA.skins;
 using MUNIA.Util;
 using OpenTK.Graphics.OpenGL;
 using Svg;
 
 namespace MUNIA.Skins {
 	public class SvgSkin : Skin {
-		private SvgDocument _svgDocument;
+		public SvgDocument SvgDocument { get; private set; }
 		public List<Button> Buttons = new List<Button>();
 		public List<Stick> Sticks = new List<Stick>();
 		public List<Trigger> Triggers = new List<Trigger>();
 		private SizeF _dimensions;
 		private int _baseTexture;
+		public ColorRemap DefaultRemap { get; private set; }
 
 		public void Load(string svgPath) {
 			try {
 				Path = svgPath;
-				_svgDocument = SvgDocument.Open(svgPath);
-				_dimensions = _svgDocument.GetDimensions();
+				SvgDocument = SvgDocument.Open(svgPath);
+				_dimensions = SvgDocument.GetDimensions();
 
 				// cleanup
 				Buttons.ForEach(b => {
@@ -38,7 +40,9 @@ namespace MUNIA.Skins {
 				Triggers.Clear();
 
 				// load button/stick/trigger mapping from svg
-				RecursiveGetElements(_svgDocument);
+				RecursiveGetElements(SvgDocument);
+
+				DefaultRemap = ColorRemap.CreateFromSkin(this);
 				LoadResult = Controllers.Any() ? SkinLoadResult.Ok : SkinLoadResult.Fail;
 			}
 			catch { LoadResult = SkinLoadResult.Fail; }
@@ -138,8 +142,8 @@ namespace MUNIA.Skins {
 		}
 
 		public override void Render(int width, int height) {
-			if (_svgDocument == null || width == 0 || height == 0) return;
-			if (_svgDocument.Height != height || _svgDocument.Width != width) {
+			if (SvgDocument == null || width == 0 || height == 0) return;
+			if (SvgDocument.Height != height || SvgDocument.Width != width) {
 				RenderBase(width, height);
 			}
 			Render();
@@ -161,7 +165,7 @@ namespace MUNIA.Skins {
 				RenderItem(all[i]);
 
 			GL.BindTexture(TextureTarget.Texture2D, _baseTexture);
-			TextureHelper.RenderTexture(0, _svgDocument.Width, 0, _svgDocument.Height);
+			TextureHelper.RenderTexture(0, SvgDocument.Width, 0, SvgDocument.Height);
 
 			for (; i < all.Count; i++)
 				RenderItem(all[i]);
@@ -200,7 +204,7 @@ namespace MUNIA.Skins {
 				x = y = 0f;
 			}
 
-			SizeF img = GetCorrectedDimensions(new SizeF(_svgDocument.Width, _svgDocument.Height));
+			SizeF img = GetCorrectedDimensions(new SizeF(SvgDocument.Width, SvgDocument.Height));
 			x *= img.Width / _dimensions.Width * stick.OffsetScale;
 			y *= img.Height / _dimensions.Height * stick.OffsetScale;
 			r.Offset(new PointF(x, y));
@@ -216,7 +220,7 @@ namespace MUNIA.Skins {
 			o = trigger.Range.Clip(o);
 
 			if (trigger.Type == TriggerType.Slide) {
-				SizeF img = GetCorrectedDimensions(new SizeF(_svgDocument.Width, _svgDocument.Height));
+				SizeF img = GetCorrectedDimensions(new SizeF(SvgDocument.Width, SvgDocument.Height));
 				if (trigger.Orientation == TriggerOrientation.Vertical) {
 					o *= img.Height / _dimensions.Height * trigger.OffsetScale;
 					r.Offset(new PointF(0, o));
@@ -255,11 +259,11 @@ namespace MUNIA.Skins {
 		}
 
 		private void RenderBase(int width, int height) {
-			_svgDocument.Height = height;
-			_svgDocument.Width = width;
+			SvgDocument.Height = height;
+			SvgDocument.Width = width;
 
 			// hide just the changable elements first
-			SetVisibleRecursive(_svgDocument, true);
+			SetVisibleRecursive(SvgDocument, true);
 			foreach (var b in Buttons) {
 				if (b.Pressed != null) b.Pressed.Visible = false;
 				if (b.Element != null) b.Element.Visible = false;
@@ -272,14 +276,14 @@ namespace MUNIA.Skins {
 				t.Element.Visible = false;
 			}
 
-			var baseImg = _svgDocument.Draw();
+			var baseImg = SvgDocument.Draw();
 			_baseTexture = TextureHelper.CreateTexture(baseImg);
 
 			// System.IO.Directory.CreateDirectory(Name);
 			// baseImg.Save(Name + "/base_texture.png");
 
 			// hide everything
-			SetVisibleRecursive(_svgDocument, false);
+			SetVisibleRecursive(SvgDocument, false);
 			var work = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
 			foreach (var btn in Buttons) {
@@ -330,7 +334,7 @@ namespace MUNIA.Skins {
 				SetVisibleToRoot(e, true);
 				SetVisibleRecursive(e, true);
 
-				_svgDocument.Draw(work);
+				SvgDocument.Draw(work);
 				// work.Clone(boundsScaled, work.PixelFormat).Save(Name + "/" + e.ID + ".png");
 
 				ret = TextureHelper.CreateTexture(work.Clone(boundsScaled, work.PixelFormat));
@@ -343,7 +347,7 @@ namespace MUNIA.Skins {
 			return Tuple.Create(ret, boundsScaled);
 		}
 
-		private void SetVisibleRecursive(SvgElement e, bool visible) {
+		public static void SetVisibleRecursive(SvgElement e, bool visible) {
 			if (e is SvgVisualElement) {
 				((SvgVisualElement)e).Visible = visible;
 			}
@@ -351,7 +355,7 @@ namespace MUNIA.Skins {
 				SetVisibleRecursive(c, visible);
 		}
 
-		private void SetVisibleToRoot(SvgElement e, bool visible) {
+		public static void SetVisibleToRoot(SvgElement e, bool visible) {
 			if (e is SvgVisualElement)
 				((SvgVisualElement)e).Visible = visible;
 			if (e.Parent != null)
@@ -392,9 +396,9 @@ namespace MUNIA.Skins {
 
 		internal PointF Unproject(PointF p) {
 			float svgAR = _dimensions.Width / _dimensions.Height;
-			float imgAR = _svgDocument.Width / _svgDocument.Height;
-			float width = _svgDocument.Width;
-			float height = _svgDocument.Height;
+			float imgAR = SvgDocument.Width / SvgDocument.Height;
+			float width = SvgDocument.Width;
+			float height = SvgDocument.Height;
 			if (svgAR > imgAR)
 				height = width / svgAR;
 			else
@@ -404,9 +408,9 @@ namespace MUNIA.Skins {
 			var y = p.Y / _dimensions.Height * height;
 
 			if (svgAR > imgAR)
-				y += (_svgDocument.Height - _svgDocument.Width / svgAR) / 2f;
+				y += (SvgDocument.Height - SvgDocument.Width / svgAR) / 2f;
 			else
-				x += (_svgDocument.Width - _svgDocument.Height * svgAR) / 2f;
+				x += (SvgDocument.Width - SvgDocument.Height * svgAR) / 2f;
 
 			return new PointF(x, y);
 		}
@@ -430,6 +434,15 @@ namespace MUNIA.Skins {
 			float maxX = points.Max(p => p.X);
 			float maxY = points.Max(p => p.Y);
 			return RectangleF.FromLTRB(minX, minY, maxX, maxY);
+		}
+
+		public void ApplyRemap(ColorRemap remap) {
+			foreach (var remapEntry in remap.Elements) {
+				var elem = this.SvgDocument.GetElementById(remapEntry.Key);
+				if (elem == null) continue;
+				if (elem.Fill is SvgColourServer f) f.Colour = remapEntry.Value.Item1;
+				if (elem.Stroke is SvgColourServer s) s.Colour = remapEntry.Value.Item2;
+			}
 		}
 
 		public class ControllerItem {

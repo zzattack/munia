@@ -11,6 +11,7 @@ using HidSharp;
 using MUNIA.Controllers;
 using MUNIA.Interop;
 using MUNIA.Skins;
+using MUNIA.Util;
 using OpenTK.Graphics.OpenGL;
 
 namespace MUNIA.Forms {
@@ -35,6 +36,8 @@ namespace MUNIA.Forms {
 
 		private void MainForm_Shown(object sender, EventArgs e) {
 			ConfigManager.Load();
+
+			tsmiBackgroundTransparent.Checked = ConfigManager.BackgroundColor.A == 0;
 			BuildMenu();
 			ActivateConfig(ConfigManager.GetActiveController(), ConfigManager.ActiveSkin);
 
@@ -64,7 +67,8 @@ namespace MUNIA.Forms {
 
 			tsmiControllers.DropDownItems.Clear();
 
-			foreach (var ctrlr in ConfigManager.Controllers) {
+			// first show the controllers which are available
+			foreach (var ctrlr in ConfigManager.Controllers.OrderBy(c => c.Name)) {
 				var tsmiController = new ToolStripMenuItem(ctrlr.Name);
 
 				foreach (var skin in ConfigManager.Skins.Where(s => s.Controllers.Contains(ctrlr.Type))) {
@@ -77,6 +81,28 @@ namespace MUNIA.Forms {
 				tsmiControllers.DropDownItems.Add(tsmiController);
 			}
 
+			// then grab the controllers from skins that weren't found
+			var allControllerTypes = ConfigManager.Skins.SelectMany(s => s.Controllers).ToList();
+			var availableControllers = ConfigManager.Controllers.Select(c => c.Type).ToList();
+
+			if (availableControllers.Count() < allControllerTypes.Count())
+				tsmiControllers.DropDownItems.Add(new ToolStripSeparator());
+
+			foreach (var controller in allControllerTypes.Except(availableControllers).OrderBy(c => c.ToString())) {
+				var tsmiSkin = new ToolStripMenuItem(controller.ToString());
+
+				var preview = tsmiSkin.DropDownItems.Add("No controllers - preview only");
+				preview.Enabled = false;
+
+				foreach (var skin in ConfigManager.Skins.Where(s => s.Controllers.Contains(controller))) {
+					var skinPrev = tsmiSkin.DropDownItems.Add(skin.Name);
+					skinPrev.Enabled = true;
+					skinPrev.Click += (sender, args) => ActivateConfig(null, skin);
+				}
+
+				tsmiControllers.DropDownItems.Add(tsmiSkin);
+			}
+
 			string skinText = $"Loaded {ConfigManager.Skins.Count} skins ({ConfigManager.Controllers.Count} devices available)";
 			int numFail = ConfigManager.Skins.Count(s => s.LoadResult != SkinLoadResult.Ok);
 			if (numFail > 0)
@@ -86,7 +112,6 @@ namespace MUNIA.Forms {
 
 		private void ActivateConfig(IController ctrlr, Skin skin) {
 			if (skin?.LoadResult != SkinLoadResult.Ok) return;
-			if (ctrlr == null) return;
 
 			ConfigManager.ActiveSkin = skin;
 			ConfigManager.SetActiveController(ctrlr);
@@ -98,6 +123,11 @@ namespace MUNIA.Forms {
 					this.Size = wsz - glControl.Size + this.Size;
 				else
 					ConfigManager.WindowSizes[skin] = glControl.Size;
+			}
+
+			// load available remaps
+			if (skin is SvgSkin svg && ConfigManager.Remaps.ContainsKey(svg)) {
+				var remaps = ConfigManager.Remaps[svg];
 			}
 
 			UpdateController();
@@ -190,7 +220,7 @@ namespace MUNIA.Forms {
 		#region update checking/performing
 
 		private void tsmiCheckUpdates_Click(object sender, EventArgs e) {
-			statusStrip1.Visible = true;
+			status.Visible = true;
 			PerformUpdateCheck(true);
 		}
 
@@ -341,14 +371,40 @@ namespace MUNIA.Forms {
 			}
 		}
 
-		private void glControl_MouseClick(object sender, MouseEventArgs args) {
-			if (args.Button == MouseButtons.Right) {
-				var dlg = new ColorDialog();
-				if (dlg.ShowDialog() == DialogResult.OK)
-					ConfigManager.BackgroundColor = dlg.Color;
+		private void tsmiRemapSkin_Click(object sender, EventArgs e) {
+			if (ConfigManager.ActiveSkin is SvgSkin svg) {
+				var remapForm = new SkinRemapperForm(svg.Path);
+				remapForm.ShowDialog();
+				svg.ApplyRemap(remapForm.Remap);
+				Render();
 			}
 		}
 
+		private void glControl_MouseClick(object sender, MouseEventArgs args) {
+			if (args.Button == MouseButtons.Right) {
+				popup.Show(glControl, args.Location);
+			}
+		}
+		
+		private void tsmiBackgroundChange_Click(object sender, EventArgs e) {
+			var dlg = new ColorDialog2 { Color = ConfigManager.BackgroundColor };
+			var colorBackup = ConfigManager.BackgroundColor;
+			dlg.ColorChanged += (o, eventArgs) => {
+				// retain transparency
+				ConfigManager.BackgroundColor = Color.FromArgb(colorBackup.A, dlg.Color);
+				Render();
+			};
+			if (dlg.ShowDialog() != DialogResult.OK) {
+				ConfigManager.BackgroundColor = colorBackup;
+			}
+		}
+
+		private void tsmiBackgroundTransparent_Click(object sender, EventArgs e) {
+			// flip transparency
+			ConfigManager.BackgroundColor = Color.FromArgb(255 - ConfigManager.BackgroundColor.A, ConfigManager.BackgroundColor);
+			tsmiBackgroundTransparent.Checked = ConfigManager.BackgroundColor.A == 0;
+			Render();
+		}
 	}
 
 }

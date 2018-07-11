@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Xml;
 using MUNIA.Controllers;
 using MUNIA.Forms;
+using MUNIA.skins;
 using MUNIA.Skins;
 
 namespace MUNIA {
@@ -17,6 +18,8 @@ namespace MUNIA {
 		public static string Email { get; set; } = "nobody@nothing.net";
 		public static Color BackgroundColor { get; set; } = Color.Gray;
 		public static Dictionary<Skin, Size> WindowSizes { get; } = new Dictionary<Skin, Size>();
+		public static Dictionary<Skin, ColorRemap> SelectedRemaps { get; } = new Dictionary<Skin, ColorRemap>();
+		public static Dictionary<SvgSkin, List<ColorRemap>> Remaps { get; } = new Dictionary<SvgSkin, List<ColorRemap>>();
 		public static readonly ArduinoMapping ArduinoMapping = new ArduinoMapping();
 
 		private static TimeSpan _delay;
@@ -59,6 +62,7 @@ namespace MUNIA {
 				var svg = new SvgSkin();
 				svg.Load(svgPath);
 				Skins.Add(svg);
+				Remaps[svg] = new List<ColorRemap>();
 			}
 			foreach (string padpyghtDir in Directory.GetDirectories("./skins")) {
 				foreach (string iniPath in Directory.GetFiles(padpyghtDir, "*.ini")) {
@@ -101,15 +105,24 @@ namespace MUNIA {
 				// now we can load the skin-specific settings
 				if (xroot["active_skin"] != null)
 					ActiveSkin = Skins.FirstOrDefault(s => s.Path == xroot["active_skin"].InnerText);
+
 				foreach (XmlNode skinCfg in xroot["skin_settings"].ChildNodes) {
 					string path = skinCfg.Attributes["skin_path"].Value;
 
+					var skin = Skins.FirstOrDefault(s => s.Path == path);
+
 					var wsz = skinCfg.Attributes["window_size"];
-					if (wsz != null) {
+					if (wsz != null && skin != null) {
 						string size = wsz.Value;
 						Size sz = new Size(int.Parse(size.Substring(0, size.IndexOf("x"))), int.Parse(size.Substring(size.IndexOf("x") + 1)));
-						var skin = Skins.FirstOrDefault(s => s.Path == path);
-						if (skin != null) WindowSizes[skin] = sz;
+						WindowSizes[skin] = sz;
+					}
+
+					if (skin is SvgSkin svg && skinCfg["remaps"] != null) {
+						var remaps = Remaps[svg];
+						foreach (XmlNode xRemap in skinCfg["remaps"]) {
+							remaps.Add(ColorRemap.LoadFrom(xRemap));
+						}
 					}
 				}
 
@@ -154,6 +167,14 @@ namespace MUNIA {
 						var sz = WindowSizes[skin];
 						xw.WriteAttributeString("window_size", $"{sz.Width}x{sz.Height}");
 					}
+
+					if (skin is SvgSkin svg) {
+						xw.WriteStartElement("remaps");
+						foreach (var remap in Remaps[svg])
+							remap.Saveto(xw);
+						xw.WriteEndElement(); // remaps
+					}
+
 					xw.WriteEndElement();
 				}
 				xw.WriteEndElement();
