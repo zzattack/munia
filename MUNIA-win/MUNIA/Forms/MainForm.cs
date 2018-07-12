@@ -7,7 +7,6 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using HidSharp;
 using MUNIA.Controllers;
 using MUNIA.Interop;
 using MUNIA.Skins;
@@ -113,9 +112,14 @@ namespace MUNIA.Forms {
 		private void ActivateConfig(IController ctrlr, Skin skin) {
 			if (skin?.LoadResult != SkinLoadResult.Ok) return;
 
+			// apply remap if it was previously selected
+			if (skin is SvgSkin svg && ConfigManager.SelectedRemaps[svg] is ColorRemap rmp) {
+				rmp.ApplyToSkin(svg);
+			}
+
 			ConfigManager.ActiveSkin = skin;
 			ConfigManager.SetActiveController(ctrlr);
-
+			
 			// find desired window size
 			if (ConfigManager.WindowSizes.ContainsKey(skin)) {
 				var wsz = ConfigManager.WindowSizes[skin];
@@ -124,12 +128,6 @@ namespace MUNIA.Forms {
 				else
 					ConfigManager.WindowSizes[skin] = glControl.Size;
 			}
-
-			// load available remaps
-			if (skin is SvgSkin svg && ConfigManager.Remaps.ContainsKey(svg)) {
-				var remaps = ConfigManager.Remaps[svg];
-			}
-
 			UpdateController();
 			Render();
 		}
@@ -159,11 +157,6 @@ namespace MUNIA.Forms {
 			return ConfigManager.ActiveSkin.UpdateState(ConfigManager.GetActiveController());
 		}
 
-		private void UpdateRender() {
-			if (UpdateController()) {
-				Render();
-			}
-		}
 
 		private void Render() {
 			glControl.MakeCurrent();
@@ -185,7 +178,7 @@ namespace MUNIA.Forms {
 		private void OnResize(object sender, EventArgs e) {
 			if (ConfigManager.ActiveSkin != null) {
 				ConfigManager.WindowSizes[ConfigManager.ActiveSkin] = glControl.Size;
-				ConfigManager.ActiveSkin?.Render(glControl.Width, glControl.Height);
+				ConfigManager.ActiveSkin?.Render(glControl.Width, glControl.Height, true);
 			}
 			GL.Viewport(0, 0, glControl.Width, glControl.Height);
 			Render();
@@ -354,7 +347,7 @@ namespace MUNIA.Forms {
 			var frm = new ArduinoMapperForm(ConfigManager.ArduinoMapping) {
 				StartPosition = FormStartPosition.CenterParent
 			};
-			if (frm.ShowDialog() == DialogResult.OK) {
+			if (frm.ShowDialog(this) == DialogResult.OK) {
 				foreach (var e in frm.Mapping)
 					ConfigManager.ArduinoMapping[e.Key] = e.Value;
 				ConfigManager.LoadControllers();
@@ -362,21 +355,12 @@ namespace MUNIA.Forms {
 			}
 		}
 
-		private void tsmiSetLagCompensation(object sender, EventArgs args) {
+		private void tsmiSetLagCompensation_Click(object sender, EventArgs args) {
 			var frm = new DelayValuePicker(ConfigManager.Delay) {
 				StartPosition = FormStartPosition.CenterParent
 			};
-			if (frm.ShowDialog() == DialogResult.OK) {
+			if (frm.ShowDialog(this) == DialogResult.OK) {
 				ConfigManager.Delay = frm.ChosenDelay;
-			}
-		}
-
-		private void tsmiRemapSkin_Click(object sender, EventArgs e) {
-			if (ConfigManager.ActiveSkin is SvgSkin svg) {
-				var remapForm = new SkinRemapperForm(svg.Path);
-				remapForm.ShowDialog();
-				svg.ApplyRemap(remapForm.Remap);
-				Render();
 			}
 		}
 
@@ -385,7 +369,7 @@ namespace MUNIA.Forms {
 				popup.Show(glControl, args.Location);
 			}
 		}
-		
+
 		private void tsmiBackgroundChange_Click(object sender, EventArgs e) {
 			var dlg = new ColorDialog2 { Color = ConfigManager.BackgroundColor };
 			var colorBackup = ConfigManager.BackgroundColor;
@@ -394,7 +378,7 @@ namespace MUNIA.Forms {
 				ConfigManager.BackgroundColor = Color.FromArgb(colorBackup.A, dlg.Color);
 				Render();
 			};
-			if (dlg.ShowDialog() != DialogResult.OK) {
+			if (dlg.ShowDialog(this) != DialogResult.OK) {
 				ConfigManager.BackgroundColor = colorBackup;
 			}
 		}
@@ -404,6 +388,51 @@ namespace MUNIA.Forms {
 			ConfigManager.BackgroundColor = Color.FromArgb(255 - ConfigManager.BackgroundColor.A, ConfigManager.BackgroundColor);
 			tsmiBackgroundTransparent.Checked = ConfigManager.BackgroundColor.A == 0;
 			Render();
+		}
+
+		private void tsmiManageThemes_Click(object sender, EventArgs e) {
+			if (ConfigManager.ActiveSkin is SvgSkin svg) {
+				var managerForm = new RemapManagerForm(svg, ConfigManager.SelectedRemaps[svg], ConfigManager.Remaps[svg]);
+
+				managerForm.SelectedRemapChanged += (o, args) =>
+					SelectRemap(managerForm.SelectedRemap);
+
+				managerForm.ShowDialog();
+			}
+		}
+
+		private void popup_Opening(object sender, System.ComponentModel.CancelEventArgs e) {
+			tsmiManageThemes.Enabled = ConfigManager.ActiveSkin is SvgSkin;
+
+			// populate the available themes list
+			tsmiApplyTheme.DropDownItems.Clear();
+			if (ConfigManager.ActiveSkin is SvgSkin svg) {
+				var remaps = ConfigManager.Remaps[svg];
+				tsmiApplyTheme.Enabled = remaps.Any(r=>!r.IsSkinDefault);
+
+				var selectedRemap = ConfigManager.SelectedRemaps[svg];
+				foreach (var remap in ConfigManager.Remaps[svg]) {
+					var tsmiSkin = new ToolStripMenuItem(remap.Name, null, (_,__) => SelectRemap(remap));
+
+					// put a checkmark in front if this is the selected remap
+					tsmiSkin.Checked = remap.Equals(selectedRemap);
+
+					tsmiApplyTheme.DropDownItems.Add(tsmiSkin);
+				}
+			}
+			else {
+				tsmiApplyTheme.Enabled = false;
+			}
+		}
+
+		private void SelectRemap(ColorRemap remap) {
+			if (ConfigManager.ActiveSkin is SvgSkin svg) {
+				svg.ApplyRemap(remap);
+				ConfigManager.SelectedRemaps[svg] = remap;
+				// force redraw of the base
+				ConfigManager.ActiveSkin?.Render(glControl.Width, glControl.Height, true);
+				Render();
+			}
 		}
 	}
 

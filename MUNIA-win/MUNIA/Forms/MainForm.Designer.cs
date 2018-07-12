@@ -32,10 +32,9 @@ namespace MUNIA.Forms {
 			this.tsmiOptions = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiSetWindowSize = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiDeviceConfig = new System.Windows.Forms.ToolStripMenuItem();
-			this.tsmiFirmware = new System.Windows.Forms.ToolStripMenuItem();
-			this.setCaptureLagCompensationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.mapArduinoDevicesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.tsmiRemapSkin = new System.Windows.Forms.ToolStripMenuItem();
+			this.tsmiFirmwareUpdate = new System.Windows.Forms.ToolStripMenuItem();
+			this.tsmiSetLagCompensation = new System.Windows.Forms.ToolStripMenuItem();
+			this.tsmiMapArduinoDevices = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiHelp = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiCheckUpdates = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiAbout = new System.Windows.Forms.ToolStripMenuItem();
@@ -50,9 +49,9 @@ namespace MUNIA.Forms {
 			this.tsmiBackgroundColor = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiBackgroundChange = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiBackgroundTransparent = new System.Windows.Forms.ToolStripMenuItem();
-			this.tsmiManage = new System.Windows.Forms.ToolStripMenuItem();
+			this.tsmiColorRemapping = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiManageThemes = new System.Windows.Forms.ToolStripMenuItem();
-			this.tsSep = new System.Windows.Forms.ToolStripSeparator();
+			this.tsmiApplyTheme = new System.Windows.Forms.ToolStripMenuItem();
 			this.menu.SuspendLayout();
 			this.status.SuspendLayout();
 			this.popup.SuspendLayout();
@@ -81,10 +80,9 @@ namespace MUNIA.Forms {
 			this.tsmiOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsmiSetWindowSize,
             this.tsmiDeviceConfig,
-            this.tsmiFirmware,
-            this.setCaptureLagCompensationToolStripMenuItem,
-            this.mapArduinoDevicesToolStripMenuItem,
-            this.tsmiRemapSkin});
+            this.tsmiFirmwareUpdate,
+            this.tsmiSetLagCompensation,
+            this.tsmiMapArduinoDevices});
 			this.tsmiOptions.Name = "tsmiOptions";
 			this.tsmiOptions.Size = new System.Drawing.Size(61, 20);
 			this.tsmiOptions.Text = "&Options";
@@ -103,33 +101,26 @@ namespace MUNIA.Forms {
 			this.tsmiDeviceConfig.Text = "Device &config";
 			this.tsmiDeviceConfig.Click += new System.EventHandler(this.tsmiMuniaSettings_Click);
 			// 
-			// tsmiFirmware
+			// tsmiFirmwareUpdate
 			// 
-			this.tsmiFirmware.Name = "tsmiFirmware";
-			this.tsmiFirmware.Size = new System.Drawing.Size(188, 22);
-			this.tsmiFirmware.Text = "Firmware &updating";
-			this.tsmiFirmware.Click += new System.EventHandler(this.tsmiFirmware_Click);
+			this.tsmiFirmwareUpdate.Name = "tsmiFirmwareUpdate";
+			this.tsmiFirmwareUpdate.Size = new System.Drawing.Size(188, 22);
+			this.tsmiFirmwareUpdate.Text = "Firmware &updating";
+			this.tsmiFirmwareUpdate.Click += new System.EventHandler(this.tsmiFirmware_Click);
 			// 
-			// setCaptureLagCompensationToolStripMenuItem
+			// tsmiSetLagCompensation
 			// 
-			this.setCaptureLagCompensationToolStripMenuItem.Name = "setCaptureLagCompensationToolStripMenuItem";
-			this.setCaptureLagCompensationToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
-			this.setCaptureLagCompensationToolStripMenuItem.Text = "Set &lag compensation";
-			this.setCaptureLagCompensationToolStripMenuItem.Click += new System.EventHandler(this.tsmiSetLagCompensation);
+			this.tsmiSetLagCompensation.Name = "tsmiSetLagCompensation";
+			this.tsmiSetLagCompensation.Size = new System.Drawing.Size(188, 22);
+			this.tsmiSetLagCompensation.Text = "Set &lag compensation";
+			this.tsmiSetLagCompensation.Click += new System.EventHandler(this.tsmiSetLagCompensation_Click);
 			// 
-			// mapArduinoDevicesToolStripMenuItem
+			// tsmiMapArduinoDevices
 			// 
-			this.mapArduinoDevicesToolStripMenuItem.Name = "mapArduinoDevicesToolStripMenuItem";
-			this.mapArduinoDevicesToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
-			this.mapArduinoDevicesToolStripMenuItem.Text = "Map arduino devices";
-			this.mapArduinoDevicesToolStripMenuItem.Click += new System.EventHandler(this.tsmiMapArduinoDevicesClick);
-			// 
-			// tsmiRemapSkin
-			// 
-			this.tsmiRemapSkin.Name = "tsmiRemapSkin";
-			this.tsmiRemapSkin.Size = new System.Drawing.Size(188, 22);
-			this.tsmiRemapSkin.Text = "Remap skin";
-			this.tsmiRemapSkin.Click += new System.EventHandler(this.tsmiRemapSkin_Click);
+			this.tsmiMapArduinoDevices.Name = "tsmiMapArduinoDevices";
+			this.tsmiMapArduinoDevices.Size = new System.Drawing.Size(188, 22);
+			this.tsmiMapArduinoDevices.Text = "Map arduino devices";
+			this.tsmiMapArduinoDevices.Click += new System.EventHandler(this.tsmiMapArduinoDevicesClick);
 			// 
 			// tsmiHelp
 			// 
@@ -213,9 +204,10 @@ namespace MUNIA.Forms {
 			// 
 			this.popup.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsmiBackgroundColor,
-            this.tsmiManage});
+            this.tsmiColorRemapping});
 			this.popup.Name = "popup";
-			this.popup.Size = new System.Drawing.Size(181, 70);
+			this.popup.Size = new System.Drawing.Size(169, 48);
+			this.popup.Opening += new System.ComponentModel.CancelEventHandler(this.popup_Opening);
 			// 
 			// tsmiBackgroundColor
 			// 
@@ -223,13 +215,13 @@ namespace MUNIA.Forms {
             this.tsmiBackgroundChange,
             this.tsmiBackgroundTransparent});
 			this.tsmiBackgroundColor.Name = "tsmiBackgroundColor";
-			this.tsmiBackgroundColor.Size = new System.Drawing.Size(180, 22);
+			this.tsmiBackgroundColor.Size = new System.Drawing.Size(168, 22);
 			this.tsmiBackgroundColor.Text = "&Background color";
 			// 
 			// tsmiBackgroundChange
 			// 
 			this.tsmiBackgroundChange.Name = "tsmiBackgroundChange";
-			this.tsmiBackgroundChange.Size = new System.Drawing.Size(180, 22);
+			this.tsmiBackgroundChange.Size = new System.Drawing.Size(136, 22);
 			this.tsmiBackgroundChange.Text = "&Change";
 			this.tsmiBackgroundChange.Click += new System.EventHandler(this.tsmiBackgroundChange_Click);
 			// 
@@ -238,32 +230,34 @@ namespace MUNIA.Forms {
 			this.tsmiBackgroundTransparent.Checked = true;
 			this.tsmiBackgroundTransparent.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.tsmiBackgroundTransparent.Name = "tsmiBackgroundTransparent";
-			this.tsmiBackgroundTransparent.Size = new System.Drawing.Size(180, 22);
+			this.tsmiBackgroundTransparent.Size = new System.Drawing.Size(136, 22);
 			this.tsmiBackgroundTransparent.Text = "&Transparent";
 			this.tsmiBackgroundTransparent.ToolTipText = "If checked, background will have an alpha channel of 0 allowing OBS to blend the " +
     "background with overlapping content.\r\nIn your OBS scene, use a game capture sour" +
     "ce with transparency enabled.";
 			this.tsmiBackgroundTransparent.Click += new System.EventHandler(this.tsmiBackgroundTransparent_Click);
 			// 
-			// tsmiManage
+			// tsmiColorRemapping
 			// 
-			this.tsmiManage.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsSep,
+			this.tsmiColorRemapping.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsmiApplyTheme,
             this.tsmiManageThemes});
-			this.tsmiManage.Name = "tsmiManage";
-			this.tsmiManage.Size = new System.Drawing.Size(180, 22);
-			this.tsmiManage.Text = "Color &remapping";
+			this.tsmiColorRemapping.Name = "tsmiColorRemapping";
+			this.tsmiColorRemapping.Size = new System.Drawing.Size(168, 22);
+			this.tsmiColorRemapping.Text = "Color &remapping";
 			// 
 			// tsmiManageThemes
 			// 
 			this.tsmiManageThemes.Name = "tsmiManageThemes";
 			this.tsmiManageThemes.Size = new System.Drawing.Size(180, 22);
 			this.tsmiManageThemes.Text = "&Manage themes";
+			this.tsmiManageThemes.Click += new System.EventHandler(this.tsmiManageThemes_Click);
 			// 
-			// tsSep
+			// tsmiApplyTheme
 			// 
-			this.tsSep.Name = "tsSep";
-			this.tsSep.Size = new System.Drawing.Size(177, 6);
+			this.tsmiApplyTheme.Name = "tsmiApplyTheme";
+			this.tsmiApplyTheme.Size = new System.Drawing.Size(180, 22);
+			this.tsmiApplyTheme.Text = "&Apply theme";
 			// 
 			// MainForm
 			// 
@@ -304,18 +298,17 @@ namespace MUNIA.Forms {
 		private System.Windows.Forms.ToolStripProgressBar pbProgress;
 		private System.Windows.Forms.ToolStripStatusLabel lblSkins;
 		private System.Windows.Forms.ToolStripMenuItem tsmiDeviceConfig;
-		private System.Windows.Forms.ToolStripMenuItem tsmiFirmware;
-		private System.Windows.Forms.ToolStripMenuItem setCaptureLagCompensationToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem mapArduinoDevicesToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem tsmiFirmwareUpdate;
+		private System.Windows.Forms.ToolStripMenuItem tsmiSetLagCompensation;
+		private System.Windows.Forms.ToolStripMenuItem tsmiMapArduinoDevices;
 		private System.Windows.Forms.ToolTip tooltip;
-		private System.Windows.Forms.ToolStripMenuItem tsmiRemapSkin;
 		private System.Windows.Forms.ContextMenuStrip popup;
 		private System.Windows.Forms.ToolStripMenuItem tsmiBackgroundColor;
-		private System.Windows.Forms.ToolStripMenuItem tsmiManage;
+		private System.Windows.Forms.ToolStripMenuItem tsmiColorRemapping;
 		private System.Windows.Forms.ToolStripMenuItem tsmiManageThemes;
 		private System.Windows.Forms.ToolStripMenuItem tsmiBackgroundChange;
 		private System.Windows.Forms.ToolStripMenuItem tsmiBackgroundTransparent;
-		private System.Windows.Forms.ToolStripSeparator tsSep;
+		private System.Windows.Forms.ToolStripMenuItem tsmiApplyTheme;
 	}
 }
 
