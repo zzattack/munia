@@ -5,11 +5,11 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Xml;
-using MUNIA.Annotations;
+using MUNIA.Properties;
 using MUNIA.Util;
 using Svg;
 
-namespace MUNIA.Skins {
+namespace MUNIA.Skinning {
 	public class ColorRemap : INotifyPropertyChanged {
 		private string _name;
 
@@ -27,12 +27,16 @@ namespace MUNIA.Skins {
 
 		private void InitGroups(SvgSkin skin) {
 			// groups svg elements by fill and stroke
-			var all = skin.SvgDocument.Children.FindSvgElementsOf<SvgElement>()
+			var all = skin.SvgDocument.Children.FindSvgElementsOf<SvgVisualElement>()
 				.Where(e => e.ContainsAttribute("fill") || e.ContainsAttribute("stroke"));
 
-			var groups = all.GroupBy(e => new { e.Fill, e.Stroke }).ToList();
 			_groups.Clear();
-			_groups.AddRange(groups.Select(g => new GroupedSvgElems(g.AsEnumerable())));
+			var grouped = all.GroupBy(e => new { e.Fill, e.Stroke }).ToList();
+			foreach (var group in grouped) {
+				var g = new GroupedSvgElems(group.Key.Fill, group.Key.Stroke);
+				g.AddRange(group.AsEnumerable());
+				_groups.Add(g);
+			}
 		}
 
 		public static ColorRemap CreateFromSkin(SvgSkin skin) {
@@ -92,7 +96,7 @@ namespace MUNIA.Skins {
 		public void Saveto(XmlTextWriter xw) {
 			// there's no point in saving the default as it
 			// should be recreated at application load and may not be edited
-			if (IsSkinDefault) return; 
+			if (IsSkinDefault) return;
 
 			xw.WriteStartElement("remap");
 			xw.WriteAttributeString("name", Name);
@@ -154,10 +158,13 @@ namespace MUNIA.Skins {
 	}
 
 	public class GroupedSvgElems : List<SvgElement> {
-		public GroupedSvgElems(IEnumerable<SvgElement> svgElements) {
-			this.AddRange(svgElements);
+		public GroupedSvgElems(SvgPaintServer fill, SvgPaintServer stroke) {
+			Fill = fill;
+			Stroke = stroke;
 		}
 
+		public SvgPaintServer Fill { get; private set; } = SvgPaintServer.None;
+		public SvgPaintServer Stroke { get; private set; } = SvgPaintServer.None;
 
 		public string Name => this.ToString();
 		public override string ToString() {
