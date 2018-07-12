@@ -8,7 +8,7 @@ using MUNIA.Util;
 using OpenTK.Graphics.OpenGL;
 using Svg;
 
-namespace MUNIA.Skins {
+namespace MUNIA.Skinning {
 	public class SvgSkin : Skin {
 		public SvgDocument SvgDocument { get; private set; }
 		public List<Button> Buttons = new List<Button>();
@@ -412,7 +412,7 @@ namespace MUNIA.Skins {
 			return new PointF(x, y);
 		}
 
-		public RectangleF CalcBounds(SvgElement x) {
+		public static RectangleF CalcBounds(SvgElement x) {
 			var b = (x as ISvgBoundable).Bounds;
 			var points = new PointF[4];
 			points[0] = new PointF(b.Left - x.StrokeWidth / 2, b.Top - x.StrokeWidth / 2);

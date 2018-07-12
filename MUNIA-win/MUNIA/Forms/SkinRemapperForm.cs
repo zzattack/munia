@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using MUNIA.Skins;
+using MUNIA.Skinning;
 using Svg;
 
 namespace MUNIA.Forms {
@@ -15,28 +15,34 @@ namespace MUNIA.Forms {
 		private Color _bkpFill;
 		private Color _selStroke;
 		private Color _selFill;
-		private GroupedSvgElems _selectedGroup;
 		private bool _isHighlight;
+		private bool _selectingGroup = false;
 
-		private List<SvgElement> _highlights = new List<SvgElement>();
-		private List<SvgElement> _nonHighlights = new List<SvgElement>();
-		private List<SvgElement> _base = new List<SvgElement>();
+		private GroupedSvgElems _selectedGroup;
+		private readonly List<GroupedSvgElems> _highlights = new List<GroupedSvgElems>();
+		private readonly List<GroupedSvgElems> _nonHighlights = new List<GroupedSvgElems>();
+		private readonly List<GroupedSvgElems> _base = new List<GroupedSvgElems>();
 
 		private SkinRemapperForm() {
 			InitializeComponent();
 
 			colorPicker.PrimaryColorPicked += (sender, args) => {
 				_selFill = pnlFill.BackColor = colorPicker.PrimaryColor;
-				// instantly unhighlight and resync timer
-				HighlightGroup(false);
-				timer.Stop(); timer.Start();
+
+				if (!_selectingGroup) {
+					HighlightGroup(false);
+					timer.Stop(); timer.Start();
+				}
 			};
 
 			colorPicker.SecondaryColorPicked += (sender, args) => {
 				_selStroke = pnlStroke.BackColor = colorPicker.SecondaryColor;
+
 				// instantly unhighlight and resync timer
-				HighlightGroup(false);
-				timer.Stop(); timer.Start();
+				if (!_selectingGroup) {
+					HighlightGroup(false);
+					timer.Stop(); timer.Start();
+				}
 			};
 		}
 
@@ -46,19 +52,45 @@ namespace MUNIA.Forms {
 			this.Remap = remap;
 			remap.ApplyToSkin(this._skin);
 
-			_highlights.AddRange(_skin.Buttons.Where(b => b.Pressed != null).Select(b => b.Pressed));
-			_highlights.AddRange(_skin.Sticks.Where(s => s.Pressed != null).Select(s => s.Pressed));
-			_nonHighlights.AddRange(_skin.Buttons.Where(b => b.Element != null).Select(b => b.Element));
-			_nonHighlights.AddRange(_skin.Sticks.Where(s => s.Element != null).Select(s => s.Element));
-			_nonHighlights.AddRange(_skin.Triggers.Where(t => t.Element != null).Select(t => t.Element));
+			var highlightElems = _skin.Buttons.Where(b => b.Pressed != null).Select(b => b.Pressed)
+				.Union(_skin.Sticks.Where(s => s.Pressed != null).Select(s => s.Pressed));
 
-			void RecurseGet(SvgElement element) {
-				if (!GroupContains(element, _highlights) && !GroupContains(element, _nonHighlights)) {
-					_base.Add(element);
-					foreach (var c in element.Children) RecurseGet(c);
+			var nonHighlightElems = _skin.Buttons.Where(b => b.Element != null).Select(b => b.Element)
+				.Union(_skin.Sticks.Where(s => s.Element != null).Select(s => s.Element))
+				.Union(_skin.Triggers.Where(t => t.Element != null).Select(t => t.Element));
+
+			// split remap groups into highlight/non-highlight/base categories
+			foreach (var group in remap.Groups) {
+				var grpHl = new GroupedSvgElems(group.Fill, group.Stroke);
+				var grpNonHl = new GroupedSvgElems(group.Fill, group.Stroke);
+				var grpBase = new GroupedSvgElems(group.Fill, group.Stroke);
+
+				foreach (var elem in group) {
+					bool hl = GroupContains(elem, highlightElems);
+					bool nonHl = GroupContains(elem, nonHighlightElems);
+					if (hl) grpHl.Add(elem);
+					if (nonHl) grpNonHl.Add(elem);
+					if (!hl && !nonHl) grpBase.Add(elem);
+				}
+
+				if (grpNonHl.Count == 0 && grpBase.Count == 0) {
+					// this is entirely a HL group
+					_highlights.Add(group);
+				}
+				else if (grpHl.Count == 0 && grpBase.Count == 0) {
+					// this is entirely a non-HL group
+					_nonHighlights.Add(group);
+				}
+				else if (grpHl.Count == 0 && grpNonHl.Count == 0) {
+					_base.Add(group);
+				}
+				else {
+					// split up
+					if (grpHl.Any()) _highlights.Add(grpHl);
+					if (grpNonHl.Any()) _nonHighlights.Add(grpNonHl);
+					if (grpBase.Any()) _base.Add(grpBase);
 				}
 			}
-			RecurseGet(_skin.SvgDocument);
 
 			tbSkinName.DataBindings.Add("Text", Remap, "Name");
 			lbGroups.DisplayMember = nameof(GroupedSvgElems.Name);
@@ -91,15 +123,9 @@ namespace MUNIA.Forms {
 
 		private void PopulateListbox() {
 			List<GroupedSvgElems> list = new List<GroupedSvgElems>();
-			foreach (var group in Remap.Groups) {
-				if (GroupContains(group, _highlights)) {
-					if (rbHighlights.Checked) list.Add(group);
-				}
-				else if (GroupContains(group, _nonHighlights)) {
-					if (rbNonHighlights.Checked) list.Add(group);
-				}
-				else if (ckbBase.Checked) list.Add(group);
-			}
+			if (rbHighlights.Checked) list.AddRange(_highlights);
+			if (rbNonHighlights.Checked) list.AddRange(_nonHighlights);
+			if (ckbBase.Checked) list.AddRange(_base);
 			lbGroups.DataSource = list;
 		}
 
@@ -118,24 +144,22 @@ namespace MUNIA.Forms {
 
 		private void SelectGroup(GroupedSvgElems group) {
 			if (_selectedGroup == group) return;
+			_selectingGroup = true;
 
 			if (_selectedGroup != null) RestoreGroup();
 			_selectedGroup = group;
 
-			var fill = _selectedGroup.FirstOrDefault(e => e.Fill is SvgColourServer);
-			colorPicker.PrimaryEnabled = pnlFill.Visible = fill != null;
+			colorPicker.PrimaryEnabled = pnlFill.Visible = group.Fill is SvgColourServer;
 
 			Color cFill = Color.Empty;
-			if (fill?.Fill is SvgColourServer cf)
+			if (group.Fill is SvgColourServer cf)
 				cFill = cf.Colour;
 			colorPicker.PrimaryColor = _bkpFill = _selFill = cFill;
 
 
-			var strk = _selectedGroup.FirstOrDefault(e => e.Stroke is SvgColourServer);
-			colorPicker.SecondaryEnabled = pnlStroke.Visible = strk != null;
-
+			colorPicker.SecondaryEnabled = pnlStroke.Visible = group.Stroke is SvgColourServer;
 			Color cStroke = Color.Empty;
-			if (strk?.Fill is SvgColourServer sf)
+			if (group.Stroke is SvgColourServer sf)
 				cStroke = sf.Colour;
 			colorPicker.SecondaryColor = _bkpStroke = _selStroke = cStroke;
 
@@ -143,19 +167,20 @@ namespace MUNIA.Forms {
 			// instantly highlight and resync timer
 			HighlightGroup(true);
 			timer.Stop(); timer.Start();
+			_selectingGroup = false;
 		}
 
 		private void HighlightGroup(bool isHighlighted) {
 			if (_selectedGroup == null) return;
 			_isHighlight = isHighlighted;
 			foreach (var item in _selectedGroup) {
-				if (item.Stroke is SvgColourServer stroke) {
-					Color hl = ColorDistance(_selStroke, Color.Red) > 150 ? Color.Red : Color.White;
-					stroke.Colour = isHighlighted ? hl : _selStroke;
-				}
 				if (item.Fill is SvgColourServer fill) {
 					Color hl = ColorDistance(_selFill, Color.Red) > 150 ? Color.Red : Color.White;
 					fill.Colour = isHighlighted ? hl : _selFill;
+				}
+				if (item.Stroke is SvgColourServer stroke) {
+					Color hl = ColorDistance(_selStroke, Color.Red) > 150 ? Color.Red : Color.White;
+					stroke.Colour = isHighlighted ? hl : _selStroke;
 				}
 			}
 			Render();
@@ -163,8 +188,10 @@ namespace MUNIA.Forms {
 
 		private void RestoreGroup() {
 			foreach (var item in _selectedGroup) {
-				if (item.Stroke is SvgColourServer stroke) stroke.Colour = _bkpStroke;
-				if (item.Fill is SvgColourServer fill) fill.Colour = _bkpFill;
+				if (item.Fill is SvgColourServer fill)
+					fill.Colour = _bkpFill;
+				if (item.Stroke is SvgColourServer stroke)
+					stroke.Colour = _bkpStroke;
 			}
 		}
 
@@ -247,6 +274,45 @@ namespace MUNIA.Forms {
 		private void btnRevert_Click(object sender, EventArgs e) {
 			_selFill = _bkpFill;
 			_selStroke = _bkpStroke;
+		} 
+
+		private void pbSvg_MouseDown(object sender, MouseEventArgs e) {
+			var clickedElems = FindElemsAt(e.Location);
+			foreach (var elem in clickedElems) {
+				// find the smallest clicked elem that belongs to any group
+				var group = (lbGroups.DataSource as List<GroupedSvgElems>).FirstOrDefault(g => g.Contains(elem));
+
+				// select
+				if (group != null) {
+					lbGroups.SelectedItem = group;
+					return;
+				}
+			}
+		}
+
+		private IEnumerable<SvgVisualElement> FindElemsAt(Point loc) {
+			List<SvgVisualElement> candidates = new List<SvgVisualElement>();
+
+			void containsRecurse(SvgElement elem) {
+				if (elem is SvgVisualElement vis && vis.Visible) {
+					var bounds = SvgSkin.CalcBounds(vis);
+					var l = _skin.Unproject(bounds.Location);
+					var s = _skin.Unproject(new PointF(bounds.Right, bounds.Bottom));
+					var boundsScaled = RectangleF.FromLTRB(l.X, l.Y, s.X, s.Y);
+
+					// if this contains the click point but is smaller yet
+					if (boundsScaled.Contains(loc))
+						candidates.Add(vis);
+
+				}
+				foreach (var child in elem.Children)
+					containsRecurse(child);
+			}
+
+			containsRecurse(_skin.SvgDocument);
+
+			// select innermost box
+			return candidates.OrderBy(e => e.Bounds.Width * e.Bounds.Height);
 		}
 
 	}
