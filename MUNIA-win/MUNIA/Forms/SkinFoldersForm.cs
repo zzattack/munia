@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.IO;
 using System.Windows.Forms;
 using Microsoft.WindowsAPICodePack.Dialogs;
 
@@ -7,7 +8,7 @@ namespace MUNIA.Forms {
 	public partial class SkinFoldersForm : Form {
 		private readonly BindingList<SkinDirectoryEntry> _folders;
 		private SkinDirectoryEntry _currentEntry;
-		private CommonOpenFileDialog fbd = new CommonOpenFileDialog();
+		private readonly CommonOpenFileDialog fbd = new CommonOpenFileDialog();
 
 		private SkinFoldersForm() {
 			InitializeComponent();
@@ -23,6 +24,7 @@ namespace MUNIA.Forms {
 		}
 
 		private void btnAdd_Click(object sender, EventArgs e) {
+			fbd.Multiselect = true;
 			if (fbd.ShowDialog() == CommonFileDialogResult.Ok) {
 				foreach (string path in fbd.FileNames)
 					_folders.Add(new SkinDirectoryEntry { Path = path, Types = SkinType.Svg });
@@ -88,6 +90,23 @@ namespace MUNIA.Forms {
 			_folders[list.SelectedIndex] = lower;
 			list.SelectedIndex++;
 		}
+
+		private void list_MouseDoubleClick(object sender, MouseEventArgs e) {
+			int index = list.IndexFromPoint(e.Location);
+			if (index == ListBox.NoMatches) return;
+
+			fbd.Multiselect = false;
+			fbd.RestoreDirectory = false;
+			if (list.Items[index] is SkinDirectoryEntry sde) {
+				fbd.InitialDirectory = sde.Path;
+				
+				if (fbd.ShowDialog() == CommonFileDialogResult.Ok) {
+					sde.Path = fbd.FileName;
+					list.Refresh();
+				}
+			}
+		}
+
 	}
 
 	[Flags]
