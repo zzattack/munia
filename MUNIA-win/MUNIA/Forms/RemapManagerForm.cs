@@ -82,6 +82,12 @@ namespace MUNIA.Forms {
 				newSkin.SvgDocument.Write(sfd.FileName);
 			}
 		}
+
+		private void list_MouseDoubleClick(object sender, MouseEventArgs e) {
+			int index = list.IndexFromPoint(e.Location);
+			if (index != ListBox.NoMatches)
+				btnEdit_Click(null, null);
+		}
 	}
 
 }
