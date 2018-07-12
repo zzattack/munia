@@ -6,19 +6,29 @@ using System.Windows.Forms;
 
 namespace MUNIA.Util {
 	[DefaultEvent("ColorPicked")]
-	public class ColorPickerControl : Control {
-		private readonly Panel _primaryColorBox = new Panel();
-		private readonly Panel _secondaryColorBox = new Panel();
-		private readonly Panel _hoverColorBox = new Panel();
+	public class ColorPickerControl : UserControl {
 		private Bitmap _canvas;
 		private Graphics _graphicsBuffer;
 		private LinearGradientBrush _spectrumGradient, _blackBottomGradient, _whiteTopGradient;
-		private float _boxSizeRatio = 0.15f; // In percent
-		private float _paddingPercentage = 0.05f;
+		private Panel pnlPrimary;
+		private Panel pnlSecondary;
+		private Panel pnlHover;
+		private Label lblFill;
+		private TextBox tbFill;
+		private TextBox tbStroke;
+		private Label lblStroke;
+		private TextBox tbHover;
+		private Label lblHover;
+		private bool _primaryEnabled;
+		private bool _secondaryEnabled;
+		private Color _primaryColor;
+		private Color _secondaryColor;
+
 		public event EventHandler PrimaryColorPicked;
 		public event EventHandler SecondaryColorPicked;
 
 		public ColorPickerControl() {
+			InitializeComponent();
 			base.Cursor = Cursors.Hand;
 			this.SetStyle(ControlStyles.SupportsTransparentBackColor | ControlStyles.ResizeRedraw |
 						  ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint |
@@ -27,33 +37,13 @@ namespace MUNIA.Util {
 			this.Size = new Size(200, 100);
 			UpdateLinearGradientBrushes();
 			UpdateGraphicsBuffer();
-			SetupInnerBoxes();
-		}
-
-		private void SetupInnerBoxes() {
-			_primaryColorBox.Anchor = (AnchorStyles.Bottom | AnchorStyles.Right);
-			_primaryColorBox.BorderStyle = BorderStyle.FixedSingle;
-			Controls.Add(_primaryColorBox);
-			_primaryColorBox.Visible = false;
-
-			_secondaryColorBox.Anchor = (AnchorStyles.Bottom | AnchorStyles.Right);
-			_secondaryColorBox.BorderStyle = BorderStyle.FixedSingle;
-			Controls.Add(_secondaryColorBox);
-			_secondaryColorBox.Visible = false;
-
-			_hoverColorBox.Anchor = (AnchorStyles.Bottom | AnchorStyles.Right);
-			_hoverColorBox.BorderStyle = BorderStyle.FixedSingle;
-			Controls.Add(_hoverColorBox);
-			_hoverColorBox.Visible = false;
-
-			ResizeChildControls();
 		}
 
 		protected virtual void OnPrimaryColorPicked() {
 			PrimaryColorPicked?.Invoke(this, EventArgs.Empty);
 		}
 		protected virtual void OnSecondaryColorPicked() {
-			SecondaryColorPicked?.Invoke(this, EventArgs.Empty);
+			 SecondaryColorPicked?.Invoke(this, EventArgs.Empty);
 		}
 
 		private void UpdateLinearGradientBrushes() {
@@ -72,69 +62,38 @@ namespace MUNIA.Util {
 
 		private void UpdateGraphicsBuffer() {
 			if (this.Width > 0) {
-				_canvas = new Bitmap(this.Width, this.Height);
+				int pad = Height - pnlPrimary.Top - pnlPrimary.Height;
+				_canvas = new Bitmap(this.Width, this.Height - pnlPrimary.Height - 2 * pad);
 				_graphicsBuffer = Graphics.FromImage(_canvas);
 			}
 		}
 
 		protected override void OnSizeChanged(EventArgs e) {
 			base.OnSizeChanged(e);
-			ResizeChildControls();
 			UpdateLinearGradientBrushes();
 			UpdateGraphicsBuffer();
 		}
 
-		/// <summary>
-		/// Resize the child controls, since the controls are anchored bottom right,
-		/// we must also relocate the controls
-		/// </summary>
-		private void ResizeChildControls() {
-			// Both controls will be the same size
-			int width = (int)(this.Width * _boxSizeRatio + 0.5f);
-			int height = (int)(this.Height * _boxSizeRatio + 0.5f);
-			_primaryColorBox.Size = new Size(width, height);
-			_secondaryColorBox.Size = new Size(width, height);
-			_hoverColorBox.Size = new Size(width, height);
-
-			int padding = (int)(this.Height * _paddingPercentage);
-
-			// Change Location of first box
-			int x = this.Width - _primaryColorBox.Width - _secondaryColorBox.Width - _hoverColorBox.Width - padding * 3;
-			int y = this.Height - _primaryColorBox.Height - padding;
-			_primaryColorBox.Location = new Point(x, y);
-
-			// Now secondary box
-			x = this.Width - _secondaryColorBox.Width - _hoverColorBox.Width - padding * 2;
-			y = this.Height - _secondaryColorBox.Height - padding;
-			_secondaryColorBox.Location = new Point(x, y);
-
-			// Now hover box
-			x = this.Width - _hoverColorBox.Width - padding;
-			y = this.Height - _hoverColorBox.Height - padding;
-			_hoverColorBox.Location = new Point(x, y);
-		}
 
 		protected override void OnMouseMove(MouseEventArgs e) {
 			base.OnMouseMove(e);
 
-			if (this.ClientRectangle.Contains(e.Location)) {
-				_hoverColorBox.BackColor = _canvas.GetPixel(e.X, e.Y);
-
-				if (!_hoverColorBox.Visible)
-					_hoverColorBox.Show();
+			if (new Rectangle(Point.Empty, _canvas.Size).Contains(e.Location)) {
+				pnlHover.BackColor = _canvas.GetPixel(e.X, e.Y);
+				tbHover.Text = pnlHover.BackColor.ToHexValue();
+				lblHover.Visible = tbHover.Visible = pnlHover.Visible = true;
 			}
 		}
 
 		protected override void OnMouseClick(MouseEventArgs e) {
 			base.OnMouseClick(e);
-
-			if (e.Button == MouseButtons.Left) {
-				_primaryColorBox.BackColor = _canvas.GetPixel(e.X, e.Y);
-				OnPrimaryColorPicked();
-			}
-			else if (e.Button == MouseButtons.Right) {
-				_secondaryColorBox.BackColor = _canvas.GetPixel(e.X, e.Y);
-				OnSecondaryColorPicked();
+			if (new Rectangle(Point.Empty, _canvas.Size).Contains(e.Location)) {
+				if (e.Button == MouseButtons.Left) {
+					PrimaryColor = _canvas.GetPixel(e.X, e.Y);
+				}
+				else if (e.Button == MouseButtons.Right) {
+					SecondaryColor = _canvas.GetPixel(e.X, e.Y);
+				}
 			}
 		}
 
@@ -146,55 +105,203 @@ namespace MUNIA.Util {
 			e.Graphics.DrawImageUnscaled(_canvas, Point.Empty);
 		}
 
-		public Color SelectedPrimaryColor {
-			get { return _primaryColorBox.BackColor; }
+		public Color PrimaryColor {
+			get => _primaryColor;
 			set {
-				_primaryColorBox.BackColor = value;
-				_primaryColorBox.Visible = true;
+				bool unchanged = _primaryColor.Equals(value);
+				_primaryColor = value;
+				pnlPrimary.BackColor = value;
+
+				if (!tbFill.Focused) tbFill.Text = value.ToHexValue();
+				if (!unchanged && _primaryEnabled) OnPrimaryColorPicked();
 			}
 		}
-		public Color SelectedSecondaryColor {
-			get { return _secondaryColorBox.BackColor; }
+		public Color SecondaryColor {
+			get => _secondaryColor;
 			set {
-				_secondaryColorBox.BackColor = value;
-				_secondaryColorBox.Visible = true;
+				bool unchanged = _secondaryColor.Equals(value);
+				_secondaryColor = value;
+				pnlSecondary.BackColor = value;
+
+				pnlSecondary.BackColor = value;
+				if (!tbStroke.Focused) tbStroke.Text = value.ToHexValue();
+				if (!unchanged && _secondaryEnabled) OnSecondaryColorPicked();
 			}
 		}
 
-		[DefaultValue(0.15f)]
-		[Description("The size of the color boxes in relation to the parent control")]
-		[Category("Layout")]
-		public float ColorBoxSizeRatio {
-			get { return _boxSizeRatio; }
-			set {
-				_boxSizeRatio = value;
-				ResizeChildControls();
-			}
+		public bool PrimaryEnabled {
+			set => pnlPrimary.Visible = lblFill.Visible = tbFill.Visible = _primaryEnabled = value;
+			get => _primaryEnabled;
 		}
 
-		[DefaultValue(0.05f)]
-		[Description("The size of the color boxes in relation to the parent control")]
-		[Category("Layout")]
-		public float ColorBoxPaddingRatio {
-			get { return _paddingPercentage; }
-			set {
-				_paddingPercentage = value;
-				ResizeChildControls();
-			}
+		public bool SecondaryEnabled {
+			set => pnlSecondary.Visible = lblStroke.Visible = tbStroke.Visible = _secondaryEnabled = value;
+			get => _secondaryEnabled;
 		}
 
-		private bool _fullColorSpectrum = true;
-		[DefaultValue(true)]
-		[Description(@"Determines whether or not to use a full color spectrum for color picking.
-                If set to false, a RGB spectrum will be used")]
-		[Category("Appearance")]
-		public bool FullColorSpectrum {
-			get { return _fullColorSpectrum; }
-			set {
-				_fullColorSpectrum = value;
-				UpdateLinearGradientBrushes();
-				this.Invalidate(false);
+		private void tbFill_TextChanged(object sender, EventArgs e) {
+			if (!_primaryEnabled) return;
+			try {
+				var col = ColorTranslator.FromHtml(tbFill.Text);
+				PrimaryColor = col;
 			}
+			catch { }
 		}
+
+		private void tbStroke_TextChanged(object sender, EventArgs e) {
+			if (!_secondaryEnabled) return;
+			try {
+				var col = ColorTranslator.FromHtml(tbStroke.Text);
+				SecondaryColor = col;
+			}
+			catch { }
+		}
+
+		private void panel_Paint(object sender, PaintEventArgs e) {
+			// give them a border
+			var panel = sender as Panel;
+			if (panel.BorderStyle == BorderStyle.FixedSingle) {
+				int thickness = 3;
+				int halfThickness = thickness / 2;
+				using (Pen p = new Pen(Color.Black, thickness)) {
+					e.Graphics.DrawRectangle(p, new Rectangle(halfThickness,
+						halfThickness,
+						panel.ClientSize.Width - thickness,
+						panel.ClientSize.Height - thickness));
+				}
+			}
+
+		}
+
+		private void InitializeComponent() {
+			this.pnlHover = new System.Windows.Forms.Panel();
+			this.pnlSecondary = new System.Windows.Forms.Panel();
+			this.pnlPrimary = new System.Windows.Forms.Panel();
+			this.lblFill = new System.Windows.Forms.Label();
+			this.tbFill = new System.Windows.Forms.TextBox();
+			this.tbStroke = new System.Windows.Forms.TextBox();
+			this.lblStroke = new System.Windows.Forms.Label();
+			this.tbHover = new System.Windows.Forms.TextBox();
+			this.lblHover = new System.Windows.Forms.Label();
+			this.SuspendLayout();
+			// 
+			// pnlHover
+			// 
+			this.pnlHover.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.pnlHover.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.pnlHover.Location = new System.Drawing.Point(330, 101);
+			this.pnlHover.Name = "pnlHover";
+			this.pnlHover.Size = new System.Drawing.Size(60, 40);
+			this.pnlHover.TabIndex = 0;
+			this.pnlHover.Visible = false;
+			this.pnlHover.Paint += new System.Windows.Forms.PaintEventHandler(this.panel_Paint);
+			// 
+			// pnlSecondary
+			// 
+			this.pnlSecondary.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.pnlSecondary.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.pnlSecondary.Location = new System.Drawing.Point(196, 101);
+			this.pnlSecondary.Name = "pnlSecondary";
+			this.pnlSecondary.Size = new System.Drawing.Size(60, 40);
+			this.pnlSecondary.TabIndex = 1;
+			this.pnlSecondary.Visible = false;
+			this.pnlSecondary.Paint += new System.Windows.Forms.PaintEventHandler(this.panel_Paint);
+			// 
+			// pnlPrimary
+			// 
+			this.pnlPrimary.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.pnlPrimary.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.pnlPrimary.Location = new System.Drawing.Point(60, 101);
+			this.pnlPrimary.Name = "pnlPrimary";
+			this.pnlPrimary.Size = new System.Drawing.Size(60, 40);
+			this.pnlPrimary.TabIndex = 2;
+			this.pnlPrimary.Visible = false;
+			this.pnlPrimary.Paint += new System.Windows.Forms.PaintEventHandler(this.panel_Paint);
+			// 
+			// lblFill
+			// 
+			this.lblFill.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.lblFill.AutoSize = true;
+			this.lblFill.Location = new System.Drawing.Point(13, 101);
+			this.lblFill.Name = "lblFill";
+			this.lblFill.Size = new System.Drawing.Size(19, 13);
+			this.lblFill.TabIndex = 3;
+			this.lblFill.Text = "Fill";
+			this.lblFill.Visible = false;
+			// 
+			// tbFill
+			// 
+			this.tbFill.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.tbFill.Location = new System.Drawing.Point(3, 117);
+			this.tbFill.Name = "tbFill";
+			this.tbFill.Size = new System.Drawing.Size(54, 20);
+			this.tbFill.TabIndex = 4;
+			this.tbFill.Text = "#000000";
+			this.tbFill.Visible = false;
+			this.tbFill.TextChanged += new System.EventHandler(this.tbFill_TextChanged);
+			// 
+			// tbStroke
+			// 
+			this.tbStroke.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.tbStroke.Location = new System.Drawing.Point(128, 117);
+			this.tbStroke.Name = "tbStroke";
+			this.tbStroke.Size = new System.Drawing.Size(62, 20);
+			this.tbStroke.TabIndex = 6;
+			this.tbStroke.Text = "#000000";
+			this.tbStroke.Visible = false;
+			this.tbStroke.TextChanged += new System.EventHandler(this.tbStroke_TextChanged);
+			// 
+			// lblStroke
+			// 
+			this.lblStroke.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.lblStroke.AutoSize = true;
+			this.lblStroke.Location = new System.Drawing.Point(138, 101);
+			this.lblStroke.Name = "lblStroke";
+			this.lblStroke.Size = new System.Drawing.Size(38, 13);
+			this.lblStroke.TabIndex = 5;
+			this.lblStroke.Text = "Stroke";
+			this.lblStroke.Visible = false;
+			// 
+			// tbHover
+			// 
+			this.tbHover.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbHover.Enabled = false;
+			this.tbHover.Location = new System.Drawing.Point(267, 117);
+			this.tbHover.Name = "tbHover";
+			this.tbHover.Size = new System.Drawing.Size(62, 20);
+			this.tbHover.TabIndex = 8;
+			this.tbHover.Text = "#000000";
+			this.tbHover.Visible = false;
+			// 
+			// lblHover
+			// 
+			this.lblHover.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.lblHover.AutoSize = true;
+			this.lblHover.Location = new System.Drawing.Point(277, 101);
+			this.lblHover.Name = "lblHover";
+			this.lblHover.Size = new System.Drawing.Size(36, 13);
+			this.lblHover.TabIndex = 7;
+			this.lblHover.Text = "Hover";
+			this.lblHover.Visible = false;
+			// 
+			// ColorPickerControl
+			// 
+			this.Controls.Add(this.tbHover);
+			this.Controls.Add(this.lblHover);
+			this.Controls.Add(this.tbStroke);
+			this.Controls.Add(this.lblStroke);
+			this.Controls.Add(this.tbFill);
+			this.Controls.Add(this.lblFill);
+			this.Controls.Add(this.pnlPrimary);
+			this.Controls.Add(this.pnlSecondary);
+			this.Controls.Add(this.pnlHover);
+			this.MinimumSize = new System.Drawing.Size(393, 144);
+			this.Name = "ColorPickerControl";
+			this.Size = new System.Drawing.Size(393, 144);
+			this.ResumeLayout(false);
+			this.PerformLayout();
+
+		}
+
 	}
 }
