@@ -142,8 +142,8 @@ namespace MUNIA.Skins {
 			return ret;
 		}
 
-		public override void Render(int w, int h) {
-			if (_dimensions.Width != w || _dimensions.Height != h) {
+		public override void Render(int w, int h, bool force) {
+			if (force || _dimensions.Width != w || _dimensions.Height != h) {
 				_dimensions = new Size(w, h);
 				CalcBounds();
 			}

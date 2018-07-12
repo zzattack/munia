@@ -1,29 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Xml;
-using MUNIA.Skins;
+using MUNIA.Annotations;
+using MUNIA.Util;
 using Svg;
 
 namespace MUNIA.Skins {
-	public class ColorRemap {
-		public string Name { get; set; }
+	public class ColorRemap : INotifyPropertyChanged {
+		private string _name;
+
 		private List<GroupedSvgElems> _groups = new List<GroupedSvgElems>();
+		public readonly bool IsSkinDefault;
+		public Guid UUID { get; private set; } = Guid.Empty;
+
 		public List<GroupedSvgElems> Groups => _groups;
 		public readonly Dictionary<string, Tuple<Color, Color>> Elements = new Dictionary<string, Tuple<Color, Color>>();
+
+		public ColorRemap(bool skinDefault = false) {
+			IsSkinDefault = skinDefault;
+			if (!IsSkinDefault) UUID = Guid.NewGuid();
+		}
 
 		private void InitGroups(SvgSkin skin) {
 			// groups svg elements by fill and stroke
 			var all = skin.SvgDocument.Children.FindSvgElementsOf<SvgElement>()
 				.Where(e => e.ContainsAttribute("fill") || e.ContainsAttribute("stroke"));
+
 			var groups = all.GroupBy(e => new { e.Fill, e.Stroke }).ToList();
+			_groups.Clear();
 			_groups.AddRange(groups.Select(g => new GroupedSvgElems(g.AsEnumerable())));
 		}
 
 		public static ColorRemap CreateFromSkin(SvgSkin skin) {
-			var ret = new ColorRemap();
+			var ret = new ColorRemap(true);
 			ret.InitGroups(skin);
+			ret.Name = "Default theme";
 
 			// extract fills and strokes from skin
 			foreach (var group in ret._groups) {
@@ -35,25 +50,25 @@ namespace MUNIA.Skins {
 					Color fill = Color.Empty;
 					Color stroke = Color.Empty;
 					if (elem.Fill is SvgColourServer cf) fill = cf.Colour;
-					if (elem.Fill is SvgColourServer cs) stroke = cs.Colour;
+					if (elem.Stroke is SvgColourServer cs) stroke = cs.Colour;
 					ret.Elements[elem.ID] = Tuple.Create(fill, stroke);
 				}
 			}
 			return ret;
 		}
 
-		public void AttachToSkin(SvgSkin skin) {
+		public void ApplyToSkin(SvgSkin skin) {
 			InitGroups(skin);
 
 			foreach (var group in _groups) {
 				foreach (var elem in group) {
 					if (string.IsNullOrEmpty(elem.ID)) elem.SetAndForceUniqueID("elem", true, null);
 
-					Color fill = Color.Empty;
-					Color stroke = Color.Empty;
-					if (elem.Fill is SvgColourServer cf) fill = cf.Colour;
-					if (elem.Fill is SvgColourServer cs) stroke = cs.Colour;
-					Elements[elem.ID] = Tuple.Create(fill, stroke);
+					if (Elements.ContainsKey(elem.ID)) {
+						var tup = Elements[elem.ID];
+						if (elem.Fill is SvgColourServer cf) cf.Colour = tup.Item1;
+						if (elem.Stroke is SvgColourServer cs) cs.Colour = tup.Item2;
+					}
 				}
 			}
 		}
@@ -61,6 +76,9 @@ namespace MUNIA.Skins {
 
 		public static ColorRemap LoadFrom(XmlNode xRemap) {
 			ColorRemap ret = new ColorRemap();
+			ret.Name = xRemap.Attributes["name"].Value;
+			ret.UUID = Guid.Parse(xRemap.Attributes["UUID"].Value);
+
 			foreach (XmlNode x in xRemap.ChildNodes) {
 				string id = x.Attributes["id"].Value;
 				Color fill = ColorTranslator.FromHtml(x.Attributes["fill"].Value);
@@ -72,18 +90,67 @@ namespace MUNIA.Skins {
 		}
 
 		public void Saveto(XmlTextWriter xw) {
+			// there's no point in saving the default as it
+			// should be recreated at application load and may not be edited
+			if (IsSkinDefault) return; 
+
 			xw.WriteStartElement("remap");
 			xw.WriteAttributeString("name", Name);
+			xw.WriteAttributeString("UUID", UUID.ToString());
+
 			foreach (var kvp in Elements) {
 				xw.WriteStartElement("entry");
 				xw.WriteAttributeString("id", kvp.Key);
-				xw.WriteAttributeString("fill", ColorTranslator.ToHtml(kvp.Value.Item1));
-				xw.WriteAttributeString("id", ColorTranslator.ToHtml(kvp.Value.Item2));
+				xw.WriteAttributeString("fill", kvp.Value.Item1.ToHexValue());
+				xw.WriteAttributeString("stroke", kvp.Value.Item2.ToHexValue());
+				xw.WriteEndElement(); // entry
 			}
-			
 			xw.WriteEndElement(); // remap
 		}
 
+		public ColorRemap Clone() {
+			var ret = new ColorRemap(false);
+			ret.Name = this.Name + " (copy)";
+
+			foreach (var kvp in this.Elements)
+				ret.Elements[kvp.Key] = kvp.Value;
+
+			return ret;
+		}
+		public string Name {
+			get => _name;
+			set {
+				if (value == _name) return;
+				_name = value;
+				OnPropertyChanged();
+			}
+		}
+
+		protected bool Equals(ColorRemap other) {
+			return UUID.Equals(other.UUID);
+		}
+
+		public override bool Equals(object obj) {
+			if (ReferenceEquals(null, obj)) return false;
+			if (ReferenceEquals(this, obj)) return true;
+			if (obj.GetType() != this.GetType()) return false;
+			return Equals((ColorRemap)obj);
+		}
+
+		public override int GetHashCode() {
+			return UUID.GetHashCode();
+		}
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		[NotifyPropertyChangedInvocator]
+		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		}
+
+		public override string ToString() {
+			return $"{Name}";
+		}
 	}
 
 	public class GroupedSvgElems : List<SvgElement> {

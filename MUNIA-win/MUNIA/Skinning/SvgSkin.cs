@@ -16,7 +16,6 @@ namespace MUNIA.Skins {
 		public List<Trigger> Triggers = new List<Trigger>();
 		private SizeF _dimensions;
 		private int _baseTexture;
-		public ColorRemap DefaultRemap { get; private set; }
 
 		public void Load(string svgPath) {
 			try {
@@ -41,7 +40,6 @@ namespace MUNIA.Skins {
 				// load button/stick/trigger mapping from svg
 				RecursiveGetElements(SvgDocument);
 
-				DefaultRemap = ColorRemap.CreateFromSkin(this);
 				LoadResult = Controllers.Any() ? SkinLoadResult.Ok : SkinLoadResult.Fail;
 			}
 			catch { LoadResult = SkinLoadResult.Fail; }
@@ -140,9 +138,9 @@ namespace MUNIA.Skins {
 			}
 		}
 
-		public override void Render(int width, int height) {
+		public override void Render(int width, int height, bool force = false) {
 			if (SvgDocument == null || width == 0 || height == 0) return;
-			if (SvgDocument.Height != height || SvgDocument.Width != width) {
+			if (force || SvgDocument.Height != height || SvgDocument.Width != width) {
 				RenderBase(width, height);
 			}
 			Render();

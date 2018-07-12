@@ -9,7 +9,7 @@ namespace MUNIA.Skins {
 		public SkinLoadResult LoadResult { get; protected set; }
 		public List<ControllerType> Controllers { get; } = new List<ControllerType>();
 
-		public abstract void Render(int width, int height);
+		public abstract void Render(int width, int height, bool force = false);
 
 		public bool UpdateState(IController controller) {
 			var oldState = State;
