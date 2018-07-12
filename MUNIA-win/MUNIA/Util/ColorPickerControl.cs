@@ -74,27 +74,43 @@ namespace MUNIA.Util {
 			UpdateGraphicsBuffer();
 		}
 
+		public enum ColorSelectMode {
+			None,
+			Primary,
+			Secondary
+		};
+
+		public ColorSelectMode Mode;
 
 		protected override void OnMouseMove(MouseEventArgs e) {
 			base.OnMouseMove(e);
 
 			if (new Rectangle(Point.Empty, _canvas.Size).Contains(e.Location)) {
-				pnlHover.BackColor = _canvas.GetPixel(e.X, e.Y);
+				var c = _canvas.GetPixel(e.X, e.Y);
+				pnlHover.BackColor = c;
 				tbHover.Text = pnlHover.BackColor.ToHexValue();
 				lblHover.Visible = tbHover.Visible = pnlHover.Visible = true;
+
+				if (Mode == ColorSelectMode.Primary) PrimaryColor = c;
+				else if (Mode == ColorSelectMode.Secondary) SecondaryColor = c;
 			}
 		}
 
 		protected override void OnMouseClick(MouseEventArgs e) {
 			base.OnMouseClick(e);
+
 			if (new Rectangle(Point.Empty, _canvas.Size).Contains(e.Location)) {
+				Color c = _canvas.GetPixel(e.X, e.Y);
 				if (e.Button == MouseButtons.Left) {
-					PrimaryColor = _canvas.GetPixel(e.X, e.Y);
+					if (Mode != ColorSelectMode.Secondary) PrimaryColor = c;
+					else SecondaryColor = c;
 				}
 				else if (e.Button == MouseButtons.Right) {
 					SecondaryColor = _canvas.GetPixel(e.X, e.Y);
 				}
 			}
+			// after a mouse click, stop mode selection
+			Mode = ColorSelectMode.None;
 		}
 
 		protected override void OnPaint(PaintEventArgs e) {
@@ -156,6 +172,14 @@ namespace MUNIA.Util {
 			catch { }
 		}
 
+		private void pnlPrimary_MouseDown(object sender, MouseEventArgs e) {
+			Mode = ColorSelectMode.Primary;
+		}
+
+		private void pnlSecondary_MouseClick(object sender, MouseEventArgs e) {
+			Mode = ColorSelectMode.Secondary;
+		}
+
 		private void panel_Paint(object sender, PaintEventArgs e) {
 			// give them a border
 			var panel = sender as Panel;
@@ -205,6 +229,7 @@ namespace MUNIA.Util {
 			this.pnlSecondary.TabIndex = 1;
 			this.pnlSecondary.Visible = false;
 			this.pnlSecondary.Paint += new System.Windows.Forms.PaintEventHandler(this.panel_Paint);
+			this.pnlSecondary.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pnlSecondary_MouseClick);
 			// 
 			// pnlPrimary
 			// 
@@ -216,6 +241,7 @@ namespace MUNIA.Util {
 			this.pnlPrimary.TabIndex = 2;
 			this.pnlPrimary.Visible = false;
 			this.pnlPrimary.Paint += new System.Windows.Forms.PaintEventHandler(this.panel_Paint);
+			this.pnlPrimary.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pnlPrimary_MouseDown);
 			// 
 			// lblFill
 			// 
