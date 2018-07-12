@@ -15,14 +15,17 @@ namespace MUNIA {
 	public static class ConfigManager {
 		private static readonly string SettingsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MUNIA");
 		private static readonly string SettingsFile = Path.Combine(SettingsDir, "munia_settings.xml");
+		private static readonly string RemapsFile = Path.Combine(SettingsDir, "munia_remaps.xml");
 		public static string Email { get; set; } = "nobody@nothing.net";
 		public static Color BackgroundColor { get; set; } = Color.Gray;
 		public static Dictionary<Skin, Size> WindowSizes { get; } = new Dictionary<Skin, Size>();
 		public static Dictionary<SvgSkin, ColorRemap> SelectedRemaps { get; } = new Dictionary<SvgSkin, ColorRemap>();
-		public static Dictionary<SvgSkin, BindingList<ColorRemap>> Remaps { get; } 
-			= new Dictionary<SvgSkin, BindingList<ColorRemap>>();
+		public static Dictionary<string, BindingList<ColorRemap>> AvailableRemaps { get; } 
+			= new Dictionary<string, BindingList<ColorRemap>>();
 		public static readonly ArduinoMapping ArduinoMapping = new ArduinoMapping();
 
+		public static BindingList<SkinDirectoryEntry> SkinFolders { get; private set; } = new BindingList<SkinDirectoryEntry>();
+		
 		private static TimeSpan _delay;
 		private static IController _activeController;
 		private static BufferedController _bufferedActiveController;
@@ -42,7 +45,7 @@ namespace MUNIA {
 				}
 			}
 		}
-		
+
 		public static void SetActiveController(IController value) {
 			// deactive old controller
 			_activeController?.Deactivate();
@@ -59,26 +62,34 @@ namespace MUNIA {
 		}
 
 		public static void LoadSkins() {
-			foreach (string svgPath in Directory.GetFiles("./skins", "*.svg")) {
-				var svg = new SvgSkin();
-				svg.Load(svgPath);
-				Skins.Add(svg);
+			foreach (var dir in SkinFolders) {
+				if ((dir.Types & SkinType.Svg) != 0) {
+					foreach (string svgPath in Directory.GetFiles(dir.Path, "*.svg")) {
+						var svg = new SvgSkin();
+						svg.Load(svgPath);
+						Skins.Add(svg);
 
-				// create default remaps
-				Remaps[svg] = new BindingList<ColorRemap>() {
-					ColorRemap.CreateFromSkin(svg),
-				};
-				SelectedRemaps[svg] = null;
-			}
-			foreach (string padpyghtDir in Directory.GetDirectories("./skins")) {
-				foreach (string iniPath in Directory.GetFiles(padpyghtDir, "*.ini")) {
-					var pp = new PadpyghtSkin();
-					pp.Load(iniPath);
-					if (pp.LoadResult == SkinLoadResult.Ok)
-						Skins.Add(pp);
+						// create default remaps
+						AvailableRemaps[svg.Path] = new BindingList<ColorRemap>() {
+							ColorRemap.CreateFromSkin(svg),
+						};
+						SelectedRemaps[svg] = null;
+					}
+				}
+
+				if ((dir.Types & SkinType.PadPyght) != 0) {
+					foreach (string padpyghtDir in Directory.GetDirectories(dir.Path)) {
+						foreach (string iniPath in Directory.GetFiles(padpyghtDir, "*.ini")) {
+							var pp = new PadpyghtSkin();
+							pp.Load(iniPath);
+							if (pp.LoadResult == SkinLoadResult.Ok)
+								Skins.Add(pp);
+						}
+					}
 				}
 			}
 		}
+
 
 		public static void LoadControllers() {
 			Controllers.Clear();
@@ -105,45 +116,59 @@ namespace MUNIA {
 				if (xroot["Email"] != null) Email = xroot["Email"].InnerText;
 				if (xroot["BackgroundColor"] != null) BackgroundColor = Color.FromArgb(int.Parse(xroot["BackgroundColor"].InnerText));
 				if (xroot["Delay"] != null) Delay = TimeSpan.FromMilliseconds(int.Parse(xroot["Delay"].InnerText));
+
+				if (xroot["SkinFolders"] is XmlNode xSkinFolders) {
+					foreach (XmlNode xDir in xSkinFolders) {
+						var sf = new SkinDirectoryEntry {
+							Path = xDir.Attributes["path"].Value,
+							Types = (SkinType)int.Parse(xDir.Attributes["types"].Value)
+						};
+						// setup skin folders to default svg only
+						SkinFolders.Add(sf);
+					}
+				}
 			}
 			catch (XmlException) { }
 			catch (FormatException) { }
 
+			if (!SkinFolders.Any()) {
+				// setup skin folders to default svg only
+				SkinFolders.Add(new SkinDirectoryEntry { Path = "./skins", Types = SkinType.Svg });
+			}
 
 			// then load all skins as they have no dependencies
 			LoadSkins();
+			LoadRemaps();
 
 			try {
 				// now we can load the skin-specific settings
-				if (xroot["active_skin"] != null)
-					ActiveSkin = Skins.FirstOrDefault(s => s.Path == xroot["active_skin"].InnerText);
+				if (xroot["ActiveSkin"] != null)
+					ActiveSkin = Skins.FirstOrDefault(s => s.Path == xroot["ActiveSkin"].InnerText);
 
-				foreach (XmlNode skinCfg in xroot["skin_settings"].ChildNodes) {
-					string path = skinCfg.Attributes["skin_path"].Value;
+				foreach (XmlNode skinCfg in xroot["SkinSettings"].ChildNodes) {
+					string path = skinCfg.Attributes["path"].Value;
 
 					var skin = Skins.FirstOrDefault(s => s.Path == path);
-					var wsz = skinCfg.Attributes["window_size"];
+					var wsz = skinCfg.Attributes["WindowSize"];
 					if (wsz != null && skin != null) {
 						string size = wsz.Value;
 						Size sz = new Size(int.Parse(size.Substring(0, size.IndexOf("x"))), int.Parse(size.Substring(size.IndexOf("x") + 1)));
 						WindowSizes[skin] = sz;
 					}
 
-					if (skin is SvgSkin svg && skinCfg["remaps"] != null) {
-						var remaps = Remaps[svg];
-						foreach (XmlNode xRemap in skinCfg["remaps"]) {
-							remaps.Add(ColorRemap.LoadFrom(xRemap));
-						}
+					if (skin is SvgSkin svg && skinCfg.Attributes["ActiveRemap"] != null) {
+						Guid uuid = Guid.Parse(skinCfg.Attributes["ActiveRemap"].Value);
 
-						if (skinCfg.Attributes["active_remap"] != null) {
-							Guid uuid = Guid.Parse(skinCfg.Attributes["active_remap"].Value);
-							SelectedRemaps[svg] = remaps.FirstOrDefault(r => r.UUID == uuid);
+						var remapList = AvailableRemaps.Where(kvp => kvp.Value.Any(cr => cr.UUID == uuid));
+						if (remapList.Any()) {
+							var skinList = remapList.First().Value;
+							SelectedRemaps[svg] = skinList.First(r => r.UUID == uuid);
 						}
 					}
 				}
 
 				// load arduino map, then controllers
-				var arduinoMap = xroot["arduino_mapping"];
+				var arduinoMap = xroot["ArduinoMapping"];
 				if (arduinoMap != null) {
 					foreach (XmlNode e in arduinoMap.ChildNodes) {
 						ArduinoMapping[e.Attributes["port"].Value] =
@@ -152,13 +177,30 @@ namespace MUNIA {
 				}
 			}
 			catch { }
-			
+
 			LoadControllers();
 
 			try {
 				// finally we can determine the active controller
-				if (xroot["active_dev_path"] != null)
-					SetActiveController(Controllers.FirstOrDefault(c => c.DevicePath == xroot["active_dev_path"].InnerText));
+				if (xroot["ActiveDevice"] is XmlNode xActiveDev)
+					SetActiveController(Controllers.FirstOrDefault(c => c.DevicePath == xActiveDev.InnerText));
+			}
+			catch { }
+		}
+
+		private static void LoadRemaps() {
+			try {
+				XmlDocument xdoc = new XmlDocument();
+				xdoc.Load(RemapsFile);
+				foreach (XmlNode xSkin in xdoc["SkinRemaps"]) {
+					string path = xSkin.Attributes["path"].Value;
+					if (!AvailableRemaps.ContainsKey(path))
+						AvailableRemaps[path] = new BindingList<ColorRemap>();
+					var remaps = AvailableRemaps[path];
+					foreach (XmlNode xRemap in xSkin) {
+						remaps.Add(ColorRemap.LoadFrom(xRemap));
+					}
+				}
 			}
 			catch { }
 		}
@@ -176,42 +218,43 @@ namespace MUNIA {
 				xw.WriteElementString("Email", Email);
 				xw.WriteElementString("Delay", ((int)Delay.TotalMilliseconds).ToString());
 
-				xw.WriteElementString("active_skin", ActiveSkin?.Path ?? "");
-				xw.WriteElementString("active_dev_path", GetActiveController()?.DevicePath ?? "");
+				xw.WriteStartElement("SkinFolders");
+				foreach (var sf in SkinFolders) {
+					xw.WriteStartElement("folder");
+					xw.WriteAttributeString("path", sf.Path);
+					xw.WriteAttributeString("types", ((int)sf.Types).ToString());
+					xw.WriteEndElement();
+				}
+				xw.WriteEndElement(); // SkinFolders
+
+				xw.WriteElementString("ActiveSkin", ActiveSkin?.Path ?? "");
+				xw.WriteElementString("ActiveDevice", GetActiveController()?.DevicePath ?? "");
 				
-				xw.WriteStartElement("skin_settings");
+				xw.WriteStartElement("SkinSettings");
 				foreach (var skin in Skins) {
 					xw.WriteStartElement("skin");
-					xw.WriteAttributeString("skin_path", skin.Path);
+					xw.WriteAttributeString("path", skin.Path);
 					if (WindowSizes.ContainsKey(skin)) {
 						var sz = WindowSizes[skin];
-						xw.WriteAttributeString("window_size", $"{sz.Width}x{sz.Height}");
+						xw.WriteAttributeString("WindowSize", $"{sz.Width}x{sz.Height}");
 					}
 
-					if (skin is SvgSkin svg) {
-
-						if (SelectedRemaps[svg] is ColorRemap r) {
-							xw.WriteAttributeString("active_remap", r.UUID.ToString());
-						}
-
-						xw.WriteStartElement("remaps");
-						foreach (var remap in Remaps[svg])
-							remap.Saveto(xw);
-						xw.WriteEndElement(); // remaps
+					if (skin is SvgSkin svg && SelectedRemaps[svg] is ColorRemap r) {
+						xw.WriteAttributeString("ActiveRemap", r.UUID.ToString());
 					}
-					
+						
 					xw.WriteEndElement(); // skin
 				}
 				xw.WriteEndElement(); // skin_settings
 
-				xw.WriteStartElement("arduino_mapping");
+				xw.WriteStartElement("ArduinoMapping");
 				foreach (var mapEntry in ArduinoMapping) {
 					xw.WriteStartElement("map");
 					xw.WriteAttributeString("port", mapEntry.Key);
 					xw.WriteAttributeString("type", mapEntry.Value.ToString());
 					xw.WriteEndElement();
 				}
-				xw.WriteEndElement(); // arduino_mapping
+				xw.WriteEndElement(); // ArduinoMapping
 
 				xw.WriteEndElement(); // settings
 				xw.WriteEndDocument();
@@ -220,6 +263,8 @@ namespace MUNIA {
 
 				File.WriteAllBytes(SettingsFile, ms.ToArray());
 				ms.Dispose();
+
+				SaveRemaps();
 			}
 			catch (IOException exc) {
 				MessageBox.Show("IO Error while saving: " + exc);
@@ -230,6 +275,36 @@ namespace MUNIA {
 			catch (Exception exc) {
 				MessageBox.Show("Unknown Error while saving: " + exc);
 			}
+		}
+
+		public static void SaveRemaps() {
+			try {
+				Directory.CreateDirectory(SettingsDir);
+				var ms = new MemoryStream();
+				var xw = new XmlTextWriter(ms, Encoding.UTF8);
+				xw.Formatting = Formatting.Indented;
+				xw.WriteStartDocument();
+				xw.WriteStartElement("SkinRemaps");
+
+				foreach (var kvp in AvailableRemaps) {
+					xw.WriteStartElement("skin");
+					xw.WriteAttributeString("path", kvp.Key);
+
+					foreach (var remap in kvp.Value)
+						if (!remap.IsSkinDefault)
+							remap.Saveto(xw);
+					xw.WriteEndElement(); // skin
+				}
+
+				xw.WriteEndElement(); // skin_remaps
+				xw.WriteEndDocument();
+
+				xw.Flush();
+				xw.Close();
+				File.WriteAllBytes(RemapsFile, ms.ToArray());
+				ms.Dispose();
+			}
+			catch { }
 		}
 
 		#endregion
