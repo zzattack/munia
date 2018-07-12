@@ -129,6 +129,7 @@ namespace MUNIA.Forms {
 				else
 					ConfigManager.WindowSizes[skin] = glControl.Size;
 			}
+			ConfigManager.Save();
 			UpdateController();
 			Render();
 		}
@@ -191,6 +192,7 @@ namespace MUNIA.Forms {
 			};
 			if (frm.ShowDialog() == DialogResult.OK) {
 				this.Size = frm.ChosenSize - glControl.Size + this.Size;
+				ConfigManager.Save();
 			}
 		}
 		private void tsmiSkinFolders_Click(object sender, EventArgs e) {
@@ -370,6 +372,7 @@ namespace MUNIA.Forms {
 					ConfigManager.ArduinoMapping[e.Key] = e.Value;
 				ConfigManager.LoadControllers();
 				BuildMenu();
+				ConfigManager.Save();
 			}
 		}
 
@@ -379,6 +382,7 @@ namespace MUNIA.Forms {
 			};
 			if (frm.ShowDialog(this) == DialogResult.OK) {
 				ConfigManager.Delay = frm.ChosenDelay;
+				ConfigManager.Save();
 			}
 		}
 
@@ -417,6 +421,8 @@ namespace MUNIA.Forms {
 					SelectRemap(managerForm.SelectedRemap);
 
 				managerForm.ShowDialog();
+				ConfigManager.Save();
+				SelectRemap(managerForm.SelectedRemap);
 			}
 		}
 
