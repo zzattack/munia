@@ -1,9 +1,7 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using HidSharp;
-using HidSharp.Reports;
 using MUNIA.Controllers;
 
 namespace MUNIA.Forms {
@@ -58,7 +56,7 @@ namespace MUNIA.Forms {
 				using (HidStream stream = _intf.Open()) {
 					var report = _deviceInfo.ToWriteReport();
 					stream.SetFeature(report);
-					MessageBox.Show("Config updated successfully", "Success");
+					Task.Run(()=> MessageBox.Show("Config updated successfully", "Success"));
 				}
 			}
 			catch {
