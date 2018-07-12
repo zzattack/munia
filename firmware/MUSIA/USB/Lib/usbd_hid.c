@@ -398,6 +398,18 @@ static void hid_dataStage(USBD_HID_IfHandleType *itf)
 
     if (dev->Setup.Request == HID_REQ_SET_REPORT)
     {
+        uint16_t len = dev->Setup.Length;
+        uint8_t* data = dev->CtrlData;
+
+        if ((dev->Setup.Value & 0xFF) != 0)
+        {
+            /* First byte is report ID from setup */
+            data += 4;
+            data[0] = (uint8_t)dev->Setup.Value;
+            len++;
+        }
+
+        /* Set ctrl context and hand over received data to App */
         itf->Request = dev->Setup.Value >> 8;
         USBD_SAFE_CALLBACK(HID_APP(itf)->SetReport, itf->Request,
                 dev->CtrlData, dev->Setup.Length);
