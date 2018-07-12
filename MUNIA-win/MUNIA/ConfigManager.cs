@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -17,8 +18,9 @@ namespace MUNIA {
 		public static string Email { get; set; } = "nobody@nothing.net";
 		public static Color BackgroundColor { get; set; } = Color.Gray;
 		public static Dictionary<Skin, Size> WindowSizes { get; } = new Dictionary<Skin, Size>();
-		public static Dictionary<Skin, ColorRemap> SelectedRemaps { get; } = new Dictionary<Skin, ColorRemap>();
-		public static Dictionary<SvgSkin, List<ColorRemap>> Remaps { get; } = new Dictionary<SvgSkin, List<ColorRemap>>();
+		public static Dictionary<SvgSkin, ColorRemap> SelectedRemaps { get; } = new Dictionary<SvgSkin, ColorRemap>();
+		public static Dictionary<SvgSkin, BindingList<ColorRemap>> Remaps { get; } 
+			= new Dictionary<SvgSkin, BindingList<ColorRemap>>();
 		public static readonly ArduinoMapping ArduinoMapping = new ArduinoMapping();
 
 		private static TimeSpan _delay;
@@ -61,7 +63,12 @@ namespace MUNIA {
 				var svg = new SvgSkin();
 				svg.Load(svgPath);
 				Skins.Add(svg);
-				Remaps[svg] = new List<ColorRemap>();
+
+				// create default remaps
+				Remaps[svg] = new BindingList<ColorRemap>() {
+					ColorRemap.CreateFromSkin(svg),
+				};
+				SelectedRemaps[svg] = null;
 			}
 			foreach (string padpyghtDir in Directory.GetDirectories("./skins")) {
 				foreach (string iniPath in Directory.GetFiles(padpyghtDir, "*.ini")) {
@@ -87,20 +94,26 @@ namespace MUNIA {
 
 		#region Xml serialization
 		public static void Load() {
+			XmlElement xroot = null;
+
 			try {
 				XmlDocument xdoc = new XmlDocument();
 				xdoc.Load(SettingsFile);
-				XmlElement xroot = xdoc["settings"] ?? xdoc["root"];
-				
+				xroot = xdoc["settings"] ?? xdoc["root"];
+
 				// first load the simplest properties
 				if (xroot["Email"] != null) Email = xroot["Email"].InnerText;
 				if (xroot["BackgroundColor"] != null) BackgroundColor = Color.FromArgb(int.Parse(xroot["BackgroundColor"].InnerText));
 				if (xroot["Delay"] != null) Delay = TimeSpan.FromMilliseconds(int.Parse(xroot["Delay"].InnerText));
+			}
+			catch (XmlException) { }
+			catch (FormatException) { }
 
 
-				// then load all skins as they have no dependencies
-				LoadSkins();
+			// then load all skins as they have no dependencies
+			LoadSkins();
 
+			try {
 				// now we can load the skin-specific settings
 				if (xroot["active_skin"] != null)
 					ActiveSkin = Skins.FirstOrDefault(s => s.Path == xroot["active_skin"].InnerText);
@@ -109,7 +122,6 @@ namespace MUNIA {
 					string path = skinCfg.Attributes["skin_path"].Value;
 
 					var skin = Skins.FirstOrDefault(s => s.Path == path);
-
 					var wsz = skinCfg.Attributes["window_size"];
 					if (wsz != null && skin != null) {
 						string size = wsz.Value;
@@ -122,6 +134,11 @@ namespace MUNIA {
 						foreach (XmlNode xRemap in skinCfg["remaps"]) {
 							remaps.Add(ColorRemap.LoadFrom(xRemap));
 						}
+
+						if (skinCfg.Attributes["active_remap"] != null) {
+							Guid uuid = Guid.Parse(skinCfg.Attributes["active_remap"].Value);
+							SelectedRemaps[svg] = remaps.FirstOrDefault(r => r.UUID == uuid);
+						}
 					}
 				}
 
@@ -129,12 +146,16 @@ namespace MUNIA {
 				var arduinoMap = xroot["arduino_mapping"];
 				if (arduinoMap != null) {
 					foreach (XmlNode e in arduinoMap.ChildNodes) {
-						ArduinoMapping[e.Attributes["port"].Value] = 
+						ArduinoMapping[e.Attributes["port"].Value] =
 							(ControllerType)Enum.Parse(typeof(ControllerType), e.Attributes["type"].Value, true);
 					}
 				}
-				LoadControllers();
+			}
+			catch { }
+			
+			LoadControllers();
 
+			try {
 				// finally we can determine the active controller
 				if (xroot["active_dev_path"] != null)
 					SetActiveController(Controllers.FirstOrDefault(c => c.DevicePath == xroot["active_dev_path"].InnerText));
@@ -168,16 +189,21 @@ namespace MUNIA {
 					}
 
 					if (skin is SvgSkin svg) {
+
+						if (SelectedRemaps[svg] is ColorRemap r) {
+							xw.WriteAttributeString("active_remap", r.UUID.ToString());
+						}
+
 						xw.WriteStartElement("remaps");
 						foreach (var remap in Remaps[svg])
 							remap.Saveto(xw);
 						xw.WriteEndElement(); // remaps
 					}
-
-					xw.WriteEndElement();
+					
+					xw.WriteEndElement(); // skin
 				}
-				xw.WriteEndElement();
-				
+				xw.WriteEndElement(); // skin_settings
+
 				xw.WriteStartElement("arduino_mapping");
 				foreach (var mapEntry in ArduinoMapping) {
 					xw.WriteStartElement("map");
@@ -185,7 +211,7 @@ namespace MUNIA {
 					xw.WriteAttributeString("type", mapEntry.Value.ToString());
 					xw.WriteEndElement();
 				}
-				xw.WriteEndElement();
+				xw.WriteEndElement(); // arduino_mapping
 
 				xw.WriteEndElement(); // settings
 				xw.WriteEndDocument();
