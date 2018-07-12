@@ -108,7 +108,7 @@ namespace MUNIA.Util {
 		public Color PrimaryColor {
 			get => _primaryColor;
 			set {
-				bool unchanged = _primaryColor.Equals(value);
+				bool unchanged = _primaryColor.ToArgb().Equals(value.ToArgb());
 				_primaryColor = value;
 				pnlPrimary.BackColor = value;
 
@@ -119,9 +119,8 @@ namespace MUNIA.Util {
 		public Color SecondaryColor {
 			get => _secondaryColor;
 			set {
-				bool unchanged = _secondaryColor.Equals(value);
+				bool unchanged = _secondaryColor.ToArgb().Equals(value.ToArgb());
 				_secondaryColor = value;
-				pnlSecondary.BackColor = value;
 
 				pnlSecondary.BackColor = value;
 				if (!tbStroke.Focused) tbStroke.Text = value.ToHexValue();
