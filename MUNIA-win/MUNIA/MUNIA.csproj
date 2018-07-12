@@ -14,6 +14,19 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
+    <ShouldCreateLogs>False</ShouldCreateLogs>
+    <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
+    <UpdateAssemblyVersion>True</UpdateAssemblyVersion>
+    <UpdateAssemblyFileVersion>False</UpdateAssemblyFileVersion>
+    <UpdateAssemblyInfoVersion>False</UpdateAssemblyInfoVersion>
+    <AssemblyVersionSettings>None.None.DayOfYearStamp.IncrementWithResetOnIncrease</AssemblyVersionSettings>
+    <UpdatePackageVersion>False</UpdatePackageVersion>
+    <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
+    <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
+    <PrimaryVersionType>
+    </PrimaryVersionType>
+    <AssemblyInfoVersionSettings>
+    </AssemblyInfoVersionSettings>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -108,8 +121,9 @@
     <Compile Include="Forms\RemapManagerForm.Designer.cs">
       <DependentUpon>RemapManagerForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Util\ColorPickerControl.cs">
-      <SubType>Component</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Forms\DevicePicker.cs">
       <SubType>Form</SubType>
@@ -130,7 +144,7 @@
     <Compile Include="Forms\SkinRemapperForm.Designer.cs">
       <DependentUpon>SkinRemapperForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="skins\ColorRemap.cs" />
+    <Compile Include="Skinning\ColorRemap.cs" />
     <Compile Include="Util\ColorDialog2.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -146,8 +160,8 @@
     <Compile Include="Interop\SerialPortInfo.cs" />
     <Compile Include="Interop\SetupApi.cs" />
     <Compile Include="Util\IniFile.cs" />
-    <Compile Include="skins\NintendoSpySkin.cs" />
-    <Compile Include="skins\PadpyghtSkin.cs" />
+    <Compile Include="Skinning\NintendoSpySkin.cs" />
+    <Compile Include="Skinning\PadpyghtSkin.cs" />
     <Compile Include="Util\Range.cs" />
     <Compile Include="Util\TextureHelper.cs" />
     <Compile Include="Forms\MainForm.cs">
@@ -173,14 +187,13 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="ConfigManager.cs" />
-    <Compile Include="skins\Skin.cs" />
-    <Compile Include="skins\SvgSkin.cs" />
+    <Compile Include="Skinning\Skin.cs" />
+    <Compile Include="Skinning\SvgSkin.cs" />
     <Compile Include="Forms\SubmitBug.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UpdateChecker.cs" />
     <Compile Include="Interop\UsbNotification.cs" />
-    <Compile Include="Properties\VersionInfo.cs" />
     <Compile Include="Forms\WindowSizePicker.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -234,6 +247,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\WindowSizePicker.resx">
       <DependentUpon>WindowSizePicker.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Util\ColorPickerControl.resx">
+      <DependentUpon>ColorPickerControl.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
