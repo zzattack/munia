@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using MUNIA.Skinning;
 using MUNIA.Util;
@@ -23,6 +24,7 @@ namespace MUNIA.Forms {
 		private readonly List<GroupedSvgElems> _highlights = new List<GroupedSvgElems>();
 		private readonly List<GroupedSvgElems> _nonHighlights = new List<GroupedSvgElems>();
 		private readonly List<GroupedSvgElems> _base = new List<GroupedSvgElems>();
+		CheckBox cbFlash;
 
 		private SkinRemapperForm() {
 			InitializeComponent();
@@ -32,7 +34,7 @@ namespace MUNIA.Forms {
 
 				if (!_selectingGroup) {
 					HighlightGroup(false);
-					timer.Stop(); timer.Start();
+					if (cbFlash.Checked) { timer.Stop(); timer.Start(); }
 				}
 			};
 
@@ -42,15 +44,25 @@ namespace MUNIA.Forms {
 				// instantly unhighlight and resync timer
 				if (!_selectingGroup) {
 					HighlightGroup(false);
-					timer.Stop(); timer.Start();
+					if (cbFlash.Checked) { timer.Stop(); timer.Start(); }
 				}
 			};
+
+			cbFlash = new CheckBox();
+			cbFlash.Text = "Flash selected group";
+			cbFlash.Checked = true;
+			cbFlash.CheckStateChanged += (s, ex) => {
+				timer.Enabled = cbFlash.Checked;
+				if (!cbFlash.Checked) HighlightGroup(false);
+			};
+			ToolStripControlHost host = new ToolStripControlHost(cbFlash);
+			toolStrip1.Items.Insert(0, host);
 		}
 
 		public SkinRemapperForm(string path, ColorRemap remap) : this() {
-			this._skin = new SvgSkin();
-			this._skin.Load(path);
-			this.Remap = remap;
+			_skin = new SvgSkin();
+			_skin.Load(path);
+			Remap = remap;
 			remap.ApplyToSkin(this._skin);
 
 			var highlightElems = _skin.Buttons.Where(b => b.Pressed != null).Select(b => b.Pressed)
@@ -98,6 +110,7 @@ namespace MUNIA.Forms {
 			PopulateListbox();
 		}
 		private void SkinRemapperForm_Load(object sender, EventArgs e) {
+			SetVisibility();
 			Render();
 		}
 
@@ -158,15 +171,18 @@ namespace MUNIA.Forms {
 			if (group.Fill is SvgColourServer cf)
 				cFill = cf.Colour;
 			colorPicker.PrimaryColor = _bkpFill = _selFill = cFill;
-			
+
 			Color cStroke = Color.Empty;
 			if (group.Stroke is SvgColourServer sf)
 				cStroke = sf.Colour;
 			colorPicker.SecondaryColor = _bkpStroke = _selStroke = cStroke;
-			
+
 			// instantly highlight and resync timer
-			HighlightGroup(true);
-			timer.Stop(); timer.Start();
+			if (cbFlash.Checked) {
+				HighlightGroup(true);
+				timer.Stop();
+				timer.Start();
+			}
 			_selectingGroup = false;
 		}
 
@@ -203,12 +219,30 @@ namespace MUNIA.Forms {
 			HighlightGroup(!_isHighlight);
 		}
 
-		private void Render() {
-			_skin.SvgDocument.Width = pbSvg.Width;
-			_skin.SvgDocument.Height = pbSvg.Height;
-			SetVisibility();
-			pbSvg.Image = _skin.SvgDocument.Draw();
+		private bool renderInProgress = false;
+		private bool renderScheduled = false;
+		private async void Render() {
+			if (renderInProgress) {
+				renderScheduled = true;
+				return;
+			}
+
+			renderInProgress = true;
+			Image img = null;
+			await Task.Run(() => {
+				_skin.SvgDocument.Width = pbSvg.Width;
+				_skin.SvgDocument.Height = pbSvg.Height;
+				img = _skin.SvgDocument.Draw();
+			});
+			pbSvg.Image = img;
+
+			renderInProgress = false;
+			if (renderScheduled) {
+				renderScheduled = false;
+				Render();
+			}
 		}
+
 
 		private void SetVisibility() {
 			bool hl = rbHighlights.Checked;
@@ -248,16 +282,19 @@ namespace MUNIA.Forms {
 
 		private void rbBaseItems_CheckedChanged(object sender, EventArgs e) {
 			PopulateListbox();
+			SetVisibility();
 			Render();
 		}
 
 		private void rbHighlights_CheckedChanged(object sender, EventArgs e) {
 			PopulateListbox();
+			SetVisibility();
 			Render();
 		}
 
 		private void ckbBase_CheckedChanged(object sender, EventArgs e) {
 			PopulateListbox();
+			SetVisibility();
 			Render();
 		}
 
@@ -274,7 +311,7 @@ namespace MUNIA.Forms {
 		private void btnRevert_Click(object sender, EventArgs e) {
 			_selFill = _bkpFill;
 			_selStroke = _bkpStroke;
-		} 
+		}
 
 		private void pbSvg_MouseDown(object sender, MouseEventArgs e) {
 			var clickedElems = FindElemsAt(e.Location);
