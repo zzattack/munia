@@ -73,6 +73,7 @@ namespace MUNIA.Forms {
 				foreach (var skin in ConfigManager.Skins.Where(s => s.Controllers.Contains(ctrlr.Type))) {
 					var tsmiSkin = new ToolStripMenuItem($"{skin.Name}");
 					tsmiSkin.Enabled = true;
+					tsmiSkin.ToolTipText = skin.Path;
 					tsmiSkin.Click += (sender, args) => ActivateConfig(ctrlr, skin);
 					tsmiController.DropDownItems.Add(tsmiSkin);
 				}
@@ -191,6 +192,23 @@ namespace MUNIA.Forms {
 			if (frm.ShowDialog() == DialogResult.OK) {
 				this.Size = frm.ChosenSize - glControl.Size + this.Size;
 			}
+		}
+		private void tsmiSkinFolders_Click(object sender, EventArgs e) {
+			(new SkinFoldersForm(ConfigManager.SkinFolders)).ShowDialog(this);
+
+			ConfigManager.Save();
+			ReloadAll();
+		}
+
+		private void ReloadAll() {
+			ConfigManager.Skins.Clear();
+			ConfigManager.SkinFolders.Clear();
+			ConfigManager.WindowSizes.Clear();
+			ConfigManager.SelectedRemaps.Clear();
+			ConfigManager.AvailableRemaps.Clear();
+			ConfigManager.Load();
+			BuildMenu();
+			ActivateConfig(ConfigManager.GetActiveController(), ConfigManager.ActiveSkin);
 		}
 
 		private void tsmiAbout_Click(object sender, EventArgs e) {
@@ -392,7 +410,8 @@ namespace MUNIA.Forms {
 
 		private void tsmiManageThemes_Click(object sender, EventArgs e) {
 			if (ConfigManager.ActiveSkin is SvgSkin svg) {
-				var managerForm = new RemapManagerForm(svg, ConfigManager.SelectedRemaps[svg], ConfigManager.Remaps[svg]);
+				var managerForm = new RemapManagerForm(svg, ConfigManager.SelectedRemaps[svg],
+					ConfigManager.AvailableRemaps[svg.Path]);
 
 				managerForm.SelectedRemapChanged += (o, args) =>
 					SelectRemap(managerForm.SelectedRemap);
@@ -407,11 +426,11 @@ namespace MUNIA.Forms {
 			// populate the available themes list
 			tsmiApplyTheme.DropDownItems.Clear();
 			if (ConfigManager.ActiveSkin is SvgSkin svg) {
-				var remaps = ConfigManager.Remaps[svg];
+				var remaps = ConfigManager.AvailableRemaps[svg.Path];
 				tsmiApplyTheme.Enabled = remaps.Any(r=>!r.IsSkinDefault);
 
 				var selectedRemap = ConfigManager.SelectedRemaps[svg];
-				foreach (var remap in ConfigManager.Remaps[svg]) {
+				foreach (var remap in ConfigManager.AvailableRemaps[svg.Path]) {
 					var tsmiSkin = new ToolStripMenuItem(remap.Name, null, (_,__) => SelectRemap(remap));
 
 					// put a checkmark in front if this is the selected remap
@@ -434,6 +453,7 @@ namespace MUNIA.Forms {
 				Render();
 			}
 		}
+
 	}
 
 }

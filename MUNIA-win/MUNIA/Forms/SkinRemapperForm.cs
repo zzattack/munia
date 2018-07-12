@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using MUNIA.Skinning;
+using MUNIA.Util;
 using Svg;
 
 namespace MUNIA.Forms {
@@ -149,21 +150,20 @@ namespace MUNIA.Forms {
 			if (_selectedGroup != null) RestoreGroup();
 			_selectedGroup = group;
 
+			colorPicker.Mode = ColorPickerControl.ColorSelectMode.None;
 			colorPicker.PrimaryEnabled = pnlFill.Visible = group.Fill is SvgColourServer;
+			colorPicker.SecondaryEnabled = pnlStroke.Visible = group.Stroke is SvgColourServer;
 
 			Color cFill = Color.Empty;
 			if (group.Fill is SvgColourServer cf)
 				cFill = cf.Colour;
 			colorPicker.PrimaryColor = _bkpFill = _selFill = cFill;
-
-
-			colorPicker.SecondaryEnabled = pnlStroke.Visible = group.Stroke is SvgColourServer;
+			
 			Color cStroke = Color.Empty;
 			if (group.Stroke is SvgColourServer sf)
 				cStroke = sf.Colour;
 			colorPicker.SecondaryColor = _bkpStroke = _selStroke = cStroke;
-
-
+			
 			// instantly highlight and resync timer
 			HighlightGroup(true);
 			timer.Stop(); timer.Start();

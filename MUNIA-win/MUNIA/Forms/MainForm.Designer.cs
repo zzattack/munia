@@ -50,8 +50,11 @@ namespace MUNIA.Forms {
 			this.tsmiBackgroundChange = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiBackgroundTransparent = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiColorRemapping = new System.Windows.Forms.ToolStripMenuItem();
-			this.tsmiManageThemes = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiApplyTheme = new System.Windows.Forms.ToolStripMenuItem();
+			this.tsmiManageThemes = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+			this.tsmiSkinFolders = new System.Windows.Forms.ToolStripMenuItem();
 			this.menu.SuspendLayout();
 			this.status.SuspendLayout();
 			this.popup.SuspendLayout();
@@ -79,10 +82,13 @@ namespace MUNIA.Forms {
 			// 
 			this.tsmiOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsmiSetWindowSize,
+            this.tsmiSetLagCompensation,
+            this.tsmiSkinFolders,
+            this.toolStripSeparator1,
             this.tsmiDeviceConfig,
             this.tsmiFirmwareUpdate,
-            this.tsmiSetLagCompensation,
-            this.tsmiMapArduinoDevices});
+            this.tsmiMapArduinoDevices,
+            this.toolStripSeparator2});
 			this.tsmiOptions.Name = "tsmiOptions";
 			this.tsmiOptions.Size = new System.Drawing.Size(61, 20);
 			this.tsmiOptions.Text = "&Options";
@@ -105,7 +111,7 @@ namespace MUNIA.Forms {
 			// 
 			this.tsmiFirmwareUpdate.Name = "tsmiFirmwareUpdate";
 			this.tsmiFirmwareUpdate.Size = new System.Drawing.Size(188, 22);
-			this.tsmiFirmwareUpdate.Text = "Firmware &updating";
+			this.tsmiFirmwareUpdate.Text = "Firmware &update";
 			this.tsmiFirmwareUpdate.Click += new System.EventHandler(this.tsmiFirmware_Click);
 			// 
 			// tsmiSetLagCompensation
@@ -246,18 +252,35 @@ namespace MUNIA.Forms {
 			this.tsmiColorRemapping.Size = new System.Drawing.Size(168, 22);
 			this.tsmiColorRemapping.Text = "Color &remapping";
 			// 
-			// tsmiManageThemes
-			// 
-			this.tsmiManageThemes.Name = "tsmiManageThemes";
-			this.tsmiManageThemes.Size = new System.Drawing.Size(180, 22);
-			this.tsmiManageThemes.Text = "&Manage themes";
-			this.tsmiManageThemes.Click += new System.EventHandler(this.tsmiManageThemes_Click);
-			// 
 			// tsmiApplyTheme
 			// 
 			this.tsmiApplyTheme.Name = "tsmiApplyTheme";
-			this.tsmiApplyTheme.Size = new System.Drawing.Size(180, 22);
+			this.tsmiApplyTheme.Size = new System.Drawing.Size(159, 22);
 			this.tsmiApplyTheme.Text = "&Apply theme";
+			// 
+			// tsmiManageThemes
+			// 
+			this.tsmiManageThemes.Name = "tsmiManageThemes";
+			this.tsmiManageThemes.Size = new System.Drawing.Size(159, 22);
+			this.tsmiManageThemes.Text = "&Manage themes";
+			this.tsmiManageThemes.Click += new System.EventHandler(this.tsmiManageThemes_Click);
+			// 
+			// toolStripSeparator1
+			// 
+			this.toolStripSeparator1.Name = "toolStripSeparator1";
+			this.toolStripSeparator1.Size = new System.Drawing.Size(185, 6);
+			// 
+			// toolStripSeparator2
+			// 
+			this.toolStripSeparator2.Name = "toolStripSeparator2";
+			this.toolStripSeparator2.Size = new System.Drawing.Size(185, 6);
+			// 
+			// tsmiSkinFolders
+			// 
+			this.tsmiSkinFolders.Name = "tsmiSkinFolders";
+			this.tsmiSkinFolders.Size = new System.Drawing.Size(188, 22);
+			this.tsmiSkinFolders.Text = "&Skin folders";
+			this.tsmiSkinFolders.Click += new System.EventHandler(this.tsmiSkinFolders_Click);
 			// 
 			// MainForm
 			// 
@@ -309,6 +332,9 @@ namespace MUNIA.Forms {
 		private System.Windows.Forms.ToolStripMenuItem tsmiBackgroundChange;
 		private System.Windows.Forms.ToolStripMenuItem tsmiBackgroundTransparent;
 		private System.Windows.Forms.ToolStripMenuItem tsmiApplyTheme;
+		private System.Windows.Forms.ToolStripMenuItem tsmiSkinFolders;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
 	}
 }
 
