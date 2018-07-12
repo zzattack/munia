@@ -24,16 +24,19 @@
 		/// </summary>
 		private void InitializeComponent() {
 			this.components = new System.ComponentModel.Container();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RemapManagerForm));
 			this.list = new System.Windows.Forms.ListBox();
-			this.bsRemaps = new System.Windows.Forms.BindingSource(this.components);
-			this.button1 = new System.Windows.Forms.Button();
-			this.button2 = new System.Windows.Forms.Button();
-			this.button3 = new System.Windows.Forms.Button();
+			this.btnNew = new System.Windows.Forms.Button();
+			this.btnEdit = new System.Windows.Forms.Button();
+			this.btnDelete = new System.Windows.Forms.Button();
 			this.btnFinish = new System.Windows.Forms.Button();
 			this.gb = new System.Windows.Forms.GroupBox();
-			this.label1 = new System.Windows.Forms.Label();
-			this.button4 = new System.Windows.Forms.Button();
-			((System.ComponentModel.ISupportInitialize)(this.bsRemaps)).BeginInit();
+			this.btnClone = new System.Windows.Forms.Button();
+			this.lblSkinType = new System.Windows.Forms.Label();
+			this.btnExport = new System.Windows.Forms.Button();
+			this.sfd = new System.Windows.Forms.SaveFileDialog();
+			this.tooltip = new System.Windows.Forms.ToolTip(this.components);
+			this.lblExport = new System.Windows.Forms.Label();
 			this.gb.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -42,53 +45,55 @@
 			this.list.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.list.DataSource = this.bsRemaps;
 			this.list.DisplayMember = "Name";
 			this.list.FormattingEnabled = true;
 			this.list.Location = new System.Drawing.Point(6, 19);
 			this.list.Name = "list";
-			this.list.Size = new System.Drawing.Size(306, 264);
+			this.list.Size = new System.Drawing.Size(347, 212);
 			this.list.TabIndex = 0;
+			this.list.SelectedIndexChanged += new System.EventHandler(this.list_SelectedIndexChanged);
 			// 
-			// bsRemaps
+			// btnNew
 			// 
-			this.bsRemaps.DataSource = typeof(MUNIA.Skins.ColorRemap);
+			this.btnNew.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.btnNew.Enabled = false;
+			this.btnNew.Location = new System.Drawing.Point(6, 247);
+			this.btnNew.Name = "btnNew";
+			this.btnNew.Size = new System.Drawing.Size(63, 23);
+			this.btnNew.TabIndex = 1;
+			this.btnNew.Text = "New";
+			this.btnNew.UseVisualStyleBackColor = true;
+			this.btnNew.Click += new System.EventHandler(this.btnNew_Click);
 			// 
-			// button1
+			// btnEdit
 			// 
-			this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.button1.Location = new System.Drawing.Point(6, 289);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(63, 23);
-			this.button1.TabIndex = 1;
-			this.button1.Text = "New";
-			this.button1.UseVisualStyleBackColor = true;
+			this.btnEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.btnEdit.Enabled = false;
+			this.btnEdit.Location = new System.Drawing.Point(75, 247);
+			this.btnEdit.Name = "btnEdit";
+			this.btnEdit.Size = new System.Drawing.Size(63, 23);
+			this.btnEdit.TabIndex = 2;
+			this.btnEdit.Text = "Edit";
+			this.btnEdit.UseVisualStyleBackColor = true;
+			this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
 			// 
-			// button2
+			// btnDelete
 			// 
-			this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.button2.Location = new System.Drawing.Point(75, 289);
-			this.button2.Name = "button2";
-			this.button2.Size = new System.Drawing.Size(63, 23);
-			this.button2.TabIndex = 2;
-			this.button2.Text = "Edit";
-			this.button2.UseVisualStyleBackColor = true;
-			// 
-			// button3
-			// 
-			this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.button3.Location = new System.Drawing.Point(213, 289);
-			this.button3.Name = "button3";
-			this.button3.Size = new System.Drawing.Size(63, 23);
-			this.button3.TabIndex = 3;
-			this.button3.Text = "Delete";
-			this.button3.UseVisualStyleBackColor = true;
+			this.btnDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.btnDelete.Enabled = false;
+			this.btnDelete.Location = new System.Drawing.Point(213, 247);
+			this.btnDelete.Name = "btnDelete";
+			this.btnDelete.Size = new System.Drawing.Size(63, 23);
+			this.btnDelete.TabIndex = 3;
+			this.btnDelete.Text = "Delete";
+			this.btnDelete.UseVisualStyleBackColor = true;
+			this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
 			// 
 			// btnFinish
 			// 
 			this.btnFinish.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnFinish.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.btnFinish.Location = new System.Drawing.Point(270, 355);
+			this.btnFinish.Location = new System.Drawing.Point(295, 313);
 			this.btnFinish.Name = "btnFinish";
 			this.btnFinish.Size = new System.Drawing.Size(75, 23);
 			this.btnFinish.TabIndex = 5;
@@ -101,47 +106,79 @@
 			this.gb.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.gb.Controls.Add(this.button4);
+			this.gb.Controls.Add(this.btnExport);
+			this.gb.Controls.Add(this.btnClone);
 			this.gb.Controls.Add(this.list);
-			this.gb.Controls.Add(this.button3);
-			this.gb.Controls.Add(this.button1);
-			this.gb.Controls.Add(this.button2);
+			this.gb.Controls.Add(this.btnDelete);
+			this.gb.Controls.Add(this.btnNew);
+			this.gb.Controls.Add(this.btnEdit);
 			this.gb.Location = new System.Drawing.Point(12, 24);
 			this.gb.Name = "gb";
-			this.gb.Size = new System.Drawing.Size(334, 318);
+			this.gb.Size = new System.Drawing.Size(359, 276);
 			this.gb.TabIndex = 6;
 			this.gb.TabStop = false;
 			// 
-			// label1
+			// btnClone
 			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(27, 9);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(130, 13);
-			this.label1.TabIndex = 7;
-			this.label1.Text = "Color schemes for {0} skin";
+			this.btnClone.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.btnClone.Enabled = false;
+			this.btnClone.Location = new System.Drawing.Point(144, 247);
+			this.btnClone.Name = "btnClone";
+			this.btnClone.Size = new System.Drawing.Size(63, 23);
+			this.btnClone.TabIndex = 4;
+			this.btnClone.Text = "Clone";
+			this.btnClone.UseVisualStyleBackColor = true;
+			this.btnClone.Click += new System.EventHandler(this.btnClone_Click);
 			// 
-			// button4
+			// lblSkinType
 			// 
-			this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.button4.Location = new System.Drawing.Point(144, 289);
-			this.button4.Name = "button4";
-			this.button4.Size = new System.Drawing.Size(63, 23);
-			this.button4.TabIndex = 4;
-			this.button4.Text = "Clone";
-			this.button4.UseVisualStyleBackColor = true;
+			this.lblSkinType.AutoSize = true;
+			this.lblSkinType.Location = new System.Drawing.Point(27, 9);
+			this.lblSkinType.Name = "lblSkinType";
+			this.lblSkinType.Size = new System.Drawing.Size(130, 13);
+			this.lblSkinType.TabIndex = 7;
+			this.lblSkinType.Text = "Color schemes for {0} skin";
+			// 
+			// btnExport
+			// 
+			this.btnExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnExport.Enabled = false;
+			this.btnExport.Location = new System.Drawing.Point(290, 247);
+			this.btnExport.Name = "btnExport";
+			this.btnExport.Size = new System.Drawing.Size(63, 23);
+			this.btnExport.TabIndex = 5;
+			this.btnExport.Text = "Export";
+			this.btnExport.UseVisualStyleBackColor = true;
+			this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
+			// 
+			// sfd
+			// 
+			this.sfd.DefaultExt = "svg";
+			this.sfd.Filter = "Scalable Vector Graphics (*.svg)|*.svg|All files (*.*)|*";
+			// 
+			// lblExport
+			// 
+			this.lblExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.lblExport.Location = new System.Drawing.Point(27, 303);
+			this.lblExport.Name = "lblExport";
+			this.lblExport.Size = new System.Drawing.Size(192, 35);
+			this.lblExport.TabIndex = 8;
+			this.lblExport.Text = "To make your changes permanent, export them to a new SVG file";
 			// 
 			// RemapManagerForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(359, 389);
-			this.Controls.Add(this.label1);
+			this.ClientSize = new System.Drawing.Size(384, 347);
+			this.Controls.Add(this.lblExport);
+			this.Controls.Add(this.lblSkinType);
 			this.Controls.Add(this.btnFinish);
 			this.Controls.Add(this.gb);
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.MinimumSize = new System.Drawing.Size(400, 386);
 			this.Name = "RemapManagerForm";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Manage remap schemes";
-			((System.ComponentModel.ISupportInitialize)(this.bsRemaps)).EndInit();
 			this.gb.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
@@ -151,13 +188,16 @@
 		#endregion
 
 		private System.Windows.Forms.ListBox list;
-		private System.Windows.Forms.BindingSource bsRemaps;
-		private System.Windows.Forms.Button button1;
-		private System.Windows.Forms.Button button2;
-		private System.Windows.Forms.Button button3;
+		private System.Windows.Forms.Button btnNew;
+		private System.Windows.Forms.Button btnEdit;
+		private System.Windows.Forms.Button btnDelete;
 		private System.Windows.Forms.Button btnFinish;
 		private System.Windows.Forms.GroupBox gb;
-		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.Button button4;
+		private System.Windows.Forms.Label lblSkinType;
+		private System.Windows.Forms.Button btnClone;
+		private System.Windows.Forms.Button btnExport;
+		private System.Windows.Forms.SaveFileDialog sfd;
+		private System.Windows.Forms.ToolTip tooltip;
+		private System.Windows.Forms.Label lblExport;
 	}
 }
