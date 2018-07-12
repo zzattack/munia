@@ -26,24 +26,25 @@ namespace MUNIA.Forms {
 			InitializeComponent();
 
 			colorPicker.PrimaryColorPicked += (sender, args) => {
-				_selFill = colorPicker.SelectedPrimaryColor;
+				_selFill = pnlFill.BackColor = colorPicker.PrimaryColor;
 				// instantly unhighlight and resync timer
 				HighlightGroup(false);
 				timer.Stop(); timer.Start();
 			};
 
 			colorPicker.SecondaryColorPicked += (sender, args) => {
-				_selStroke = colorPicker.SelectedSecondaryColor;
+				_selStroke = pnlStroke.BackColor = colorPicker.SecondaryColor;
 				// instantly unhighlight and resync timer
 				HighlightGroup(false);
 				timer.Stop(); timer.Start();
 			};
-
 		}
-		public SkinRemapperForm(string path) : this() {
+
+		public SkinRemapperForm(string path, ColorRemap remap) : this() {
 			this._skin = new SvgSkin();
 			this._skin.Load(path);
-			this.Remap = ColorRemap.CreateFromSkin(_skin);
+			this.Remap = remap;
+			remap.ApplyToSkin(this._skin);
 
 			_highlights.AddRange(_skin.Buttons.Where(b => b.Pressed != null).Select(b => b.Pressed));
 			_highlights.AddRange(_skin.Sticks.Where(s => s.Pressed != null).Select(s => s.Pressed));
@@ -51,16 +52,15 @@ namespace MUNIA.Forms {
 			_nonHighlights.AddRange(_skin.Sticks.Where(s => s.Element != null).Select(s => s.Element));
 			_nonHighlights.AddRange(_skin.Triggers.Where(t => t.Element != null).Select(t => t.Element));
 
-			Action<SvgElement> recurseGet = null;
-			recurseGet = element => {
+			void RecurseGet(SvgElement element) {
 				if (!GroupContains(element, _highlights) && !GroupContains(element, _nonHighlights)) {
 					_base.Add(element);
-					foreach (var c in element.Children)
-						recurseGet(c);
+					foreach (var c in element.Children) RecurseGet(c);
 				}
-			};
-			recurseGet(_skin.SvgDocument);
+			}
+			RecurseGet(_skin.SvgDocument);
 
+			tbSkinName.DataBindings.Add("Text", Remap, "Name");
 			lbGroups.DisplayMember = nameof(GroupedSvgElems.Name);
 			PopulateListbox();
 		}
@@ -104,6 +104,14 @@ namespace MUNIA.Forms {
 		}
 
 		private void lbGroups_SelectedIndexChanged(object sender, EventArgs e) {
+			if (_selectedGroup != null && (_bkpFill.ToArgb() != _selFill.ToArgb() || _bkpStroke.ToArgb() != _selStroke.ToArgb())) {
+				var dr = MessageBox.Show("You have unsaved color changes in this group. Press Yes to apply them or No to discard.",
+					"Save changes?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+				if (dr == DialogResult.Yes) {
+					btnSave_Click(null, null);
+				}
+			}
+
 			var group = lbGroups.SelectedItem as GroupedSvgElems;
 			SelectGroup(group);
 		}
@@ -114,16 +122,23 @@ namespace MUNIA.Forms {
 			if (_selectedGroup != null) RestoreGroup();
 			_selectedGroup = group;
 
-			var strk = _selectedGroup.FirstOrDefault(e => e.Stroke is SvgColourServer);
-			if (strk != null) _bkpStroke = (strk.Stroke as SvgColourServer).Colour;
-
 			var fill = _selectedGroup.FirstOrDefault(e => e.Fill is SvgColourServer);
-			if (fill != null) _bkpFill = (fill.Fill as SvgColourServer).Colour;
+			colorPicker.PrimaryEnabled = pnlFill.Visible = fill != null;
 
-			pnlStroke.BackColor = _bkpStroke;
-			pnlFill.BackColor = _bkpFill;
-			colorPicker.SelectedPrimaryColor = _bkpFill;
-			colorPicker.SelectedSecondaryColor = _bkpStroke;
+			Color cFill = Color.Empty;
+			if (fill?.Fill is SvgColourServer cf)
+				cFill = cf.Colour;
+			colorPicker.PrimaryColor = _bkpFill = _selFill = cFill;
+
+
+			var strk = _selectedGroup.FirstOrDefault(e => e.Stroke is SvgColourServer);
+			colorPicker.SecondaryEnabled = pnlStroke.Visible = strk != null;
+
+			Color cStroke = Color.Empty;
+			if (strk?.Fill is SvgColourServer sf)
+				cStroke = sf.Colour;
+			colorPicker.SecondaryColor = _bkpStroke = _selStroke = cStroke;
+
 
 			// instantly highlight and resync timer
 			HighlightGroup(true);
@@ -131,6 +146,7 @@ namespace MUNIA.Forms {
 		}
 
 		private void HighlightGroup(bool isHighlighted) {
+			if (_selectedGroup == null) return;
 			_isHighlight = isHighlighted;
 			foreach (var item in _selectedGroup) {
 				if (item.Stroke is SvgColourServer stroke) {
@@ -147,7 +163,7 @@ namespace MUNIA.Forms {
 
 		private void RestoreGroup() {
 			foreach (var item in _selectedGroup) {
-				if (item.Stroke is SvgColourServer stroke) stroke.Colour =  _bkpStroke;
+				if (item.Stroke is SvgColourServer stroke) stroke.Colour = _bkpStroke;
 				if (item.Fill is SvgColourServer fill) fill.Colour = _bkpFill;
 			}
 		}

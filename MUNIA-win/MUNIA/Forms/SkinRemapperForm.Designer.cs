@@ -26,6 +26,7 @@ namespace MUNIA.Forms {
 		/// </summary>
 		private void InitializeComponent() {
 			this.components = new System.ComponentModel.Container();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SkinRemapperForm));
 			this.lbGroups = new System.Windows.Forms.ListBox();
 			this.ckbBase = new System.Windows.Forms.CheckBox();
 			this.rbHighlights = new System.Windows.Forms.RadioButton();
@@ -41,7 +42,10 @@ namespace MUNIA.Forms {
 			this.timer = new System.Windows.Forms.Timer(this.components);
 			this.tableLeft = new System.Windows.Forms.TableLayoutPanel();
 			this.pnlTopLeft = new System.Windows.Forms.Panel();
-			this.lblAboveBox = new System.Windows.Forms.Label();
+			this.tbSkinName = new System.Windows.Forms.TextBox();
+			this.lblSkinName = new System.Windows.Forms.Label();
+			this.gbSvgGroups = new System.Windows.Forms.GroupBox();
+			this.lblItemsToShow = new System.Windows.Forms.Label();
 			this.pnlBottomLeft = new System.Windows.Forms.Panel();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.gbFillAndStroke.SuspendLayout();
@@ -49,6 +53,7 @@ namespace MUNIA.Forms {
 			((System.ComponentModel.ISupportInitialize)(this.pbSvg)).BeginInit();
 			this.tableLeft.SuspendLayout();
 			this.pnlTopLeft.SuspendLayout();
+			this.gbSvgGroups.SuspendLayout();
 			this.pnlBottomLeft.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
@@ -62,9 +67,9 @@ namespace MUNIA.Forms {
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.lbGroups.FormattingEnabled = true;
-			this.lbGroups.Location = new System.Drawing.Point(11, 36);
+			this.lbGroups.Location = new System.Drawing.Point(6, 15);
 			this.lbGroups.Name = "lbGroups";
-			this.lbGroups.Size = new System.Drawing.Size(397, 95);
+			this.lbGroups.Size = new System.Drawing.Size(385, 95);
 			this.lbGroups.TabIndex = 0;
 			this.lbGroups.SelectedIndexChanged += new System.EventHandler(this.lbGroups_SelectedIndexChanged);
 			// 
@@ -74,11 +79,11 @@ namespace MUNIA.Forms {
 			this.ckbBase.AutoSize = true;
 			this.ckbBase.Checked = true;
 			this.ckbBase.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.ckbBase.Location = new System.Drawing.Point(18, 147);
+			this.ckbBase.Location = new System.Drawing.Point(97, 119);
 			this.ckbBase.Name = "ckbBase";
-			this.ckbBase.Size = new System.Drawing.Size(77, 17);
+			this.ckbBase.Size = new System.Drawing.Size(95, 17);
 			this.ckbBase.TabIndex = 4;
-			this.ckbBase.Text = "Base items";
+			this.ckbBase.Text = "Base elements";
 			this.ckbBase.UseVisualStyleBackColor = true;
 			this.ckbBase.CheckedChanged += new System.EventHandler(this.ckbBase_CheckedChanged);
 			// 
@@ -86,7 +91,7 @@ namespace MUNIA.Forms {
 			// 
 			this.rbHighlights.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.rbHighlights.AutoSize = true;
-			this.rbHighlights.Location = new System.Drawing.Point(107, 165);
+			this.rbHighlights.Location = new System.Drawing.Point(289, 118);
 			this.rbHighlights.Name = "rbHighlights";
 			this.rbHighlights.Size = new System.Drawing.Size(71, 17);
 			this.rbHighlights.TabIndex = 3;
@@ -99,7 +104,7 @@ namespace MUNIA.Forms {
 			this.rbNonHighlights.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.rbNonHighlights.AutoSize = true;
 			this.rbNonHighlights.Checked = true;
-			this.rbNonHighlights.Location = new System.Drawing.Point(16, 165);
+			this.rbNonHighlights.Location = new System.Drawing.Point(198, 118);
 			this.rbNonHighlights.Name = "rbNonHighlights";
 			this.rbNonHighlights.Size = new System.Drawing.Size(85, 17);
 			this.rbNonHighlights.TabIndex = 2;
@@ -127,6 +132,7 @@ namespace MUNIA.Forms {
 			// 
 			// btnRevert
 			// 
+			this.btnRevert.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnRevert.Location = new System.Drawing.Point(289, 46);
 			this.btnRevert.Name = "btnRevert";
 			this.btnRevert.Size = new System.Drawing.Size(75, 23);
@@ -137,6 +143,7 @@ namespace MUNIA.Forms {
 			// 
 			// btnSave
 			// 
+			this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnSave.Location = new System.Drawing.Point(289, 19);
 			this.btnSave.Name = "btnSave";
 			this.btnSave.Size = new System.Drawing.Size(75, 23);
@@ -162,9 +169,7 @@ namespace MUNIA.Forms {
 			this.colorPicker.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.colorPicker.Location = new System.Drawing.Point(6, 75);
 			this.colorPicker.Name = "colorPicker";
-			this.colorPicker.SelectedPrimaryColor = System.Drawing.SystemColors.Control;
-			this.colorPicker.SelectedSecondaryColor = System.Drawing.SystemColors.Control;
-			this.colorPicker.Size = new System.Drawing.Size(391, 259);
+			this.colorPicker.Size = new System.Drawing.Size(385, 259);
 			this.colorPicker.TabIndex = 3;
 			// 
 			// pnlStroke
@@ -220,25 +225,59 @@ namespace MUNIA.Forms {
 			// 
 			// pnlTopLeft
 			// 
-			this.pnlTopLeft.Controls.Add(this.lblAboveBox);
-			this.pnlTopLeft.Controls.Add(this.lbGroups);
-			this.pnlTopLeft.Controls.Add(this.ckbBase);
-			this.pnlTopLeft.Controls.Add(this.rbHighlights);
-			this.pnlTopLeft.Controls.Add(this.rbNonHighlights);
+			this.pnlTopLeft.Controls.Add(this.tbSkinName);
+			this.pnlTopLeft.Controls.Add(this.lblSkinName);
+			this.pnlTopLeft.Controls.Add(this.gbSvgGroups);
 			this.pnlTopLeft.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.pnlTopLeft.Location = new System.Drawing.Point(3, 3);
 			this.pnlTopLeft.Name = "pnlTopLeft";
 			this.pnlTopLeft.Size = new System.Drawing.Size(418, 194);
 			this.pnlTopLeft.TabIndex = 6;
 			// 
-			// lblAboveBox
+			// tbSkinName
 			// 
-			this.lblAboveBox.AutoSize = true;
-			this.lblAboveBox.Location = new System.Drawing.Point(15, 15);
-			this.lblAboveBox.Name = "lblAboveBox";
-			this.lblAboveBox.Size = new System.Drawing.Size(244, 13);
-			this.lblAboveBox.TabIndex = 5;
-			this.lblAboveBox.Text = "SVG elements, grouped by matching fill and stroke";
+			this.tbSkinName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbSkinName.Location = new System.Drawing.Point(88, 18);
+			this.tbSkinName.Name = "tbSkinName";
+			this.tbSkinName.Size = new System.Drawing.Size(263, 20);
+			this.tbSkinName.TabIndex = 8;
+			// 
+			// lblSkinName
+			// 
+			this.lblSkinName.AutoSize = true;
+			this.lblSkinName.Location = new System.Drawing.Point(25, 21);
+			this.lblSkinName.Name = "lblSkinName";
+			this.lblSkinName.Size = new System.Drawing.Size(57, 13);
+			this.lblSkinName.TabIndex = 7;
+			this.lblSkinName.Text = "Skin name";
+			// 
+			// gbSvgGroups
+			// 
+			this.gbSvgGroups.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.gbSvgGroups.Controls.Add(this.lblItemsToShow);
+			this.gbSvgGroups.Controls.Add(this.rbNonHighlights);
+			this.gbSvgGroups.Controls.Add(this.rbHighlights);
+			this.gbSvgGroups.Controls.Add(this.ckbBase);
+			this.gbSvgGroups.Controls.Add(this.lbGroups);
+			this.gbSvgGroups.Location = new System.Drawing.Point(11, 50);
+			this.gbSvgGroups.Name = "gbSvgGroups";
+			this.gbSvgGroups.Size = new System.Drawing.Size(397, 141);
+			this.gbSvgGroups.TabIndex = 9;
+			this.gbSvgGroups.TabStop = false;
+			this.gbSvgGroups.Text = "SVG elements, grouped by matching fill and stroke";
+			// 
+			// lblItemsToShow
+			// 
+			this.lblItemsToShow.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.lblItemsToShow.AutoSize = true;
+			this.lblItemsToShow.Location = new System.Drawing.Point(19, 120);
+			this.lblItemsToShow.Name = "lblItemsToShow";
+			this.lblItemsToShow.Size = new System.Drawing.Size(72, 13);
+			this.lblItemsToShow.TabIndex = 6;
+			this.lblItemsToShow.Text = "Items to show";
 			// 
 			// pnlBottomLeft
 			// 
@@ -272,7 +311,9 @@ namespace MUNIA.Forms {
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1273, 556);
 			this.Controls.Add(this.splitContainer1);
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "SkinRemapperForm";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Skin color remapper";
 			this.Load += new System.EventHandler(this.SkinRemapperForm_Load);
 			this.ResizeEnd += new System.EventHandler(this.SkinRemapperForm_ResizeEnd);
@@ -283,6 +324,8 @@ namespace MUNIA.Forms {
 			this.tableLeft.ResumeLayout(false);
 			this.pnlTopLeft.ResumeLayout(false);
 			this.pnlTopLeft.PerformLayout();
+			this.gbSvgGroups.ResumeLayout(false);
+			this.gbSvgGroups.PerformLayout();
 			this.pnlBottomLeft.ResumeLayout(false);
 			this.splitContainer1.Panel1.ResumeLayout(false);
 			this.splitContainer1.Panel2.ResumeLayout(false);
@@ -306,11 +349,14 @@ namespace MUNIA.Forms {
 		private ColorPickerControl colorPicker;
 		private System.Windows.Forms.TableLayoutPanel tableLeft;
 		private System.Windows.Forms.Panel pnlTopLeft;
-		private System.Windows.Forms.Label lblAboveBox;
 		private System.Windows.Forms.Panel pnlBottomLeft;
 		private System.Windows.Forms.SplitContainer splitContainer1;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Button btnRevert;
 		private System.Windows.Forms.Button btnSave;
+		private System.Windows.Forms.TextBox tbSkinName;
+		private System.Windows.Forms.Label lblSkinName;
+		private System.Windows.Forms.GroupBox gbSvgGroups;
+		private System.Windows.Forms.Label lblItemsToShow;
 	}
 }
