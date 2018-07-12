@@ -1,6 +1,3 @@
-using System;
-using System.Diagnostics;
-
 namespace MUNIA.Controllers {
 	public enum ControllerType {
 		None,

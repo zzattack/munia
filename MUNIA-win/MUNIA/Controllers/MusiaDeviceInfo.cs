@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 
 namespace MUNIA.Controllers {
 	public class MusiaDeviceInfo {
@@ -48,7 +47,6 @@ namespace MUNIA.Controllers {
 			VersionMinor = info[6];
 
 			Output = (OutputMode)config[1];
-			AllowVibrate = config[2] != 0;
 			PollingFrequency = (PollingFrequencySetting)config[3];
 
 			return true;
