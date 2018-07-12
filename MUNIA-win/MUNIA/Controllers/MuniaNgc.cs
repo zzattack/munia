@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using HidSharp;
+﻿using HidSharp;
 using MUNIA.Util;
 
 namespace MUNIA.Controllers {

@@ -1,5 +1,4 @@
-﻿using System;
-using HidSharp;
+﻿using HidSharp;
 
 namespace MUNIA.Controllers {
 	public abstract class ConfigInterface {
