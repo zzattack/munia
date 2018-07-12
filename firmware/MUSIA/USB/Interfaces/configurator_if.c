@@ -19,8 +19,8 @@ extern void getEEPROMConfig(uint8_t* buffer, uint8_t buffSize);
 uint8_t cfgBuff[CFG_CMD_REPORT_SIZE ];
 
 void Configurator_Init();
-void Configurator_SetReport(uint8_t* data, uint16_t length);
-void Configurator_GetReport(uint8_t reportId);
+void Configurator_SetReport(USBD_HID_ReportType type, uint8_t* data, uint16_t length);
+void Configurator_GetReport(USBD_HID_ReportType type, uint8_t reportId);
 
 //Class specific descriptor - HID
 __ALIGN_BEGIN static const uint8_t hid_rpt_cfg[] __ALIGN_END = {
@@ -87,7 +87,7 @@ void Configurator_Init() {
 	USBD_HID_ReportOut(&hconfigurator_if, cfgBuff, sizeof(cfgBuff));
 }
 
-void Configurator_SetReport(uint8_t* data, uint16_t length) {
+void Configurator_SetReport(USBD_HID_ReportType type, uint8_t* data, uint16_t length) {
 	sys_printf("Configurator_SetReport\n");
 	
 	uint8_t reportId = data[0];
@@ -103,7 +103,7 @@ void Configurator_SetReport(uint8_t* data, uint16_t length) {
 	USBD_HID_ReportOut(configurator_if, cfgBuff, sizeof(cfgBuff));
 }
 
-void Configurator_GetReport(uint8_t reportId) {
+void Configurator_GetReport(USBD_HID_ReportType type, uint8_t reportId) {
 	sys_printf("Configurator_GetReport\n");
 
 	uint8_t resp[9];

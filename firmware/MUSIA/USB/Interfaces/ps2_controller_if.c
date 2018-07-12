@@ -8,8 +8,6 @@
 
 
 static void PS2Controller_Init();
-static void PS2Controller_SetReport(uint8_t * data, uint16_t length);
-static void PS2Controller_GetReport(uint8_t reportId);
 
 //Class specific descriptor - HID
 __ALIGN_BEGIN static const uint8_t hid_rpt_ps2[] __ALIGN_END = {
