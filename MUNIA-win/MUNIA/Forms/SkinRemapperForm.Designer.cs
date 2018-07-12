@@ -48,7 +48,8 @@ namespace MUNIA.Forms {
 			this.lblItemsToShow = new System.Windows.Forms.Label();
 			this.pnlBottomLeft = new System.Windows.Forms.Panel();
 			this.split = new System.Windows.Forms.SplitContainer();
-			this.lblClickToSelect = new System.Windows.Forms.Label();
+			this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+			this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
 			this.gbFillAndStroke.SuspendLayout();
 			this.pnlStroke.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pbSvg)).BeginInit();
@@ -60,6 +61,7 @@ namespace MUNIA.Forms {
 			this.split.Panel1.SuspendLayout();
 			this.split.Panel2.SuspendLayout();
 			this.split.SuspendLayout();
+			this.toolStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// lbGroups
@@ -83,7 +85,7 @@ namespace MUNIA.Forms {
 			this.ckbBase.Location = new System.Drawing.Point(97, 119);
 			this.ckbBase.Name = "ckbBase";
 			this.ckbBase.Size = new System.Drawing.Size(95, 17);
-			this.ckbBase.TabIndex = 4;
+			this.ckbBase.TabIndex = 2;
 			this.ckbBase.Text = "Base elements";
 			this.ckbBase.UseVisualStyleBackColor = true;
 			this.ckbBase.CheckedChanged += new System.EventHandler(this.ckbBase_CheckedChanged);
@@ -95,7 +97,7 @@ namespace MUNIA.Forms {
 			this.rbHighlights.Location = new System.Drawing.Point(289, 118);
 			this.rbHighlights.Name = "rbHighlights";
 			this.rbHighlights.Size = new System.Drawing.Size(71, 17);
-			this.rbHighlights.TabIndex = 3;
+			this.rbHighlights.TabIndex = 4;
 			this.rbHighlights.Text = "Highlights";
 			this.rbHighlights.UseVisualStyleBackColor = true;
 			this.rbHighlights.CheckedChanged += new System.EventHandler(this.rbHighlights_CheckedChanged);
@@ -108,7 +110,7 @@ namespace MUNIA.Forms {
 			this.rbNonHighlights.Location = new System.Drawing.Point(198, 118);
 			this.rbNonHighlights.Name = "rbNonHighlights";
 			this.rbNonHighlights.Size = new System.Drawing.Size(85, 17);
-			this.rbNonHighlights.TabIndex = 2;
+			this.rbNonHighlights.TabIndex = 3;
 			this.rbNonHighlights.TabStop = true;
 			this.rbNonHighlights.Text = "Non-pressed";
 			this.rbNonHighlights.UseVisualStyleBackColor = true;
@@ -127,7 +129,7 @@ namespace MUNIA.Forms {
 			this.gbFillAndStroke.Location = new System.Drawing.Point(11, 3);
 			this.gbFillAndStroke.Name = "gbFillAndStroke";
 			this.gbFillAndStroke.Size = new System.Drawing.Size(397, 340);
-			this.gbFillAndStroke.TabIndex = 1;
+			this.gbFillAndStroke.TabIndex = 0;
 			this.gbFillAndStroke.TabStop = false;
 			this.gbFillAndStroke.Text = "Fill and stroke";
 			// 
@@ -137,7 +139,7 @@ namespace MUNIA.Forms {
 			this.btnRevert.Location = new System.Drawing.Point(289, 46);
 			this.btnRevert.Name = "btnRevert";
 			this.btnRevert.Size = new System.Drawing.Size(75, 23);
-			this.btnRevert.TabIndex = 6;
+			this.btnRevert.TabIndex = 2;
 			this.btnRevert.Text = "Revert";
 			this.btnRevert.UseVisualStyleBackColor = true;
 			this.btnRevert.Click += new System.EventHandler(this.btnRevert_Click);
@@ -148,7 +150,7 @@ namespace MUNIA.Forms {
 			this.btnSave.Location = new System.Drawing.Point(289, 19);
 			this.btnSave.Name = "btnSave";
 			this.btnSave.Size = new System.Drawing.Size(75, 23);
-			this.btnSave.TabIndex = 5;
+			this.btnSave.TabIndex = 1;
 			this.btnSave.Text = "Save";
 			this.btnSave.UseVisualStyleBackColor = true;
 			this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
@@ -159,7 +161,7 @@ namespace MUNIA.Forms {
 			this.lblColorPickInstruction.Location = new System.Drawing.Point(21, 59);
 			this.lblColorPickInstruction.Name = "lblColorPickInstruction";
 			this.lblColorPickInstruction.Size = new System.Drawing.Size(247, 13);
-			this.lblColorPickInstruction.TabIndex = 4;
+			this.lblColorPickInstruction.TabIndex = 3;
 			this.lblColorPickInstruction.Text = "Left click to change fill, right click to change stroke";
 			// 
 			// colorPicker
@@ -176,7 +178,7 @@ namespace MUNIA.Forms {
 			this.colorPicker.SecondaryColor = System.Drawing.Color.Empty;
 			this.colorPicker.SecondaryEnabled = false;
 			this.colorPicker.Size = new System.Drawing.Size(393, 259);
-			this.colorPicker.TabIndex = 3;
+			this.colorPicker.TabIndex = 4;
 			// 
 			// pnlStroke
 			// 
@@ -188,7 +190,7 @@ namespace MUNIA.Forms {
 			this.pnlStroke.Name = "pnlStroke";
 			this.pnlStroke.Padding = new System.Windows.Forms.Padding(5);
 			this.pnlStroke.Size = new System.Drawing.Size(262, 30);
-			this.pnlStroke.TabIndex = 2;
+			this.pnlStroke.TabIndex = 0;
 			// 
 			// pnlFill
 			// 
@@ -197,7 +199,7 @@ namespace MUNIA.Forms {
 			this.pnlFill.Location = new System.Drawing.Point(5, 5);
 			this.pnlFill.Name = "pnlFill";
 			this.pnlFill.Size = new System.Drawing.Size(252, 20);
-			this.pnlFill.TabIndex = 3;
+			this.pnlFill.TabIndex = 0;
 			// 
 			// pbSvg
 			// 
@@ -241,7 +243,7 @@ namespace MUNIA.Forms {
 			this.pnlTopLeft.Location = new System.Drawing.Point(3, 3);
 			this.pnlTopLeft.Name = "pnlTopLeft";
 			this.pnlTopLeft.Size = new System.Drawing.Size(418, 194);
-			this.pnlTopLeft.TabIndex = 6;
+			this.pnlTopLeft.TabIndex = 0;
 			// 
 			// tbSkinName
 			// 
@@ -250,7 +252,7 @@ namespace MUNIA.Forms {
 			this.tbSkinName.Location = new System.Drawing.Point(88, 18);
 			this.tbSkinName.Name = "tbSkinName";
 			this.tbSkinName.Size = new System.Drawing.Size(263, 20);
-			this.tbSkinName.TabIndex = 8;
+			this.tbSkinName.TabIndex = 0;
 			// 
 			// lblSkinName
 			// 
@@ -285,7 +287,7 @@ namespace MUNIA.Forms {
 			this.lblItemsToShow.Location = new System.Drawing.Point(19, 120);
 			this.lblItemsToShow.Name = "lblItemsToShow";
 			this.lblItemsToShow.Size = new System.Drawing.Size(72, 13);
-			this.lblItemsToShow.TabIndex = 6;
+			this.lblItemsToShow.TabIndex = 1;
 			this.lblItemsToShow.Text = "Items to show";
 			// 
 			// pnlBottomLeft
@@ -310,21 +312,28 @@ namespace MUNIA.Forms {
 			// 
 			// split.Panel2
 			// 
-			this.split.Panel2.Controls.Add(this.lblClickToSelect);
+			this.split.Panel2.Controls.Add(this.toolStrip1);
 			this.split.Panel2.Controls.Add(this.pbSvg);
 			this.split.Size = new System.Drawing.Size(870, 556);
 			this.split.SplitterDistance = 424;
-			this.split.TabIndex = 3;
+			this.split.TabIndex = 0;
 			// 
-			// lblClickToSelect
+			// toolStrip1
 			// 
-			this.lblClickToSelect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.lblClickToSelect.AutoSize = true;
-			this.lblClickToSelect.Location = new System.Drawing.Point(13, 535);
-			this.lblClickToSelect.Name = "lblClickToSelect";
-			this.lblClickToSelect.Size = new System.Drawing.Size(213, 13);
-			this.lblClickToSelect.TabIndex = 3;
-			this.lblClickToSelect.Text = "Click on any skin element to select its group";
+			this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripLabel1});
+			this.toolStrip1.Location = new System.Drawing.Point(0, 531);
+			this.toolStrip1.Name = "toolStrip1";
+			this.toolStrip1.Size = new System.Drawing.Size(442, 25);
+			this.toolStrip1.TabIndex = 0;
+			this.toolStrip1.Text = "toolStrip1";
+			// 
+			// toolStripLabel1
+			// 
+			this.toolStripLabel1.Name = "toolStripLabel1";
+			this.toolStripLabel1.Size = new System.Drawing.Size(321, 22);
+			this.toolStripLabel1.Text = "Click anywhere in the skin to select its corresponding group";
 			// 
 			// SkinRemapperForm
 			// 
@@ -354,6 +363,8 @@ namespace MUNIA.Forms {
 			this.split.Panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.split)).EndInit();
 			this.split.ResumeLayout(false);
+			this.toolStrip1.ResumeLayout(false);
+			this.toolStrip1.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -381,6 +392,7 @@ namespace MUNIA.Forms {
 		private System.Windows.Forms.Label lblSkinName;
 		private System.Windows.Forms.GroupBox gbSvgGroups;
 		private System.Windows.Forms.Label lblItemsToShow;
-		private System.Windows.Forms.Label lblClickToSelect;
+		private System.Windows.Forms.ToolStrip toolStrip1;
+		private System.Windows.Forms.ToolStripLabel toolStripLabel1;
 	}
 }

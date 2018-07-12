@@ -44,7 +44,7 @@
 			this.lbSerialPorts.Location = new System.Drawing.Point(12, 25);
 			this.lbSerialPorts.Name = "lbSerialPorts";
 			this.lbSerialPorts.Size = new System.Drawing.Size(157, 134);
-			this.lbSerialPorts.TabIndex = 0;
+			this.lbSerialPorts.TabIndex = 1;
 			// 
 			// cbDeviceType
 			// 
@@ -60,7 +60,7 @@
 			this.label1.Location = new System.Drawing.Point(9, 9);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(85, 13);
-			this.label1.TabIndex = 2;
+			this.label1.TabIndex = 0;
 			this.label1.Text = "Select COM port";
 			// 
 			// label2
@@ -69,7 +69,7 @@
 			this.label2.Location = new System.Drawing.Point(14, 19);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(64, 13);
-			this.label2.TabIndex = 3;
+			this.label2.TabIndex = 0;
 			this.label2.Text = "Device type";
 			// 
 			// btnTest
@@ -77,7 +77,7 @@
 			this.btnTest.Location = new System.Drawing.Point(17, 62);
 			this.btnTest.Name = "btnTest";
 			this.btnTest.Size = new System.Drawing.Size(75, 23);
-			this.btnTest.TabIndex = 4;
+			this.btnTest.TabIndex = 2;
 			this.btnTest.Text = "Test";
 			this.btnTest.UseVisualStyleBackColor = true;
 			// 
@@ -88,7 +88,7 @@
 			this.btnCancel.Location = new System.Drawing.Point(191, 135);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(75, 23);
-			this.btnCancel.TabIndex = 5;
+			this.btnCancel.TabIndex = 3;
 			this.btnCancel.Text = "Cancel";
 			this.btnCancel.UseVisualStyleBackColor = true;
 			// 
@@ -99,7 +99,7 @@
 			this.BtnAccept.Location = new System.Drawing.Point(272, 135);
 			this.BtnAccept.Name = "BtnAccept";
 			this.BtnAccept.Size = new System.Drawing.Size(75, 23);
-			this.BtnAccept.TabIndex = 6;
+			this.BtnAccept.TabIndex = 4;
 			this.BtnAccept.Text = "Accept";
 			this.BtnAccept.UseVisualStyleBackColor = true;
 			// 
@@ -112,7 +112,7 @@
 			this.gb.Location = new System.Drawing.Point(175, 25);
 			this.gb.Name = "gb";
 			this.gb.Size = new System.Drawing.Size(172, 100);
-			this.gb.TabIndex = 7;
+			this.gb.TabIndex = 2;
 			this.gb.TabStop = false;
 			this.gb.Text = "Mapping";
 			// 

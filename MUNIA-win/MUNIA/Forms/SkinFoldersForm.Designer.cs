@@ -49,6 +49,7 @@
 			this.list.Size = new System.Drawing.Size(367, 186);
 			this.list.TabIndex = 0;
 			this.list.SelectedIndexChanged += new System.EventHandler(this.list_SelectedIndexChanged);
+			this.list.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.list_MouseDoubleClick);
 			// 
 			// btnMoveUp
 			// 

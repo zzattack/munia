@@ -31,10 +31,14 @@ namespace MUNIA.Forms {
 			this.tsmiControllers = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiOptions = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiSetWindowSize = new System.Windows.Forms.ToolStripMenuItem();
+			this.tsmiSetLagCompensation = new System.Windows.Forms.ToolStripMenuItem();
+			this.tsmiSkinFolders = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.tsmiDeviceConfig = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiFirmwareUpdate = new System.Windows.Forms.ToolStripMenuItem();
-			this.tsmiSetLagCompensation = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiMapArduinoDevices = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+			this.tsmiManageSkinThemes = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiHelp = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiCheckUpdates = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiAbout = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,9 +56,6 @@ namespace MUNIA.Forms {
 			this.tsmiColorRemapping = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiApplyTheme = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiManageThemes = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-			this.tsmiSkinFolders = new System.Windows.Forms.ToolStripMenuItem();
 			this.menu.SuspendLayout();
 			this.status.SuspendLayout();
 			this.popup.SuspendLayout();
@@ -88,7 +89,8 @@ namespace MUNIA.Forms {
             this.tsmiDeviceConfig,
             this.tsmiFirmwareUpdate,
             this.tsmiMapArduinoDevices,
-            this.toolStripSeparator2});
+            this.toolStripSeparator2,
+            this.tsmiManageSkinThemes});
 			this.tsmiOptions.Name = "tsmiOptions";
 			this.tsmiOptions.Size = new System.Drawing.Size(61, 20);
 			this.tsmiOptions.Text = "&Options";
@@ -99,6 +101,25 @@ namespace MUNIA.Forms {
 			this.tsmiSetWindowSize.Size = new System.Drawing.Size(188, 22);
 			this.tsmiSetWindowSize.Text = "Set &window size";
 			this.tsmiSetWindowSize.Click += new System.EventHandler(this.tsmiSetWindowSize_Click);
+			// 
+			// tsmiSetLagCompensation
+			// 
+			this.tsmiSetLagCompensation.Name = "tsmiSetLagCompensation";
+			this.tsmiSetLagCompensation.Size = new System.Drawing.Size(188, 22);
+			this.tsmiSetLagCompensation.Text = "Set &lag compensation";
+			this.tsmiSetLagCompensation.Click += new System.EventHandler(this.tsmiSetLagCompensation_Click);
+			// 
+			// tsmiSkinFolders
+			// 
+			this.tsmiSkinFolders.Name = "tsmiSkinFolders";
+			this.tsmiSkinFolders.Size = new System.Drawing.Size(188, 22);
+			this.tsmiSkinFolders.Text = "&Skin folders";
+			this.tsmiSkinFolders.Click += new System.EventHandler(this.tsmiSkinFolders_Click);
+			// 
+			// toolStripSeparator1
+			// 
+			this.toolStripSeparator1.Name = "toolStripSeparator1";
+			this.toolStripSeparator1.Size = new System.Drawing.Size(185, 6);
 			// 
 			// tsmiDeviceConfig
 			// 
@@ -114,19 +135,24 @@ namespace MUNIA.Forms {
 			this.tsmiFirmwareUpdate.Text = "Firmware &update";
 			this.tsmiFirmwareUpdate.Click += new System.EventHandler(this.tsmiFirmware_Click);
 			// 
-			// tsmiSetLagCompensation
-			// 
-			this.tsmiSetLagCompensation.Name = "tsmiSetLagCompensation";
-			this.tsmiSetLagCompensation.Size = new System.Drawing.Size(188, 22);
-			this.tsmiSetLagCompensation.Text = "Set &lag compensation";
-			this.tsmiSetLagCompensation.Click += new System.EventHandler(this.tsmiSetLagCompensation_Click);
-			// 
 			// tsmiMapArduinoDevices
 			// 
 			this.tsmiMapArduinoDevices.Name = "tsmiMapArduinoDevices";
 			this.tsmiMapArduinoDevices.Size = new System.Drawing.Size(188, 22);
 			this.tsmiMapArduinoDevices.Text = "Map arduino devices";
 			this.tsmiMapArduinoDevices.Click += new System.EventHandler(this.tsmiMapArduinoDevicesClick);
+			// 
+			// toolStripSeparator2
+			// 
+			this.toolStripSeparator2.Name = "toolStripSeparator2";
+			this.toolStripSeparator2.Size = new System.Drawing.Size(185, 6);
+			// 
+			// tsmiManageSkinThemes
+			// 
+			this.tsmiManageSkinThemes.Name = "tsmiManageSkinThemes";
+			this.tsmiManageSkinThemes.Size = new System.Drawing.Size(188, 22);
+			this.tsmiManageSkinThemes.Text = "Manage skin &themes";
+			this.tsmiManageSkinThemes.Click += new System.EventHandler(this.tsmiManageThemes_Click);
 			// 
 			// tsmiHelp
 			// 
@@ -255,32 +281,15 @@ namespace MUNIA.Forms {
 			// tsmiApplyTheme
 			// 
 			this.tsmiApplyTheme.Name = "tsmiApplyTheme";
-			this.tsmiApplyTheme.Size = new System.Drawing.Size(159, 22);
+			this.tsmiApplyTheme.Size = new System.Drawing.Size(180, 22);
 			this.tsmiApplyTheme.Text = "&Apply theme";
 			// 
 			// tsmiManageThemes
 			// 
 			this.tsmiManageThemes.Name = "tsmiManageThemes";
-			this.tsmiManageThemes.Size = new System.Drawing.Size(159, 22);
+			this.tsmiManageThemes.Size = new System.Drawing.Size(180, 22);
 			this.tsmiManageThemes.Text = "&Manage themes";
 			this.tsmiManageThemes.Click += new System.EventHandler(this.tsmiManageThemes_Click);
-			// 
-			// toolStripSeparator1
-			// 
-			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(185, 6);
-			// 
-			// toolStripSeparator2
-			// 
-			this.toolStripSeparator2.Name = "toolStripSeparator2";
-			this.toolStripSeparator2.Size = new System.Drawing.Size(185, 6);
-			// 
-			// tsmiSkinFolders
-			// 
-			this.tsmiSkinFolders.Name = "tsmiSkinFolders";
-			this.tsmiSkinFolders.Size = new System.Drawing.Size(188, 22);
-			this.tsmiSkinFolders.Text = "&Skin folders";
-			this.tsmiSkinFolders.Click += new System.EventHandler(this.tsmiSkinFolders_Click);
 			// 
 			// MainForm
 			// 
@@ -335,6 +344,7 @@ namespace MUNIA.Forms {
 		private System.Windows.Forms.ToolStripMenuItem tsmiSkinFolders;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+		private System.Windows.Forms.ToolStripMenuItem tsmiManageSkinThemes;
 	}
 }
 

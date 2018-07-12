@@ -38,7 +38,7 @@
 			this.btnAccept.Location = new System.Drawing.Point(223, 132);
 			this.btnAccept.Name = "btnAccept";
 			this.btnAccept.Size = new System.Drawing.Size(75, 23);
-			this.btnAccept.TabIndex = 2;
+			this.btnAccept.TabIndex = 3;
 			this.btnAccept.Text = "Accept";
 			this.btnAccept.UseVisualStyleBackColor = true;
 			this.btnAccept.Click += new System.EventHandler(this.BtnAccept_Click);
@@ -50,7 +50,7 @@
 			this.btnCancel.Location = new System.Drawing.Point(142, 132);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(75, 23);
-			this.btnCancel.TabIndex = 1;
+			this.btnCancel.TabIndex = 2;
 			this.btnCancel.Text = "Cancel";
 			this.btnCancel.UseVisualStyleBackColor = true;
 			// 
@@ -60,7 +60,7 @@
 			this.label1.Location = new System.Drawing.Point(18, 14);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(168, 13);
-			this.label1.TabIndex = 3;
+			this.label1.TabIndex = 0;
 			this.label1.Text = "Multiple devices found, select one";
 			// 
 			// lbDevices
@@ -72,7 +72,7 @@
 			this.lbDevices.Location = new System.Drawing.Point(15, 34);
 			this.lbDevices.Name = "lbDevices";
 			this.lbDevices.Size = new System.Drawing.Size(283, 82);
-			this.lbDevices.TabIndex = 4;
+			this.lbDevices.TabIndex = 1;
 			this.lbDevices.SelectedIndexChanged += new System.EventHandler(this.lbDevices_SelectedIndexChanged);
 			this.lbDevices.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lbDevices_MouseDoubleClick);
 			// 

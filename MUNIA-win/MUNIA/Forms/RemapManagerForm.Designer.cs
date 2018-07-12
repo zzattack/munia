@@ -31,9 +31,9 @@
 			this.btnDelete = new System.Windows.Forms.Button();
 			this.btnFinish = new System.Windows.Forms.Button();
 			this.gb = new System.Windows.Forms.GroupBox();
+			this.btnExport = new System.Windows.Forms.Button();
 			this.btnClone = new System.Windows.Forms.Button();
 			this.lblSkinType = new System.Windows.Forms.Label();
-			this.btnExport = new System.Windows.Forms.Button();
 			this.sfd = new System.Windows.Forms.SaveFileDialog();
 			this.tooltip = new System.Windows.Forms.ToolTip(this.components);
 			this.lblExport = new System.Windows.Forms.Label();
@@ -52,6 +52,7 @@
 			this.list.Size = new System.Drawing.Size(347, 212);
 			this.list.TabIndex = 0;
 			this.list.SelectedIndexChanged += new System.EventHandler(this.list_SelectedIndexChanged);
+			this.list.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.list_MouseDoubleClick);
 			// 
 			// btnNew
 			// 
@@ -84,7 +85,7 @@
 			this.btnDelete.Location = new System.Drawing.Point(213, 247);
 			this.btnDelete.Name = "btnDelete";
 			this.btnDelete.Size = new System.Drawing.Size(63, 23);
-			this.btnDelete.TabIndex = 3;
+			this.btnDelete.TabIndex = 4;
 			this.btnDelete.Text = "Delete";
 			this.btnDelete.UseVisualStyleBackColor = true;
 			this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
@@ -96,7 +97,7 @@
 			this.btnFinish.Location = new System.Drawing.Point(295, 313);
 			this.btnFinish.Name = "btnFinish";
 			this.btnFinish.Size = new System.Drawing.Size(75, 23);
-			this.btnFinish.TabIndex = 5;
+			this.btnFinish.TabIndex = 3;
 			this.btnFinish.Text = "Finished";
 			this.btnFinish.UseVisualStyleBackColor = true;
 			this.btnFinish.Click += new System.EventHandler(this.btnFinish_Click);
@@ -115,29 +116,8 @@
 			this.gb.Location = new System.Drawing.Point(12, 24);
 			this.gb.Name = "gb";
 			this.gb.Size = new System.Drawing.Size(359, 276);
-			this.gb.TabIndex = 6;
+			this.gb.TabIndex = 1;
 			this.gb.TabStop = false;
-			// 
-			// btnClone
-			// 
-			this.btnClone.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.btnClone.Enabled = false;
-			this.btnClone.Location = new System.Drawing.Point(144, 247);
-			this.btnClone.Name = "btnClone";
-			this.btnClone.Size = new System.Drawing.Size(63, 23);
-			this.btnClone.TabIndex = 4;
-			this.btnClone.Text = "Clone";
-			this.btnClone.UseVisualStyleBackColor = true;
-			this.btnClone.Click += new System.EventHandler(this.btnClone_Click);
-			// 
-			// lblSkinType
-			// 
-			this.lblSkinType.AutoSize = true;
-			this.lblSkinType.Location = new System.Drawing.Point(27, 9);
-			this.lblSkinType.Name = "lblSkinType";
-			this.lblSkinType.Size = new System.Drawing.Size(130, 13);
-			this.lblSkinType.TabIndex = 7;
-			this.lblSkinType.Text = "Color schemes for {0} skin";
 			// 
 			// btnExport
 			// 
@@ -151,6 +131,27 @@
 			this.btnExport.UseVisualStyleBackColor = true;
 			this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
 			// 
+			// btnClone
+			// 
+			this.btnClone.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.btnClone.Enabled = false;
+			this.btnClone.Location = new System.Drawing.Point(144, 247);
+			this.btnClone.Name = "btnClone";
+			this.btnClone.Size = new System.Drawing.Size(63, 23);
+			this.btnClone.TabIndex = 3;
+			this.btnClone.Text = "Clone";
+			this.btnClone.UseVisualStyleBackColor = true;
+			this.btnClone.Click += new System.EventHandler(this.btnClone_Click);
+			// 
+			// lblSkinType
+			// 
+			this.lblSkinType.AutoSize = true;
+			this.lblSkinType.Location = new System.Drawing.Point(27, 9);
+			this.lblSkinType.Name = "lblSkinType";
+			this.lblSkinType.Size = new System.Drawing.Size(130, 13);
+			this.lblSkinType.TabIndex = 0;
+			this.lblSkinType.Text = "Color schemes for {0} skin";
+			// 
 			// sfd
 			// 
 			this.sfd.DefaultExt = "svg";
@@ -162,7 +163,7 @@
 			this.lblExport.Location = new System.Drawing.Point(27, 303);
 			this.lblExport.Name = "lblExport";
 			this.lblExport.Size = new System.Drawing.Size(192, 35);
-			this.lblExport.TabIndex = 8;
+			this.lblExport.TabIndex = 2;
 			this.lblExport.Text = "To make your changes permanent, export them to a new SVG file";
 			// 
 			// RemapManagerForm
