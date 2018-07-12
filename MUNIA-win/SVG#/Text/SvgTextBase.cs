@@ -13,10 +13,10 @@ namespace Svg
 {
     public abstract class SvgTextBase : SvgVisualElement
     {
-        protected SvgUnitCollection _x = new SvgUnitCollection();
-        protected SvgUnitCollection _y = new SvgUnitCollection();
-        protected SvgUnitCollection _dy = new SvgUnitCollection();
-        protected SvgUnitCollection _dx = new SvgUnitCollection();
+        [CLSCompliant(false)] protected SvgUnitCollection _x = new SvgUnitCollection();
+        [CLSCompliant(false)] protected SvgUnitCollection _y = new SvgUnitCollection();
+        [CLSCompliant(false)] protected SvgUnitCollection _dy = new SvgUnitCollection();
+        [CLSCompliant(false)] protected SvgUnitCollection _dx = new SvgUnitCollection();
         private string _rotate;
         private List<float> _rotations = new List<float>();
 
@@ -26,25 +26,16 @@ namespace Svg
         public virtual string Text
         {
             get { return base.Content; }
-            set { base.Content = value; this.IsPathDirty = true; this.Content = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the text anchor.
-        /// </summary>
-        /// <value>The text anchor.</value>
-        [SvgAttribute("text-anchor", true)]
-        public virtual SvgTextAnchor TextAnchor
-        {
-            get { return (this.Attributes["text-anchor"] == null) ? SvgTextAnchor.Inherit : (SvgTextAnchor)this.Attributes["text-anchor"]; }
-            set { this.Attributes["text-anchor"] = value; this.IsPathDirty = true; }
-        }
-
-        [SvgAttribute("baseline-shift", true)]
-        public virtual string BaselineShift
-        {
-            get { return this.Attributes["baseline-shift"] as string; }
-            set { this.Attributes["baseline-shift"] = value; this.IsPathDirty = true; }
+            set {
+                Nodes.Clear();
+                Children.Clear();
+                if(value != null)
+                {
+                    Nodes.Add(new SvgContentNode { Content = value });
+                }
+                this.IsPathDirty = true;
+                Content = value;
+            }
         }
 
         public override XmlSpaceHandling SpaceHandling
@@ -216,15 +207,6 @@ namespace Svg
         }
 
         /// <summary>
-        /// Gets or sets a value to determine if anti-aliasing should occur when the element is being rendered.
-        /// </summary>
-        /// <value></value>
-        protected override bool RequiresSmoothRendering
-        {
-            get { return true; }
-        }
-
-        /// <summary>
         /// Gets the bounds of the element.
         /// </summary>
         /// <value>The bounds.</value>
@@ -235,9 +217,7 @@ namespace Svg
                 var path = this.Path(null);
                 foreach (var elem in this.Children.OfType<SvgVisualElement>())
                 {
-                    var p = elem.Path(null);
-                    if (p.GetBounds() != RectangleF.Empty)
-                        path.AddPath(p, false);
+                    path.AddPath(elem.Path(null), false);
                 }
                 return path.GetBounds();
             }

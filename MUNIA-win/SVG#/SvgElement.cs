@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -101,7 +101,7 @@ namespace Svg
         /// <summary>
         /// Gets the name of the element.
         /// </summary>
-        public string ElementName
+        protected internal string ElementName
         {
             get
             {
@@ -284,7 +284,7 @@ namespace Svg
             get { return this._customAttributes; }
         }
 
-        private static readonly Matrix _zeroMatrix = new Matrix(0, 0, 0, 0, 0, 0);
+        private readonly Matrix _zeroMatrix = new Matrix(0, 0, 0, 0, 0, 0);
 
         /// <summary>
         /// Applies the required transforms to <see cref="ISvgRenderer"/>.
@@ -377,9 +377,9 @@ namespace Svg
         }
 
         /// <summary>
-        /// Gets or sets the text anchor.
+        /// Gets or sets the space handling.
         /// </summary>
-        /// <value>The text anchor.</value>
+        /// <value>The space handling.</value>
         [SvgAttribute("space", SvgAttributeAttribute.XmlNamespace)]
         public virtual XmlSpaceHandling SpaceHandling
         {
@@ -745,6 +745,12 @@ namespace Svg
         {
         	foreach(var child in elem.Children)
         	{
+            // Skip to avoid double calculate Symbol element
+            // symbol element is only referenced by use element 
+            // So here we need to skip when it is directly considered
+            if (child is Svg.Document_Structure.SvgSymbol)
+              continue;
+
         		if (child is SvgVisualElement)
         		{
         			if(!(child is SvgGroup))
@@ -783,7 +789,11 @@ namespace Svg
         			{
                         var childPath = ((SvgVisualElement)child).Path(renderer);
         				
-        				if (childPath != null)
+      					// Non-group element can have child element which we have to consider. i.e tspan in text element
+      					if (child.Children.Count > 0)
+    				  		childPath.AddPath(GetPaths(child, renderer), false);
+
+        				if (childPath != null && childPath.PointCount > 0)
         				{
         					childPath = (GraphicsPath)childPath.Clone();
         					if(child.Transforms != null)
@@ -794,9 +804,14 @@ namespace Svg
         			}
         			else
         			{
-                        var childPath = GetPaths(child, renderer);
-        				if(child.Transforms != null)
-        					childPath.Transform(child.Transforms.GetMatrix());
+				        var childPath = GetPaths(child, renderer);
+        				if (childPath != null && childPath.PointCount > 0)
+        				{
+        					if (child.Transforms != null)
+						        childPath.Transform(child.Transforms.GetMatrix());
+                  
+					        ret.AddPath(childPath, false);
+				        }
         			}
         		}
         			
@@ -817,6 +832,11 @@ namespace Svg
         }
 
     	public abstract SvgElement DeepCopy();
+
+        ISvgNode ISvgNode.DeepCopy()
+        {
+            return DeepCopy();
+        }
 
 		public virtual SvgElement DeepCopy<T>() where T : SvgElement, new()
 		{
@@ -872,7 +892,14 @@ namespace Svg
 				}
 			}
 
-			return newObj;
+            if (this._nodes.Count > 0)
+            {
+                foreach (var node in this._nodes)
+                {
+                    newObj.Nodes.Add(node.DeepCopy());
+                }
+            }
+            return newObj;
         }
 
 		/// <summary>
@@ -1182,6 +1209,12 @@ namespace Svg
     public interface ISvgNode
     {
         string Content { get; }
+        
+        /// <summary>
+        /// Create a deep copy of this <see cref="ISvgNode"/>.
+        /// </summary>
+        /// <returns>A deep copy of this <see cref="ISvgNode"/></returns>
+        ISvgNode DeepCopy();
     }
 
     /// <summary>This interface mostly indicates that a node is not to be drawn when rendering the SVG.</summary>

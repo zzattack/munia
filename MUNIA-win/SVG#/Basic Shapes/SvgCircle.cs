@@ -1,11 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Xml;
-using System.Web.UI.WebControls;
-using System.ComponentModel;
 
 namespace Svg
 {
@@ -13,7 +6,7 @@ namespace Svg
     /// An SVG element to render circles to the document.
     /// </summary>
     [SvgElement("circle")]
-    public class SvgCircle : SvgVisualElement
+    public class SvgCircle : SvgPathBasedElement
     {
         private GraphicsPath _path;
         
@@ -76,39 +69,28 @@ namespace Svg
         }
 
         /// <summary>
-        /// Gets the bounds of the circle.
-        /// </summary>
-        /// <value>The rectangular bounds of the circle.</value>
-        public override RectangleF Bounds
-        {
-            get { return this.Path(null).GetBounds(); }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the circle requires anti-aliasing when being rendered.
-        /// </summary>
-        /// <value>
-        /// 	<c>true</c> if the circle requires anti-aliasing; otherwise, <c>false</c>.
-        /// </value>
-        protected override bool RequiresSmoothRendering
-        {
-            get { return true; }
-        }
-
-        /// <summary>
         /// Gets the <see cref="GraphicsPath"/> representing this element.
         /// </summary>
         public override GraphicsPath Path(ISvgRenderer renderer)
         {
             if (this._path == null || this.IsPathDirty)
             {
+							float halfStrokeWidth = base.StrokeWidth / 2;
+
+							// If it is to render, don't need to consider stroke width.
+							// i.e stroke width only to be considered when calculating boundary
+							if (renderer != null)
+							{
+								halfStrokeWidth = 0;
+								this.IsPathDirty = false;
+							}
+
                 _path = new GraphicsPath();
                 _path.StartFigure();
-                var center = this.Center.ToDeviceValue(renderer, this);
-                var radius = this.Radius.ToDeviceValue(renderer, UnitRenderingType.Other, this);
-                _path.AddEllipse(center.X - radius, center.Y - radius, 2 * radius, 2 * radius);
+								var center = this.Center.ToDeviceValue(renderer, this);
+								var radius = this.Radius.ToDeviceValue(renderer, UnitRenderingType.Other, this) + halfStrokeWidth;
+								_path.AddEllipse(center.X - radius, center.Y - radius, 2 * radius, 2 * radius);
                 _path.CloseFigure();
-                this.IsPathDirty = false;
             }
             return _path;
         }

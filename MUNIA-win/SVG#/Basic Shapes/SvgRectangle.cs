@@ -1,15 +1,14 @@
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using Svg.Transforms;
 
 namespace Svg
 {
     /// <summary>
-    /// Represents and SVG rectangle that could also have reounded edges.
+    /// Represents an SVG rectangle that could also have rounded edges.
     /// </summary>
     [SvgElement("rect")]
-    public class SvgRectangle : SvgVisualElement
+    public class SvgRectangle : SvgPathBasedElement
     {
         private SvgUnit _cornerRadiusX;
         private SvgUnit _cornerRadiusY;
@@ -159,16 +158,13 @@ namespace Svg
         /// </summary>
         protected override bool RequiresSmoothRendering
         {
-            get { return (CornerRadiusX.Value > 0 || CornerRadiusY.Value > 0); }
-        }
-
-        /// <summary>
-        /// Gets the bounds of the element.
-        /// </summary>
-        /// <value>The bounds.</value>
-        public override RectangleF Bounds
-        {
-            get { return Path(null).GetBounds(); }
+            get
+            {
+                if (base.RequiresSmoothRendering)
+                    return (CornerRadiusX.Value > 0 || CornerRadiusY.Value > 0);
+                else
+                    return false;
+            }
         }
 
         /// <summary>
@@ -178,11 +174,25 @@ namespace Svg
         {
             if (_path == null || IsPathDirty)
             {
+                var halfStrokeWidth = new SvgUnit(base.StrokeWidth / 2);
+
+                // If it is to render, don't need to consider stroke
+                if (renderer != null)
+                {
+                  halfStrokeWidth = 0;
+                  this.IsPathDirty = false;
+                }
+
                 // If the corners aren't to be rounded just create a rectangle
                 if (CornerRadiusX.Value == 0.0f && CornerRadiusY.Value == 0.0f)
                 {
-                    var rectangle = new RectangleF(Location.ToDeviceValue(renderer, this),
-                        SvgUnit.GetDeviceSize(this.Width, this.Height, renderer, this));
+                  // Starting location which take consideration of stroke width
+                  SvgPoint strokedLocation = new SvgPoint(Location.X - halfStrokeWidth, Location.Y - halfStrokeWidth);
+
+                  var width = this.Width.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this) + halfStrokeWidth;
+                  var height = this.Height.ToDeviceValue(renderer, UnitRenderingType.Vertical, this) + halfStrokeWidth;
+                  
+                  var rectangle = new RectangleF(strokedLocation.ToDeviceValue(renderer, this), new SizeF(width, height));
 
                     _path = new GraphicsPath();
                     _path.StartFigure();
@@ -253,7 +263,6 @@ namespace Svg
                     // Close
                     _path.CloseFigure();
                 }
-                IsPathDirty = false;
             }
             return _path;
         }

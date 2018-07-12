@@ -11,7 +11,7 @@ namespace Svg
     /// </summary>
     public abstract partial class SvgVisualElement : SvgElement, ISvgBoundable, ISvgStylable, ISvgClipable
     {
-        private bool _requiresSmoothRendering;
+        private bool? _requiresSmoothRendering;
         private Region _previousClip;
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace Svg
         [SvgAttribute("clip-path")]
         public virtual Uri ClipPath
         {
-            get { return this.Attributes.GetInheritedAttribute<Uri>("clip-path"); }
+            get { return this.Attributes.GetAttribute<Uri>("clip-path"); }
             set { this.Attributes["clip-path"] = value; }
         }
 
@@ -86,7 +86,28 @@ namespace Svg
         /// </summary>
         protected virtual bool RequiresSmoothRendering
         {
-            get { return this._requiresSmoothRendering; }
+            get
+            {
+                if (_requiresSmoothRendering == null)
+                    _requiresSmoothRendering = ConvertShapeRendering2AntiAlias(ShapeRendering);
+
+                return _requiresSmoothRendering.Value;
+            }
+        }
+
+        private bool ConvertShapeRendering2AntiAlias(SvgShapeRendering shapeRendering)
+        {
+            switch (shapeRendering)
+            {
+                case SvgShapeRendering.OptimizeSpeed:
+                case SvgShapeRendering.CrispEdges:
+                case SvgShapeRendering.GeometricPrecision:
+                    return false;
+                default:
+                    // SvgShapeRendering.Auto
+                    // SvgShapeRendering.Inherit
+                    return true;
+            }
         }
 
         /// <summary>
@@ -95,7 +116,6 @@ namespace Svg
         public SvgVisualElement()
         {
             this.IsPathDirty = true;
-            this._requiresSmoothRendering = false;
         }
 
         protected virtual bool Renderable { get { return true; } }
@@ -111,7 +131,7 @@ namespace Svg
 
         private void Render(ISvgRenderer renderer, bool renderFilter)
         {
-            if (this.Visible && /*this.Displayable && */this.PushTransforms(renderer) &&
+            if (this.Visible && this.Displayable && this.PushTransforms(renderer) &&
                 (!Renderable || this.Path(renderer) != null))
             {
                 bool renderNormal = true;
@@ -195,7 +215,7 @@ namespace Svg
         /// <param name="renderer">The <see cref="ISvgRenderer"/> object to render to.</param>
         protected internal virtual bool RenderStroke(ISvgRenderer renderer)
         {
-            if (this.Stroke != null && this.Stroke != SvgColourServer.None)
+            if (this.Stroke != null && this.Stroke != SvgColourServer.None && this.StrokeWidth > 0)
             {
                 float strokeWidth = this.StrokeWidth.ToDeviceValue(renderer, UnitRenderingType.Other, this);
                 using (var brush = this.Stroke.GetBrush(this, renderer, Math.Min(Math.Max(this.StrokeOpacity * this.Opacity, 0), 1), true))

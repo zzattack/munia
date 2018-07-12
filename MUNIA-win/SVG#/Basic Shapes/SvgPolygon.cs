@@ -1,10 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Diagnostics;
-using Svg.Pathing;
+using Svg.ExtensionMethods;
 
 namespace Svg
 {
@@ -12,7 +9,7 @@ namespace Svg
     /// SvgPolygon defines a closed shape consisting of a set of connected straight line segments.
     /// </summary>
     [SvgElement("polygon")]
-    public class SvgPolygon : SvgVisualElement
+    public class SvgPolygon : SvgPathBasedElement
     {
         private GraphicsPath _path;
         
@@ -30,9 +27,9 @@ namespace Svg
         /// Gets or sets the marker (end cap) of the path.
         /// </summary>
         [SvgAttribute("marker-end")]
-        public Uri MarkerEnd
+        public virtual Uri MarkerEnd
         {
-            get { return this.Attributes.GetAttribute<Uri>("marker-end"); }
+            get { return this.Attributes.GetAttribute<Uri>("marker-end").ReplaceWithNullIfNone(); }
             set { this.Attributes["marker-end"] = value; }
         }
 
@@ -41,9 +38,9 @@ namespace Svg
         /// Gets or sets the marker (start cap) of the path.
         /// </summary>
         [SvgAttribute("marker-mid")]
-        public Uri MarkerMid
+        public virtual Uri MarkerMid
         {
-            get { return this.Attributes.GetAttribute<Uri>("marker-mid"); }
+            get { return this.Attributes.GetAttribute<Uri>("marker-mid").ReplaceWithNullIfNone(); }
             set { this.Attributes["marker-mid"] = value; }
         }
 
@@ -52,15 +49,10 @@ namespace Svg
         /// Gets or sets the marker (start cap) of the path.
         /// </summary>
         [SvgAttribute("marker-start")]
-        public Uri MarkerStart
+        public virtual Uri MarkerStart
         {
-            get { return this.Attributes.GetAttribute<Uri>("marker-start"); }
+            get { return this.Attributes.GetAttribute<Uri>("marker-start").ReplaceWithNullIfNone(); }
             set { this.Attributes["marker-start"] = value; }
-        }
-
-        protected override bool RequiresSmoothRendering
-        {
-            get { return true; }
         }
 
         public override GraphicsPath Path(ISvgRenderer renderer)
@@ -76,6 +68,15 @@ namespace Svg
                     for (int i = 2; (i + 1) < points.Count; i += 2)
                     {
                         var endPoint = SvgUnit.GetDevicePoint(points[i], points[i + 1], renderer, this);
+
+                      // If it is to render, don't need to consider stroke width.
+                        // i.e stroke width only to be considered when calculating boundary
+                        if (renderer == null)
+                        {
+                          var radius = base.StrokeWidth / 2;
+                          _path.AddEllipse(endPoint.X - radius, endPoint.Y - radius, 2 * radius, 2 * radius);
+                          continue;
+                        }
 
                         //first line
                         if (_path.PointCount == 0)
@@ -94,7 +95,8 @@ namespace Svg
                 }
 
                 this._path.CloseFigure();
-                this.IsPathDirty = false;
+                if (renderer != null)
+                  this.IsPathDirty = false;
             }
             return this._path;
         }
@@ -129,12 +131,6 @@ namespace Svg
 
             return result;
         }
-
-        public override RectangleF Bounds
-        {
-            get { return this.Path(null).GetBounds(); }
-        }
-
 
 		public override SvgElement DeepCopy()
 		{

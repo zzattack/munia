@@ -4,6 +4,7 @@ using System.Text;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Diagnostics;
+using Svg.ExtensionMethods;
 
 namespace Svg
 {
@@ -17,9 +18,9 @@ namespace Svg
         /// Gets or sets the marker (end cap) of the path.
         /// </summary>
         [SvgAttribute("marker-end")]
-        public Uri MarkerEnd
+        public override Uri MarkerEnd
         {
-            get { return this.Attributes.GetAttribute<Uri>("marker-end"); }
+            get { return this.Attributes.GetAttribute<Uri>("marker-end").ReplaceWithNullIfNone(); }
             set { this.Attributes["marker-end"] = value; }
         }
 
@@ -28,9 +29,9 @@ namespace Svg
         /// Gets or sets the marker (start cap) of the path.
         /// </summary>
         [SvgAttribute("marker-mid")]
-        public Uri MarkerMid
+        public override Uri MarkerMid
         {
-            get { return this.Attributes.GetAttribute<Uri>("marker-mid"); }
+            get { return this.Attributes.GetAttribute<Uri>("marker-mid").ReplaceWithNullIfNone(); }
             set { this.Attributes["marker-mid"] = value; }
         }
 
@@ -39,16 +40,16 @@ namespace Svg
         /// Gets or sets the marker (start cap) of the path.
         /// </summary>
         [SvgAttribute("marker-start")]
-        public Uri MarkerStart
+        public override Uri MarkerStart
         {
-            get { return this.Attributes.GetAttribute<Uri>("marker-start"); }
+            get { return this.Attributes.GetAttribute<Uri>("marker-start").ReplaceWithNullIfNone(); }
             set { this.Attributes["marker-start"] = value; }
         }
 
         private GraphicsPath _Path;
         public override GraphicsPath Path(ISvgRenderer renderer)
         {
-            if (_Path == null || this.IsPathDirty)
+            if ((_Path == null || this.IsPathDirty) && base.StrokeWidth > 0)
             {
                 _Path = new GraphicsPath();
 
@@ -58,6 +59,13 @@ namespace Svg
                     {
                         PointF endPoint = new PointF(Points[i].ToDeviceValue(renderer, UnitRenderingType.Horizontal, this), 
                                                      Points[i + 1].ToDeviceValue(renderer, UnitRenderingType.Vertical, this));
+
+                        if (renderer == null)
+                        {
+                          var radius = base.StrokeWidth / 2;
+                          _Path.AddEllipse(endPoint.X - radius, endPoint.Y - radius, 2 * radius, 2 * radius);
+                          continue;
+                        }
 
                         // TODO: Remove unrequired first line
                         if (_Path.PointCount == 0)
@@ -74,7 +82,8 @@ namespace Svg
                 {
                     Trace.TraceError("Error rendering points: " + exc.Message);
                 }
-                this.IsPathDirty = false;
+                if (renderer != null)
+                  this.IsPathDirty = false;
             }
             return _Path;
         }

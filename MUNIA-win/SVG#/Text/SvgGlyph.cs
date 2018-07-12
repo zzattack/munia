@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using Svg.Pathing;
 using System.Drawing.Drawing2D;
 
 namespace Svg
 {
     [SvgElement("glyph")]
-    public class SvgGlyph : SvgVisualElement
+    public class SvgGlyph : SvgPathBasedElement
     {
         private GraphicsPath _path;
 
@@ -77,24 +74,6 @@ namespace Svg
                 this.IsPathDirty = false;
             }
             return _path;
-        }
-
-        
-        /// <summary>
-        /// Gets or sets a value to determine if anti-aliasing should occur when the element is being rendered.
-        /// </summary>
-        protected override bool RequiresSmoothRendering
-        {
-            get { return true; }
-        }
-
-        /// <summary>
-        /// Gets the bounds of the element.
-        /// </summary>
-        /// <value>The bounds.</value>
-        public override System.Drawing.RectangleF Bounds
-        {
-            get { return this.Path(null).GetBounds(); }
         }
 
         /// <summary>

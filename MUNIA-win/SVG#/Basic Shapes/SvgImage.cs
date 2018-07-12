@@ -23,6 +23,8 @@ namespace Svg
             Height = new SvgUnit(0.0f);
         }
 
+        private GraphicsPath _path;
+
         /// <summary>
         /// Gets an <see cref="SvgPoint"/> representing the top left point of the rectangle.
         /// </summary>
@@ -72,9 +74,9 @@ namespace Svg
 		}
 
 		[SvgAttribute("href", SvgAttributeAttribute.XLinkNamespace)]
-		public virtual Uri Href
+		public virtual string Href
 		{
-			get { return this.Attributes.GetAttribute<Uri>("href"); }
+			get { return this.Attributes.GetAttribute<string>("href"); }
 			set { this.Attributes["href"] = value; }
 		}
 
@@ -86,8 +88,8 @@ namespace Svg
         /// <value>The bounds.</value>
         public override RectangleF Bounds
         {
-			get { return new RectangleF(this.Location.ToDeviceValue(null, this), 
-                                        new SizeF(this.Width.ToDeviceValue(null, UnitRenderingType.Horizontal, this), 
+			get { return new RectangleF(this.Location.ToDeviceValue(null, this),
+                                        new SizeF(this.Width.ToDeviceValue(null, UnitRenderingType.Horizontal, this),
                                                   this.Height.ToDeviceValue(null, UnitRenderingType.Vertical, this))); }
         }
 
@@ -96,7 +98,19 @@ namespace Svg
         /// </summary>
         public override GraphicsPath Path(ISvgRenderer renderer)
         {
-		    return null;
+          if (_path == null)
+          {
+            // Same size of rectangle can suffice to provide bounds of the image
+            var rectangle = new RectangleF(Location.ToDeviceValue(renderer, this),
+                SvgUnit.GetDeviceSize(Width, Height, renderer, this));
+
+            _path = new GraphicsPath();
+            _path.StartFigure();
+            _path.AddRectangle(rectangle);
+            _path.CloseFigure();
+          }
+
+          return _path;
         }
 
         /// <summary>
@@ -109,7 +123,7 @@ namespace Svg
 
             if (Width.Value > 0.0f && Height.Value > 0.0f && this.Href != null)
             {
-                var img = GetImage(this.Href);
+                var img = GetImage();
                 if (img != null)
                 {
                     RectangleF srcRect;
@@ -129,10 +143,10 @@ namespace Svg
                     }
 
                     var destClip = new RectangleF(this.Location.ToDeviceValue(renderer, this),
-                                                  new SizeF(Width.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this), 
+                                                  new SizeF(Width.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this),
                                                             Height.ToDeviceValue(renderer, UnitRenderingType.Vertical, this)));
                     RectangleF destRect = destClip;
-                        
+
                     this.PushTransforms(renderer);
                     renderer.SetClip(new Region(destClip), CombineMode.Intersect);
                     this.SetClip(renderer);
@@ -189,7 +203,7 @@ namespace Svg
                                 break;
                         }
 
-                        destRect = new RectangleF(destClip.X + xOffset, destClip.Y + yOffset, 
+                        destRect = new RectangleF(destClip.X + xOffset, destClip.Y + yOffset,
                                                     srcRect.Width * fScaleX, srcRect.Height * fScaleY);
                     }
 
@@ -209,7 +223,7 @@ namespace Svg
                         renderer.PopBoundable();
                     }
 
-                    
+
                     this.ResetClip(renderer);
                     this.PopTransforms(renderer);
                 }
@@ -218,14 +232,31 @@ namespace Svg
             }
         }
 
-        protected object GetImage(Uri uri)
+        public object GetImage()
         {
+            return this.GetImage(this.Href);
+        }
+
+        public object GetImage(string uriString)
+        {
+            string safeUriString;
+            if (uriString.Length > 65519)
+            {
+                //Uri MaxLength is 65519 (https://msdn.microsoft.com/en-us/library/z6c2z492.aspx)
+                safeUriString = uriString.Substring(0, 65519);
+            }
+            else
+            {
+                safeUriString = uriString;
+            }
+
             try
             {
+                var uri = new Uri(safeUriString, UriKind.RelativeOrAbsolute);
+
                 // handle data/uri embedded images (http://en.wikipedia.org/wiki/Data_URI_scheme)
                 if (uri.IsAbsoluteUri && uri.Scheme == "data")
                 {
-                    string uriString = uri.OriginalString;
                     int dataIdx = uriString.IndexOf(",") + 1;
                     if (dataIdx <= 0 || dataIdx + 1 > uriString.Length)
                         throw new Exception("Invalid data URI");
@@ -251,7 +282,10 @@ namespace Svg
                 {
                     using (var stream = webResponse.GetResponseStream())
                     {
-                        stream.Position = 0;
+                        if (stream.CanSeek)
+                        {
+                            stream.Position = 0;
+                        }
                         if (uri.LocalPath.EndsWith(".svg", StringComparison.InvariantCultureIgnoreCase))
                         {
                             var doc = SvgDocument.Open<SvgDocument>(stream);
@@ -267,7 +301,7 @@ namespace Svg
             }
             catch (Exception ex)
             {
-                Trace.TraceError("Error loading image: '{0}', error: {1} ", uri, ex.Message);
+                Trace.TraceError("Error loading image: '{0}', error: {1} ", uriString, ex.Message);
                 return null;
             }
         }

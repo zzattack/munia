@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using Svg.ExtensionMethods;
 
 namespace Svg
 {
@@ -11,7 +9,7 @@ namespace Svg
     /// Represents and SVG line element.
     /// </summary>
     [SvgElement("line")]
-    public class SvgLine : SvgVisualElement
+    public class SvgLine : SvgPathBasedElement
     {
         private SvgUnit _startX;
         private SvgUnit _startY;
@@ -85,7 +83,7 @@ namespace Svg
         [SvgAttribute("marker-end")]
         public Uri MarkerEnd
         {
-            get { return this.Attributes.GetAttribute<Uri>("marker-end"); }
+            get { return this.Attributes.GetAttribute<Uri>("marker-end").ReplaceWithNullIfNone(); }
             set { this.Attributes["marker-end"] = value; }
         }
 
@@ -96,7 +94,7 @@ namespace Svg
         [SvgAttribute("marker-mid")]
         public Uri MarkerMid
         {
-            get { return this.Attributes.GetAttribute<Uri>("marker-mid"); }
+            get { return this.Attributes.GetAttribute<Uri>("marker-mid").ReplaceWithNullIfNone(); }
             set { this.Attributes["marker-mid"] = value; }
         }
 
@@ -107,7 +105,7 @@ namespace Svg
         [SvgAttribute("marker-start")]
         public Uri MarkerStart
         {
-            get { return this.Attributes.GetAttribute<Uri>("marker-start"); }
+	        get { return this.Attributes.GetAttribute<Uri>("marker-start").ReplaceWithNullIfNone(); }
             set { this.Attributes["marker-start"] = value; }
         }
 
@@ -126,7 +124,7 @@ namespace Svg
 
         public override System.Drawing.Drawing2D.GraphicsPath Path(ISvgRenderer renderer)
         {
-            if (this._path == null || this.IsPathDirty)
+            if ((this._path == null || this.IsPathDirty) && base.StrokeWidth > 0)
             {
                 PointF start = new PointF(this.StartX.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this), 
                                           this.StartY.ToDeviceValue(renderer, UnitRenderingType.Vertical, this));
@@ -134,8 +132,22 @@ namespace Svg
                                         this.EndY.ToDeviceValue(renderer, UnitRenderingType.Vertical, this));
 
                 this._path = new GraphicsPath();
-                this._path.AddLine(start, end);
-                this.IsPathDirty = false;
+
+                // If it is to render, don't need to consider stroke width.
+                // i.e stroke width only to be considered when calculating boundary
+                if (renderer != null)
+                {
+                  this._path.AddLine(start, end);
+                  this.IsPathDirty = false;
+                }
+                else
+                {	 // only when calculating boundary 
+                  _path.StartFigure();
+                  var radius = base.StrokeWidth / 2;
+                  _path.AddEllipse(start.X - radius, start.Y - radius, 2 * radius, 2 * radius);
+                  _path.AddEllipse(end.X - radius, end.Y - radius, 2 * radius, 2 * radius);
+                  _path.CloseFigure();
+                }
             }
             return this._path;
         }
@@ -169,11 +181,6 @@ namespace Svg
             }
 
             return result;
-        }
-
-        public override System.Drawing.RectangleF Bounds
-        {
-            get { return this.Path(null).GetBounds(); }
         }
 
 		public override SvgElement DeepCopy()

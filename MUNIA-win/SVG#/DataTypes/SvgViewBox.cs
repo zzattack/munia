@@ -131,7 +131,7 @@ namespace Svg
 
             if (this.Equals(SvgViewBox.Empty))
             {
-                renderer.TranslateTransform(x, y);
+                renderer.TranslateTransform(x, y, MatrixOrder.Prepend);
                 return;
             }
 
@@ -140,8 +140,8 @@ namespace Svg
 
             var fScaleX = width / this.Width;
             var fScaleY = height / this.Height; //(this.MinY < 0 ? -1 : 1) * 
-            var fMinX = -this.MinX;
-            var fMinY = -this.MinY;
+            var fMinX = -this.MinX * fScaleX;
+            var fMinY = -this.MinY * fScaleY;
 
             if (aspectRatio == null) aspectRatio = new SvgAspectRatio(SvgPreserveAspectRatio.xMidYMid, false);
             if (aspectRatio.Align != SvgPreserveAspectRatio.none)
@@ -160,6 +160,8 @@ namespace Svg
                 float fViewMidY = (this.Height / 2) * fScaleY;
                 float fMidX = width / 2;
                 float fMidY = height / 2;
+                fMinX = -this.MinX * fScaleX;
+                fMinY = -this.MinY * fScaleY;
 
                 switch (aspectRatio.Align)
                 {
@@ -197,11 +199,10 @@ namespace Svg
                         break;
                 }
             }
-
-            renderer.SetClip(new Region(new RectangleF(x, y, width, height)), CombineMode.Intersect);
-            renderer.ScaleTransform(fScaleX, fScaleY, MatrixOrder.Prepend);
-            renderer.TranslateTransform(x, y);
-            renderer.TranslateTransform(fMinX, fMinY);
+            
+            renderer.TranslateTransform(x, y, MatrixOrder.Prepend);
+            renderer.TranslateTransform(fMinX, fMinY, MatrixOrder.Prepend);
+            renderer.ScaleTransform(fScaleX, fScaleY, MatrixOrder.Prepend);       
         }
     }
 

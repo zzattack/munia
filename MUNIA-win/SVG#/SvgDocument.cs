@@ -13,6 +13,7 @@ using ExCSS;
 using Svg.Css;
 using System.Threading;
 using System.Globalization;
+using Svg.Exceptions;
 
 namespace Svg
 {
@@ -243,7 +244,8 @@ namespace Svg
             SvgElement element = null;
             SvgElement parent;
             T svgDocument = null;
-            
+			var elementFactory = new SvgElementFactory();
+
             var styles = new List<ISvgNode>();
 
             while (reader.Read())
@@ -259,11 +261,11 @@ namespace Svg
                             // Create element
                             if (elementStack.Count > 0)
                             {
-                                element = SvgElementFactory.CreateElement(reader, svgDocument);
+                                element = elementFactory.CreateElement(reader, svgDocument);
                             }
                             else
                             {
-                                svgDocument = SvgElementFactory.CreateDocument<T>(reader);
+                                svgDocument = elementFactory.CreateDocument<T>(reader);
                                 element = svgDocument;
                             }
 
@@ -349,7 +351,7 @@ namespace Svg
 
                     foreach (var selector in selectors)
                     {
-                        elemsToStyle = svgDocument.QuerySelectorAll(rule.Selector.ToString());
+                        elemsToStyle = svgDocument.QuerySelectorAll(rule.Selector.ToString(), elementFactory);
                         foreach (var elem in elemsToStyle)
                         {
                             foreach (var decl in rule.Declarations)
@@ -433,17 +435,27 @@ namespace Svg
             this.Render(renderer);
         }
 
-        /// <summary>
-        /// Renders the <see cref="SvgDocument"/> and returns the image as a <see cref="Bitmap"/>.
-        /// </summary>
-        /// <returns>A <see cref="Bitmap"/> containing the rendered document.</returns>
-        public virtual Bitmap Draw()
-        {
-            //Trace.TraceInformation("Begin Render");
+	    /// <summary>
+	    /// Renders the <see cref="SvgDocument"/> and returns the image as a <see cref="Bitmap"/>.
+	    /// </summary>
+	    /// <returns>A <see cref="Bitmap"/> containing the rendered document.</returns>
+	    public virtual Bitmap Draw()
+	    {
+		    //Trace.TraceInformation("Begin Render");
 
-            var size = GetDimensions();
-            var bitmap = new Bitmap((int)Math.Round(size.Width), (int)Math.Round(size.Height));
-            // 	bitmap.SetResolution(300, 300);
+		    var size = GetDimensions();
+		    Bitmap bitmap = null;
+		    try
+		    {
+			    bitmap = new Bitmap((int) Math.Round(size.Width), (int) Math.Round(size.Height));
+		    }
+		    catch (ArgumentException e)
+		    {
+				//When processing too many files at one the system can run out of memory
+			    throw new SvgMemoryException("Cannot process SVG file, cannot allocate the required memory", e);
+		    }
+
+	    // 	bitmap.SetResolution(300, 300);
             try
             {
                 Draw(bitmap);
@@ -471,11 +483,6 @@ namespace Svg
 				{
 					renderer.SetBoundable(new GenericBoundable(0, 0, bitmap.Width, bitmap.Height));
 
-					//EO, 2014-12-05: Requested to ensure proper zooming (draw the svg in the bitmap size, ==> proper scaling)
-					//EO, 2015-01-09, Added GetDimensions to use its returned size instead of this.Width and this.Height (request of Icarrere).
-					SizeF size = this.GetDimensions();
-					renderer.ScaleTransform(bitmap.Width / size.Width, bitmap.Height / size.Height);
-
 					//EO, 2014-12-05: Requested to ensure proper zooming out (reduce size). Otherwise it clip the image.
 					this.Overflow = SvgOverflow.Auto;
 
@@ -490,24 +497,83 @@ namespace Svg
             //Trace.TraceInformation("End Render");
         }
 
+        /// <summary>
+        /// Renders the <see cref="SvgDocument"/> in given size and returns the image as a <see cref="Bitmap"/>.
+        /// </summary>
+        /// <returns>A <see cref="Bitmap"/> containing the rendered document.</returns>
+        public virtual Bitmap Draw(int rasterWidth, int rasterHeight)
+        {
+          var size = GetDimensions();
+          RasterizeDimensions(ref size, rasterWidth, rasterHeight);
+
+          if (size.Width == 0 || size.Height == 0)
+            return null;
+
+          var bitmap = new Bitmap((int)Math.Round(size.Width), (int)Math.Round(size.Height));
+          try
+          {
+            Draw(bitmap);
+          }
+          catch
+          {
+            bitmap.Dispose();
+            throw;
+          }
+
+          //Trace.TraceInformation("End Render");
+          return bitmap;
+        }
+
+        /// <summary>
+        /// If both or one of raster height and width is not given (0), calculate that missing value from original SVG size
+        /// while keeping original SVG size ratio
+        /// </summary>
+        /// <param name="size"></param>
+        /// <param name="rasterWidth"></param>
+        /// <param name="rasterHeight"></param>
+        public virtual void RasterizeDimensions(ref SizeF size, int rasterWidth, int rasterHeight)
+        {
+          if (size == null || size.Width == 0)
+            return;
+
+          // Ratio of height/width of the original SVG size, to be used for scaling transformation
+          float ratio = size.Height / size.Width;
+
+          size.Width = rasterWidth > 0 ? (float)rasterWidth : size.Width;
+          size.Height = rasterHeight > 0 ? (float)rasterHeight : size.Height;
+
+          if (rasterHeight == 0 && rasterWidth > 0)
+          {
+            size.Height = (int)(rasterWidth * ratio);
+          }
+          else if (rasterHeight > 0 && rasterWidth == 0)
+          {
+            size.Width = (int)(rasterHeight / ratio);
+          }
+        }
+
         public override void Write(XmlTextWriter writer)
         {
             //Save previous culture and switch to invariant for writing
             var previousCulture = Thread.CurrentThread.CurrentCulture;
-            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-
-            base.Write(writer);
-
-            //Switch culture back
-            Thread.CurrentThread.CurrentCulture = previousCulture;
+            try {
+                Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+                base.Write(writer);
+            }
+            finally
+            {
+                // Make sure to set back the old culture even an error occurred.
+                //Switch culture back
+                Thread.CurrentThread.CurrentCulture = previousCulture;
+            }
         }
 
-        public void Write(Stream stream)
+        public void Write(Stream stream, bool useBom = true)
         {
 
-            var xmlWriter = new XmlTextWriter(stream, Encoding.UTF8);
+            var xmlWriter = new XmlTextWriter(stream, useBom ? Encoding.UTF8 : new System.Text.UTF8Encoding(false));
             xmlWriter.Formatting = Formatting.Indented;
-
+            xmlWriter.WriteStartDocument();
             xmlWriter.WriteDocType("svg", "-//W3C//DTD SVG 1.1//EN", "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd", null);
             
             if (!String.IsNullOrEmpty(this.ExternalCSSHref))
@@ -518,11 +584,11 @@ namespace Svg
             xmlWriter.Flush();
         }
 
-        public void Write(string path)
+        public void Write(string path, bool useBom = true)
         {
             using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
             {
-                this.Write(fs);
+                this.Write(fs, useBom);
             }
         }
     }

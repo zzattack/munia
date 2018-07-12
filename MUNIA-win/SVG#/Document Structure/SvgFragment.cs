@@ -132,7 +132,7 @@ namespace Svg
         /// Refers to the size of the font from baseline to baseline when multiple lines of text are set solid in a multiline layout environment.
         /// </summary>
         [SvgAttribute("font-size")]
-        public virtual SvgUnit FontSize
+        public override SvgUnit FontSize
         {
             get { return (this.Attributes["font-size"] == null) ? SvgUnit.Empty : (SvgUnit)this.Attributes["font-size"]; }
             set { this.Attributes["font-size"] = value; }
@@ -142,7 +142,7 @@ namespace Svg
         /// Indicates which font family is to be used to render the text.
         /// </summary>
         [SvgAttribute("font-family")]
-        public virtual string FontFamily
+        public override string FontFamily
         {
             get { return this.Attributes["font-family"] as string; }
             set { this.Attributes["font-family"] = value; }
@@ -165,7 +165,7 @@ namespace Svg
             {
                 case SvgOverflow.Auto:
                 case SvgOverflow.Visible:
-                case SvgOverflow.Scroll:
+                case SvgOverflow.Inherit:
                     base.Render(renderer);
                     break;
                 default:
@@ -211,7 +211,34 @@ namespace Svg
         {
             get
             {
-                return this.Path.GetBounds();
+                var bounds = new RectangleF();
+                foreach (var child in this.Children)
+                {
+                    RectangleF childBounds = new RectangleF();
+                    if (child is SvgFragment)
+                    {
+                        childBounds = ((SvgFragment)child).Bounds;
+                        childBounds.Offset(((SvgFragment)child).X, ((SvgFragment)child).Y);
+                    }
+                    else if (child is SvgVisualElement)
+                    {
+                        childBounds = ((SvgVisualElement)child).Bounds;
+                    }
+
+                    if (!childBounds.IsEmpty)
+                    {
+                        if (bounds.IsEmpty)
+                        {
+                            bounds = childBounds;
+                        }
+                        else
+                        {
+                            bounds = RectangleF.Union(bounds, childBounds);
+                        }
+                    }
+                }
+
+                return bounds;
             }
         }
 

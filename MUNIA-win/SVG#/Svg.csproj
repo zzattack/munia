@@ -52,7 +52,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>Full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\vvvv\public\common\src\thirdparty\</OutputPath>
     <DefineConstants>TRACE;DEBUG;REFLECTION</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -61,7 +61,6 @@
     <DocumentationFile>
     </DocumentationFile>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>PdbOnly</DebugType>
@@ -74,13 +73,10 @@
     </CodeAnalysisRules>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <DebugSymbols>false</DebugSymbols>
-    <DocumentationFile>
-    </DocumentationFile>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <PlatformTarget>x86</PlatformTarget>
+    <DocumentationFile>bin\Release\Svg.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>svgkey.snk</AssemblyOriginatorKeyFile>
@@ -93,6 +89,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Basic Shapes\SvgImage.cs" />
+    <Compile Include="Basic Shapes\SvgPathBasedElement.cs" />
     <Compile Include="Basic Shapes\SvgVisualElement.cs" />
     <Compile Include="Basic Shapes\SvgCircle.cs" />
     <Compile Include="Basic Shapes\SvgEllipse.cs" />
@@ -111,12 +108,15 @@
     <Compile Include="DataTypes\SvgTextPathSpacing.cs" />
     <Compile Include="DataTypes\XmlSpaceHandling.cs" />
     <Compile Include="Document Structure\SvgSymbol.cs" />
+    <Compile Include="Exceptions\SvgMemoryException.cs" />
+    <Compile Include="ExtensionMethods\UriExtensions.cs" />
     <Compile Include="Filter Effects\ImageBuffer.cs" />
     <Compile Include="Painting\GenericBoundable.cs" />
     <Compile Include="Painting\SvgFallbackPaintServer .cs" />
     <Compile Include="Paths\CoordinateParser.cs" />
     <Compile Include="Rendering\IGraphicsProvider.cs" />
     <Compile Include="Rendering\ISvgRenderer.cs" />
+    <Compile Include="Rendering\SvgRendering.cs" />
     <Compile Include="SvgElementStyle.cs" />
     <Compile Include="SvgNodeReader.cs" />
     <Compile Include="Css\CssQuery.cs" />
@@ -356,6 +356,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Basic Shapes\DOM.cd" />
+    <None Include="Svg.nuspec" />
     <None Include="svgkey.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
