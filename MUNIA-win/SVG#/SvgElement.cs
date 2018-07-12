@@ -101,7 +101,7 @@ namespace Svg
         /// <summary>
         /// Gets the name of the element.
         /// </summary>
-        protected internal string ElementName
+        public string ElementName
         {
             get
             {
@@ -117,7 +117,7 @@ namespace Svg
 
                 return this._elementName;
             }
-            internal set { this._elementName = value; }
+            set { this._elementName = value; }
         }
 
         /// <summary>

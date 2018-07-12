@@ -217,7 +217,9 @@ namespace Svg
                 var path = this.Path(null);
                 foreach (var elem in this.Children.OfType<SvgVisualElement>())
                 {
-                    path.AddPath(elem.Path(null), false);
+                    var p = elem.Path(null);
+                    if (p.GetBounds() != RectangleF.Empty)
+                        path.AddPath(p, false);
                 }
                 return path.GetBounds();
             }
