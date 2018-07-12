@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using System.Xml;
 using MUNIA.Controllers;
 using MUNIA.Forms;
-using MUNIA.Skins;
+using MUNIA.Skinning;
 
 namespace MUNIA {
 	public static class ConfigManager {

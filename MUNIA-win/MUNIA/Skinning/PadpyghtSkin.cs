@@ -7,7 +7,7 @@ using MUNIA.Controllers;
 using MUNIA.Util;
 using OpenTK.Graphics.OpenGL;
 
-namespace MUNIA.Skins {
+namespace MUNIA.Skinning {
 	public class PadpyghtSkin : Skin {
 		public List<Button> Buttons = new List<Button>();
 		public List<Stick> Sticks = new List<Stick>();

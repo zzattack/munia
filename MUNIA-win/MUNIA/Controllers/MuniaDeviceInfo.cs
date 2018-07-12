@@ -1,6 +1,6 @@
 using System;
 
-namespace MUNIA {
+namespace MUNIA.Controllers {
 	public class MuniaDeviceInfo {
 		public enum OutputMode { NGC, N64, SNES, PC };
 

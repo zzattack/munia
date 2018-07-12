@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using MUNIA.Controllers;
 
-namespace MUNIA.Skins {
+namespace MUNIA.Skinning {
 
 	public abstract class Skin {
 		public string Name { get; set; }

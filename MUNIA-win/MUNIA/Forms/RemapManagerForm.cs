@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using MUNIA.Skins;
+using MUNIA.Skinning;
 
 namespace MUNIA.Forms {
 	public partial class RemapManagerForm : Form {

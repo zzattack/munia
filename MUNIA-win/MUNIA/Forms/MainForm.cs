@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MUNIA.Controllers;
 using MUNIA.Interop;
-using MUNIA.Skins;
+using MUNIA.Skinning;
 using MUNIA.Util;
 using OpenTK.Graphics.OpenGL;
 
