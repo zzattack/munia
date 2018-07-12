@@ -215,7 +215,7 @@ namespace MUNIA.Util {
 			this.pnlHover.Location = new System.Drawing.Point(330, 101);
 			this.pnlHover.Name = "pnlHover";
 			this.pnlHover.Size = new System.Drawing.Size(60, 40);
-			this.pnlHover.TabIndex = 0;
+			this.pnlHover.TabIndex = 8;
 			this.pnlHover.Visible = false;
 			this.pnlHover.Paint += new System.Windows.Forms.PaintEventHandler(this.panel_Paint);
 			// 
@@ -226,7 +226,7 @@ namespace MUNIA.Util {
 			this.pnlSecondary.Location = new System.Drawing.Point(196, 101);
 			this.pnlSecondary.Name = "pnlSecondary";
 			this.pnlSecondary.Size = new System.Drawing.Size(60, 40);
-			this.pnlSecondary.TabIndex = 1;
+			this.pnlSecondary.TabIndex = 5;
 			this.pnlSecondary.Visible = false;
 			this.pnlSecondary.Paint += new System.Windows.Forms.PaintEventHandler(this.panel_Paint);
 			this.pnlSecondary.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pnlSecondary_MouseClick);
@@ -250,7 +250,7 @@ namespace MUNIA.Util {
 			this.lblFill.Location = new System.Drawing.Point(13, 101);
 			this.lblFill.Name = "lblFill";
 			this.lblFill.Size = new System.Drawing.Size(19, 13);
-			this.lblFill.TabIndex = 3;
+			this.lblFill.TabIndex = 0;
 			this.lblFill.Text = "Fill";
 			this.lblFill.Visible = false;
 			// 
@@ -260,7 +260,7 @@ namespace MUNIA.Util {
 			this.tbFill.Location = new System.Drawing.Point(3, 117);
 			this.tbFill.Name = "tbFill";
 			this.tbFill.Size = new System.Drawing.Size(54, 20);
-			this.tbFill.TabIndex = 4;
+			this.tbFill.TabIndex = 1;
 			this.tbFill.Text = "#000000";
 			this.tbFill.Visible = false;
 			this.tbFill.TextChanged += new System.EventHandler(this.tbFill_TextChanged);
@@ -271,7 +271,7 @@ namespace MUNIA.Util {
 			this.tbStroke.Location = new System.Drawing.Point(128, 117);
 			this.tbStroke.Name = "tbStroke";
 			this.tbStroke.Size = new System.Drawing.Size(62, 20);
-			this.tbStroke.TabIndex = 6;
+			this.tbStroke.TabIndex = 4;
 			this.tbStroke.Text = "#000000";
 			this.tbStroke.Visible = false;
 			this.tbStroke.TextChanged += new System.EventHandler(this.tbStroke_TextChanged);
@@ -283,7 +283,7 @@ namespace MUNIA.Util {
 			this.lblStroke.Location = new System.Drawing.Point(138, 101);
 			this.lblStroke.Name = "lblStroke";
 			this.lblStroke.Size = new System.Drawing.Size(38, 13);
-			this.lblStroke.TabIndex = 5;
+			this.lblStroke.TabIndex = 3;
 			this.lblStroke.Text = "Stroke";
 			this.lblStroke.Visible = false;
 			// 
@@ -294,7 +294,7 @@ namespace MUNIA.Util {
 			this.tbHover.Location = new System.Drawing.Point(267, 117);
 			this.tbHover.Name = "tbHover";
 			this.tbHover.Size = new System.Drawing.Size(62, 20);
-			this.tbHover.TabIndex = 8;
+			this.tbHover.TabIndex = 7;
 			this.tbHover.Text = "#000000";
 			this.tbHover.Visible = false;
 			// 
@@ -305,7 +305,7 @@ namespace MUNIA.Util {
 			this.lblHover.Location = new System.Drawing.Point(277, 101);
 			this.lblHover.Name = "lblHover";
 			this.lblHover.Size = new System.Drawing.Size(36, 13);
-			this.lblHover.TabIndex = 7;
+			this.lblHover.TabIndex = 6;
 			this.lblHover.Text = "Hover";
 			this.lblHover.Visible = false;
 			// 

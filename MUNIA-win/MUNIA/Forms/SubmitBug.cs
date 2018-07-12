@@ -68,7 +68,7 @@ namespace MUNIA.Forms {
 			this.tbEmail.Location = new System.Drawing.Point(27, 80);
 			this.tbEmail.Name = "tbEmail";
 			this.tbEmail.Size = new System.Drawing.Size(228, 20);
-			this.tbEmail.TabIndex = 0;
+			this.tbEmail.TabIndex = 2;
 			this.tbEmail.TextChanged += new System.EventHandler(this.tbEmail_TextChanged);
 			this.tbEmail.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GlobalKeyDown);
 			// 
@@ -79,7 +79,7 @@ namespace MUNIA.Forms {
 			this.btnCancel.Location = new System.Drawing.Point(277, 77);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(64, 24);
-			this.btnCancel.TabIndex = 2;
+			this.btnCancel.TabIndex = 4;
 			this.btnCancel.Text = "&Cancel";
 			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
 			this.btnCancel.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GlobalKeyDown);
@@ -91,7 +91,7 @@ namespace MUNIA.Forms {
 			this.btnOK.Location = new System.Drawing.Point(277, 47);
 			this.btnOK.Name = "btnOK";
 			this.btnOK.Size = new System.Drawing.Size(64, 24);
-			this.btnOK.TabIndex = 1;
+			this.btnOK.TabIndex = 3;
 			this.btnOK.Text = "&OK";
 			this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
 			this.btnOK.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GlobalKeyDown);
@@ -101,7 +101,7 @@ namespace MUNIA.Forms {
 			this.label1.Location = new System.Drawing.Point(18, 9);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(321, 33);
-			this.label1.TabIndex = 3;
+			this.label1.TabIndex = 0;
 			this.label1.Text = "Something seems to have failed. Would you like to transmit a bug report containin" +
     "g the error log and skin to bugs@munia.io?";
 			// 
@@ -111,7 +111,7 @@ namespace MUNIA.Forms {
 			this.label2.Location = new System.Drawing.Point(27, 63);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(220, 13);
-			this.label2.TabIndex = 4;
+			this.label2.TabIndex = 1;
 			this.label2.Text = "Email (optional, allows author to contact you):";
 			// 
 			// SubmitBug
