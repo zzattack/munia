@@ -119,7 +119,7 @@ namespace MUNIA.Forms {
 						else if (rbOutputN64.Checked) {
 							rbInputNGC.Enabled = true;
 							rbInputN64.Enabled = true;
-							rbInputSNES.Checked = _deviceInfo.Version >= new Version(1, 6);
+							rbInputSNES.Enabled = _deviceInfo.Version >= new Version(1, 6);
 						}
 						else if (rbOutputSNES.Checked) {
 							rbInputNGC.Enabled = _deviceInfo.Version >= new Version(1, 6);
