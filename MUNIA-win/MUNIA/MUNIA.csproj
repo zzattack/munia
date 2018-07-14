@@ -170,9 +170,6 @@
     <Compile Include="Controllers\ControllerType.cs" />
     <Compile Include="Interop\SerialPortInfo.cs" />
     <Compile Include="Interop\SetupApi.cs" />
-    <Compile Include="Util\FolderBrowserDialogEx.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Util\IniFile.cs" />
     <Compile Include="Skinning\NintendoSpySkin.cs" />
     <Compile Include="Skinning\PadpyghtSkin.cs" />
