@@ -29,8 +29,7 @@ enum __menu_command {
 // this is where the input is redirected to
 const char* menu_sub_items[][5] = {
     {"NGC ", "N64 ", "SNES", "PC ", NULL},  // MENU_PAGE_NGC,
-    {"NGC ", "N64 ", "SNES", NULL },        // MENU_PAGE_PC_INPUTS,
-    {"NGC ", "N64",  "SNES", NULL },        // MENU_PAGE_INPUT,
+    {"NGC ", "N64 ", "SNES", NULL },        // MENU_PAGE_PC_INPUTS, MENU_PAGE_INPUT,
     {"A:Ok ", " B:Cancel", NULL },          // MENU_PAGE_CONFIRM,
 };
 
@@ -76,8 +75,15 @@ void menu_exit(bool save_settings) {
     apply_config();
 }
 
+unsigned int log2(unsigned int x) {
+  unsigned int ans = 0 ;
+  while( x>>=1 ) ans++;
+  return ans ;
+}
+
 void menu_page(uint8_t page) {
     current_menu_page = page;
+    int idx = current_menu_page + (current_menu_page >= MENU_PAGE_INPUT ? 1 : 0);
     menu_current_items = menu_sub_items[current_menu_page];
     submenu_idx = 0;
     menu_leftalign = true;
@@ -93,20 +99,20 @@ void menu_page(uint8_t page) {
     }
     else if (page == MENU_PAGE_PC_INPUTS) {
         lcd_string("PC inputs"); 
-        submenu_idx = 0;
         submenu_mask = config_edit.input_sources;
     }
-    else if (page == MENU_PAGE_INPUT && config_edit.output_mode == output_ngc) {
-        lcd_string("NGC input");
-        submenu_idx = 0; // todo: restore selection
-    }
-    else if (page == MENU_PAGE_INPUT && config_edit.output_mode == output_n64) {
-        lcd_string("N64 input");
-        submenu_idx = 0; // todo: restore selection
-    }
-    else if (page == MENU_PAGE_INPUT && config_edit.output_mode == output_snes) {
-        lcd_string("SNES input");
-        submenu_idx = 0; // todo: restore selection
+    else if (page == MENU_PAGE_INPUT) {
+        submenu_idx = log2(config_edit.input_sources);
+        if (config_edit.output_mode == output_ngc) {
+            lcd_string("NGC");
+        }
+        else if (config_edit.output_mode == output_n64) {
+            lcd_string("N64");
+        }
+        else {
+            lcd_string("SNES");
+        }
+        lcd_string(" input");
     }
     else if (page == MENU_PAGE_CONFIRM) {
         lcd_string("Save");
@@ -202,9 +208,9 @@ void menu_press(uint8_t command) {
             else if (submenu_mask != 0) menu_page(MENU_PAGE_CONFIRM);
             else { /* no source selected */ }
         }
-        else {
-            // select only one input source, lookup from table
-            uint8_t in = submenu_idx;
+        else if (current_menu_page == MENU_PAGE_INPUT) {
+            // select only one input source
+            uint8_t in = 1 << submenu_idx;
             config_edit.input_sources = in;
             menu_page(MENU_PAGE_CONFIRM);
         }
