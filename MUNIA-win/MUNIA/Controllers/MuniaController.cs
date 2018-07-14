@@ -34,37 +34,38 @@ namespace MUNIA.Controllers {
 		}
 
 		public static IEnumerable<MuniaController> ListDevices() {
+			var ldr = new HidDeviceLoader();
 
 			// MUNIA devices with 0x1209 VID
-			foreach (var device in DeviceList.Local.GetHidDevices(0x1209, 0x8843)) {
-				if (device.ProductName.Equals("NinHID NGC")) {
+			foreach (var device in ldr.GetDevices(0x1209, 0x8843)) {
+				if (device.ProductName == "NinHID NGC") {
 					yield return new MuniaNgc(device);
 				}
-				else if (device.ProductName.Equals("NinHID N64")) {
+				else if (device.ProductName == "NinHID N64") {
 					yield return new MuniaN64(device);
 				}
-				else if (device.ProductName.Equals("NinHID SNES")) {
+				else if (device.ProductName == "NinHID SNES") {
 					yield return new MuniaSnes(device);
 				}
 			}
 
 			// MUSIA devices
-			foreach (var device in DeviceList.Local.GetHidDevices(0x1209, 0x8844)) {
-				if (device.ProductName.Equals("MUSIA PS2 controller")) {
+			foreach (var device in ldr.GetDevices(0x1209, 0x8844)) {
+				if (device.ProductName == "MUSIA PS2 controller") {
 					yield return new MusiaPS2(device);
 				}
 			}
 
-			
+
 			// legacy VID/PID combo from microchip
-			foreach (var device in DeviceList.Local.GetHidDevices(0x04d8, 0x0058)) {
-				if (device.ProductName.Equals("NinHID NGC") || (device.GetMaxInputReportLength() == 9 && device.GetMaxOutputReportLength() == 0)) {
+			foreach (var device in ldr.GetDevices(0x04d8, 0x0058)) {
+				if (device.ProductName == "NinHID NGC" || device.GetMaxInputReportLength() == 9 && device.GetMaxOutputReportLength() == 0) {
 					yield return new MuniaNgc(device);
 				}
-				else if (device.ProductName.Equals("NinHID N64") || device.GetMaxInputReportLength() == 5) {
+				else if (device.ProductName == "NinHID N64" || device.GetMaxInputReportLength() == 5) {
 					yield return new MuniaN64(device);
 				}
-				else if (device.ProductName.Equals("NinHID SNES") || device.GetMaxInputReportLength() == 3) {
+				else if (device.ProductName == "NinHID SNES" || device.GetMaxInputReportLength() == 3) {
 					yield return new MuniaSnes(device);
 				}
 			}
@@ -77,16 +78,23 @@ namespace MUNIA.Controllers {
 		}
 
 		public static IEnumerable<MuniaConfigInterface> GetMuniaConfigInterfaces() {
-			var candidates = DeviceList.Local.GetHidDevices(0x04d8, 0x0058)
-				.Union(DeviceList.Local.GetHidDevices(0x1209, 0x8843));
-			foreach (HidDevice dev in candidates.Where(device => device.ProductName.Equals("NinHID CFG") 
-				|| (device.GetMaxInputReportLength() == device.GetMaxOutputReportLength()
-					&& device.GetMaxOutputReportLength() == 9)))
+			var ldr = new HidDeviceLoader();
+			var candidates = ldr.GetDevices(0x04d8, 0x0058)
+				.Union(ldr.GetDevices(0x1209, 0x8843));
+			foreach (HidDevice dev in candidates.Where(device => device.ProductName == "NinHID CFG"
+																|| device.GetMaxInputReportLength() == device.GetMaxOutputReportLength()
+																	&& device.GetMaxOutputReportLength() == 9))
 				yield return new MuniaConfigInterface(dev);
 		}
 
+		public static IEnumerable<HidDevice> GetMuniaBootloaderInterfaces() {
+			var ldr = new HidDeviceLoader();
+			return ldr.GetDevices(0x04d8, 0x003c);
+		}
+
 		public static IEnumerable<MusiaConfigInterface> GetMusiaConfigInterfaces() {
-			foreach (HidDevice dev in DeviceList.Local.GetHidDevices(0x1209, 0x8844).Where(d => d.ProductName.Contains("config")))
+			var ldr = new HidDeviceLoader();
+			foreach (HidDevice dev in ldr.GetDevices(0x1209, 0x8844).Where(d => d.ProductName.Contains("config")))
 				yield return new MusiaConfigInterface(dev);
 		}
 
