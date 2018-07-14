@@ -64,4 +64,6 @@
 
 void usb_descriptors_check();
 
+extern uint32_t deviceID;
+
 #endif // _SYSTEM_CONFIG_H

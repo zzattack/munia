@@ -53,6 +53,8 @@ please contact mla_licensing@microchip.com
 #include "usb_device.h"
 #include "usb_device_local.h"
 
+extern void load_device_id();
+
 #if defined(USB_USE_MSD)
     #include "usb_device_msd.h"
 #endif
@@ -2108,13 +2110,22 @@ static void USBStdGetDscHandler(void)
                     // Set data count
                     inPipes[0].wCount.Val = *inPipes[0].pSrc.bRom;    
                     
-                    CtrlTrfData[0] = 22; // number of bytes
+                    load_device_id();
+                    CtrlTrfData[0] = 18; // number of bytes
                     CtrlTrfData[1] = USB_DESCRIPTOR_STRING;
                     unsigned char i;
-                    for (i = 0; i < 10; i++) {
-                        CtrlTrfData[2 + i * 2] = 'x';
+                    for (i = 0; i < 8; i++) {
+                        // format 32-bit integer in eeprom to 8-character hex string
+                        uint8_t* r = (uint8_t*)&deviceID;
+                        uint8_t val = *(r + 3 - i/2);
+                        if (!(i & 1)) val >>= 4;
+                        val &= 0x0F;
+                        if (val < 10) val = '0' + val;
+                        else val = 'A' + (val-10);
+                        CtrlTrfData[2 + i * 2] = val;
                         CtrlTrfData[2 + i * 2 + 1] = '\0';
                     }
+
                     inPipes[0].info.bits.ctrl_trf_mem = USB_EP0_RAM; // Set memory type
                     inPipes[0].pSrc.bRam = (uint8_t*)CtrlTrfData; // Set Source
                     inPipes[0].wCount.v[0] = CtrlTrfData[0]; // Set data count
