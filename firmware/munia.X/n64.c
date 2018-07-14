@@ -23,7 +23,10 @@ void n64_tasks() {
     }
     
     if (packets.n64_test) {
-        if (!in_menu && config.output_mode == output_n64 && !config.input_n64) n64_fakeout_test();
+        if (!in_menu && config.output_mode == output_n64 && !config.input_n64)  {
+            n64_fakeout_test();
+            WRITETIMER3(65000); // schedule next fake poll soon
+        }
         else n64_handle_packet();
         packets.n64_test = false;
     }

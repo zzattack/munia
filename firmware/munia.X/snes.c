@@ -6,8 +6,6 @@
 #include "fakeout.h"
 #include <usb/usb_device_hid.h>
 
-#include "uarts.h"
-
 snes_packet_t joydata_snes_last_raw;
 void snes_to_ngc();
 
@@ -19,7 +17,10 @@ void snes_tasks() {
     }
         
     if (packets.snes_test) {
-        if (!in_menu && config.output_mode == output_snes && !config.input_snes) snes_fakeout_test();
+        if (!in_menu && config.output_mode == output_snes && !config.input_snes) {
+            snes_fakeout_test();
+            WRITETIMER3(65000); // schedule next fake poll soon
+        }
         else snes_handle_packet();
         packets.snes_test = false;
     }

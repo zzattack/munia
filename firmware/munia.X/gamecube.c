@@ -23,7 +23,10 @@ void ngc_tasks() {
     }
     
     if (packets.ngc_test) {
-        if (!in_menu && config.output_mode == output_ngc && !config.input_ngc) ngc_fakeout_test();
+        if (!in_menu && config.output_mode == output_ngc && !config.input_ngc) {
+            ngc_fakeout_test();
+            WRITETIMER3(65000); // schedule next fake poll soon
+        }
         else ngc_handle_packet();
         packets.ngc_test = false;
     }
