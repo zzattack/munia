@@ -332,8 +332,8 @@ namespace MUNIA.Forms {
 			// toolStripLabel1
 			// 
 			this.toolStripLabel1.Name = "toolStripLabel1";
-			this.toolStripLabel1.Size = new System.Drawing.Size(321, 22);
-			this.toolStripLabel1.Text = "Click anywhere in the skin to select its corresponding group";
+			this.toolStripLabel1.Size = new System.Drawing.Size(257, 22);
+			this.toolStripLabel1.Text = "Click in the skin to select corresponding groups";
 			// 
 			// SkinRemapperForm
 			// 
