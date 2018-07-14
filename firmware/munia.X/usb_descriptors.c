@@ -231,7 +231,7 @@ const uint8_t *const USB_SD_Ptr[]=
 
 
 void usb_descriptors_check() {
-#if DEBUG || SIMUL
+#ifdef SIMUL
     int dds = sizeof(device_dsc);
     while (device_dsc.bLength != dds) {
         printf("device_dsc size should be %i", dds);
