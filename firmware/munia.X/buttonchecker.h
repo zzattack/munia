@@ -39,15 +39,15 @@ typedef struct {
     uint8_t repeat : 1;
 } ButtonState;
 
-ButtonState bcState[BUTTON_COUNT];
+ButtonState bcState;
 
 /******************************************************************************/
 /* Function Prototypes                                                        */
 /******************************************************************************/
 void bcInit();
 bool bcCheck(); // Check if a button is pressed/unpressed call @ 1000Hz
-bool bcTick(uint8_t i);
-bool bcRepeat(uint8_t i);
-bool bcPressed(uint8_t i);
+bool bcTick();
+bool bcRepeat();
+bool bcPressed();
 
 #endif	/* BUTTONCHECKER_H */
