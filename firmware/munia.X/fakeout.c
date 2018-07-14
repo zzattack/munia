@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <xc.h>
 
-#define NGC_JOY_DEADZONE 18
+#define NGC_JOY_DEADZONE 25
 #define NGC_CSTICK_THRESHOLD 30
 
 #define ngc_fakeout() do { portc_mask = 0b00000001; fakeout_ngc64(); } while (0);
@@ -18,13 +18,13 @@ void ngc_fakeout_test() {
         uint8_t cmd = pack_byte((int8_t*)sample_buff);
         if (cmd == 0x00) {
             // tell wii we're here
-            fake_count = 24;
-            pfake_out = ngc_id_packet;
+            fake_count = sizeof(ngc_id_packet) * 8;
+            fake_unpack(ngc_id_packet, sizeof(ngc_id_packet));
             ngc_fakeout();
         }
         else if (cmd == 0x41) {
-            fake_count = 80;
-            pfake_out = ngc_init_packet;
+            fake_count = sizeof(ngc_init_packet) * 8;
+            fake_unpack(ngc_init_packet, sizeof(ngc_init_packet));
             ngc_fakeout();
         }
         else {
@@ -33,7 +33,6 @@ void ngc_fakeout_test() {
     }
     else if (idx == 24) {
         fake_count = 64;
-        pfake_out = fake_buffer;
         ngc_fakeout();
     }
     else {
@@ -46,13 +45,12 @@ void n64_fakeout_test() {
     if (idx == 8) {
         uint8_t cmd = pack_byte((int8_t*)sample_buff);
         if (cmd == 0x00) {
-            fake_count = 24;
-            pfake_out = n64_id_packet;
+            fake_count = 8*sizeof(n64_id_packet);
+            fake_unpack(n64_id_packet, sizeof(n64_id_packet));
             n64_fakeout();
         }
         else if (cmd == 0x01) {
             fake_count = 32;
-            pfake_out = fake_buffer;
             n64_fakeout();
             // dbgs("n64_fakeout() completed\n");
         }
@@ -77,18 +75,18 @@ void fakeout_ngc64() {
     // the pins that have IOCC notification enabled
     
     CLR(); // set data pin to output, making the pin low
-    uint8_t* r = pfake_out;
+    uint8_t* r = fake_buffer;
     while (fake_count) {
         CLR(); // use stopwatch to verify this happens either 1 or 3 µs after SET() call below)
         if (!*r) {
             // low
             r++; fake_count--; Nop();
             _delay(24);
-            SET(); // use stopwatch to verify this happens 3µs after CLR())
+            SET(); // use stopwatch to verify this happens 3�s after CLR())
         }
         else {
             _delay(3);
-            SET(); // use stopwatch to verify this happens 3µs after CLR()
+            SET(); // use stopwatch to verify this happens 3�s after CLR()
             r++; fake_count--;
             _delay(22);
         }
@@ -148,10 +146,7 @@ void snes_to_n64() {
             joydata_n64_raw.joy_y -= 127;
 
         // d-pad unused
-        joydata_n64_raw.dup = 0;
-        joydata_n64_raw.ddown = 0;
-        joydata_n64_raw.dleft = 0;
-        joydata_n64_raw.dright = 0;
+        joydata_n64_raw.dpad = 0;
 
         // c-stick unused
         joydata_n64_raw.cdown = 0;
@@ -170,10 +165,7 @@ void snes_to_n64() {
         joydata_n64_raw.joy_y = 0;
         
         // d-pad maps to d-pad
-        joydata_n64_raw.dup = joydata_snes_raw.up;
-        joydata_n64_raw.ddown = joydata_snes_raw.down;
-        joydata_n64_raw.dleft = joydata_snes_raw.left;
-        joydata_n64_raw.dright = joydata_snes_raw.right;
+        joydata_n64_raw.dpad = joydata_snes_raw.dpad;
 
         // face buttons map to c-stick
         joydata_n64_raw.cleft = joydata_snes_raw.y;
@@ -196,7 +188,6 @@ void snes_to_ngc() {
     joydata_ngc_raw.start = joydata_snes_raw.start;
     joydata_ngc_raw.l = joydata_snes_raw.l;
     joydata_ngc_raw.r = joydata_snes_raw.r;
-
     
     joydata_ngc_raw.left_trig = joydata_snes_raw.l ? 255 : 0;
     joydata_ngc_raw.right_trig = joydata_snes_raw.r ? 255 : 0;
@@ -222,10 +213,7 @@ void snes_to_ngc() {
             joydata_ngc_raw.joy_y -= 127;
 
         // d-pad unused
-        joydata_ngc_raw.dup = 0;
-        joydata_ngc_raw.ddown = 0;
-        joydata_ngc_raw.dleft = 0;
-        joydata_ngc_raw.dright = 0;
+        joydata_ngc_raw.pad = 0;
 
         // c-stick unused
         joydata_ngc_raw.c_x = 128;
