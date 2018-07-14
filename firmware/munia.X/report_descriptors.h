@@ -194,16 +194,14 @@ const uint8_t hid_rpt_cfg[] = {
     0x05, 0x01,                    //   USAGE_PAGE (Generic Desktop)
     0x15, 0x00,                    //     LOGICAL_MINIMUM (0)
     0x26, 0xff, 0x00,              //     LOGICAL_MAXIMUM (255)
+    0x75, 0x08,                    //     REPORT_SIZE (8)
+    0x95, CFG_CMD_REPORT_SIZE,     //     REPORT_COUNT
 
     // write config command
     0x09, 0x00,                    //     USAGE (Undefined)
-    0x95, CFG_CMD_REPORT_SIZE,     //     REPORT_COUNT
-    0x29, CFG_CMD_REPORT_SIZE,     //     USAGE_MAXIMUM
-    0x19, 0x01,                    //     USAGE_MINIMUM
-    0x75, 0x08,                    //     REPORT_SIZE (8)
     0x91, 0x00,                    //     OUTPUT (Data,Ary,Abs)
-    0x29, CFG_CMD_REPORT_SIZE,     //     USAGE_MAXIMUM
-    0x19, 0x01,                    //     USAGE_MINIMUM
+    // read config command
+    0x09, 0x00,                    //     USAGE (Undefined)
     0x81, 0x00,                    //     INPUT (Data,Ary,Abs)
 
     0xc0                           // END_COLLECTION    
