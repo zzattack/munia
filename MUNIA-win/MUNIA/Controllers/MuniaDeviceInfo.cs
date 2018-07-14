@@ -53,8 +53,8 @@ namespace MUNIA.Controllers {
 			var v = new Version(VersionMajor, VersionMinor);
 			if (v >= Version.Parse("1.5")) {
 				IsLegacy = false;
-				Output = (OutputMode) report[4];
-				Inputs = (InputSources) report[5];
+				Output = (OutputMode)report[4];
+				Inputs = (InputSources)report[5];
 			}
 			else {
 				IsLegacy = true;
@@ -62,8 +62,8 @@ namespace MUNIA.Controllers {
 				N64 = (N64Mode)report[5];
 				SNES = (SnesMode)report[6];
 			}
-			DeviceID = (ushort) ((report[7] << 8) | report[8]);
-			PICRevision = (byte) (DeviceID & 0x0F);
+			DeviceID = (ushort)((report[7] << 8) | report[8]);
+			PICRevision = (byte)(DeviceID & 0x0F);
 			DeviceID &= 0xFFF0;
 			return true;
 		}
