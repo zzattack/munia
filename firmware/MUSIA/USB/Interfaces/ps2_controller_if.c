@@ -1,5 +1,4 @@
 #include "ps2_controller_if.h"
-#include "forcefeedback.h"
 #include <usbd_hid.h>
 #include <stdint.h>
 #include <stdbool.h>
