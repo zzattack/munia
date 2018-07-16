@@ -17,7 +17,6 @@
 #include "uarts.h"
 #include "fakeout.h"
 
-void init_random();
 void init_pll();
 void init_io();
 void init_timers();
@@ -27,6 +26,7 @@ void low_priority interrupt isr_low();
 void load_config();
 void apply_config();
 void save_config();
+void load_device_id();
 
 volatile uint8_t EasyTimerTick;
 uint8_t counter60hz = 0;
@@ -35,10 +35,9 @@ void tick1000Hz();
 void usb_tasks();
 
 void main() {
-    init_random();
     init_io();
     
-#ifdef DEBUG
+#ifdef DEBUG_PRINT
     U1Init(115200, false, true);
 #endif
     
@@ -58,12 +57,6 @@ void main() {
     
     load_config();
     
-#ifdef DEBUG
-    config.output_mode = output_pc;
-    config.input_sources = input_snes | input_ngc | input_n64;
-    menu_enter();
-#endif    
-    
     apply_config();
     init_interrupts();    
     
@@ -76,9 +69,7 @@ void main() {
         USBDeviceTasks();
         
         LED_SNES_GREEN = USBDeviceState >= CONFIGURED_STATE;
-#ifndef DEBUG
         LED_SNES_ORANGE = !USBSuspendControl;
-#endif
         
         if (EasyTimerTick > 0) {
             EasyTimerTick--;         
@@ -168,29 +159,6 @@ void init_timers() {
     WRITETIMER3(15536);
 }
 
-void init_random() {
-    // setup adc
-    ADCON1bits.PVCFG    = 0b00; // set v+ reference to Vdd
-    ADCON1bits.NVCFG    = 0b0;  // set v- reference to GND
-    ADCON2bits.ADFM     = 0b1;  // right justify the output
-    ADCON2bits.ACQT     = 0b110;// 16 TAD
-    ADCON2bits.ADCS     = 0b101;// use Fosc/16 for clock source
-    ADCON0bits.ADON     = 0b1;  // turn on the ADC
-
-    // generate random serial, seeded with xor of 16 readings of ADC
-    // (Performing a conversion on unimplemented channels will return random values.)
-    unsigned int seed = 0x3F07 ^ TMR0; // poly
-    ADCON0bits.CHS = 0b11011; // select analog input channel 27 (unimplemented))
-    
-    for (int i = 0; i < 8; i++) {
-        ADCON0bits.GO = 0b1; // start the conversion
-        while(ADCON0bits.DONE); // wait for the conversion to finish
-        seed ^= (ADRESH << 8) | ADRESL;  // return the result
-    }
-    ADCON0bits.ADON     = 0;  // turn off the ADC
-    srand(seed); // seed with conversion result
-}
-
 void init_interrupts() {
 	// setup interrupt on falling change of data on gamepad ports
 	INTCONbits.IOCIE = 1; // IOC interrupt enabled
@@ -231,6 +199,50 @@ void apply_config() {
     SWITCH3 = IOCCbits.IOCC7 || !config.input_snes;
 }
 
+void randomize_device_id() {    
+    // setup adc
+    ADCON1bits.PVCFG    = 0b00; // set v+ reference to Vdd
+    ADCON1bits.NVCFG    = 0b0;  // set v- reference to GND
+    ADCON2bits.ADFM     = 0b1;  // right justify the output
+    ADCON2bits.ACQT     = 0b110;// 16 TAD
+    ADCON2bits.ADCS     = 0b101;// use Fosc/16 for clock source
+    ADCON0bits.ADON     = 0b1;  // turn on the ADC
+
+    // generate random serial, seeded with xor of 16 readings of ADC
+    // (Performing a conversion on unimplemented channels will return random values.)
+    unsigned int seed = 0x3F07 ^ TMR0; // poly
+    ADCON0bits.CHS = 0b11011; // select analog input channel 27 (unimplemented))
+    
+    for (int i = 0; i < 8; i++) {
+        ADCON0bits.GO = 0b1; // start the conversion
+        while(ADCON0bits.DONE); // wait for the conversion to finish
+        seed ^= (ADRESH << 8) | ADRESL;  // return the result
+    }
+    ADCON0bits.ADON = 0;  // turn off the ADC
+    srand(seed); // seed with conversion result
+
+    uint8_t* w = (uint8_t*)&deviceID;
+    *w++ = rand();
+    *w++ = rand();
+    *w++ = rand();
+    *w++ = rand();
+    ADCON0bits.ADON = 0;  // turn off the ADC
+}
+
+void load_device_id() {
+    uint8_t* r = (uint8_t*)&deviceID;
+    for (uint8_t i = 0x20; i < 0x24 ; i++)
+        *r++ = ee_read(i);
+
+    if (deviceID == 0 || deviceID == 0xFFFFFFFF) {
+        // generate random device id, and save it
+        randomize_device_id();
+        uint8_t* w = (uint8_t*)&deviceID;   
+        for (uint8_t i = 0x20; i < 0x24 ; i++){            
+            ee_write(i, *w++);
+        }
+    }
+}
 
 void tick1000Hz() {
     lcd_process();
@@ -238,7 +250,7 @@ void tick1000Hz() {
 
 #ifndef DEBUG
     if (bcCheck()) {
-        if (bcTick(0) && bcPressed(0)) {
+        if (bcTick() && bcPressed()) {
             if (in_menu) menu_exit(false);
             else menu_enter();
         }

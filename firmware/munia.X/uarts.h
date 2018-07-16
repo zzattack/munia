@@ -11,7 +11,7 @@ void U1Init(uint32_t baudrate, bool read, bool write);
 void U1SetBaudrate(uint32_t baudrate);
 void U1Disable();
 
-#ifdef DEBUG
+#ifdef DEBUG_PRINT
 #define dbgb(x) U1TxSync(x)
 #define dbgs(x) U1putsSync(x)
 #define dbgsval(x) U1writeVal(x)

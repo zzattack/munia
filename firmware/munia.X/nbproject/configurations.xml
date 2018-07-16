@@ -49,7 +49,7 @@
       <itemPath>capture-n64.inc</itemPath>
       <itemPath>capture-ngc.inc</itemPath>
       <itemPath>capture-snes.inc</itemPath>
-      <itemPath>C:/microchip/mla/v2015_08_10/apps/usb/device/bootloaders/firmware/pic18_non_j/src/config_bits.h</itemPath>
+      <itemPath>config_bits.c</itemPath>
     </logicalFolder>
     <logicalFolder name="f1" displayName="USB" projectFiles="true">
       <itemPath>usb/usb_device.c</itemPath>
@@ -132,11 +132,9 @@
         <property key="optimization-assembler" value="true"/>
         <property key="optimization-assembler-files" value="false"/>
         <property key="optimization-debug" value="false"/>
-        <property key="optimization-global" value="true"/>
         <property key="optimization-invariant-enable" value="false"/>
         <property key="optimization-invariant-value" value="16"/>
         <property key="optimization-level" value="9"/>
-        <property key="optimization-set" value="default"/>
         <property key="optimization-speed" value="false"/>
         <property key="optimization-stable-enable" value="false"/>
         <property key="preprocess-assembler" value="true"/>
@@ -163,8 +161,10 @@
         <property key="code-model-rom" value="default,-0-FFF,-1006-1007,-1016-1017"/>
         <property key="create-html-files" value="false"/>
         <property key="data-model-ram" value=""/>
-        <property key="data-model-size-of-double" value="32"/>
-        <property key="data-model-size-of-float" value="32"/>
+        <property key="data-model-size-of-double" value="24"/>
+        <property key="data-model-size-of-double-gcc" value="short-double"/>
+        <property key="data-model-size-of-float" value="24"/>
+        <property key="data-model-size-of-float-gcc" value="short-float"/>
         <property key="display-class-usage" value="false"/>
         <property key="display-hex-usage" value="false"/>
         <property key="display-overall-usage" value="true"/>
@@ -180,6 +180,7 @@
         <property key="initialize-data" value="true"/>
         <property key="keep-generated-startup.as" value="false"/>
         <property key="link-in-c-library" value="true"/>
+        <property key="link-in-c-library-gcc" value=""/>
         <property key="link-in-peripheral-library" value="false"/>
         <property key="managed-stack" value="false"/>
         <property key="opt-xc8-linker-file" value="false"/>
@@ -289,7 +290,6 @@
         <property key="ToolFirmwareFilePath" value=""/>
         <property key="ToolFirmwareOption.UseLatestFirmware" value="false"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
-        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="hwtoolclock.instructionspeed" value="4"/>
         <property key="hwtoolclock.units" value="mips"/>
@@ -524,6 +524,9 @@
       </Simulator>
       <XC8-config-global>
         <property key="advanced-elf" value="true"/>
+        <property key="gcc-opt-driver-new" value="false"/>
+        <property key="gcc-opt-std" value="--std=c89"/>
+        <property key="gcc-output-file-format" value="dwarf-3"/>
         <property key="output-file-format" value="-mcof,+elf"/>
         <property key="stack-size-high" value="auto"/>
         <property key="stack-size-low" value="auto"/>
@@ -534,7 +537,7 @@
     <conf name="debug" type="2">
       <toolsSet>
         <developmentServer>localhost</developmentServer>
-        <targetDevice>PIC18F25K50</targetDevice>
+        <targetDevice>PIC18F24K50</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
         <platformTool>RealICEPlatformTool</platformTool>
@@ -579,11 +582,9 @@
         <property key="optimization-assembler" value="true"/>
         <property key="optimization-assembler-files" value="false"/>
         <property key="optimization-debug" value="false"/>
-        <property key="optimization-global" value="true"/>
         <property key="optimization-invariant-enable" value="false"/>
         <property key="optimization-invariant-value" value="16"/>
         <property key="optimization-level" value="9"/>
-        <property key="optimization-set" value="default"/>
         <property key="optimization-speed" value="false"/>
         <property key="optimization-stable-enable" value="false"/>
         <property key="preprocess-assembler" value="true"/>
@@ -610,8 +611,10 @@
         <property key="code-model-rom" value="default"/>
         <property key="create-html-files" value="false"/>
         <property key="data-model-ram" value=""/>
-        <property key="data-model-size-of-double" value="32"/>
-        <property key="data-model-size-of-float" value="32"/>
+        <property key="data-model-size-of-double" value="24"/>
+        <property key="data-model-size-of-double-gcc" value="short-double"/>
+        <property key="data-model-size-of-float" value="24"/>
+        <property key="data-model-size-of-float-gcc" value="short-float"/>
         <property key="display-class-usage" value="false"/>
         <property key="display-hex-usage" value="false"/>
         <property key="display-overall-usage" value="true"/>
@@ -627,6 +630,7 @@
         <property key="initialize-data" value="true"/>
         <property key="keep-generated-startup.as" value="false"/>
         <property key="link-in-c-library" value="true"/>
+        <property key="link-in-c-library-gcc" value=""/>
         <property key="link-in-peripheral-library" value="false"/>
         <property key="managed-stack" value="false"/>
         <property key="opt-xc8-linker-file" value="false"/>
@@ -746,7 +750,7 @@
         <property key="memories.instruction.ram.ranges"
                   value="${memories.instruction.ram.ranges}"/>
         <property key="memories.programmemory" value="true"/>
-        <property key="memories.programmemory.ranges" value="0-7fff"/>
+        <property key="memories.programmemory.ranges" value="0-3fff"/>
         <property key="poweroptions.powerenable" value="false"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
@@ -967,6 +971,9 @@
       </Simulator>
       <XC8-config-global>
         <property key="advanced-elf" value="true"/>
+        <property key="gcc-opt-driver-new" value="false"/>
+        <property key="gcc-opt-std" value="--std=c89"/>
+        <property key="gcc-output-file-format" value="dwarf-3"/>
         <property key="output-file-format" value="-mcof,+elf"/>
         <property key="stack-size-high" value="auto"/>
         <property key="stack-size-low" value="auto"/>
@@ -1022,11 +1029,9 @@
         <property key="optimization-assembler" value="true"/>
         <property key="optimization-assembler-files" value="true"/>
         <property key="optimization-debug" value="false"/>
-        <property key="optimization-global" value="true"/>
         <property key="optimization-invariant-enable" value="false"/>
         <property key="optimization-invariant-value" value="16"/>
         <property key="optimization-level" value="9"/>
-        <property key="optimization-set" value="default"/>
         <property key="optimization-speed" value="false"/>
         <property key="optimization-stable-enable" value="false"/>
         <property key="preprocess-assembler" value="true"/>
@@ -1054,7 +1059,9 @@
         <property key="create-html-files" value="false"/>
         <property key="data-model-ram" value=""/>
         <property key="data-model-size-of-double" value="24"/>
+        <property key="data-model-size-of-double-gcc" value="short-double"/>
         <property key="data-model-size-of-float" value="24"/>
+        <property key="data-model-size-of-float-gcc" value="short-float"/>
         <property key="display-class-usage" value="false"/>
         <property key="display-hex-usage" value="false"/>
         <property key="display-overall-usage" value="true"/>
@@ -1070,6 +1077,7 @@
         <property key="initialize-data" value="true"/>
         <property key="keep-generated-startup.as" value="false"/>
         <property key="link-in-c-library" value="true"/>
+        <property key="link-in-c-library-gcc" value=""/>
         <property key="link-in-peripheral-library" value="false"/>
         <property key="managed-stack" value="false"/>
         <property key="opt-xc8-linker-file" value="false"/>
@@ -1284,6 +1292,17 @@
                   value="report"/>
         <property key="warningmessagebreakoptions.W0111_SIM_UNSUPPORTED_SELECTION"
                   value="report"/>
+        <property key="warningmessagebreakoptions.W0112_SIM_INVALID_OPERATION"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W0113_SIM_WRITE_TO_PROTECTED_SFR"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W0114_SIM_INVALID_KEY" value="report"/>
+        <property key="warningmessagebreakoptions.W0115_SIM_FAILED_TO_PARSE_DEVICE_FILE"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W0116_SIM_STACK_OVERFLOW"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W0117_SIM_STACK_UNDERFLOW"
+                  value="report"/>
         <property key="warningmessagebreakoptions.W0201_ADC_NO_STIMULUS_FILE"
                   value="report"/>
         <property key="warningmessagebreakoptions.W0202_ADC_GO_DONE_BIT" value="report"/>
@@ -1369,6 +1388,11 @@
                   value="report"/>
         <property key="warningmessagebreakoptions.W0400_PWM_PWM_FASTER_THAN_FOSC"
                   value="report"/>
+        <property key="warningmessagebreakoptions.W0600_WDT_2ND_WDT_MR_WRITE"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W0601_WDT_EXPIRED" value="report"/>
+        <property key="warningmessagebreakoptions.W0601_WDT_RESET_OUTSIDE_WINDOW"
+                  value="report"/>
         <property key="warningmessagebreakoptions.W0700_CLC_GENERAL_WARNING"
                   value="report"/>
         <property key="warningmessagebreakoptions.W0701_CLC_CLCOUT_AS_INPUT"
@@ -1384,6 +1408,8 @@
         <property key="warningmessagebreakoptions.W10102_UNSUPPORTED_CLK_SOURCE"
                   value="report"/>
         <property key="warningmessagebreakoptions.W10103_UNSUPPORTED_RECEIVER_FILTER"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W10301_NO_PORT_PINS_FOUND"
                   value="report"/>
         <property key="warningmessagebreakoptions.W1201_DATAFLASH_MEM_OUTSIDE_RANGE"
                   value="report"/>
@@ -1426,6 +1452,16 @@
                   value="report"/>
         <property key="warningmessagebreakoptions.W2701_MPU_INVALID_REGION"
                   value="report"/>
+        <property key="warningmessagebreakoptions.W3000_LPM_READ_PROTECTION_SECTION"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W3010_SPM_WRITE_PROTECTION_SECTION"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W6001_RTT_FORBIDDEN_RTPRES"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W6002_RTT_BAD_WRITING_ALMV"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W6003_RTT_BAD_WRITING_RTPRES"
+                  value="report"/>
         <property key="warningmessagebreakoptions.W7001_SMT_CLK_SELECTION_NOT_SUPPORT"
                   value="report"/>
         <property key="warningmessagebreakoptions.W7002_SMT_SIG_SELECTION_NOT_SUPPORT"
@@ -1449,6 +1485,10 @@
         <property key="warningmessagebreakoptions.W9204_UART_RX_EMPTY_QUEUE"
                   value="report"/>
         <property key="warningmessagebreakoptions.W9205_UART_TX_BADFILE" value="report"/>
+        <property key="warningmessagebreakoptions.W9206_UART_RESERVED_MODE"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W9207_UART_UNABLETOCLOSE_FILE"
+                  value="report"/>
         <property key="warningmessagebreakoptions.W9401_CVREF_INVALIDSOURCESELECTION"
                   value="report"/>
         <property key="warningmessagebreakoptions.W9402_CVREF_INPUT_OUTPUTPINCONFLICT"
@@ -1489,6 +1529,9 @@
       </Simulator>
       <XC8-config-global>
         <property key="advanced-elf" value="true"/>
+        <property key="gcc-opt-driver-new" value="false"/>
+        <property key="gcc-opt-std" value="--std=c89"/>
+        <property key="gcc-output-file-format" value="dwarf-3"/>
         <property key="output-file-format" value="-mcof,+elf"/>
         <property key="stack-size-high" value="auto"/>
         <property key="stack-size-low" value="auto"/>
