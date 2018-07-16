@@ -38,7 +38,7 @@ uint8_t submenu_count = 0;
 
 void menu_enter() {
 	lcd_command(LCD_DISPLAY_ON_CURSOR_OFF);
-	// lcd_backlight(10);
+	lcd_backlight(10);
 	in_menu = true;
     
 	// copy config
@@ -52,7 +52,7 @@ void menu_enter() {
 }
 void menu_exit(bool save_settings) {
 	lcd_command(LCD_DISPLAY_OFF);
-	// lcd_backlight(0);
+	lcd_backlight(0);
 	in_menu = false;
     
 	if (save_settings) {
@@ -147,6 +147,7 @@ void menu_press(MENU_COMMAND command) {
 			else menu_page(MENU_PAGE::CONFIRM);
 		}
 		else if (menu_current_page == MENU_PAGE::POLL_FREQ) {
+			config_edit.pollFreq = pollFreqs[submenu_idx];
 			menu_page(MENU_PAGE::CONFIRM);
 		} 
 		else if (menu_current_page == MENU_PAGE::CONFIRM) {

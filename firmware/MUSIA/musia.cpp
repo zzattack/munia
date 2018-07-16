@@ -62,8 +62,6 @@ EXTERNC int musia_main(void) {
 	validateConfig();
 	applyConfig();
 
-	menu_enter();
-	
 	for (;;) {
 		HAL_IWDG_Refresh(&hiwdg);
 
@@ -130,9 +128,6 @@ void sysInit() {
 
 	// set green led
 	HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_SET);
-
-	// lcd backlight on
-	HAL_GPIO_WritePin(LCD_PWM_GPIO_Port, LCD_PWM_Pin, GPIO_PIN_SET);
 
 	lcd_setup();
 }
@@ -296,4 +291,9 @@ EXTERNC void getEEPROMConfig(uint8_t* buffer, uint8_t buffSize) {
 
 EXTERNC void HAL_SYSTICK_Callback() {
 	tick1Khz = true;
+}
+
+EXTERNC void lcd_backlight(uint8_t pwm) {
+	// lcd backlight on, maybe PWM
+	HAL_GPIO_WritePin(LCD_PWM_GPIO_Port, LCD_PWM_Pin, pwm ? GPIO_PIN_SET : GPIO_PIN_RESET);
 }

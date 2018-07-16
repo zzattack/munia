@@ -23,4 +23,6 @@ EXTERNC void lcd_goto(uint8_t line, uint8_t pos);
 EXTERNC void lcd_char(uint8_t chr);
 EXTERNC void lcd_string(const char *q);
 
+EXTERNC void lcd_backlight(uint8_t pwm);
+
 #endif	/* LCD_H */
