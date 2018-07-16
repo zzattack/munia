@@ -15,24 +15,7 @@ PSECT ISR_jumps,local,class=CODE,delta=1,reloc=2,abs
     
 PSECT ISR_routines,local,class=CODE,delta=1,reloc=2
 isr_low:    
-    movff   WREG,WREGCPY
-    movff   BSR,BSRCPY
-    movff   STATUS,STATUSCPY   
-    
-    ; TMR2 is only interrupt source
-    bcf	    TMR2IF,c ; tmr2 uses period, no need to reload, just increment 100Hz timer
-    
-    banksel _EasyTimerTick
-    incf    BANKMASK(_EasyTimerTick),f,b    
-    
-    goto    isr_low_end 
-        
-isr_low_end:    
-    movff   BSRCPY,BSR
-    movff   STATUSCPY,STATUS
-    movff   WREGCPY,WREG
     retfie
-
     
     
 isr_high:

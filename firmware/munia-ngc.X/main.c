@@ -16,7 +16,6 @@ void init_pll();
 void init_io();
 void init_timers();
 void init_interrupts();
-void low_priority interrupt isr_low();
 
 void load_config();
 void apply_config();
@@ -24,7 +23,6 @@ void save_config();
 
 volatile uint8_t EasyTimerTick;
 uint8_t counter60hz = 0;
-void tick1000Hz();
 
 void usb_tasks();
 
@@ -46,12 +44,6 @@ void main() {
     USBDeviceAttach();
     
     load_config();
-    
-#ifdef DEBUG
-    config.output_mode = output_pc;
-    config.input_sources = input_n64;
-#endif    
-    
     apply_config();
     init_interrupts();    
     
@@ -62,10 +54,6 @@ void main() {
 	while (1) {
         ClrWdt();                
         USBDeviceTasks();
-        if (EasyTimerTick > 0) {
-            EasyTimerTick--;         
-            tick1000Hz();   
-        }
         
         if (PIR2bits.TMR3IF) {
             WRITETIMER3(15536);
@@ -113,10 +101,8 @@ void init_timers() {
     //   Reset when starting packet sample, or new bit received
     //   Once IF set, packet sample has finished
     // Timer 1: count packet length during NGC/N64 sampling
-    // Timer 2: source at 1KHz, for EasyTimer
     // Timer 3: polling indicator, runs either at 50Hz or 60Hz
-    
-    
+        
 	// Timer0 as 8-bit 1:1 on instruction clock
 	INTCONbits.TMR0IE = 0; // Disables the TMR0 overflow interrupt
 	T0CONbits.TMR0ON = 1; // Enables Timer0
@@ -132,14 +118,6 @@ void init_timers() {
 	PIE1bits.TMR1IE = 0; // Disables the TMR1 overflow interrupt
     T1CONbits.TMR1ON = 1; // start
     
-    // Timer2 Registers Prescaler=16 - PostScaler=15 - PR2=50 - Freq =~ 1000.00 Hz
-    T2CONbits.T2CKPS = 0b11; // Prescaler = 1:16
-    T2CONbits.T2OUTPS = 0b1110; // Postscaler = 1:15
-    PR2 = 50;         // Period register
-    IPR1bits.TMR2IP = 0; // Low priority group
-    PIE1bits.TMR2IE = 1; // Interrupt enabled
-    T2CONbits.TMR2ON = 1;  // Enable timer
-
     // Timer3 Registers Prescaler= 4 - TMR3 Preset = 15536 - Freq = 60.00 Hz - Period = 0.016667 seconds
     T3CONbits.TMR3CS = 0b00; // clock source is instruction clock (FOSC/4)
     T3CONbits.T3CKPS = 0b10; // 1:1 prescaler
@@ -205,8 +183,4 @@ void apply_config() {
     // switch position = 0 --> connected to our fake output,
     //                   1 --> connected to joystick
     SWITCH1 = IOCCbits.IOCC1 || !config.input_ngc;
-}
-
-
-void tick1000Hz() {
 }
