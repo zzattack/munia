@@ -85,8 +85,8 @@
 #define LCD_D4_GPIO_Port GPIOB
 #define LCD_E_Pin GPIO_PIN_7
 #define LCD_E_GPIO_Port GPIOB
-#define BOOT0_Pin GPIO_PIN_11
-#define BOOT0_GPIO_Port GPIOF
+#define MENU_Pin GPIO_PIN_11
+#define MENU_GPIO_Port GPIOF
 #define LCD_RS_Pin GPIO_PIN_8
 #define LCD_RS_GPIO_Port GPIOB
 #define SW_SPI_CLK_Pin GPIO_PIN_9
