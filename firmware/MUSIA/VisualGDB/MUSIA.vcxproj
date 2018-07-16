@@ -63,7 +63,7 @@
       <AdditionalOptions />
       <CLanguageStandard />
       <CPPLanguageStandard />
-      <Optimization>O0</Optimization>
+      <Optimization>Os</Optimization>
       <InlineFunctions>true</InlineFunctions>
     </ClCompile>
     <Link>
@@ -128,6 +128,8 @@
   </ImportGroup>
   <ItemGroup>
     <ClCompile Include="..\bootloader_helper.c" />
+    <ClCompile Include="..\buttonchecker.c" />
+    <ClCompile Include="..\circular_buffer.c" />
     <ClCompile Include="..\CubeMX\Src\dma.c" />
     <ClCompile Include="..\CubeMX\Src\gpio.c" />
     <ClCompile Include="..\CubeMX\Src\iwdg.c" />
@@ -136,12 +138,12 @@
     <ClCompile Include="..\CubeMX\Src\stm32f0xx_it.c" />
     <ClCompile Include="..\CubeMX\Src\system_stm32f0xx.c" />
     <ClCompile Include="..\CubeMX\Src\tim.c" />
-    <ClCompile Include="..\CubeMX\Src\usart.c" />
     <ClCompile Include="..\EEPROM\25xx080.cpp" />
     <ClCompile Include="..\EEPROM\crc.c" />
     <ClCompile Include="..\EEPROM\eeprom.cpp" />
     <ClCompile Include="..\EEPROM\hal_spi.cpp" />
-    <ClCompile Include="..\forcefeedback.cpp" />
+    <ClCompile Include="..\lcd.c" />
+    <ClCompile Include="..\menu.cpp" />
     <ClCompile Include="..\musia.cpp" />
     <ClCompile Include="..\ps2_poller.cpp" />
     <ClCompile Include="..\ps2_state.cpp" />
@@ -149,6 +151,9 @@
     <ClCompile Include="..\spi_sniffer.cpp" />
     <ClCompile Include="..\usb_joystick.cpp" />
     <ClInclude Include="..\bootloader_helper.h" />
+    <ClInclude Include="..\buttonchecker.h" />
+    <ClInclude Include="..\circular_buffer.h" />
+    <ClInclude Include="..\config.h" />
     <ClInclude Include="..\CubeMX\Inc\dma.h" />
     <ClInclude Include="..\CubeMX\Inc\gpio.h" />
     <ClInclude Include="..\CubeMX\Inc\iwdg.h" />
@@ -156,14 +161,14 @@
     <ClInclude Include="..\CubeMX\Inc\stm32f0xx_hal_conf.h" />
     <ClInclude Include="..\CubeMX\Inc\stm32f0xx_it.h" />
     <ClInclude Include="..\CubeMX\Inc\tim.h" />
-    <ClInclude Include="..\CubeMX\Inc\usart.h" />
     <ClInclude Include="..\EEPROM\25xx080.h" />
     <ClInclude Include="..\EEPROM\crc.h" />
     <ClInclude Include="..\EEPROM\eeprom.h" />
     <ClInclude Include="..\EEPROM\eeprom_layout.h" />
     <ClInclude Include="..\EEPROM\hal_spi.h" />
     <ClInclude Include="..\EEPROM\spi_interface.h" />
-    <ClInclude Include="..\forcefeedback.h" />
+    <ClInclude Include="..\lcd.h" />
+    <ClInclude Include="..\menu.h" />
     <ClInclude Include="..\ps2_packet.h" />
     <ClInclude Include="..\usbd_pid.h" />
     <ClInclude Include="..\USB\Lib\Inc\hid_usage.h" />
@@ -226,7 +231,6 @@
     <ClCompile Include="$(BSP_ROOT)\STM32F0xxxx\STM32F0xx_HAL_Driver\Src\stm32f0xx_ll_tim.c" />
     <ClCompile Include="$(BSP_ROOT)\STM32F0xxxx\STM32F0xx_HAL_Driver\Src\stm32f0xx_ll_usart.c" />
     <ClCompile Include="$(BSP_ROOT)\STM32F0xxxx\STM32F0xx_HAL_Driver\Src\stm32f0xx_ll_utils.c" />
-    <ClInclude Include="..\config.h" />
     <ClInclude Include="..\musia.h" />
     <ClInclude Include="..\ps2_poller.h" />
     <ClInclude Include="..\ps2_state.h" />

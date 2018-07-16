@@ -15,17 +15,24 @@ void sendPortLow(uint8_t b);
 
 void lcd_setup() {
 	cbInit(&lcd_cb);
-	lcd_startupTimer = 500;
+	lcd_startupTimer = 250;
 	HAL_GPIO_WritePin(LCD_E_GPIO_Port, LCD_E_Pin, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(LCD_RS_GPIO_Port, LCD_RS_Pin, GPIO_PIN_RESET);       
 }
 
 #define addByte(b) do { cbWrite(&lcd_cb, b); } while (0);
 
-void lcd_pulseE() {            
-	HAL_Delay(1); HAL_GPIO_WritePin(LCD_E_GPIO_Port, LCD_E_Pin, GPIO_PIN_SET);
-	HAL_Delay(1); HAL_GPIO_WritePin(LCD_E_GPIO_Port, LCD_E_Pin, GPIO_PIN_RESET);
+#pragma GCC push_options
+#pragma GCC optimize ("O0")
+void lcd_pulseE() { 
+	// burn about 4us (scope aligned)
+	volatile uint32_t counter = 100; while (counter--);
+	HAL_GPIO_WritePin(LCD_E_GPIO_Port, LCD_E_Pin, GPIO_PIN_SET);
+	counter = 100; while (counter--);
+	HAL_GPIO_WritePin(LCD_E_GPIO_Port, LCD_E_Pin, GPIO_PIN_RESET);
 }
+#pragma GCC pop_options
+
 
 void sendPortLow(uint8_t b) {
 	HAL_GPIO_WritePin(LCD_D7_GPIO_Port, LCD_D7_Pin, (b & 8) ? GPIO_PIN_SET : GPIO_PIN_RESET);

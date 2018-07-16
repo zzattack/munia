@@ -93,14 +93,13 @@ int main(void)
 
   /* USER CODE BEGIN SysInit */
  __HAL_RCC_DBGMCU_CLK_ENABLE();
- __HAL_DBGMCU_FREEZE_IWDG();
+ // __HAL_DBGMCU_FREEZE_IWDG();
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_IWDG_Init();
-  MX_USART1_UART_Init();
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
 
@@ -115,7 +114,7 @@ int main(void)
 
   /* USER CODE BEGIN 3 */
 #ifndef FAST_SEMIHOSTING_PROFILER_DRIVER
-	RetargetInit(&huart1);
+	// RetargetInit(&huart1);
 #endif		  
 	  musia_main();
   }

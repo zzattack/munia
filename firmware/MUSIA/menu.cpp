@@ -17,23 +17,22 @@ extern void applyConfig();
 
 
 // this is where the input is redirected to
-const char* menu_sub_items[][6] = {
-	{ "PS2 ", "PC ", NULL },								   // MENU_PAGE::OUTPUT,
-	{ "120Hz ", "100Hz", "60Hz", "50Hz", "30Hz", "25Hz" },  // MENU_PAGE::POLL_FREQ,
-	{ "A:Ok ", " B:Cancel", NULL },						   // MENU_PAGE::CONFIRM,
+const char* menu_sub_items[][7] = {
+	{ "PS2 ", "PC ", NULL },							 // MENU_PAGE::OUTPUT,
+	{ "120", "100", " 60", " 50", " 30", " 25", NULL },  // MENU_PAGE::POLL_FREQ,
+	{ "A:Ok ", " B:Cancel", NULL },						 // MENU_PAGE::CONFIRM,
 };
-
 uint8_t pollFreqs[] = { 120, 100, 60, 50, 30, 25 };
+
 EELayout config_backup, config_edit;
 extern eeprom ee;
 uint8_t submenu_idx = 0;
 uint8_t submenu_mask = 0;
 bool menu_leftalign = true;
 bool in_menu;
-MENU_PAGE current_menu_page;
+MENU_PAGE menu_current_page;
 
 uint16_t menu_next_press_delay;
-const char** menu_current_items;
 uint8_t submenu_count = 0;
 
 
@@ -67,15 +66,9 @@ void menu_exit(bool save_settings) {
 	applyConfig();
 }
 
-unsigned int log2(unsigned int x) {
-	unsigned int ans = 0;
-	while (x >>= 1) ans++;
-	return ans ;
-}
-
 void menu_page(MENU_PAGE page) {
-	current_menu_page = page;
-	menu_current_items = menu_sub_items[(int)page];
+	menu_current_page = page;
+	auto menu_current_items = menu_sub_items[(uint8_t)page];
 	submenu_idx = 0;
 	menu_leftalign = true;
 	submenu_count = 0;
@@ -89,10 +82,10 @@ void menu_page(MENU_PAGE page) {
 		submenu_idx = config_edit.mode;
 	}
 	else if (page == MENU_PAGE::POLL_FREQ) {
-		lcd_string("Poll frequency");
+		lcd_string("Poll freq. (Hz)");
 		submenu_idx = 0;
 		for (int i = 0; i < sizeof(pollFreqs) / sizeof(pollFreqs[0]); i++)
-			if (pollFreqs[i] = ee.data->pollFreq)
+			if (pollFreqs[i] == ee.data->pollFreq)
 				submenu_idx  = i;
 	}
 	else if (page == MENU_PAGE::CONFIRM) {
@@ -113,8 +106,9 @@ void menu_display_setting() {
 	lcd_goto(2, 1);
     
 	for (uint8_t i = left_display; i <= right_display; i++) {
+		auto menu_current_items = menu_sub_items[(uint8_t)menu_current_page];
 		lcd_string(menu_current_items[i]);
-		if (current_menu_page != MENU_PAGE::CONFIRM) {
+		if (menu_current_page != MENU_PAGE::CONFIRM) {
 			lcd_char('[');
 			lcd_char(submenu_idx == i ? '*' : ' ');
 			lcd_string("] ");
@@ -123,12 +117,15 @@ void menu_display_setting() {
     
 }
 
-void menu_packet(ps2_state* packet) {
-	if (!in_menu) return;
+void menu_tick1000hz() {
 	if (menu_next_press_delay > 0) { 
 		menu_next_press_delay--; 
 		return; 
 	}
+}
+
+void menu_packet(ps2_state* packet) {
+	if (!in_menu || menu_next_press_delay) return;
 	if (packet->dpad_left) menu_press(MENU_COMMAND::LEFT);
 	else if (packet->dpad_right) menu_press(MENU_COMMAND::RIGHT);
 	if (packet->start) menu_press(MENU_COMMAND::EXIT);
@@ -144,15 +141,15 @@ void menu_press(MENU_COMMAND command) {
 	 }
 
 	else if (command == MENU_COMMAND::CONFIRM || command == MENU_COMMAND::SELECT) {
-		if (current_menu_page == MENU_PAGE::OUTPUT) {
+		if (menu_current_page == MENU_PAGE::OUTPUT) {
 			config_edit.mode = (musia_mode)submenu_idx;
 			if (config_edit.mode == MODE_POLLER) menu_page(MENU_PAGE::POLL_FREQ);
 			else menu_page(MENU_PAGE::CONFIRM);
 		}
-		else if (current_menu_page == MENU_PAGE::POLL_FREQ) {
+		else if (menu_current_page == MENU_PAGE::POLL_FREQ) {
 			menu_page(MENU_PAGE::CONFIRM);
 		} 
-		else if (current_menu_page == MENU_PAGE::CONFIRM) {
+		else if (menu_current_page == MENU_PAGE::CONFIRM) {
 			menu_exit(true);
 		}	     
 	}

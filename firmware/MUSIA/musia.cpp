@@ -15,6 +15,9 @@
 #include "iwdg.h"
 #include "usart.h"
 #include "eeprom.h"
+#include "lcd.h"
+#include "menu.h"
+#include "buttonchecker.h"
 
 
 SPI_HandleTypeDef hspi1;
@@ -36,6 +39,7 @@ bool configUpdatePending = false;
 extern TIM_HandleTypeDef htim3;
 uint8_t tim1Expired;
 bool packetObserved = false;
+extern bool in_menu;
 
 void sysInit();
 void applyConfig();
@@ -45,14 +49,20 @@ void handlePollerPacket();
 void eepromSelect(spi_interface* spi_if);
 void eepromDeselect(spi_interface* spi_if);
 
+volatile bool tick1Khz;
 
 EXTERNC int musia_main(void) {
+	HAL_IWDG_Refresh(&hiwdg);
+
 	sysInit();
 	sys_printf("MUSIA started\n");
 	
 	spi_ee.setSelectHandler(eepromSelect);
 	ee.init(); // load eeprom
+	validateConfig();
 	applyConfig();
+
+	menu_enter();
 	
 	for (;;) {
 		HAL_IWDG_Refresh(&hiwdg);
@@ -77,6 +87,19 @@ EXTERNC int musia_main(void) {
 			packetObserved = false;
 			tim1Expired = false;
 		}
+
+		if (tick1Khz) {
+			static uint16_t counter = 0;
+			tick1Khz = false;
+			if (bcCheck()) {
+				if (bcPressed(0) && bcTick(0)) {
+					if (!in_menu) menu_enter();
+					else menu_exit(false); 
+				}
+			}
+			lcd_process();
+			menu_tick1000hz();
+		}
 		
 		__WFI();
 		// USB is fully based off interrupts,
@@ -86,6 +109,7 @@ EXTERNC int musia_main(void) {
 }
 
 void sysInit() {
+	__HAL_DBGMCU_UNFREEZE_IWDG();
 	// initialize HAL instances that we elected for CubeMX not to initialize
 	hspi1.Instance = SPI1;
 	hspi2.Instance = SPI2;
@@ -106,13 +130,17 @@ void sysInit() {
 
 	// set green led
 	HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_SET);
+
+	// lcd backlight on
+	HAL_GPIO_WritePin(LCD_PWM_GPIO_Port, LCD_PWM_Pin, GPIO_PIN_SET);
+
+	lcd_setup();
 }
 
 bool validateConfig() {
-	ee.data->allowVibrate &= 0x01;
 	ee.data->mode = (musia_mode)((int)(ee.data->mode) & 0x01);
 	if (ee.data->pollFreq != 25  && ee.data->pollFreq != 30 &&
-		ee.data->pollFreq != 50 	&& ee.data->pollFreq != 60 &&
+		ee.data->pollFreq != 50  && ee.data->pollFreq != 60 &&
 		ee.data->pollFreq != 100 && ee.data->pollFreq != 120) {
 		
 		ee.data->pollFreq = 60;
@@ -140,7 +168,7 @@ void applyConfig() {
 	else {
 		poller.init();
 		poller.start(static_cast<polling_freq>(ee.data->pollFreq));
-		current_mode = MODE_SNIFFER;
+		current_mode = MODE_POLLER;
 	}
 }
 
@@ -171,6 +199,7 @@ void handleSnifferPacket() {
 		resyncDetect = 0;
 		resyncFail = 0;
 		usbJoy.updateState(&ps2State);
+		menu_packet(&ps2State);
 	}
 	
 	upd->isNew = false;
@@ -204,6 +233,7 @@ void handlePollerPacket() {
 		resyncDetect = 0;
 		resyncFail = 0;
 		usbJoy.updateState(&ps2State);
+		menu_packet(&ps2State);
 	}
 	upd->isNew = false;
 	prevWasValid = validPacket;
@@ -262,4 +292,8 @@ EXTERNC void setEEPROMConfig(const uint8_t* buffer) {
 }
 EXTERNC void getEEPROMConfig(uint8_t* buffer, uint8_t buffSize) {
 	memcpy(buffer, ee.eepBuf, std::min((uint8_t)EEPROM_SIZE, buffSize));
+}
+
+EXTERNC void HAL_SYSTICK_Callback() {
+	tick1Khz = true;
 }

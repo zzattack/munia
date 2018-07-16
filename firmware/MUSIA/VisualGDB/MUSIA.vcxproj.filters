@@ -643,23 +643,26 @@
     <ClCompile Include="..\CubeMX\Src\system_stm32f0xx.c">
       <Filter>CubeMX</Filter>
     </ClCompile>
-    <ClCompile Include="..\CubeMX\Src\usart.c">
-      <Filter>CubeMX</Filter>
-    </ClCompile>
     <ClCompile Include="..\bootloader_helper.c">
-      <Filter>Source files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\forcefeedback.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
     <ClCompile Include="..\CubeMX\Src\tim.c">
       <Filter>CubeMX</Filter>
     </ClCompile>
+    <ClCompile Include="..\lcd.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\circular_buffer.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\menu.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\buttonchecker.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\config.h">
-      <Filter>Header files</Filter>
-    </ClInclude>
     <ClInclude Include="..\musia.h">
       <Filter>Header files</Filter>
     </ClInclude>
@@ -723,9 +726,6 @@
     <ClInclude Include="..\CubeMX\Inc\stm32f0xx_it.h">
       <Filter>CubeMX</Filter>
     </ClInclude>
-    <ClInclude Include="..\CubeMX\Inc\usart.h">
-      <Filter>CubeMX</Filter>
-    </ClInclude>
     <ClInclude Include="..\ps2_packet.h">
       <Filter>Header files</Filter>
     </ClInclude>
@@ -735,11 +735,23 @@
     <ClInclude Include="..\bootloader_helper.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="..\forcefeedback.h">
-      <Filter>Source files</Filter>
-    </ClInclude>
     <ClInclude Include="..\CubeMX\Inc\tim.h">
       <Filter>CubeMX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lcd.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\circular_buffer.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\menu.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\buttonchecker.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\config.h">
+      <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
