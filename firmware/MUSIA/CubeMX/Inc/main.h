@@ -49,6 +49,8 @@
 
 /* Private define ------------------------------------------------------------*/
 
+#define LCD_PWM_Pin GPIO_PIN_14
+#define LCD_PWM_GPIO_Port GPIOC
 #define PS2_VIBR_EN_Pin GPIO_PIN_15
 #define PS2_VIBR_EN_GPIO_Port GPIOC
 #define JPS2_ATT_Pin GPIO_PIN_0
