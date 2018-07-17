@@ -1,37 +1,81 @@
-{%  extends 'base.html' %}
+{% extends 'home/base.html' %}
 
 {% block content %}
-{% load static %}
+	{% load static %}
+	<main>
+		<section class="bg-image-hero center-tablet dark overlay-shape-03">
+			<div class=" -margin-bottom padding padding-top-tablet">
+				<div class="row max-width-l">
+					<div class="col-one-half middle">
+						<div>
+							<h1 class="hero">MUNIA.io</h1>
+							<p class="lead">Devices for capturing gamepad inputs for displaying on screen or stream.
+							</p>
+							<p>All designs, firmware and software are open source.</p>
+							<a href="http://github.com/zzattack/munia" class="button button-primary space-top" role="button">Github
+								project</a>
+						</div>
+					</div>
+					<div class="col-one-half middle">
+						<img src="{% static "img/content/code-illustration.png" %}" alt="Source code illustration">
+					</div>
+				</div>
+			</div>
 
-<section><div class="container">
-    <div class="row">
-        <div class="col-sm-12"><div class="elements--title"><h4>Input adapters</h4></div></div>
-        <div class="col-md-4 col-sm-6">
-            <div class="card card-1">
-                <div class="card__image"><img alt="Pic" src="{% static "img/small2.jpg" %}"></div>
-                <div class="card__body boxed bg--white">
-                    <div class="card__title"><h5>Capture videogame inputs</h5></div>
-                    <span><em>Show your inputs on screen or stream!</em></span>
-                    <p>Videogame input adapters can capture gamepad inputs and allow to them to be used for
-                    purposes such as playing in emulators, displaying them on your screen, capturing them
-                    for display on twitch, making video tutorials, or even mapping them to be used on
-                    unrelated videogame consoles.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 col-sm-6">
-            <div class="card card-1">
-                <div class="card__image"><img alt="Pic" src="{%  static "img/small1.jpg"  %}"></div>
-                <div class="card__body boxed bg--white">
-                    <div class="card__title"><h5>Console modifications</h5></div>
-                    <span><em>Get the most out of your consoles</em></span>
-                    <p>Most older and some recent consoles can be modified to expand their capacbilities.
-                    Mods can have purposes ranging from gaining the ability to run homebrew applications
-                    to improving the video output quality or adding new output methods entirely.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div></section>
+			<div class="padding"></div>
+
+			<div class="row margin-top max-width-l">
+				<div class="col-one-half">
+					<img class="rounded shadow-l" src="{% static "img/content/device.png" %}" alt="MUSIA device">
+				</div>
+				<div class="col-one-half middle">
+					<h3>Plug-and-play hardware</h3>
+					<p class="paragraph">All devices come with plug and play cables, so there's no need to splice
+						existing cables.
+						The USB device does not require custom drivers and all controllers can be used as input display
+						or as controller adapter. </p>
+				</div>
+			</div>
+
+			<div class="row margin-top max-width-l reverse-order">
+				<div class="col-one-half middle">
+					<h3>Fully customizable software</h3>
+					<p class="paragraph">The feature-packed accompanying software is heavily focused on performance and
+						image quality.
+						Using OpenGL rendering and scalable vector graphics, your skins couldn't look any better.</p>
+				</div>
+				<div class="col-one-half">
+					<img class="rounded shadow-l" src="{% static "img/content/munia.png" %}" alt="Software screenshot">
+				</div>
+			</div>
+
+			<div class="row margin-top max-width-l">
+				<div class="col-one-half">
+					<img class="rounded shadow-l" src="{% static "img/content/opensource.png" %}" alt="Editor">
+				</div>
+				<div class="col-one-half middle">
+					<h3>Open source designs</h3>
+					<p class="paragraph">All schematics, designs, firmware and software are available
+						on <a href="http://github.com/zzattack/munia">Github</a>.
+						It is entirely possible to build your own devices, alter functionality and the permissive MIT
+						license even allows reuse. </p>
+				</div>
+			</div>
+		</section>
+
+
+		<section class="bg-gradient-consoles -margin-bottom-2 overlay padding">
+			<div class="center dark max-width-l">
+				<h2>MUNIA input adapters are available for several retrogaming consoles.</h2>
+				<p class="paragraph">At present, adapters for the Super Nintendo, Nintendo 64, Gamecube and most
+					recently for the Sony Playstation 2 are available.
+					Expect to see adapters for other consoles in the future!</p>
+
+				<a href="/devices.html"><img class="rounded shadow-l margin-top" src="{% static "img/content/consoles.png" %}" alt="Supported consoles"></a>
+			</div>
+			<div class="padding"/>
+		</section>
+
+	</main>
 
 {% endblock %}
