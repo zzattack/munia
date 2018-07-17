@@ -35,9 +35,9 @@ namespace MUNIA.Controllers {
 
 		public static IEnumerable<MuniaController> ListDevices() {
 			var ldr = new HidDeviceLoader();
-
+			
 			// MUNIA devices with 0x1209 VID
-			foreach (var device in ldr.GetDevices(0x1209, 0x8843)) {
+			foreach (var device in ldr.GetDevices(0x1209)) {
 				if (device.ProductName == "NinHID NGC") {
 					yield return new MuniaNgc(device);
 				}
@@ -80,10 +80,10 @@ namespace MUNIA.Controllers {
 		public static IEnumerable<MuniaConfigInterface> GetMuniaConfigInterfaces() {
 			var ldr = new HidDeviceLoader();
 			var candidates = ldr.GetDevices(0x04d8, 0x0058)
-				.Union(ldr.GetDevices(0x1209, 0x8843));
+				.Union(ldr.GetDevices(0x1209));
 			foreach (HidDevice dev in candidates.Where(device => device.ProductName == "NinHID CFG"
-																|| device.GetMaxInputReportLength() == device.GetMaxOutputReportLength()
-																	&& device.GetMaxOutputReportLength() == 9))
+				|| device.GetMaxInputReportLength() == device.GetMaxOutputReportLength()
+					&& device.GetMaxOutputReportLength() == 9))
 				yield return new MuniaConfigInterface(dev);
 		}
 

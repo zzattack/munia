@@ -70,8 +70,21 @@ namespace MUNIA.Forms {
 						rbInputSNES.Checked = deviceInfo.Inputs.HasFlag(MuniaDeviceInfo.InputSources.SNES);
 					}
 				}
+				else if (deviceInfo.DevType == MuniaDeviceInfo.DeviceType.MuniaSNES) {
+					if (deviceInfo.Output == MuniaDeviceInfo.OutputMode.PC)
+						rbOutputPC.Checked = true;
+					else
+						rbOutputSNES.Checked = true;
+					ckbSNES.Checked = true;
+				}
+				else if (deviceInfo.DevType == MuniaDeviceInfo.DeviceType.MuniaN64) {
+					if (deviceInfo.Output == MuniaDeviceInfo.OutputMode.PC)
+						rbOutputPC.Checked = true;
+					else
+						rbOutputN64.Checked = true;
+					ckbN64.Checked = true;
+				}
 				else if (deviceInfo.DevType == MuniaDeviceInfo.DeviceType.MuniaNgc) {
-					// MUNIA-NGC
 					if (deviceInfo.Output == MuniaDeviceInfo.OutputMode.PC)
 						rbOutputPC.Checked = true;
 					else
@@ -129,22 +142,47 @@ namespace MUNIA.Forms {
 					}
 				}
 
+				else if (_deviceInfo.DevType == MuniaDeviceInfo.DeviceType.MuniaSNES) {
+					pnlInputsPC.Visible = true;
+					pnlInputs.Visible = false;
+
+					rbOutputPC.Enabled = true;
+					rbOutputSNES.Enabled = true;
+					rbOutputNGC.Enabled = false;
+					rbOutputN64.Enabled = false;
+
+					ckbSNES.Enabled = false; ckbSNES.Checked = true;
+					ckbN64.Enabled = ckbN64.Checked = false;
+					ckbNGC.Enabled = ckbNGC.Checked = false;
+				}
+
+
+				else if (_deviceInfo.DevType == MuniaDeviceInfo.DeviceType.MuniaN64) {
+					pnlInputsPC.Visible = true;
+					pnlInputs.Visible = false;
+
+					rbOutputPC.Enabled = true;
+					rbOutputN64.Enabled = true;
+					rbOutputNGC.Enabled = false;
+					rbOutputSNES.Enabled = false;
+
+					ckbSNES.Enabled = ckbSNES.Checked = false;
+					ckbN64.Enabled = false; ckbN64.Checked = true;
+					ckbNGC.Enabled = ckbNGC.Checked = false;
+				}
+
 				else if (_deviceInfo.DevType == MuniaDeviceInfo.DeviceType.MuniaNgc) {
-					// MUNIA-NGC
-					pnlInputs.Visible = true;
-					pnlInputsPC.Visible = false;
+					pnlInputsPC.Visible = true;
+					pnlInputs.Visible = false;
 
 					rbOutputPC.Enabled = true;
 					rbOutputNGC.Enabled = true;
 					rbOutputN64.Enabled = false;
 					rbOutputSNES.Enabled = false;
 
-					rbInputNGC.Checked = true;
-					rbInputNGC.Enabled = false;
-					rbInputN64.Enabled = false;
-					rbInputN64.Checked = false;
-					rbInputSNES.Enabled = false;
-					rbInputSNES.Checked = false;
+					ckbSNES.Enabled = ckbSNES.Checked = false;
+					ckbN64.Enabled = ckbN64.Checked = false;
+					ckbNGC.Enabled = false;  ckbNGC.Checked = true;
 				}
 
 			}

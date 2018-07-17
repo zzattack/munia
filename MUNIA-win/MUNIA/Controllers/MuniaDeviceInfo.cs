@@ -36,7 +36,7 @@ namespace MUNIA.Controllers {
 		public NGCMode NGC;
 		public enum SnesMode { SNES_MODE_SNES, SNES_MODE_PC, SNES_MODE_NGC };
 		public enum N64Mode { N64_MODE_N64, N64_MODE_PC };
-		public enum NGCMode { NGC_MODE_NGC, NGC_MODE_PC, NGC_MODE_N64 };
+		public enum NGCMode { NGC_MODE_NGC, NGC_MODE_PC };
 
 		public int VersionMajor;
 		public int VersionMinor;

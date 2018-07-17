@@ -185,8 +185,8 @@
 			// gbSettings
 			// 
 			this.gbSettings.Controls.Add(this.pnlOutput);
-			this.gbSettings.Controls.Add(this.pnlInputs);
 			this.gbSettings.Controls.Add(this.pnlInputsPC);
+			this.gbSettings.Controls.Add(this.pnlInputs);
 			this.gbSettings.Location = new System.Drawing.Point(9, 83);
 			this.gbSettings.Name = "gbSettings";
 			this.gbSettings.Size = new System.Drawing.Size(296, 85);
