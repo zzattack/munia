@@ -9,10 +9,6 @@
       <Configuration>Debug</Configuration>
       <Platform>VisualGDB</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|VisualGDB">
-      <Configuration>Release</Configuration>
-      <Platform>VisualGDB</Platform>
-    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -31,10 +27,6 @@
     <GenerateHexFile>true</GenerateHexFile>
     <GenerateBinFile>false</GenerateBinFile>
   </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|VisualGDB'">
-    <MCUPropertyListFile>$(ProjectDir)stm32.props</MCUPropertyListFile>
-    <GenerateHexFile>true</GenerateHexFile>
-  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
@@ -48,10 +40,6 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug-072|VisualGDB'">
     <GNUConfigurationType>Debug</GNUConfigurationType>
-    <ToolchainID>com.visualgdb.arm-eabi</ToolchainID>
-    <ToolchainVersion>7.2.0/8.0.1/r3</ToolchainVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|VisualGDB'">
     <ToolchainID>com.visualgdb.arm-eabi</ToolchainID>
     <ToolchainVersion>7.2.0/8.0.1/r3</ToolchainVersion>
   </PropertyGroup>
@@ -104,22 +92,6 @@
       <InstructionSet>THUMB</InstructionSet>
     </ToolchainSettingsContainer>
     <ToolchainSettingsContainer />
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|VisualGDB'">
-    <ClCompile>
-      <AdditionalIncludeDirectories>..;../EEPROM;../CubeMX/Inc;../USB;../USB/Device;../USB/Interfaces;../USB/Lib/Inc;../USB/XPD;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG=1;RELEASE=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ForcedIncludeFiles>..\retarget.h</ForcedIncludeFiles>
-      <Optimization>Os</Optimization>
-      <LinkTimeOptimization>true</LinkTimeOptimization>
-      <InlineFunctions>true</InlineFunctions>
-    </ClCompile>
-    <Link>
-      <AdditionalLinkerInputs>;%(Link.AdditionalLinkerInputs)</AdditionalLinkerInputs>
-      <LibrarySearchDirectories>;%(Link.LibrarySearchDirectories)</LibrarySearchDirectories>
-      <AdditionalLibraryNames>;%(Link.AdditionalLibraryNames)</AdditionalLibraryNames>
-      <LinkerScript />
-    </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
   </ItemGroup>
@@ -359,6 +331,6 @@
     <ClInclude Include="..\USB\XPD\xpd_usb.h" />
     <ClInclude Include="..\USB\XPD\xpd_usb_wrapper.h" />
     <ClInclude Include="..\USB\XPD\xpd_utils.h" />
-    <ClCompile Include="$(BSP_ROOT)\STM32F0xxxx\StartupFiles\startup_stm32f072xb.c" />
+    <ClCompile Include="$(BSP_ROOT)\STM32F0xxxx\StartupFiles\startup_stm32f042x6.c" />
   </ItemGroup>
 </Project>

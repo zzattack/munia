@@ -9,15 +9,12 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|VisualGDB = Debug|VisualGDB
 		Debug-072|VisualGDB = Debug-072|VisualGDB
-		Release|VisualGDB = Release|VisualGDB
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{F9B71E82-BCCE-4DB0-9CDA-7DD3F353233A}.Debug|VisualGDB.ActiveCfg = Debug|VisualGDB
 		{F9B71E82-BCCE-4DB0-9CDA-7DD3F353233A}.Debug|VisualGDB.Build.0 = Debug|VisualGDB
 		{F9B71E82-BCCE-4DB0-9CDA-7DD3F353233A}.Debug-072|VisualGDB.ActiveCfg = Debug-072|VisualGDB
 		{F9B71E82-BCCE-4DB0-9CDA-7DD3F353233A}.Debug-072|VisualGDB.Build.0 = Debug-072|VisualGDB
-		{F9B71E82-BCCE-4DB0-9CDA-7DD3F353233A}.Release|VisualGDB.ActiveCfg = Release|VisualGDB
-		{F9B71E82-BCCE-4DB0-9CDA-7DD3F353233A}.Release|VisualGDB.Build.0 = Release|VisualGDB
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
