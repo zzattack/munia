@@ -95,7 +95,7 @@ void lcd_int(int value, uint8_t width, char fill, BOOL right) {
 
 void lcd_process() {
 	if (lcd_startupTimer > 0) {
-		// timer is initialized at 300, which blocks lcd ops during the first 300ms
+		// timer is initialized at 200, which blocks lcd ops during the first 200ms
 		if (lcd_startupTimer == 20) {
 			sendPortHigh(0b00110000); // set interface to 8-bit for proper init
 		} 
