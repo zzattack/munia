@@ -451,7 +451,7 @@ namespace MUNIA.Forms {
 		}
 
 		private void SelectRemap(ColorRemap remap) {
-			if (ConfigManager.ActiveSkin is SvgSkin svg) {
+			if (remap != null && ConfigManager.ActiveSkin is SvgSkin svg) {
 				svg.ApplyRemap(remap);
 				ConfigManager.SelectedRemaps[svg] = remap;
 				// force redraw of the base
