@@ -33,7 +33,6 @@ DATABASES = {
 		'ENGINE': 'django.db.backends.sqlite3',
 		'NAME': os.path.join('./', 'munia_io.db'),
 	}
-
 }
 
 # Application definition
