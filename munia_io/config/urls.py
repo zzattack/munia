@@ -18,15 +18,11 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 import adapters.urls
-import consoles.urls
-import repros.urls
 import tool.urls
 import home.urls
 
 urlpatterns = [
     url(r'^(?:adapters|munia)/', include(adapters.urls)),
-    url(r'^consoles/', include(consoles.urls)),
-    url(r'^repros/', include(repros.urls)),
     url(r'^tool/', include(tool.urls)),
     url(r'^admin/', admin.site.urls),
     url(r'^', include(home.urls)),
