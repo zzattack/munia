@@ -1,7 +1,8 @@
-
+venv
 *.pyc
 /*.suo
 python*.core
-munia/settings.py
 static/*
 media/*
+munia/settings_dev.py
+/munia_io.db  # dev db
