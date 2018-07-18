@@ -22,16 +22,34 @@
 
 						<ul id="device" class="cd-faq-group blank">
 							<li class="cd-faq-title"><h2>Device</h2></li>
+
 							<li class="content-visible">
-								<a class="cd-faq-trigger" href="#0">How does this product compare to an Arduino?</a>
-								<div class="cd-faq-content content-visible">Favorably. Benefits include not having to
-									splice any cables,
-									the device showing up as HID device on your computer, superior software, more stable
-									firmware, ability
-									to use the controller on our PC in e.g. emulators and better 3rd party controller
-									support. In the end,
-									though, both work and the MUNIA software also supports inputs from Arduino-based
-									NintendoSpy devices!
+								<a class="cd-faq-trigger" href="#0">Does use of this product incur input lag?</a>
+								<div class="cd-faq-content content-visible">No. All MUNIA devices <em>tap</em> the
+									controller signals but do not interrupt them. Theoretically the device could
+									block the connection between console and controller entirely, but it will never
+									modify or delay the contents of the packets being transmitted. This means the
+									device is both safe for competitive play and its use is permitted in all speedrun
+									communities.
+								</div>
+							</li>
+
+							<li>
+								<a class="cd-faq-trigger" href="#0">Do you offer warranty on the devices?</a>
+								<div class="cd-faq-content">Full 1-year carry-in warranty is provided for any hardware defects.
+									If unforeseen incompatibilities are found I make every effort to add support for your setup,
+									which after applying a firmware update might become supported. When in doubt whether
+									your exotic setup will be supported, please contact me first.
+								</div>
+							</li>
+
+							<li>
+								<a class="cd-faq-trigger" href="#0">How does this product compare to NintendoSpy?</a>
+								<div class="cd-faq-content">Favorably. Benefits include not having to
+									splice any cables, the device showing up as HID device on your computer, superior
+									software, more stable firmware, ability to use the controller on your PC in e.g.
+									emulators and better 3rd party controller support. In the end, though, both work
+									and the MUNIA software also supports inputs from Arduino-based NintendoSpy devices!
 								</div>
 							</li>
 
@@ -39,6 +57,7 @@
 								<a class="cd-faq-trigger" href="#0">Will you support console ‘X’?</a>
 								<div class="cd-faq-content">Unless mentioned on the index page, the likely answer is no.
 									The newer the console, the less likely it is we are able to tap into their signals.
+									Especially USB or wireless controllers are unlikely to happen.
 								</div>
 							</li>
 
@@ -55,19 +74,36 @@
 								<div class="cd-faq-content">Yes! The NintendoSpy/Arduino solution outputs the ones and zeroes on the
 									controller line over a serial port to the PC. The MUNIA software can parse these packets
 									and use them to animate SNES, N64 and Gamecube skins. This is not as powerful as the USB HID device
-									as which the MUNIA presents itself.
+									as which the MUNIA presents itself, but at least it works well enough with official controllers.
 								</div>
 							</li>
 						</ul>
 
 						<ul id="software" class="cd-faq-group blank">
 							<li class="cd-faq-title"><h2>Software</h2></li>
+
 							<li>
-								<a class="cd-faq-trigger" href="#0">Do you offer warranty on the devices?</a>
-								<div class="cd-faq-content">Full 1-year carry-in warranty is provided for any hardware defects.
-									If unforeseen incompatibilities are found I make every effort to add support for your setup,
-									which after applying a firmware update might become supported. When in doubt whether
-									your exotic setup will be supported, please contact me first.
+								<a class="cd-faq-trigger" href="#0">Can I customize the built-in skins?</a>
+								<div class="cd-faq-content">Yes, in two ways. The software has a built-in color theming
+									engine which allows you to specify the fill and stroke for all components that are
+									part of an existing skin. This is a convenient and simple way of recoloring existing
+									skins and quickly making multiple themes for them.
+									<img src="{% static "img/content/remap_engine.png" %}" alt="Theming engine">
+									<p></p>
+									A more powerful way that gives you full control over the look of your skin
+										is to use a vector graphics editing program such as Adobe Illustrator
+										or Inkscape. Both will let you fully modify every aspect of the skin.
+								</div>
+							</li>
+
+							<li>
+								<a class="cd-faq-trigger" href="#0">How do I show my inputs with OBS?</a>
+								<div class="cd-faq-content">The preferred way is to use a <em>Game Capture</em> source in
+									OBS. This allows you to use proper transparency without setting a colorkey, and its
+									the most efficient method of capturing since MUNIA is rendered using OpenGL.
+									Unfortunately there are reports of Game Capture mode not working in OBS in which
+									case resorting to Window Capture is a workable solution, but you should first
+									attempt to make Game Capture work!
 								</div>
 							</li>
 
@@ -80,8 +116,11 @@
 							</li>
 
 							<li>
-								<a class="cd-faq-trigger" href="#0">Can I customize the built-in skins?</a>
-								<div class="cd-faq-content">Yes, in two ways. The software has a built-in
+								<a class="cd-faq-trigger" href="#0">Are there any alternatives to the accompanying software?</a>
+								<div class="cd-faq-content">Since the MUNIA devices present themselves to the PC as USB HID
+									gamepads, any software that takes inputs from such controllers will work. Known alternatives
+									are <a href="https://gamepadviewer.com">gamepadviewer.com</a> and
+									<a href="https://github.com/lifning/padpyght">padpyght</a>.
 								</div>
 							</li>
 
@@ -91,7 +130,8 @@
 									identifying varying parts of the controller. Any controller that identifies itself
 									as a USB HID device can be supported with a custom skin. You can draw skins with
 									vector graphics editing programs such as Adobe Illustrator or Inkscape.
-									A <a href="https://github.com/zzattack/munia/blob/master/SKINS.md">reference guide</a>
+									A
+									<a href="https://github.com/zzattack/munia/blob/master/SKINS.md">reference guide</a>
 									for making skins compatible with your controller can be found on the Github project pages.
 								</div>
 							</li>
@@ -104,7 +144,7 @@
 								<a class="cd-faq-trigger" href="#0">What does ‘MUNIA’ mean?</a>
 								<div class="cd-faq-content">The very first iteration of the device supported SNES, N64
 									and NGC simultaneously. The acronym was for ‘Multi-use Nintendo Input Adapter’.
-									Both the Multi-use and Nintendo parts no longer apply to most of our devices,
+									Both the Multi-use and Nintendo parts no longer apply universally,
 									so we’ve parted with the acronym but kept the pretty name.
 								</div>
 							</li>
@@ -115,8 +155,8 @@
 
 
 			</div>
-	<div class="padding"></div>
-	<div class="padding"></div>
+			<div class="padding"></div>
+			<div class="padding"></div>
 		</section>
 
 	</main>
