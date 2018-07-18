@@ -1,8 +1,91 @@
 {% extends "home/base.html" %}
-
+{% load static %}
 
 {% block content %}
+	<main>
+		<section class="bg-image-hero center-tablet dark overlay-shape-03 full-screen">
+			<div class="-margin-bottom padding padding-top-tablet">
 
-	devices
+				<div class="center max-width-l">
+					<h1 class="hero">Pick your device</h1>
+				</div>
+
+				<div class="row margin-top max-width-l">
+					<div class="col-one-third card card-content dark flex-column">
+						<h2>MUNIA</h2>
+						<p>The original, for NGC, N64 and SNES</p>
+						<h3>
+							<span class="pricing-price">€70</span>
+						</h3>
+						<p class="paragraph">Powerful input display for 3 iconic Nintendo systems</p>
+						<ul class="space-bottom">
+							<li>Plug-and-play input viewer</li>
+							<li>Cross-device mode</li>
+							<small>Play Gamecube with your SNES controller,
+								N64 with your Gamecube controller, etc.!
+							</small>
+							<li>Use gamepads with emulators in PC mode</li>
+							<li>Built-in LCD for configuration</li>
+						</ul>
+						<object data="{% static "img/content/munia_device.svg" %}" type="image/svg+xml">
+							<img src="{% static "img/content/munia_device.jpg" %}"/>
+						</object>
+
+						<div style="flex-grow: 1;"></div>
+						<a href="#munia" class="button button-secondary full-width space-top" role="button">More info</a>
+					</div>
+
+					<div class="col-one-third card card-content dark flex-column">
+						<h2>MUSIA</h2>
+						<p>World's first PS2 input display</p>
+						<h3>
+							<span class="pricing-price">€55</span>
+						</h3>
+
+						<p class="paragraph">The first and only device capable of showing PS2 inputs on stream</p>
+						<ul class="space-bottom">
+							<li>Plug-and-play input viewer</li>
+							<li>Built-in LCD for configuration</li>
+							<li>Powerful 32-bit microcontroller</li>
+							<li>Ability to use controller on PC with emulators</li>
+						</ul>
+
+						<object data="{% static "img/content/munia_device.svg" %}" type="image/svg+xml">
+							<img src="{% static "img/content/munia_device.jpg" %}"/>
+						</object>
+
+						<div style="flex-grow: 1;"></div>
+						<a href="#musia" class="button button-secondary full-width space-top" role="button">More info</a>
+					</div>
+
+
+					<div class="col-one-third card card-content dark flex-column">
+						<h2>MUNIA-N64</h2>
+						<p>Nintendo 64 input display/switch</p>
+						<h3>
+							<span class="pricing-price">€40</span>
+						</h3>
+
+						<p class="paragraph">Input display, controller adapter and built-in switch</p>
+						<ul class="space-bottom">
+							<li>Plug-and-play input viewer</li>
+							<li>Connect 2 controllers</li>
+							<small>Easily switch between original and Hori mini controller. SM64 players will know!</small>
+							<li>Ability to use controller on PC with emulators</li>
+						</ul>
+
+						<object data="{% static "img/content/munia_device.svg" %}" type="image/svg+xml">
+							<img src="{% static "img/content/munia_device.jpg" %}"/>
+						</object>
+
+						<div style="flex-grow: 1;"></div>
+						<a style="vertical-align: bottom;" href="#musia" class="button button-secondary full-width" role="button">More info</a>
+					</div>
+
+				</div>
+			</div>
+		</section>
+	</main>
+
 
 {% endblock %}

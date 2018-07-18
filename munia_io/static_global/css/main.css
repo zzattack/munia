@@ -1646,10 +1646,13 @@ p:last-child {
 	}
 }
 
+.flex-column {
+	display: flex;
+	flex-direction: column;
+}
+
 /* -----------------------------------------------------------------------------
-
 # Components - Footer
-
 ----------------------------------------------------------------------------- */
 .footer-main a:not(.button) {
 	font-size: 0.875rem;
