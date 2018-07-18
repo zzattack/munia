@@ -4,5 +4,5 @@ venv
 python*.core
 static/*
 media/*
-munia/settings_dev.py
+munia/settings_settings.py
 /munia_io.db  # dev db
