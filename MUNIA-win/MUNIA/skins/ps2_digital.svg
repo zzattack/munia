@@ -1,123 +1,109 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg xmlns:munia="http://www.munia.io/namespaces/munia" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" version="1.1" id="ps2-controller" x="0px" y="0px" width="731.82" height="321.498" viewBox="-0.1 0 731.82 321.498" xml:space="preserve" sodipodi:docname="ps2_compact.svg" inkscape:version="0.92.3 (2405546, 2018-03-11)"><metadata id="metadata99"><rdf:RDF><cc:Work rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title>MUNIA PS2 controller skin - compact</dc:title></cc:Work></rdf:RDF></metadata><defs id="defs97" /><sodipodi:namedview pagecolor="#ffffff" bordercolor="#666666" borderopacity="1" objecttolerance="10" gridtolerance="10" guidetolerance="10" inkscape:pageopacity="0" inkscape:pageshadow="2" inkscape:window-width="1920" inkscape:window-height="1147" id="namedview95" showgrid="false" inkscape:zoom="0.613197" inkscape:cx="534.583" inkscape:cy="78.4556" inkscape:window-x="1072" inkscape:window-y="147" inkscape:window-maximized="1" inkscape:current-layer="controller" />
-	<title id="title194">MUNIA PS2 controller skin - digital</title>
-	<munia:info munia:skin-name="PlayStation 2 - compact" munia:device-type="PS2" />
+<svg xmlns:munia="http://www.munia.io/namespaces/munia" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" viewBox="-0.1 0 731.82 321.498" height="321.498" width="731.82" y="0px" x="0px" id="ps2-controller" version="1.1">
+	<munia:info munia:device-type="PS2" munia:skin-name="PlayStation 2 - digital" />
+	<g id="controller" transform="translate(-113.471,-122.218)">
+		<path d="m 131.745,124.613 c -8.561,0 -15.979,4.823 -15.979,11.254 v 294.202 c 0,6.029 6.848,11.253 15.979,11.253 h 695.076 c 8.557,0 15.976,-4.823 15.976,-11.253 V 135.867 c 0,-6.029 -6.851,-11.254 -15.976,-11.254 -236.282,4.759 -459.357,0 -695.076,0 z" style="fill:#3f3f3f;stroke:black;stroke-width:4.78915;stroke-linecap:round;stroke-linejoin:round;fill-opacity:0.361809" id="back-base" />
+		<g transform="matrix(5.34872,0,0,-2.90785,58.646,377.11)" id="triggers">
+			<g transform="translate(2.24352,1.37559)" munia:button-id="8" munia:button-state="pressed" id="L1-hl">
+				<rect rx="0.747842" ry="1.37559" id="rect1782" height="10" width="20" y="55" x="53" style="display:inline;fill:#ccc;stroke:#f4f4f4;stroke-width:0.19779" />
+				<text transform="scale(0.726692,-1.3761)" id="text1861" y="-41.26" x="82.3205" style="font-style:normal;font-weight:normal;font-size:6.810942px;line-height:9.12181px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:white;fill-opacity:1;stroke:none;stroke-width:0.364872px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" xml:space="preserve">
+					<tspan style="font-size:6.810942px;fill:white;stroke-width:0.364872px" y="-41.26" x="82.3205" id="tspan1859">L1</tspan>
+				</text>
 
-	<g transform="translate(-113.471,-122.218)" id="controller">
-		<path id="back-base" style="fill:#3f3f3f;stroke:black;stroke-width:4.78915;stroke-linecap:round;stroke-linejoin:round;fill-opacity:0.361809" d="m 131.745,124.613 c -8.561,0 -15.979,4.823 -15.979,11.254 v 294.202 c 0,6.029 6.848,11.253 15.979,11.253 h 695.076 c 8.557,0 15.976,-4.823 15.976,-11.253 V 135.867 c 0,-6.029 -6.851,-11.254 -15.976,-11.254 -236.282,4.759 -459.357,0 -695.076,0 z" inkscape:connector-curvature="0" />
-		<g id="triggers" transform="matrix(5.34872,0,0,-2.90785,58.646,377.11)">
+			</g><g transform="translate(2.24352,1.37559)" munia:button-id="8" munia:button-state="released" id="L1">
+				<rect rx="0.747842" ry="1.37559" id="rect1785" height="10" width="20" y="55" x="53" style="display:inline;fill:#555;stroke:black;stroke-width:0.19779" />
+				<text transform="scale(0.726692,-1.3761)" id="text1882" y="-41.26" x="82.3205" style="font-style:normal;font-weight:normal;font-size:6.810942px;line-height:9.12181px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:white;fill-opacity:1;stroke:none;stroke-width:0.364872px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" xml:space="preserve">
+					<tspan style="font-size:6.810942px;fill:white;stroke-width:0.364872px" y="-41.26" x="82.3205" id="tspan1880">L1</tspan>
+				</text>
 
-			<g id="L1-hl" munia:button-state="pressed" munia:button-id="8" transform="translate(2.24352,1.37559)">
-				<rect style="display:inline;fill:#ccc;stroke:#f4f4f4;stroke-width:0.19779" x="53" y="55" width="20" height="10" id="rect1782" ry="1.37559" rx="0.747842" />
-				<text xml:space="preserve" style="font-style:normal;font-weight:normal;font-size:6.810942px;line-height:9.12181px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:white;fill-opacity:1;stroke:none;stroke-width:0.364872px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" x="82.3205" y="-41.26" id="text1861" transform="scale(0.726692,-1.3761)"><tspan id="tspan1859" x="82.3205" y="-41.26" style="font-size:6.810942px;fill:white;stroke-width:0.364872px">L1</tspan></text>
+			</g><g transform="translate(-2.24352,1.37559)" munia:button-id="9" munia:button-state="pressed" id="R1-hl">
+				<rect rx="0.747842" ry="1.37559" id="rect1788" height="10" width="20" y="55" x="83" style="display:inline;fill:#ccc;stroke:#f4f4f4;stroke-width:0.19779" />
+				<text transform="scale(0.726692,-1.3761)" id="text1888" y="-41.26" x="123.923" style="font-style:normal;font-weight:normal;font-size:6.810942px;line-height:9.12181px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:white;fill-opacity:1;stroke:none;stroke-width:0.364872px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" xml:space="preserve">
+					<tspan style="font-size:6.810942px;fill:white;stroke-width:0.364872px" y="-41.26" x="123.923" id="tspan1886">R1</tspan>
+				</text>
 
+			</g><g transform="translate(-2.24352,1.37559)" munia:button-id="9" munia:button-state="released" id="R1">
+				<rect rx="0.747842" ry="1.37559" id="rect1791" height="10" width="20" y="55" x="83" style="display:inline;fill:#555;stroke:black;stroke-width:0.19779" />
+				<text transform="scale(0.726692,-1.3761)" id="text1894" y="-41.26" x="123.923" style="font-style:normal;font-weight:normal;font-size:6.810942px;line-height:9.12181px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:white;fill-opacity:1;stroke:none;stroke-width:0.364872px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" xml:space="preserve">
+					<tspan style="font-size:6.810942px;fill:white;stroke-width:0.364872px" y="-41.26" x="123.923" id="tspan1892">R1</tspan>
+				</text>
 
-			</g>
+			</g><g transform="translate(2.24352,-1.37559)" munia:button-id="10" munia:button-state="pressed" id="L2-hl">
+				<rect rx="0.747842" ry="1.37559" id="rect1794" height="10" width="20" y="72" x="53" style="display:inline;fill:#ccc;stroke:#f4f4f4;stroke-width:0.19779" />
+				<text transform="scale(0.726692,-1.3761)" id="text1900" y="-53.6649" x="82.3205" style="font-style:normal;font-weight:normal;font-size:6.810942px;line-height:9.12181px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:white;fill-opacity:1;stroke:none;stroke-width:0.364872px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" xml:space="preserve">
+					<tspan style="font-size:6.810942px;fill:white;stroke-width:0.364872px" y="-53.6649" x="82.3205" id="tspan1898">L2</tspan>
+				</text>
 
-			<g id="L1" munia:button-state="released" munia:button-id="8" transform="translate(2.24352,1.37559)"> 
-				<rect style="display:inline;fill:#555;stroke:black;stroke-width:0.19779" x="53" y="55" width="20" height="10" id="rect1785" ry="1.37559" rx="0.747842" />
-				<text xml:space="preserve" style="font-style:normal;font-weight:normal;font-size:6.810942px;line-height:9.12181px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:white;fill-opacity:1;stroke:none;stroke-width:0.364872px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" x="82.3205" y="-41.26" id="text1882" transform="scale(0.726692,-1.3761)"><tspan id="tspan1880" x="82.3205" y="-41.26" style="font-size:6.810942px;fill:white;stroke-width:0.364872px">L1</tspan></text>
+			</g><g transform="translate(2.24352,-1.37559)" munia:button-id="10" munia:button-state="released" id="L2" style="display:inline">
+				<rect rx="0.747842" ry="1.37559" id="rect1797" height="10" width="20" y="72" x="53" style="display:inline;fill:#555;stroke:black;stroke-width:0.19779" />
+				<text transform="scale(0.726692,-1.3761)" id="text1906" y="-53.6649" x="82.3205" style="font-style:normal;font-weight:normal;font-size:6.810942px;line-height:9.12181px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:white;fill-opacity:1;stroke:none;stroke-width:0.364872px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" xml:space="preserve">
+					<tspan style="font-size:6.810942px;fill:white;stroke-width:0.364872px" y="-53.6649" x="82.3205" id="tspan1904">L2</tspan>
+				</text>
 
+			</g><g transform="translate(-2.24352,-1.37559)" munia:button-id="11" munia:button-state="pressed" id="R2-hl" style="display:inline">
+				<rect ry="1.37559" rx="0.747842" id="rect1800" height="10" width="20" y="72" x="83" style="display:inline;fill:#ccc;stroke:#f4f4f4;stroke-width:0.19779" />
+				<text transform="scale(0.726692,-1.3761)" id="text1912" y="-53.6649" x="123.923" style="font-style:normal;font-weight:normal;font-size:6.810942px;line-height:9.12181px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:white;fill-opacity:1;stroke:none;stroke-width:0.364872px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" xml:space="preserve">
+					<tspan style="font-size:6.810942px;fill:white;stroke-width:0.364872px" y="-53.6649" x="123.923" id="tspan1910">R2</tspan>
+				</text>
 
-			</g>
-
-			<g id="R1-hl" munia:button-state="pressed" munia:button-id="9" transform="translate(-2.24352,1.37559)"> 
-				<rect style="display:inline;fill:#ccc;stroke:#f4f4f4;stroke-width:0.19779" x="83" y="55" width="20" height="10" id="rect1788" ry="1.37559" rx="0.747842" />
-				<text xml:space="preserve" style="font-style:normal;font-weight:normal;font-size:6.810942px;line-height:9.12181px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:white;fill-opacity:1;stroke:none;stroke-width:0.364872px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" x="123.923" y="-41.26" id="text1888" transform="scale(0.726692,-1.3761)"><tspan id="tspan1886" x="123.923" y="-41.26" style="font-size:6.810942px;fill:white;stroke-width:0.364872px">R1</tspan></text>
-
-
-			</g>
-
-			<g id="R1" munia:button-state="released" munia:button-id="9" transform="translate(-2.24352,1.37559)"> 
-				<rect style="display:inline;fill:#555;stroke:black;stroke-width:0.19779" x="83" y="55" width="20" height="10" id="rect1791" ry="1.37559" rx="0.747842" />
-				<text xml:space="preserve" style="font-style:normal;font-weight:normal;font-size:6.810942px;line-height:9.12181px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:white;fill-opacity:1;stroke:none;stroke-width:0.364872px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" x="123.923" y="-41.26" id="text1894" transform="scale(0.726692,-1.3761)"><tspan id="tspan1892" x="123.923" y="-41.26" style="font-size:6.810942px;fill:white;stroke-width:0.364872px">R1</tspan></text>
-
-
-			</g>
-
-			<g id="L2-hl" munia:button-state="pressed" munia:button-id="10" transform="translate(2.24352,-1.37559)"> 
-				<rect style="display:inline;fill:#ccc;stroke:#f4f4f4;stroke-width:0.19779" x="53" y="72" width="20" height="10" id="rect1794" ry="1.37559" rx="0.747842" />
-				<text xml:space="preserve" style="font-style:normal;font-weight:normal;font-size:6.810942px;line-height:9.12181px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:white;fill-opacity:1;stroke:none;stroke-width:0.364872px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" x="82.3205" y="-53.6649" id="text1900" transform="scale(0.726692,-1.3761)"><tspan id="tspan1898" x="82.3205" y="-53.6649" style="font-size:6.810942px;fill:white;stroke-width:0.364872px">L2</tspan></text>
-
-
-			</g>
-
-			<g style="display:inline" id="L2" munia:button-state="released" munia:button-id="10" transform="translate(2.24352,-1.37559)"> 
-				<rect style="display:inline;fill:#555;stroke:black;stroke-width:0.19779" x="53" y="72" width="20" height="10" id="rect1797" ry="1.37559" rx="0.747842" />
-				<text xml:space="preserve" style="font-style:normal;font-weight:normal;font-size:6.810942px;line-height:9.12181px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:white;fill-opacity:1;stroke:none;stroke-width:0.364872px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" x="82.3205" y="-53.6649" id="text1906" transform="scale(0.726692,-1.3761)"><tspan id="tspan1904" x="82.3205" y="-53.6649" style="font-size:6.810942px;fill:white;stroke-width:0.364872px">L2</tspan></text>
-
-
-			</g>
-
-			<g style="display:inline" id="R2-hl" munia:button-state="pressed" munia:button-id="11" transform="translate(-2.24352,-1.37559)"> 
-				<rect style="display:inline;fill:#ccc;stroke:#f4f4f4;stroke-width:0.19779" x="83" y="72" width="20" height="10" id="rect1800" ry="1.37559" rx="747.842" />
-				<text xml:space="preserve" style="font-style:normal;font-weight:normal;font-size:6.810942px;line-height:9.12181px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:white;fill-opacity:1;stroke:none;stroke-width:0.364872px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" x="123.923" y="-53.6649" id="text1912" transform="scale(0.726692,-1.3761)"><tspan id="tspan1910" x="123.923" y="-53.6649" style="font-size:6.810942px;fill:white;stroke-width:0.364872px">R2</tspan></text>
-
+			</g><g transform="translate(-2.24352,-1.37559)" munia:button-id="11" munia:button-state="released" id="R2" style="display:inline">
+				<rect ry="1.37559" rx="0.747842" id="rect1803" height="10" width="20" y="72" x="83" style="display:inline;fill:#555;stroke:black;stroke-width:0.19779" />
+				<text transform="scale(0.726692,-1.3761)" id="text1918" y="-53.6649" x="123.923" style="font-style:normal;font-weight:normal;font-size:6.810942px;line-height:9.12181px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:white;fill-opacity:1;stroke:none;stroke-width:0.364872px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" xml:space="preserve">
+					<tspan style="font-size:6.810942px;fill:white;stroke-width:0.364872px" y="-53.6649" x="123.923" id="tspan1916">R2</tspan>
+				</text>
 
 			</g>
-
-			<g style="display:inline" id="R2" munia:button-state="released" munia:button-id="11" transform="translate(-2.24352,-1.37559)"> 
-				<rect style="display:inline;fill:#555;stroke:black;stroke-width:0.19779" x="83" y="72" width="20" height="10" id="rect1803" rx="0.747842" ry="1.37559" />
-				<text xml:space="preserve" style="font-style:normal;font-weight:normal;font-size:6.810942px;line-height:9.12181px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:white;fill-opacity:1;stroke:none;stroke-width:0.364872px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" x="123.923" y="-53.6649" id="text1918" transform="scale(0.726692,-1.3761)"><tspan id="tspan1916" x="123.923" y="-53.6649" style="font-size:6.810942px;fill:white;stroke-width:0.364872px">R2</tspan></text>
-
-
+		</g>		<g transform="translate(10.8353,-11.2941)" id="dpad">
+			<path id="dpad-base_1_" style="display:inline;fill:#262626;stroke-width:5.295069" d="m 219.217,144.458 c -7.917,0 -14.779,6.374 -14.779,14.873 v 78.082 h -77.066 c -7.918,0 -14.78,6.374 -14.78,14.873 v 82.332 c 0,7.967 6.335,14.873 14.78,14.873 h 77.594 v 78.082 c 0,7.967 6.334,14.873 14.779,14.873 h 82.344 c 7.918,0 14.252,-6.374 14.78,-14.873 v -78.082 h 77.594 c 7.917,0 14.779,-6.375 14.779,-14.873 v -82.863 c 0,-7.968 -6.334,-14.873 -14.779,-14.873 h -78.122 v -77.551 c 0,-7.968 -6.334,-14.873 -14.779,-14.873 z" />
+			<g style="display:inline" transform="matrix(5.27847,0,0,5.31172,241.382,-4619.58)" id="dpad-outer">
+				<path id="dpad-outer-up" style="fill:#3f3f3f" d="m 3.6,899.8 -3.8,3.6 h 7.6 z" />
+				<path id="dpad-outer-down" style="fill:#3f3f3f" d="m 3.6,949.9 -3.8,-3.6 h 7.6 z" />
+				<path id="dpad-outer-right" style="fill:#3f3f3f" d="m 28.7,924.9 -3.6,-3.8 v 7.6 z" />
+				<path id="dpad-outer-left" style="fill:#3f3f3f" d="m -21.4,924.9 3.6,-3.8 v 7.6 z" />
+			</g><g style="display:inline" transform="matrix(5.51434,0,0,5.63063,240.109,-4915.78)" id="dpad-buttons">
+				<path d="m 9.3,915.4 c 0,0.4 -0.2,0.7 -0.4,0.9 l -4.4,3.5 c -0.4,0.3 -1,0.3 -1.5,0 l -4.5,-3.5 C -1.8,916.1 -2,915.7 -2,915.4 v -8.1 c 0,-0.7 0.5,-1.2 1.2,-1.2 v 0 H 8 c 0.6,0 1.2,0.5 1.2,1.2 z" style="fill:#5a5a5a;stroke:#454545;stroke-linecap:round;stroke-linejoin:round" munia:button-state="released" munia:button-id="12" id="dpad-up" />
+				<path d="m 9.3,915.4 c 0,0.4 -0.2,0.7 -0.4,0.9 l -4.4,3.5 c -0.4,0.3 -1,0.3 -1.5,0 l -4.5,-3.5 C -1.8,916.1 -2,915.7 -2,915.4 v -8.1 c 0,-0.7 0.5,-1.2 1.2,-1.2 v 0 H 8 c 0.6,0 1.2,0.5 1.2,1.2 z" style="display:none;fill:#ddd;stroke:white;stroke-linecap:round;stroke-linejoin:round" munia:button-state="pressed" munia:button-id="12" id="dpad-up-hl" />
+				<path d="m 9.2,934.3 c 0,-0.4 -0.2,-0.7 -0.4,-0.9 l -4.4,-3.5 c -0.4,-0.3 -1,-0.3 -1.5,0 l -4.5,3.5 c -0.3,0.2 -0.5,0.6 -0.5,0.9 v 8.1 c 0,0.7 0.5,1.2 1.2,1.2 v 0 h 8.8 c 0.6,0 1.2,-0.5 1.2,-1.2 z" style="fill:#5a5a5a;stroke:#454545;stroke-linecap:round;stroke-linejoin:round" munia:button-state="released" munia:button-id="13" id="dpad_down" />
+				<path d="m 9.2,934.3 c 0,-0.4 -0.2,-0.7 -0.4,-0.9 l -4.4,-3.5 c -0.4,-0.3 -1,-0.3 -1.5,0 l -4.5,3.5 c -0.3,0.2 -0.5,0.6 -0.5,0.9 v 8.1 c 0,0.7 0.5,1.2 1.2,1.2 v 0 h 8.8 c 0.6,0 1.2,-0.5 1.2,-1.2 z" style="display:none;fill:#ddd;stroke:white;stroke-linecap:round;stroke-linejoin:round" munia:button-state="pressed" munia:button-id="13" id="dpad_down-hl" />
+				<path d="m -5.8,919.2 c 0.4,0 0.7,0.2 0.9,0.4 l 3.5,4.4 c 0.3,0.4 0.3,1 0,1.5 l -3.5,4.5 c -0.2,0.3 -0.6,0.5 -0.9,0.5 h -8.1 c -0.7,0 -1.2,-0.5 -1.2,-1.2 v 0 -8.8 c 0,-0.6 0.5,-1.2 1.2,-1.2 z" style="fill:#5a5a5a;stroke:#454545;stroke-linecap:round;stroke-linejoin:round" munia:button-state="released" munia:button-id="14" id="dpad-left" />
+				<path d="m -5.8,919.2 c 0.4,0 0.7,0.2 0.9,0.4 l 3.5,4.4 c 0.3,0.4 0.3,1 0,1.5 l -3.5,4.5 c -0.2,0.3 -0.6,0.5 -0.9,0.5 h -8.1 c -0.7,0 -1.2,-0.5 -1.2,-1.2 v 0 -8.8 c 0,-0.6 0.5,-1.2 1.2,-1.2 z" style="display:none;fill:#ddd;stroke:white;stroke-linecap:round;stroke-linejoin:round" munia:button-state="pressed" munia:button-id="14" id="dpad-left-hl" />
+				<path d="m 13.1,919.3 c -0.4,0 -0.7,0.2 -0.9,0.4 l -3.5,4.4 c -0.3,0.4 -0.3,1 0,1.5 l 3.5,4.5 c 0.2,0.3 0.6,0.5 0.9,0.5 h 8.1 c 0.7,0 1.2,-0.5 1.2,-1.2 v 0 -8.8 c 0,-0.6 -0.5,-1.2 -1.2,-1.2 z" style="fill:#5a5a5a;stroke:#454545;stroke-linecap:round;stroke-linejoin:round" munia:button-state="released" munia:button-id="15" id="dpad-right" />
+				<path d="m 13.1,919.3 c -0.4,0 -0.7,0.2 -0.9,0.4 l -3.5,4.4 c -0.3,0.4 -0.3,1 0,1.5 l 3.5,4.5 c 0.2,0.3 0.6,0.5 0.9,0.5 h 8.1 c 0.7,0 1.2,-0.5 1.2,-1.2 v 0 -8.8 c 0,-0.6 -0.5,-1.2 -1.2,-1.2 z" style="display:none;fill:#ddd;stroke:white;stroke-linecap:round;stroke-linejoin:round" munia:button-state="pressed" munia:button-id="15" id="dpad-right-hl" />
 			</g>
-		</g>	
-		
-		<g id="dpad" transform="translate(10.8353,-11.2941)">
-			<path d="m 219.217,144.458 c -7.917,0 -14.779,6.374 -14.779,14.873 v 78.082 h -77.066 c -7.918,0 -14.78,6.374 -14.78,14.873 v 82.332 c 0,7.967 6.335,14.873 14.78,14.873 h 77.594 v 78.082 c 0,7.967 6.334,14.873 14.779,14.873 h 82.344 c 7.918,0 14.252,-6.374 14.78,-14.873 v -78.082 h 77.594 c 7.917,0 14.779,-6.375 14.779,-14.873 v -82.863 c 0,-7.968 -6.334,-14.873 -14.779,-14.873 h -78.122 v -77.551 c 0,-7.968 -6.334,-14.873 -14.779,-14.873 z" style="display:inline;fill:#262626;stroke-width:5.295069" id="dpad-base_1_" inkscape:connector-curvature="0" />
-			<g id="dpad-outer" transform="matrix(5.27847,0,0,5.31172,241.382,-4619.58)" style="display:inline">
-				<path d="m 3.6,899.8 -3.8,3.6 h 7.6 z" style="fill:#3f3f3f" id="dpad-outer-up" inkscape:connector-curvature="0" />
-				<path d="m 3.6,949.9 -3.8,-3.6 h 7.6 z" style="fill:#3f3f3f" id="dpad-outer-down" inkscape:connector-curvature="0" />
-				<path d="m 28.7,924.9 -3.6,-3.8 v 7.6 z" style="fill:#3f3f3f" id="dpad-outer-right" inkscape:connector-curvature="0" />
-				<path d="m -21.4,924.9 3.6,-3.8 v 7.6 z" style="fill:#3f3f3f" id="dpad-outer-left" inkscape:connector-curvature="0" />
-			</g>
-			<g id="dpad-buttons" transform="matrix(5.51434,0,0,5.63063,240.109,-4915.78)" style="display:inline">
-				<path id="dpad-up" munia:button-id="12" munia:button-state="released" style="fill:#5a5a5a;stroke:#454545;stroke-linecap:round;stroke-linejoin:round" d="m 9.3,915.4 c 0,0.4 -0.2,0.7 -0.4,0.9 l -4.4,3.5 c -0.4,0.3 -1,0.3 -1.5,0 l -4.5,-3.5 C -1.8,916.1 -2,915.7 -2,915.4 v -8.1 c 0,-0.7 0.5,-1.2 1.2,-1.2 v 0 H 8 c 0.6,0 1.2,0.5 1.2,1.2 z" inkscape:connector-curvature="0" />
-				<path id="dpad-up-hl" munia:button-id="12" munia:button-state="pressed" style="display:none;fill:#ddd;stroke:white;stroke-linecap:round;stroke-linejoin:round" d="m 9.3,915.4 c 0,0.4 -0.2,0.7 -0.4,0.9 l -4.4,3.5 c -0.4,0.3 -1,0.3 -1.5,0 l -4.5,-3.5 C -1.8,916.1 -2,915.7 -2,915.4 v -8.1 c 0,-0.7 0.5,-1.2 1.2,-1.2 v 0 H 8 c 0.6,0 1.2,0.5 1.2,1.2 z" inkscape:connector-curvature="0" />
-				<path id="dpad_down" munia:button-id="13" munia:button-state="released" style="fill:#5a5a5a;stroke:#454545;stroke-linecap:round;stroke-linejoin:round" d="m 9.2,934.3 c 0,-0.4 -0.2,-0.7 -0.4,-0.9 l -4.4,-3.5 c -0.4,-0.3 -1,-0.3 -1.5,0 l -4.5,3.5 c -0.3,0.2 -0.5,0.6 -0.5,0.9 v 8.1 c 0,0.7 0.5,1.2 1.2,1.2 v 0 h 8.8 c 0.6,0 1.2,-0.5 1.2,-1.2 z" inkscape:connector-curvature="0" />
-				<path id="dpad_down-hl" munia:button-id="13" munia:button-state="pressed" style="display:none;fill:#ddd;stroke:white;stroke-linecap:round;stroke-linejoin:round" d="m 9.2,934.3 c 0,-0.4 -0.2,-0.7 -0.4,-0.9 l -4.4,-3.5 c -0.4,-0.3 -1,-0.3 -1.5,0 l -4.5,3.5 c -0.3,0.2 -0.5,0.6 -0.5,0.9 v 8.1 c 0,0.7 0.5,1.2 1.2,1.2 v 0 h 8.8 c 0.6,0 1.2,-0.5 1.2,-1.2 z" inkscape:connector-curvature="0" />
-				<path id="dpad-left" munia:button-id="14" munia:button-state="released" style="fill:#5a5a5a;stroke:#454545;stroke-linecap:round;stroke-linejoin:round" d="m -5.8,919.2 c 0.4,0 0.7,0.2 0.9,0.4 l 3.5,4.4 c 0.3,0.4 0.3,1 0,1.5 l -3.5,4.5 c -0.2,0.3 -0.6,0.5 -0.9,0.5 h -8.1 c -0.7,0 -1.2,-0.5 -1.2,-1.2 v 0 -8.8 c 0,-0.6 0.5,-1.2 1.2,-1.2 z" inkscape:connector-curvature="0" />
-				<path id="dpad-left-hl" munia:button-id="14" munia:button-state="pressed" style="display:none;fill:#ddd;stroke:white;stroke-linecap:round;stroke-linejoin:round" d="m -5.8,919.2 c 0.4,0 0.7,0.2 0.9,0.4 l 3.5,4.4 c 0.3,0.4 0.3,1 0,1.5 l -3.5,4.5 c -0.2,0.3 -0.6,0.5 -0.9,0.5 h -8.1 c -0.7,0 -1.2,-0.5 -1.2,-1.2 v 0 -8.8 c 0,-0.6 0.5,-1.2 1.2,-1.2 z" inkscape:connector-curvature="0" />
-				<path id="dpad-right" munia:button-id="15" munia:button-state="released" style="fill:#5a5a5a;stroke:#454545;stroke-linecap:round;stroke-linejoin:round" d="m 13.1,919.3 c -0.4,0 -0.7,0.2 -0.9,0.4 l -3.5,4.4 c -0.3,0.4 -0.3,1 0,1.5 l 3.5,4.5 c 0.2,0.3 0.6,0.5 0.9,0.5 h 8.1 c 0.7,0 1.2,-0.5 1.2,-1.2 v 0 -8.8 c 0,-0.6 -0.5,-1.2 -1.2,-1.2 z" inkscape:connector-curvature="0" />
-				<path id="dpad-right-hl" munia:button-id="15" munia:button-state="pressed" style="display:none;fill:#ddd;stroke-linecap:round;stroke-linejoin:round" d="m 13.1,919.3 c -0.4,0 -0.7,0.2 -0.9,0.4 l -3.5,4.4 c -0.3,0.4 -0.3,1 0,1.5 l 3.5,4.5 c 0.2,0.3 0.6,0.5 0.9,0.5 h 8.1 c 0.7,0 1.2,-0.5 1.2,-1.2 v 0 -8.8 c 0,-0.6 -0.5,-1.2 -1.2,-1.2 z" inkscape:connector-curvature="0" />
-			</g>
-		</g>
-		<g id="face" transform="matrix(1,0,0,0.992239,-323.048,5.09151)">
-			<path id="face-buttons-base" style="fill:#262626;stroke-width:5.295069" d="m 963.206,131.098 c -7.918,0 -14.78,6.374 -14.78,14.873 v 78.082 h -77.593 c -7.918,0 -14.78,6.374 -14.78,14.873 v 82.863 c 0,7.967 6.334,14.873 14.78,14.873 h 77.593 v 78.082 c 0,7.967 6.334,14.873 14.78,14.873 h 82.344 c 7.92,0 14.25,-6.374 14.78,-14.873 v -78.082 h 77.59 c 7.92,0 14.78,-6.375 14.78,-14.873 v -82.863 c 0,-7.968 -6.33,-14.873 -14.78,-14.873 h -77.59 v -78.082 c 0,-7.968 -6.33,-14.873 -14.78,-14.873 z" inkscape:connector-curvature="0" />
-			<g id="face-buttons" transform="matrix(5.41561,0,0,5.52638,1612.38,-2219.34)">
-				<g id="facebtn-cross" munia:button-id="0" munia:button-state="released" transform="translate(-259.501,-472.992)">
-					<circle id="path3246" style="fill:#5a5a5a;stroke:#454545;stroke-linecap:round;stroke-linejoin:round" cx="147.2" cy="943.1" r="8.2" />
-					<path id="path3313" style="fill:none;stroke:#8243fb" d="m 143,939 8.5,8.5 m 0,-8.5 -8.5,8.5" inkscape:connector-curvature="0" />
-				</g><g id="facebtn-cross-hl" munia:button-id="0" munia:button-state="pressed" transform="translate(-259.501,-472.992)" style="display:none">
-					<circle id="circle1725" style="fill:#ddd;stroke:#f4f4f4;stroke-linecap:round;stroke-linejoin:round" cx="147.2" cy="943.1" r="8.2" />
-					<path id="path1727" style="fill:none;stroke:white;stroke-opacity:0.3" d="m 143,939 8.5,8.5 m 0,-8.5 -8.5,8.5" inkscape:connector-curvature="0" />
-				</g><g id="facebtn-square" munia:button-id="1" munia:button-state="released" transform="translate(-259.501,-472.992)">
-					<circle id="path3250" style="fill:#5a5a5a;stroke:#454545;stroke-linecap:round;stroke-linejoin:round" cx="129.5" cy="925.4" r="8.2" />
-					<rect id="rect3307" x="124.8" y="920.7" width="9.4" height="9.4" style="fill:none;stroke:#ff01db" />
-				</g><g id="facebtn-square-hl" munia:button-id="1" munia:button-state="pressed" transform="translate(-259.501,-472.992)" style="display:none">
-					<circle id="circle1733" style="fill:#ddd;stroke:#f4f4f4;stroke-linecap:round;stroke-linejoin:round" cx="129.5" cy="925.4" r="8.2" />
-					<rect id="rect1735" x="124.8" y="920.7" style="fill:none;stroke:white;stroke-opacity:0.3" width="9.4" height="9.4" />
-				</g><g id="facebtn-circle" munia:button-id="2" munia:button-state="released" transform="translate(-259.501,-472.992)">
-					<circle id="path3248" style="fill:#5a5a5a;stroke:#454545;stroke-linecap:round;stroke-linejoin:round" cx="164.9" cy="925.4" r="8.2" />
-					<circle id="path3311" style="fill:none;stroke:red;stroke-width:1.4583;stroke-linecap:round;stroke-linejoin:round" cx="164.9" cy="925.4" r="5.6" />
-				</g><g id="facebtn-circle-hl" munia:button-id="2" munia:button-state="pressed" transform="translate(-259.501,-472.992)" style="display:none">
-					<circle id="circle1741" style="fill:#ddd;stroke:#f4f4f4;stroke-linecap:round;stroke-linejoin:round" cx="164.9" cy="925.4" r="8.2" />
-					<circle id="circle1743" style="fill:none;stroke:white;stroke-width:1.4583;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:0.3" cx="164.9" cy="925.4" r="5.6" />
-				</g><g id="facebtn-triangle" munia:button-id="3" munia:button-state="released" transform="translate(-259.501,-472.992)">
-					<circle id="path3244" style="fill:#5a5a5a;stroke:#454545;stroke-linecap:round;stroke-linejoin:round" cx="147.2" cy="907.7" r="8.2" />
-					<path id="path3309" style="fill:none;stroke:#00ff83;stroke-width:1.1416" d="M 152.5,911.1 H 142 l 5.2,-9.1 z" inkscape:connector-curvature="0" />
-				</g><g id="facebtn-triangle-hl" munia:button-id="3" munia:button-state="pressed" transform="translate(-259.501,-472.992)" style="display:none">
-					<circle id="circle1749" style="fill:#ddd;stroke:#f4f4f4;stroke-linecap:round;stroke-linejoin:round" cx="147.2" cy="907.7" r="8.2" />
-					<path id="path1751" style="fill:none;stroke:white;stroke-width:1.1416;stroke-opacity:0.3" d="M 152.5,911.1 H 142 l 5.2,-9.1 z" inkscape:connector-curvature="0" />
+		</g><g transform="matrix(1,0,0,0.992239,-323.048,5.09151)" id="face">
+			<path d="m 963.206,131.098 c -7.918,0 -14.78,6.374 -14.78,14.873 v 78.082 h -77.593 c -7.918,0 -14.78,6.374 -14.78,14.873 v 82.863 c 0,7.967 6.334,14.873 14.78,14.873 h 77.593 v 78.082 c 0,7.967 6.334,14.873 14.78,14.873 h 82.344 c 7.92,0 14.25,-6.374 14.78,-14.873 v -78.082 h 77.59 c 7.92,0 14.78,-6.375 14.78,-14.873 v -82.863 c 0,-7.968 -6.33,-14.873 -14.78,-14.873 h -77.59 v -78.082 c 0,-7.968 -6.33,-14.873 -14.78,-14.873 z" style="fill:#262626;stroke-width:5.295069" id="face-buttons-base" />
+			<g transform="matrix(5.41561,0,0,5.52638,1612.38,-2219.34)" id="face-buttons">
+				<g transform="translate(-259.501,-472.992)" munia:button-state="released" munia:button-id="0" id="facebtn-cross">
+					<circle r="8.2" cy="943.1" cx="147.2" style="fill:#5a5a5a;stroke:#454545;stroke-linecap:round;stroke-linejoin:round" id="path3246" />
+					<path d="m 143,939 8.5,8.5 m 0,-8.5 -8.5,8.5" style="fill:none;stroke:#8243fb" id="path3313" />
+				</g><g style="display:none" transform="translate(-259.501,-472.992)" munia:button-state="pressed" munia:button-id="0" id="facebtn-cross-hl">
+					<circle r="8.2" cy="943.1" cx="147.2" style="fill:#ddd;stroke:#f4f4f4;stroke-linecap:round;stroke-linejoin:round" id="circle1725" />
+					<path d="m 143,939 8.5,8.5 m 0,-8.5 -8.5,8.5" style="fill:none;stroke:white;stroke-opacity:0.3" id="path1727" />
+				</g><g transform="translate(-259.501,-472.992)" munia:button-state="released" munia:button-id="1" id="facebtn-square">
+					<circle r="8.2" cy="925.4" cx="129.5" style="fill:#5a5a5a;stroke:#454545;stroke-linecap:round;stroke-linejoin:round" id="path3250" />
+					<rect style="fill:none;stroke:#ff01db" height="9.4" width="9.4" y="920.7" x="124.8" id="rect3307" />
+				</g><g style="display:none" transform="translate(-259.501,-472.992)" munia:button-state="pressed" munia:button-id="1" id="facebtn-square-hl">
+					<circle r="8.2" cy="925.4" cx="129.5" style="fill:#ddd;stroke:#f4f4f4;stroke-linecap:round;stroke-linejoin:round" id="circle1733" />
+					<rect height="9.4" width="9.4" style="fill:none;stroke:white;stroke-opacity:0.3" y="920.7" x="124.8" id="rect1735" />
+				</g><g transform="translate(-259.501,-472.992)" munia:button-state="released" munia:button-id="2" id="facebtn-circle">
+					<circle r="8.2" cy="925.4" cx="164.9" style="fill:#5a5a5a;stroke:#454545;stroke-linecap:round;stroke-linejoin:round" id="path3248" />
+					<circle r="5.6" cy="925.4" cx="164.9" style="fill:none;stroke:red;stroke-width:1.4583;stroke-linecap:round;stroke-linejoin:round" id="path3311" />
+				</g><g style="display:none" transform="translate(-259.501,-472.992)" munia:button-state="pressed" munia:button-id="2" id="facebtn-circle-hl">
+					<circle r="8.2" cy="925.4" cx="164.9" style="fill:#ddd;stroke:#f4f4f4;stroke-linecap:round;stroke-linejoin:round" id="circle1741" />
+					<circle r="5.6" cy="925.4" cx="164.9" style="fill:none;stroke:white;stroke-width:1.4583;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:0.3" id="circle1743" />
+				</g><g transform="translate(-259.501,-472.992)" munia:button-state="released" munia:button-id="3" id="facebtn-triangle">
+					<circle r="8.2" cy="907.7" cx="147.2" style="fill:#5a5a5a;stroke:#454545;stroke-linecap:round;stroke-linejoin:round" id="path3244" />
+					<path d="M 152.5,911.1 H 142 l 5.2,-9.1 z" style="fill:none;stroke:#00ff83;stroke-width:1.1416" id="path3309" />
+				</g><g style="display:none" transform="translate(-259.501,-472.992)" munia:button-state="pressed" munia:button-id="3" id="facebtn-triangle-hl">
+					<circle r="8.2" cy="907.7" cx="147.2" style="fill:#ddd;stroke:#f4f4f4;stroke-linecap:round;stroke-linejoin:round" id="circle1749" />
+					<path d="M 152.5,911.1 H 142 l 5.2,-9.1 z" style="fill:none;stroke:white;stroke-width:1.1416;stroke-opacity:0.3" id="ps2-triangle" />
 				</g>
 			</g>
-		</g>
-		<g id="buttons" transform="matrix(5.27847,0,0,5.31172,1504.92,-2025.33)">
-			<path munia:button-state="released" munia:button-id="4" id="btn-select" style="fill:#595959;stroke:black;stroke-linecap:round;stroke-linejoin:round" d="m -210.5,449.884 h 8.5 c 0.9,0 1.6,0.7 1.6,1.6 v 3.5 c 0,0.9 -0.7,1.6 -1.6,1.6 h -8.5 c -0.9,0 -1.6,-0.7 -1.6,-1.6 v -3.5 c 0.1,-0.9 0.8,-1.6 1.6,-1.6 z" inkscape:connector-curvature="0" sodipodi:nodetypes="cscsssscc" />
-			<path munia:button-state="pressed" munia:button-id="4" id="btn-select-hl" style="display:none;fill:#ddd;stroke:white;stroke-linecap:round;stroke-linejoin:round" d="m -210.5,449.884 h 8.5 c 0.9,0 1.6,0.7 1.6,1.6 v 3.5 c 0,0.9 -0.7,1.6 -1.6,1.6 h -8.5 c -0.9,0 -1.6,-0.7 -1.6,-1.6 v -3.5 c 0.1,-0.9 0.8,-1.6 1.6,-1.6 z" inkscape:connector-curvature="0" />
-			<path munia:button-state="released" munia:button-id="5" id="btn-start" style="fill:#595959;stroke:black;stroke-linecap:round;stroke-linejoin:round" d="m -175.734,453.184 -8.5,3.3 c -0.8,0.3 -1.6,-0.7 -1.6,-1.6 v -3.5 c 0,-0.9 0.8,-1.9 1.6,-1.6 z" inkscape:connector-curvature="0" />
-			<path munia:button-state="pressed" munia:button-id="5" id="btn-start-hl" style="display:none;fill:#ddd;stroke:white;stroke-linecap:round;stroke-linejoin:round" d="m -175.734,453.184 -8.5,3.3 c -0.8,0.3 -1.6,-0.7 -1.6,-1.6 v -3.5 c 0,-0.9 0.8,-1.9 1.6,-1.6 z" inkscape:connector-curvature="0" />
+		</g><g transform="matrix(5.27847,0,0,5.31172,1504.92,-2025.33)" id="buttons">
+			<path d="m -210.5,449.884 h 8.5 c 0.9,0 1.6,0.7 1.6,1.6 v 3.5 c 0,0.9 -0.7,1.6 -1.6,1.6 h -8.5 c -0.9,0 -1.6,-0.7 -1.6,-1.6 v -3.5 c 0.1,-0.9 0.8,-1.6 1.6,-1.6 z" style="fill:#595959;stroke:black;stroke-linecap:round;stroke-linejoin:round" id="btn-select" munia:button-id="4" munia:button-state="released" />
+			<path d="m -210.5,449.884 h 8.5 c 0.9,0 1.6,0.7 1.6,1.6 v 3.5 c 0,0.9 -0.7,1.6 -1.6,1.6 h -8.5 c -0.9,0 -1.6,-0.7 -1.6,-1.6 v -3.5 c 0.1,-0.9 0.8,-1.6 1.6,-1.6 z" style="display:none;fill:#ddd;stroke:white;stroke-linecap:round;stroke-linejoin:round" id="btn-select-hl" munia:button-id="4" munia:button-state="pressed" />
+			<path d="m -175.734,453.184 -8.5,3.3 c -0.8,0.3 -1.6,-0.7 -1.6,-1.6 v -3.5 c 0,-0.9 0.8,-1.9 1.6,-1.6 z" style="fill:#595959;stroke:black;stroke-linecap:round;stroke-linejoin:round" id="btn-start" munia:button-id="5" munia:button-state="released" />
+			<path d="m -175.734,453.184 -8.5,3.3 c -0.8,0.3 -1.6,-0.7 -1.6,-1.6 v -3.5 c 0,-0.9 0.8,-1.9 1.6,-1.6 z" style="display:none;fill:#ddd;stroke:white;stroke-linecap:round;stroke-linejoin:round" id="btn-start-hl" munia:button-id="5" munia:button-state="pressed" />
 		</g>
 	</g>
 </svg>

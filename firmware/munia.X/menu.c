@@ -83,8 +83,8 @@ unsigned int log2(unsigned int x) {
 
 void menu_page(uint8_t page) {
     current_menu_page = page;
-    int idx = current_menu_page + (current_menu_page >= MENU_PAGE_INPUT ? 1 : 0);
-    menu_current_items = menu_sub_items[current_menu_page];
+    int idx = current_menu_page - (current_menu_page >= MENU_PAGE_INPUT ? 1 : 0);
+    menu_current_items = menu_sub_items[idx];
     submenu_idx = 0;
     menu_leftalign = true;
     submenu_count = 0;
