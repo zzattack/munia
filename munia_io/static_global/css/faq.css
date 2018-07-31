@@ -65,6 +65,13 @@ a.cd-faq-trigger {
 	clear: both;
 }
 
+@media only screen and (max-width: 767px) {
+	.cd-faq-group {
+		background: #2e3339;
+		z-index: 1;
+	}
+}
+
 @media only screen and (min-width: 768px) {
 	.cd-faq {
 		position: relative;
@@ -194,7 +201,6 @@ a.cd-faq-trigger {
 	width: 90%;
 	top: 0;
 	right: 0;
-	background: #ffffff;
 	padding: 0 5% 1em;
 	overflow: auto;
 	-webkit-overflow-scrolling: touch;

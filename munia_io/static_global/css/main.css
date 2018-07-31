@@ -964,7 +964,12 @@ p:last-child {
 [class*="bg-image-"] {
 	overflow: hidden;
 	position: relative;
-	z-index: 0;
+}
+
+@media only screen and (min-width: 768px) {
+	[class*="bg-image-"] {
+		z-index: 0; /* listed separately to not break FAQ */
+	}
 }
 
 [class*="bg-image-"]:before, [class*="bg-image-"]:after {
