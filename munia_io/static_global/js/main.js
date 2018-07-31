@@ -7,6 +7,7 @@
 
         // set active class on navbar selected page
         var page = window.location.pathname.substring(1);
+        if (page.length == 0) page = "index.html";
         $('nav ul li a[href*="' + page + '"]').addClass('active');
     });
 
@@ -28,9 +29,8 @@
     });
 
     // Prevent background from scrolling on mobile when navigation is toggled
-
-    $('html, body').on('touchmove', function () {
-        e.preventDefault();
+    $('html, body').on('touchmove', function(ev) {
+        ev.preventDefault();
     });
 
     $('a#connect').click(function () {

@@ -270,9 +270,7 @@ section {
 }
 
 /* -----------------------------------------------------------------------------
-
 # Base - Typography
-
 ----------------------------------------------------------------------------- */
 html {
 	font-size: 16px;
@@ -340,13 +338,13 @@ h6:last-child {
 h1,
 h2,
 h3 {
-	font-family: "PT Serif", Georgia, serif;
+	font-family: Arial;
 }
 
 h4,
 h5,
 h6 {
-	font-family: "Lato", Helvetica, sans-serif;
+	font-family: Arial;
 }
 
 h1 {
@@ -447,7 +445,7 @@ p:last-child {
 }
 
 .paragraph.serif {
-	font-family: "PT Serif", Georgia, serif;
+	font-family: Arial;
 }
 
 @media only screen and (max-width: 479px) {
@@ -479,9 +477,7 @@ p:last-child {
 }
 
 /* -----------------------------------------------------------------------------
-
 # Base - Grid
-
 ----------------------------------------------------------------------------- */
 .row {
 	display: table;
@@ -2323,7 +2319,7 @@ ul.inline li:last-child {
 
 .logo span {
 	display: inline-block;
-	font-family: "PT Serif", Georgia, serif;
+	font-family:"Arial Black";
 	vertical-align: top;
 }
 
@@ -2348,9 +2344,7 @@ ul.inline li:last-child {
 }
 
 /* -----------------------------------------------------------------------------
-
 # Components - Pricing
-
 ----------------------------------------------------------------------------- */
 .pricing-price {
 	font-weight: 400;
@@ -2363,9 +2357,7 @@ ul.inline li:last-child {
 }
 
 /* -----------------------------------------------------------------------------
-
 # Components - Table
-
 ----------------------------------------------------------------------------- */
 table {
 	-webkit-border-radius: 0.1875rem;
@@ -2413,9 +2405,7 @@ table td {
 }
 
 /* -----------------------------------------------------------------------------
-
 # Pages - Onboarding
-
 ----------------------------------------------------------------------------- */
 .page-onboarding .form-help {
 	line-height: 2.5rem;
