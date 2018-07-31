@@ -16,6 +16,9 @@ def devices(request):
 def faq(request):
     return render(request, 'home/faq.html', {})
 
+def success(request):
+    return render(request, 'home/success.html', {})
+
 
 def software(request):
     return render(request, 'home/software.html', {})

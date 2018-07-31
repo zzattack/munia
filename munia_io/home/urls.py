@@ -6,4 +6,5 @@ urlpatterns = [
 	url(r'^(?i)contact$', contact, name='contact'),
 	url(r'^(?i)devices', devices, name='devices'),
 	url(r'^(?i)faq', faq, name='faq'),
+	url(r'^(?i)success', success, name='success'),
 ]
