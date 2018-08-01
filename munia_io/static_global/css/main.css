@@ -131,6 +131,10 @@ html small {
 	font-size: 80%;
 }
 
+.xsmall {
+	font-size: 50%;
+}
+
 html sub, html sup {
 	font-size: 75%;
 	line-height: 0;
@@ -1434,6 +1438,7 @@ p:last-child {
 	line-height: 3rem;
 	padding: 0 1.25rem;
 	text-align: center;
+	cursor: pointer;
 }
 
 .button.button-s {

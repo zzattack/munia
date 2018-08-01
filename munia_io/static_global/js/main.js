@@ -38,4 +38,8 @@
         $('html,body').animate({scrollTop: $(aTag).offset().top}, 'slow');
         return false;
     });
+
+    $('form.button').click(function() {
+       $(this).submit();
+    });
 })(jQuery);
