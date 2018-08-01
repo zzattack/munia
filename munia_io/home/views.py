@@ -57,7 +57,7 @@ def contact(request):
 			else:
 				reply_to.append('noreply@munia.io')
 
-		email = EmailMessage(subject=subj, body=message, from_email='info@munia.io', to=['frank@zzattack.org'], cc=cc,
+		email = EmailMessage(subject=subj, body=message, from_email='info@munia.io', to=['frank@munia.io', 'will@munia.io'], cc=cc,
 			reply_to=reply_to)
 
 		email.send(fail_silently=False)
