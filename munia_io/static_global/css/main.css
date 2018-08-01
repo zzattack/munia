@@ -480,6 +480,19 @@ p:last-child {
 	opacity: 0.9;
 }
 
+::-webkit-input-placeholder { font-style: italic; opacity: 1; -webkit-transition: opacity .5s; transition: opacity .5s; }  /* Chrome <=56, Safari < 10 */
+:-moz-placeholder { font-style: italic; opacity: 1; -moz-transition: opacity .5s; transition: opacity .5s; } /* FF 4-18 */
+::-moz-placeholder { font-style: italic; opacity: 1; -moz-transition: opacity .5s; transition: opacity .5s; } /* FF 19-51 */
+:-ms-input-placeholder { font-style: italic; opacity: 1; -ms-transition: opacity .5s; transition: opacity .5s; } /* IE 10+ */
+::placeholder { font-style: italic; opacity: 1; transition: opacity .5s; } /* Modern Browsers */
+
+*:focus::-webkit-input-placeholder { opacity: 0; } /* Chrome <=56, Safari < 10 */
+*:focus:-moz-placeholder { opacity: 0; } /* FF 4-18 */
+*:focus::-moz-placeholder { opacity: 0; } /* FF 19-50 */
+*:focus:-ms-input-placeholder { opacity: 0; } /* IE 10+ */
+*:focus::placeholder { opacity: 0; } /* Modern Browsers */
+
+
 /* -----------------------------------------------------------------------------
 # Base - Grid
 ----------------------------------------------------------------------------- */
@@ -1995,6 +2008,16 @@ form .form-help {
 	line-height: 1rem;
 	color: #110f24;
 	opacity: 0.4;
+}
+
+form input:optional {
+  border-left-color: #999;
+}
+form input:required {
+  border-left-color: palegreen;
+}
+form input:invalid {
+  border-left-color: salmon;
 }
 
 @media only screen and (max-width: 767px) {

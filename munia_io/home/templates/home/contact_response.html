@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<main>
+		<section class="bg-image-hero center-tablet dark overlay-shape-03 full-screen">
+			<div class="-margin-bottom padding padding-top-tablet ">
+
+				<div class="col-one-half middle padding">
+
+					{% if contact_success %}
+					<div class="max-width-m bg-gradient-consoles padding rounded">
+						<h5>Your inquiry was received successfully!</h5>
+					</div>
+
+					{% else %}
+					<div class="max-width-m bg-gradient-pink padding rounded">
+						<h5>Your inquiry could not be processed. Please contact info@munia.io directly!</h5>
+					</div>
+					{% endif %}
+				</div>
+			</div>
+
+		</section>
+	</main>
+
+{% endblock %}
