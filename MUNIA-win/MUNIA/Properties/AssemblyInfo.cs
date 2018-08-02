@@ -7,8 +7,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("MUNIA input viewer")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("MUNA")]
+[assembly: AssemblyCompany("MUNIA.io")]
+[assembly: AssemblyProduct("MUNIA")]
 [assembly: AssemblyCopyright("Copyright © Frank Razenberg 2015-2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -21,4 +21,4 @@ using System.Runtime.InteropServices;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("278dcc56-806a-4749-a39e-8140bc80d341")]
 
-[assembly: System.Reflection.AssemblyVersion("1.0.198.0")]
+[assembly: System.Reflection.AssemblyVersion("1.1.214.9")]
