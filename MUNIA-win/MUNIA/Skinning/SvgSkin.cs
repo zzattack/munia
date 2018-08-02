@@ -326,7 +326,7 @@ namespace MUNIA.Skinning {
 			boundsScaled.Inflate(10f, 10f); // small margin for rounding error
 			boundsScaled.Intersect(new RectangleF(0f, 0f, work.Width, work.Height));
 			int ret = -1;
-			if (!boundsScaled.IsEmpty) {
+			if (boundsScaled.Width > 1.0 && boundsScaled.Height > 1.0) {
 				// unhide temporarily
 				SetVisibleToRoot(e, true);
 				SetVisibleRecursive(e, true);
@@ -413,7 +413,11 @@ namespace MUNIA.Skinning {
 		}
 
 		public static RectangleF CalcBounds(SvgElement x) {
-			var b = (x as ISvgBoundable).Bounds;
+			RectangleF b;
+			if (x is SvgPathBasedElement sp)
+				b = sp.Path(null).GetBounds(); // use path without transforms applied to it
+			else b = (x as ISvgBoundable).Bounds;
+
 			var points = new PointF[4];
 			points[0] = new PointF(b.Left - x.StrokeWidth / 2, b.Top - x.StrokeWidth / 2);
 			points[1] = new PointF(b.Right + x.StrokeWidth / 2, b.Top - x.StrokeWidth / 2);
