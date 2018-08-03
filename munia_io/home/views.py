@@ -8,6 +8,14 @@ from django.views.decorators.csrf import csrf_protect
 def index(request):
 	return render(request, 'home/index.html', {})
 
+def devices(request):
+	return render(request, 'home/devices.html', {})
+
+def software(request):
+	return render(request, 'home/software.html', {})
+
+def faq(request):
+	return render(request, 'home/faq.html', {})
 
 def validate_mail_address(email):
 	from django.core.validators import validate_email
@@ -17,7 +25,6 @@ def validate_mail_address(email):
 		return True
 	except ValidationError:
 		return False
-
 
 @csrf_protect
 def contact(request):
@@ -67,18 +74,5 @@ def contact(request):
 
 	return render(request, 'home/contact_response.html', {'contact_success': success})
 
-
-def devices(request):
-	return render(request, 'home/devices.html', {})
-
-
-def faq(request):
-	return render(request, 'home/faq.html', {})
-
-
 def success(request):
 	return render(request, 'home/success.html', {})
-
-
-def software(request):
-	return render(request, 'home/software.html', {})
