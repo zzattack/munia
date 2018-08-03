@@ -249,24 +249,24 @@ namespace MUNIA.Forms {
 			SvgSkin.SetVisibleRecursive(_skin.SvgDocument, ckbBase.Checked);
 
 			foreach (var b in _skin.Buttons) {
-				if (b.Element != null) {
-					SvgSkin.SetVisibleRecursive(b.Element, !hl);
-					if (!hl) SvgSkin.SetVisibleToRoot(b.Element, true);
-				}
 				if (b.Pressed != null) {
 					SvgSkin.SetVisibleRecursive(b.Pressed, hl);
 					if (hl) SvgSkin.SetVisibleToRoot(b.Pressed, true);
 				}
+				if (b.Element != null) {
+					SvgSkin.SetVisibleRecursive(b.Element, !hl);
+					if (!hl) SvgSkin.SetVisibleToRoot(b.Element, true);
+				}
 			}
 
 			foreach (var s in _skin.Sticks) {
-				if (s.Element != null) {
-					SvgSkin.SetVisibleRecursive(s.Element, !hl);
-					SvgSkin.SetVisibleToRoot(s.Element, !hl);
-				}
 				if (s.Pressed != null) {
 					SvgSkin.SetVisibleRecursive(s.Pressed, hl);
-					SvgSkin.SetVisibleToRoot(s.Pressed, hl);
+					if (hl) SvgSkin.SetVisibleToRoot(s.Pressed, true);
+				}
+				if (s.Element != null) {
+					SvgSkin.SetVisibleRecursive(s.Element, !hl);
+					if (!hl) SvgSkin.SetVisibleToRoot(s.Element, true);
 				}
 			}
 
