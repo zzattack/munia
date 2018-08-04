@@ -1,3 +1,4 @@
 Django
 gunicorn
 MySQL-python
+django-analytical

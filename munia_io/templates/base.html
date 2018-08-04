@@ -1,7 +1,9 @@
+{% load analytical %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% analytical_head_top %}
 	<title>{% block title %}MUNIA.io{% endblock %}</title>
 	<meta charset="utf-8"/>
 	<meta name="description" content="Webpage for the MUNIA series of devices allowing gamepad display on your pc."/>
@@ -17,8 +19,10 @@
 	<link rel="stylesheet" type='text/css' href="{% static "css/main.css" %}"/>
 	{% endblock %}
 	{% block extrastylesheets %} {% endblock %}
+    {% analytical_head_bottom %}
 </head>
 <body class="page page-home preload">
+{% analytical_body_top %}
 {% block header %}    {% include "header.html" %} {% endblock %}
 {% block content %} {% endblock %}
 {% block footer %}    {% include "footer.html" %} {% endblock %}
@@ -27,5 +31,6 @@
 	<script src="{% static "js/main.js" %}"></script>
 {% endblock %}
 {% block extrascripts %} {% endblock %}
+{% analytical_body_bottom %}
 </body>
 </html>
