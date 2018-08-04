@@ -1,0 +1,1 @@
+venv\scripts\python.exe manage.py collectstatic --settings=config.settings_dev
