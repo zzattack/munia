@@ -6,3 +6,4 @@ static/*
 media/*
 config/settings.py
 /munia_io.db  # dev db
+.idea
