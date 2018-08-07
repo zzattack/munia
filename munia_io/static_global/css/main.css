@@ -1251,11 +1251,13 @@ p:last-child {
 }
 
 /* -----------------------------------------------------------------------------
-
 # Tools - Spacing
-
 ----------------------------------------------------------------------------- */
 .padding {
+	padding: 5rem;
+}
+
+.padding-opt {
 	padding: 5rem;
 }
 
@@ -1268,6 +1270,18 @@ p:last-child {
 @media only screen and (max-width: 767px) {
 	.padding {
 		padding: 3rem 1rem;
+	}
+}
+
+@media only screen and (max-width: 1023px) {
+	.padding-opt {
+		padding: 3rem;
+	}
+}
+
+@media only screen and (max-width: 767px) {
+	.padding-opt {
+		padding: 0;
 	}
 }
 
@@ -2294,9 +2308,7 @@ form input:invalid {
 }
 
 /* -----------------------------------------------------------------------------
-
 # Components - List
-
 ----------------------------------------------------------------------------- */
 ol,
 ul {
