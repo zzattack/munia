@@ -1263,7 +1263,7 @@ p:last-child {
 
 @media only screen and (max-width: 1023px) {
 	.padding {
-		padding: 3rem;
+		padding: 4rem;
 	}
 }
 
@@ -1320,7 +1320,7 @@ p:last-child {
 /* Add spacing above content */
 @media only screen and (max-width: 767px) {
 	.padding-top-tablet {
-		padding-top: 8rem;
+		padding-top: 6rem;
 	}
 }
 
