@@ -10,15 +10,15 @@
                 arrows: true,
                 infinite: false,
                 speed: 200,
-	            centerPadding: '60px',
+                centerPadding: '60px',
                 slidesToShow: 2,
                 slidesToScroll: 1,
-	            adaptiveHeight: true,
+                adaptiveHeight: true,
                 responsive: [
                     {
                         breakpoint: 768,
                         settings: {
-			                dots: true,
+                            dots: true,
                             slidesToShow: 1
                         }
                     },
@@ -38,80 +38,85 @@
 	{% load static %}
 	<main>
 		<section class="bg-image-hero center-tablet dark overlay-shape-03 full-screen">
+			<div class="-margin-bottom padding padding-top-tablet">
 
-			<div class="margin-top space-left dark max-width-l bg-gradient-blue">
-				<h2>Built-in skin list</h2>
-				<p class="space-left margin-bottom">At least 2 skins are available to choose from for each supported device.</p>
+				<div class="center max-width-l">
+					<h1 class="hero">Software features</h1>
+				</div>
 
-				<div id="slick_container" class="slick-track">
-					<div class="">
-						<em class="space-left">Nintendo Gamecube</em>
-						<img class="space-top" src="{% static "img/content/skin_gamecube.png" %}" alt="Nintendo Gamecube skin">
-					</div>
-					<div>
-						<em class="space-left">Nintendo Gamecube - compact</em>
-						<img class="space-top" src="{% static "img/content/skin_gamecube_compact.png" %}" alt="Nintendo Gamecube - compact skin">
-					</div>
+				<div class="margin-top padding-opt dark max-width-l bg-gradient-blue">
+					<h2>Built-in skin list</h2>
+					<p class="space-left margin-bottom">At least 2 skins are available to choose from for each supported device.</p>
 
-					<div>
-						<em class="space-left">Nintendo 64</em>
-						<img class="space-top" src="{% static "img/content/skin_n64.png" %}" alt="Nintendo 64 skin">
-					</div>
-					<div>
-						<em class="space-left">Nintendo 64 - compact</em>
-						<img class="space-top" src="{% static "img/content/skin_n64_compact.png" %}" alt="Nintendo 64 - compact skin">
-					</div>
+					<div id="slick_container" class="slick-track">
+						<div class="">
+							<em class="space-left">Nintendo Gamecube</em>
+							<img class="space-top" src="{% static "img/content/skin_gamecube.png" %}" alt="Nintendo Gamecube skin">
+						</div>
+						<div>
+							<em class="space-left">Nintendo Gamecube - compact</em>
+							<img class="space-top" src="{% static "img/content/skin_gamecube_compact.png" %}" alt="Nintendo Gamecube - compact skin">
+						</div>
 
-					<div>
-						<em class="space-left">SNES</em>
-						<img class="space-top" src="{% static "img/content/skin_snes.png" %}" alt="SNES skin">
-					</div>
-					<div>
-						<em class="space-left">SNES - compact</em>
-						<img class="space-top" src="{% static "img/content/skin_snes_compact.png" %}" alt="SNES compact skin">
-					</div>
+						<div>
+							<em class="space-left">Nintendo 64</em>
+							<img class="space-top" src="{% static "img/content/skin_n64.png" %}" alt="Nintendo 64 skin">
+						</div>
+						<div>
+							<em class="space-left">Nintendo 64 - compact</em>
+							<img class="space-top" src="{% static "img/content/skin_n64_compact.png" %}" alt="Nintendo 64 - compact skin">
+						</div>
 
-					<div>
-						<em class="space-left">PlayStation 2</em>
-						<img class="space-top" src="{% static "img/content/skin_ps2.png" %}" alt="PlayStation 2 skin">
-					</div>
-					<div>
-						<em class="space-left">PlayStation 2 - compact</em>
-						<img class="space-top" src="{% static "img/content/skin_ps2_compact.png" %}" alt="PlayStation 2 - compact skin">
+						<div>
+							<em class="space-left">SNES</em>
+							<img class="space-top" src="{% static "img/content/skin_snes.png" %}" alt="SNES skin">
+						</div>
+						<div>
+							<em class="space-left">SNES - compact</em>
+							<img class="space-top" src="{% static "img/content/skin_snes_compact.png" %}" alt="SNES compact skin">
+						</div>
+
+						<div>
+							<em class="space-left">PlayStation 2</em>
+							<img class="space-top" src="{% static "img/content/skin_ps2.png" %}" alt="PlayStation 2 skin">
+						</div>
+						<div>
+							<em class="space-left">PlayStation 2 - compact</em>
+							<img class="space-top" src="{% static "img/content/skin_ps2_compact.png" %}" alt="PlayStation 2 - compact skin">
+						</div>
 					</div>
 				</div>
-			</div>
 
-			<div class="margin-top padding-opt dark max-width-l bg-gradient-sienna">
-				<h2>Skin theming engine</h2>
-				<p class="paragraph">The built-in theming engine will allow you to recolor existing themes without
-					any need for XML or SVG knowledge.</p>
-				<img src="{% static "img/content/remap_engine.png" %}" alt="Skin color remapping engine">
-			</div>
+				<div class="margin-top padding-opt dark max-width-l bg-gradient-sienna">
+					<h2>Skin theming engine</h2>
+					<p class="paragraph">The built-in theming engine will allow you to recolor existing themes without
+						any need for XML or SVG knowledge.</p>
+					<img src="{% static "img/content/remap_engine.png" %}" alt="Skin color remapping engine">
+				</div>
 
-			<div class="margin-top padding-opt dark max-width-l bg-gradient-olive">
-				<h2>Capture card lag compensation</h2>
-				<p class="paragraph">Many capture cards have a delay between capturing and displaying the
-					video stream. This is very noticable when inputs are being shown in the same picture, so the MUNIA
-					software is able to seemlessly delay the shown inputs to match the capture lag.</p>
-				<img src="{% static "img/content/lag_compensation.png" %}" alt="Lag compensation window">
-			</div>
+				<div class="margin-top padding-opt dark max-width-l bg-gradient-olive">
+					<h2>Capture card lag compensation</h2>
+					<p class="paragraph">Many capture cards have a delay between capturing and displaying the
+						video stream. This is very noticable when inputs are being shown in the same picture, so the MUNIA
+						software is able to seemlessly delay the shown inputs to match the capture lag.</p>
+					<img src="{% static "img/content/lag_compensation.png" %}" alt="Lag compensation window">
+				</div>
 
-			<div class="margin-top padding-opt max-width-l bg-gradient-violet">
-				<h2>Firmware updating</h2>
-				<p class="paragraph">All devices we sell are eligible for firmware updates.</p>
-				<img src="{% static "img/content/bootloader.png" %}" alt="Bootloader window">
-			</div>
+				<div class="margin-top padding-opt max-width-l bg-gradient-violet">
+					<h2>Firmware updating</h2>
+					<p class="paragraph">All devices we sell are eligible for firmware updates.</p>
+					<img src="{% static "img/content/bootloader.png" %}" alt="Bootloader window">
+				</div>
 
-			<div class="margin-top padding-opt margin-bottom dark max-width-l bg-gradient-cyan">
-				<h2>NintendoSpy compatibility</h2>
-				<p class="paragraph">Although fundamentally different, the MUNIA software can be configured to process
-					data form NintendoSpy input displays as well. These devices are arduino-based and show up on your system
-					as a Serial COM port. The MUNIA software allows these to be mapped onto Gamecube, N64 or SNES controllers.
-					All you need to do is specify the correct mapping in the <em>Arduino mappings</em> menu.</p>
-				<img src="{% static "img/content/arduino_mapper.png" %}" alt="Arduino mapper window">
+				<div class="margin-top padding-opt margin-bottom dark max-width-l bg-gradient-cyan">
+					<h2>NintendoSpy compatibility</h2>
+					<p class="paragraph">Although fundamentally different, the MUNIA software can be configured to process
+						data form NintendoSpy input displays as well. These devices are arduino-based and show up on your system
+						as a Serial COM port. The MUNIA software allows these to be mapped onto Gamecube, N64 or SNES controllers.
+						All you need to do is specify the correct mapping in the <em>Arduino mappings</em> menu.</p>
+					<img src="{% static "img/content/arduino_mapper.png" %}" alt="Arduino mapper window">
+				</div>
 			</div>
-
 		</section>
 
 	</main>

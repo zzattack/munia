@@ -1258,7 +1258,7 @@ p:last-child {
 }
 
 .padding-opt {
-	padding: 5rem;
+	padding: 2rem;
 }
 
 @media only screen and (max-width: 1023px) {
@@ -1275,7 +1275,7 @@ p:last-child {
 
 @media only screen and (max-width: 1023px) {
 	.padding-opt {
-		padding: 3rem;
+		padding: 1rem;
 	}
 }
 
