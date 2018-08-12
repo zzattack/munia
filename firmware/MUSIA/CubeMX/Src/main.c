@@ -62,6 +62,7 @@ void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
 void bootloaderSwitcher();
+void musia_main();
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
@@ -100,6 +101,7 @@ int main(void)
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_IWDG_Init();
+  MX_USART1_UART_Init();
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
 
@@ -113,10 +115,7 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-#ifndef FAST_SEMIHOSTING_PROFILER_DRIVER
-	// RetargetInit(&huart1);
-#endif		  
-	  musia_main();
+	 musia_main();
   }
   /* USER CODE END 3 */
 
