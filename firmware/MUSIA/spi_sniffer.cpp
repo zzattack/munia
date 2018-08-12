@@ -196,7 +196,9 @@ void spi_sniffer::work() {
 			if (dmaIdxData == sizeof(buffData)) dmaIdxData = 0;
 		}
 		// minimum packet length is 5 and both cmd and data should be of equal length
-		pkt.isNew = i > 5 && pkt.pktLength == i;
+		pkt.isNew = i >= 5 && pkt.pktLength == i;
+
+		// sys_printf("captureAvailable=true, pkt.isNew=%d, data len=%d, cmd len=%d\n", pkt.isNew ? 1 : 0, pkt.pktLength, i);
 		captureAvailable = false;
 	}
 }
@@ -226,6 +228,7 @@ void spi_sniffer::captureEnd() {
 #define WAIT_FALLING_EDGE(PORT,PIN,TIMEOUT)  WAIT_EDGE(PORT,PIN,TIMEOUT,GPIO_PIN_RESET)
 
 void spi_sniffer::resync(bool hard) {
+	ps2_printf("resync attempt\n");
 	stop();
 	
 	// wait for ATT to toggle, ending high, indicating console clock pauses

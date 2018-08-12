@@ -45,7 +45,7 @@ int sync_printf_pfx(const char* prefix, const char* format, ...) {
 
 EXTERNC void printf_payload(const char* x, int len) {
 #ifdef DEBUG
-// 	while (len--) sync_printf("%02x ", *x++);
+ 	while (len--) sync_printf("%02x ", *x++);
 #endif
 }
 

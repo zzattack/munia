@@ -19,7 +19,6 @@ bool ps2_state::update(uint8_t* cmd, uint8_t* data, uint8_t pkt_len) {
 	}
 	else if (cmd[0] != 0x01) {
 		ps2_printf("Invalid packet: cmd[0] != 0x01\n", pkt_len);
-		print_packet(cmd, data, pkt_len);
 		return false;
 	}
 	else if (cmd[2] != 0x00 || data[2] != 0x5A) {
@@ -28,12 +27,14 @@ bool ps2_state::update(uint8_t* cmd, uint8_t* data, uint8_t pkt_len) {
 	}
 	
 	uint8_t numWords = data[1] & 0x0F;
-	if (pkt_len != 3 + numWords * 2) return false; // verify pkt len
-	
+	if (pkt_len != 3 + numWords * 2) {
+		ps2_printf("Invalid packet length: len %d should be %d\n", pkt_len, 3 + numWords * 2);
+		return false; // verify pkt len
+	}
 	uint8_t cmdId = cmd[1];
 	if (cmdId == 0x42) return updatePoll(&data[3], numWords * 2);
 	else if (cmdId == 0x43) return updateConfig(cmd, data, numWords * 2);
-	else {/*
+	else {
 		sys_printf("Unknown command %02X:\n", cmdId);
 		printf("\t CMD:  ");
 		for (int i = 0; i < pkt_len; i++)
@@ -41,7 +42,7 @@ bool ps2_state::update(uint8_t* cmd, uint8_t* data, uint8_t pkt_len) {
 		printf("\n\t DATA: ");
 		for (int i = 0; i < pkt_len; i++)
 			printf("%02X ", data[i]);
-		printf("\n");*/
+		printf("\n");
 		return (cmdId & 0x40) == 0x40;
 	}
 }
@@ -113,7 +114,6 @@ bool ps2_state::updatePoll(uint8_t* data, int len) {
 }
 
 bool ps2_state::updateConfig(uint8_t* cmd, uint8_t* data, int len) {
-	/*
 	sys_printf("updateConfig, with \n");
 	printf("\t CMD:  ");
 	for (int i = 0; i < len; i++)
@@ -121,7 +121,7 @@ bool ps2_state::updateConfig(uint8_t* cmd, uint8_t* data, int len) {
 	printf("\n\t DATA: ");
 	for (int i = 0; i < len; i++)
 		printf("%02X ", data[i]);
-	printf("\n")*/;
+	printf("\n");
 
 	return true;
 }
