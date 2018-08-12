@@ -5,7 +5,7 @@
 
 class spi_sniffer {
 private:
-	bool captureAvailable;
+	volatile bool captureAvailable;
 	ps2_packet pkt;	
 	SPI_HandleTypeDef* hspiCmd;
 	SPI_HandleTypeDef* hspiData;
