@@ -14,7 +14,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{F9B71E82-BCCE-4DB0-9CDA-7DD3F353233A}</ProjectGuid>
     <BSP_ID>com.sysprogs.arm.stm32</BSP_ID>
-    <BSP_VERSION>4.7</BSP_VERSION>
+    <BSP_VERSION>4.7R3</BSP_VERSION>
     <InPlaceBSPSubdir />
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -52,7 +52,6 @@
       <CLanguageStandard />
       <CPPLanguageStandard />
       <Optimization>Os</Optimization>
-      <InlineFunctions>true</InlineFunctions>
     </ClCompile>
     <Link>
       <AdditionalLinkerInputs>;%(Link.AdditionalLinkerInputs)</AdditionalLinkerInputs>
@@ -110,6 +109,7 @@
     <ClCompile Include="..\CubeMX\Src\stm32f0xx_it.c" />
     <ClCompile Include="..\CubeMX\Src\system_stm32f0xx.c" />
     <ClCompile Include="..\CubeMX\Src\tim.c" />
+    <ClCompile Include="..\CubeMX\Src\usart.c" />
     <ClCompile Include="..\EEPROM\25xx080.cpp" />
     <ClCompile Include="..\EEPROM\crc.c" />
     <ClCompile Include="..\EEPROM\eeprom.cpp" />
@@ -133,6 +133,7 @@
     <ClInclude Include="..\CubeMX\Inc\stm32f0xx_hal_conf.h" />
     <ClInclude Include="..\CubeMX\Inc\stm32f0xx_it.h" />
     <ClInclude Include="..\CubeMX\Inc\tim.h" />
+    <ClInclude Include="..\CubeMX\Inc\usart.h" />
     <ClInclude Include="..\EEPROM\25xx080.h" />
     <ClInclude Include="..\EEPROM\crc.h" />
     <ClInclude Include="..\EEPROM\eeprom.h" />

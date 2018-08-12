@@ -661,6 +661,9 @@
     <ClCompile Include="..\buttonchecker.c">
       <Filter>Source files</Filter>
     </ClCompile>
+    <ClCompile Include="..\CubeMX\Src\usart.c">
+      <Filter>CubeMX</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\musia.h">
@@ -752,6 +755,9 @@
     </ClInclude>
     <ClInclude Include="..\config.h">
       <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CubeMX\Inc\usart.h">
+      <Filter>CubeMX</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
