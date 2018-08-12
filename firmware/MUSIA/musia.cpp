@@ -1,3 +1,7 @@
+// #define WITHOUT_POLLER
+// #define WITHOUT_LCD
+#define WITHOUT_UART
+
 #include "musia.h"
 #include "ps2_poller.h"
 #include "ps2_state.h"
@@ -15,9 +19,12 @@
 #include "iwdg.h"
 #include "usart.h"
 #include "eeprom.h"
+
+#ifndef WITHOUT_LCD
 #include "lcd.h"
 #include "menu.h"
 #include "buttonchecker.h"
+#endif
 
 
 SPI_HandleTypeDef hspi1;
@@ -31,7 +38,11 @@ m25xx080 m25xx080(&spi_ee); // eeprom for configuration retaining
 eeprom ee(&m25xx080);
 
 spi_sniffer sniffer(&hspi2, &hspi1, &hdma_spi2_rx, &hdma_spi1_rx); // sniff on both spi lines configured as slave inputs
+
+#ifndef WITHOUT_POLLER
 ps2_poller poller(&spi_ps2); // polls on spi1 when not in sniffer mode
+#endif
+
 ps2_state ps2State; // tracks controller state, read by USB and updated either by sniffer or poller
 usb_joystick usbJoy; // transmits USB HID packets containing ps2 state
 
@@ -76,8 +87,10 @@ EXTERNC int musia_main(void) {
 			handleSnifferPacket();
 		}
 		else {
+#ifndef WITHOUT_POLLER
 			poller.work();
 			handlePollerPacket();
+#endif
 		}
 
 		if (tim1Expired) {
@@ -85,7 +98,8 @@ EXTERNC int musia_main(void) {
 			packetObserved = false;
 			tim1Expired = false;
 		}
-
+		
+#ifndef WITHOUT_LCD
 		if (tick1Khz) {
 			static uint16_t counter = 0;
 			tick1Khz = false;
@@ -95,9 +109,11 @@ EXTERNC int musia_main(void) {
 					else menu_exit(false); 
 				}
 			}
+			
 			lcd_process();
 			menu_tick1000hz();
 		}
+#endif
 		
 		__WFI();
 		// USB is fully based off interrupts,
@@ -129,7 +145,14 @@ void sysInit() {
 	// set green led
 	HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_SET);
 
+#ifndef WITHOUT_LCD
 	lcd_setup();
+#endif
+
+#ifndef WITHOUT_UART
+	MX_USART1_UART_Init();
+	RetargetInit(&huart1);
+#endif
 }
 
 bool validateConfig() {
@@ -152,8 +175,12 @@ void applyConfig() {
 	static musia_mode current_mode = MODE_INVALID;
 	if (current_mode == MODE_SNIFFER)
 		sniffer.deInit();
+
+#ifndef WITHOUT_POLLER
 	if (current_mode == MODE_POLLER)
 		poller.deInit();
+#endif
+
 		
 	if (ee.data->mode == MODE_SNIFFER) {
 		sniffer.init();
@@ -161,9 +188,11 @@ void applyConfig() {
 		current_mode = MODE_SNIFFER;
 	}
 	else {
+#ifndef WITHOUT_POLLER
 		poller.init();
 		poller.start(static_cast<polling_freq>(ee.data->pollFreq));
 		current_mode = MODE_POLLER;
+#endif
 	}
 }
 
@@ -178,8 +207,8 @@ void handleSnifferPacket() {
 	packetObserved |= validPacket;
 
 	if (!validPacket) {
-		// sys_printf("INVALID PACKET RECEIVED, RESYNC CTR: %d\n", resyncDetect);
-		// ps2_state::print_packet(upd->cmd, upd->data, upd->pktLength);
+		sys_printf("INVALID PACKET RECEIVED, RESYNC CTR: %d\n", resyncDetect);
+		ps2_state::print_packet(upd->cmd, upd->data, upd->pktLength);
 		resyncDetect++;
 		if (resyncDetect == 10) {
 			sniffer.resync(resyncFail > 10); 
@@ -194,13 +223,16 @@ void handleSnifferPacket() {
 		resyncDetect = 0;
 		resyncFail = 0;
 		usbJoy.updateState(&ps2State);
+#ifndef WITHOUT_LCD
 		menu_packet(&ps2State);
+#endif
 	}
 	
 	upd->isNew = false;
 	prevWasValid = validPacket;
 }
 
+#ifndef WITHOUT_POLLER
 void handlePollerPacket() {
 	static uint8_t resyncDetect = 0, resyncFail = 0;
 	static bool prevWasValid = false;
@@ -212,8 +244,8 @@ void handlePollerPacket() {
 	packetObserved |= validPacket;
 
 	if (!validPacket) {
-		// sys_printf("INVALID PACKET RECEIVED, RESYNC CTR: %d\n", 0);
-		// ps2_state::print_packet(upd->cmd, upd->data, upd->pktLength);
+		sys_printf("INVALID PACKET RECEIVED, RESYNC CTR: %d\n", 0);
+		ps2_state::print_packet(upd->cmd, upd->data, upd->pktLength);
 		resyncDetect++;
 		if (resyncDetect == 10) {
 			poller.resync(resyncFail > 10); 
@@ -233,6 +265,7 @@ void handlePollerPacket() {
 	upd->isNew = false;
 	prevWasValid = validPacket;
 }
+#endif
 
 void eepromSelect(spi_interface* spi_if) {
 	hal_spi_interface* hintf = (hal_spi_interface*)spi_if;
