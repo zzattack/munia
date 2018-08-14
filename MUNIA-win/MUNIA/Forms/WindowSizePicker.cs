@@ -103,13 +103,13 @@ namespace MUNIA.Forms {
 
 	public class SceneCollection {
 		public string Name;
-		public List<Scene> Scenes = new List<Scene>();
+		public readonly List<Scene> Scenes = new List<Scene>();
 		public override string ToString() => Name;
 	}
 
 	public class Scene {
 		public string Name;
-		public List<Source> Source = new List<Source>();
+		public readonly List<Source> Source = new List<Source>();
 		public override string ToString() => Name;
 	}
 

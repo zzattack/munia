@@ -10,7 +10,7 @@ using Svg;
 
 namespace MUNIA.Forms {
 	public partial class SkinRemapperForm : Form {
-		private SvgSkin _skin;
+		private readonly SvgSkin _skin;
 		public ColorRemap Remap { get; private set; }
 
 		private Color _bkpStroke;
@@ -24,7 +24,7 @@ namespace MUNIA.Forms {
 		private readonly List<GroupedSvgElems> _highlights = new List<GroupedSvgElems>();
 		private readonly List<GroupedSvgElems> _nonHighlights = new List<GroupedSvgElems>();
 		private readonly List<GroupedSvgElems> _base = new List<GroupedSvgElems>();
-		CheckBox cbFlash;
+		private readonly CheckBox cbFlash;
 
 		private SkinRemapperForm() {
 			InitializeComponent();
