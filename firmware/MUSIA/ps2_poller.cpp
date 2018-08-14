@@ -199,8 +199,8 @@ void ps2_poller::work() {
 			}
 			else {
 				configFailCount++;
-				ps2_printf("enterConfigMode failed, return payload=");
-				printf_payload((char*)rcvBuff, sizeof(rcvBuff)); printf("\n");
+				ps2_printf("\nenterConfigMode failed, return payload=");
+				printf_payload((char*)rcvBuff, sizeof(rcvBuff));
 			}
 		}
 		
@@ -211,12 +211,12 @@ void ps2_poller::work() {
 			
 			if (rcvBuff[2] == 0x5A) {
 				nextConfigState();
-				ps2_printf("state enterConfigMode --> turnOnAnalog\n");
+				ps2_printf("\nstate enterConfigMode --> turnOnAnalog\n");
 			}
 			else {
 				configFailCount++;
-				ps2_printf("turnOnAnalog failed, return payload=");
-				printf_payload((char*)rcvBuff, sizeof(rcvBuff)); printf("\n");
+				ps2_printf("\nturnOnAnalog failed, return payload=");
+				printf_payload((char*)rcvBuff, sizeof(rcvBuff));
 			}
 		}
 		
@@ -227,12 +227,12 @@ void ps2_poller::work() {
 			
 			if (rcvBuff[1] == 0xF3 && rcvBuff[2] == 0x5A) {
 				nextConfigState();
-				ps2_printf("state turnOnAnalog --> setupMotorMapping\n");
+				ps2_printf("\nstate turnOnAnalog --> setupMotorMapping\n");
 			}
 			else {
 				configFailCount++;
-				ps2_printf("setupMotorMapping failed, return payload=");
-				printf_payload((char*)rcvBuff, sizeof(rcvBuff)); printf("\n");
+				ps2_printf("\nsetupMotorMapping failed, return payload=");
+				printf_payload((char*)rcvBuff, sizeof(rcvBuff));
 			}
 		}
 		
@@ -243,12 +243,12 @@ void ps2_poller::work() {
 			
 			if (rcvBuff[1] == 0xF3 && rcvBuff[2] == 0x5a && rcvBuff[4] == 0x01) {
 				nextConfigState();
-				ps2_printf("state setupMotorMapping --> enablePressureMappings\n");
+				ps2_printf("\nstate setupMotorMapping --> enablePressureMappings\n");
 			}
 			else {
 				configFailCount++;
-				ps2_printf("enablePressureMappings failed, return payload=");
-				printf_payload((char*)rcvBuff, sizeof(rcvBuff)); printf("\n");
+				ps2_printf("\nenablePressureMappings failed, return payload=");
+				printf_payload((char*)rcvBuff, sizeof(rcvBuff));
 			}
 		}
 		
@@ -259,12 +259,12 @@ void ps2_poller::work() {
 			
 			if (rcvBuff[1] == 0xF3 && rcvBuff[2] == 0x5a && rcvBuff[8] == 0x5a) {
 				nextConfigState();
-				ps2_printf("state enablePressureMappings --> exitConfig\n");
+				ps2_printf("\nstate enablePressureMappings --> exitConfig\n");
 			 }
 			else {
 				configFailCount++;
 				ps2_printf("exitConfig failed, return payload=");
-				printf_payload((char*)rcvBuff, sizeof(rcvBuff)); printf("\n");
+				printf_payload((char*)rcvBuff, sizeof(rcvBuff));
 			}
 		}
 		
@@ -276,7 +276,7 @@ void ps2_poller::work() {
 			if (rcvBuff[1] == 0xF3 && rcvBuff[2] == 0x5a) {
 				// show be completed now
 				nextConfigState();
-				ps2_printf("state exitConfig --> fully initialized\n");
+				ps2_printf("\nstate exitConfig --> fully initialized\n");
 			}
 			else configFailCount++;
 		}
