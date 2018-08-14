@@ -968,6 +968,15 @@ p:last-child {
 	background: linear-gradient(#d5bfab 0%, #c4a495 100%);
 }
 
+.bg-gradient-orange {
+	background: #ffa500;
+	background: -webkit-linear-gradient(#ffa50080 0%, #ffbf2f 100%);
+	background: -moz-linear-gradient(#ffa50080 0%, #ffbf2f 100%);
+	background: -ms-linear-gradient(#ffa50080 0%, #ffbf2f 100%);
+	background: -o-linear-gradient(#ffa50080 0%, #ffbf2f 100%);
+	background: linear-gradient(#ffa50080 0%, #ffbf2f 100%);
+}
+
 .bg-gradient-violet {
 	background: #7421db;
 	background: -webkit-linear-gradient(#9e3ee2 0%, #7421db 100%);
