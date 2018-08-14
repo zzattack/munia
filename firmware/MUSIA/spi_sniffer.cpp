@@ -171,7 +171,6 @@ void spi_sniffer::stop() {
 
 void spi_sniffer::work() {
 	if (captureAvailable) {
-
 		uint32_t pos = __HAL_DMA_GET_COUNTER(hspiCmd->hdmarx), i = 0;
 		// if too much data in buffer, discard
 		int tgtIdxCmd = sizeof(buffCmd) - pos;

@@ -2,14 +2,14 @@
 #include <cstdio>
 
 void ps2_state::print_packet(uint8_t* cmd, uint8_t* data, uint8_t pkt_len) {
-	sys_printf("PS2 packet capture, len: %d:\n", pkt_len);
+	/*sys_printf("PS2 packet capture, len: %d:\n", pkt_len);
 	printf("\t CMD:  ");
 	for (int i = 0; i < pkt_len; i++)
 		printf("%02X ", cmd[i]);
 	printf("\n\t DATA: ");
 	for (int i = 0; i < pkt_len; i++)
 		printf("%02X ", data[i]);
-	printf("\n");
+	printf("\n");*/
 }
 
 bool ps2_state::update(uint8_t* cmd, uint8_t* data, uint8_t pkt_len) {
@@ -34,17 +34,6 @@ bool ps2_state::update(uint8_t* cmd, uint8_t* data, uint8_t pkt_len) {
 	uint8_t cmdId = cmd[1];
 	if (cmdId == 0x42) return updatePoll(&data[3], numWords * 2);
 	else if (cmdId == 0x43) return updateConfig(cmd, data, numWords * 2);
-	else {
-		sys_printf("Unknown command %02X:\n", cmdId);
-		printf("\t CMD:  ");
-		for (int i = 0; i < pkt_len; i++)
-			printf("%02X ", cmd[i]);
-		printf("\n\t DATA: ");
-		for (int i = 0; i < pkt_len; i++)
-			printf("%02X ", data[i]);
-		printf("\n");
-		return (cmdId & 0x40) == 0x40;
-	}
 }
 
 bool ps2_state::updatePoll(uint8_t* data, int len) {
@@ -78,20 +67,25 @@ bool ps2_state::updatePoll(uint8_t* data, int len) {
 		square = buttons2 & 0x80;
 	}
 	
+	int idx = 2;
 	if (len >= 6) {
 		l_stick = buttons1 & 0x02;
-		r_stick = buttons1 & 0x04;
-		
-		int idx = 2;
+		r_stick = buttons1 & 0x04;		
 		analog2_x = data[idx++] - 128;
 		analog2_y = data[idx++] - 128;
 		analog1_x = data[idx++] - 128;
 		analog1_y = data[idx++] - 128;
 	}
+	else {
+		analog2_x = 0;
+		analog2_y = 0;
+		analog1_x = 0;
+		analog1_y = 0;
+		idx += 4;
+	}
 	
 	if (len == 18) {
 		// pressures
-		int idx = 6;
 		pressures.dpad_right    = data[idx++];
 		pressures.dpad_left     = data[idx++];
 		pressures.dpad_up		= data[idx++];
