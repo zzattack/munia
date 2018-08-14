@@ -43,12 +43,6 @@ int sync_printf_pfx(const char* prefix, const char* format, ...) {
 	return v;
 }
 
-EXTERNC void printf_payload(const char* x, int len) {
-#ifdef DEBUG
- 	while (len--) sync_printf("%02x ", *x++);
-#endif
-}
-
 #ifndef FAST_SEMIHOSTING_PROFILER_DRIVER
 int _isatty(int fd) {
 	if (fd >= STDIN_FILENO && fd <= STDERR_FILENO)
@@ -59,6 +53,7 @@ int _isatty(int fd) {
 }
 
 int _write(int fd, char* ptr, int len) {
+#ifndef WITHOUT_UART
 	HAL_StatusTypeDef hstatus;
 
 	if (fd == STDOUT_FILENO || fd == STDERR_FILENO) {
@@ -68,6 +63,7 @@ int _write(int fd, char* ptr, int len) {
 	}
 	errno = EBADF;
 	return -1;
+#endif
 }
 
 int _close(int fd) {
@@ -88,16 +84,6 @@ int _lseek(int fd, int ptr, int dir) {
 }
 
 int _read(int fd, char* ptr, int len) {
-	HAL_StatusTypeDef hstatus;
-
-	if (fd == STDIN_FILENO) {
-		hstatus = HAL_UART_Receive(gHuart, (uint8_t *) ptr, 1, HAL_MAX_DELAY);
-		if (hstatus == HAL_OK)
-			return 1;
-		else
-			return EIO;
-	}
-	errno = EBADF;
 	return -1;
 }
 
