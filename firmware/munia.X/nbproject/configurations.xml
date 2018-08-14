@@ -77,7 +77,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>RealICEPlatformTool</platformTool>
         <languageToolchain>XC8</languageToolchain>
-        <languageToolchainVersion>1.44</languageToolchainVersion>
+        <languageToolchainVersion>1.45</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <compileType>
@@ -542,7 +542,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>RealICEPlatformTool</platformTool>
         <languageToolchain>XC8</languageToolchain>
-        <languageToolchainVersion>1.44</languageToolchainVersion>
+        <languageToolchainVersion>1.45</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <compileType>
@@ -989,7 +989,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>Simulator</platformTool>
         <languageToolchain>XC8</languageToolchain>
-        <languageToolchainVersion>1.44</languageToolchainVersion>
+        <languageToolchainVersion>1.45</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <compileType>
