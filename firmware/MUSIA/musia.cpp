@@ -1,7 +1,3 @@
-// #define WITHOUT_POLLER
-// #define WITHOUT_LCD
-#define WITHOUT_UART
-
 #include "musia.h"
 #include "ps2_poller.h"
 #include "ps2_state.h"
