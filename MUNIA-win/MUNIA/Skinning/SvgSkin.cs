@@ -424,13 +424,12 @@ namespace MUNIA.Skinning {
 			points[2] = new PointF(b.Left - x.StrokeWidth / 2, b.Bottom + x.StrokeWidth / 2);
 			points[3] = new PointF(b.Right + x.StrokeWidth / 2, b.Bottom + x.StrokeWidth / 2);
 
-			// x = x.Parent;
 			while (x is SvgVisualElement) {
 				var m = x.Transforms.GetMatrix();
 				m.TransformPoints(points);
 				x = x.Parent;
 			}
-			float minX = points.Min(p => p.X);
+			float minX = points.Min(p => p.X); 
 			float minY = points.Min(p => p.Y);
 			float maxX = points.Max(p => p.X);
 			float maxY = points.Max(p => p.Y);
@@ -457,6 +456,7 @@ namespace MUNIA.Skinning {
 			public SvgVisualElement Pressed;
 			public int PressedTexture = -1;
 			public RectangleF PressedBounds;
+			public bool AttachedToStick;
 		}
 		public class Stick : ControllerItem {
 			public float OffsetScale;
