@@ -64,7 +64,7 @@ USBD_HID_IfHandleType hps2controller_if = {
 	.App = &ps2controllerApp,
 	.Base.AltCount = 1,
 	.Config.InEp.Size = sizeof(ps2_hid_packet),
-	.Config.InEp.Interval = 1,
+	.Config.InEp.Interval_ms = 1,
 }, *const ps2controller_if = &hps2controller_if;
 
 

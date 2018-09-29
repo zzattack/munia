@@ -21,7 +21,7 @@
   * See the License for the specific language governing permissions and
   * limitations under the License.
   */
-#include <usbd_private.h>
+#include <private/usbd_private.h>
 
 /** @ingroup USBD
  * @defgroup USBD_Exported_Functions USB Device Exported Functions
@@ -170,6 +170,10 @@ void USBD_ResetCallback(USBD_HandleType *dev, USB_SpeedType speed)
 /** @} */
 
 /** @ingroup USBD
+ * @defgroup USBD_Private USB Device Private Functions
+ */
+
+/** @ingroup USBD_Private
  * @addtogroup USBD_Private_Functions_Ctrl
  * @{ */
 

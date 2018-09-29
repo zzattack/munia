@@ -21,12 +21,11 @@
   * See the License for the specific language governing permissions and
   * limitations under the License.
   */
-#define USBD_DEVICE_API
-#include <usbd_private.h>
+#include <private/usbd_private.h>
 #include <usbd_utils.h>
 
-/** @ingroup USBD
- * @defgroup USBD_Private_Constants USBD Descriptor Prototypes
+/** @ingroup USBD_Private
+ * @defgroup USBD_Private_Functions_Desc USBD Descriptors Provision
  * @{ */
 
 __alignment(USBD_DATA_ALIGNMENT)
@@ -95,12 +94,6 @@ static const struct {
 };
 #endif
 
-/** @} */
-
-/** @ingroup USBD
- * @defgroup USBD_Private_Functions_Desc USBD Descriptors Provision
- * @{ */
-
 /**
  * @brief This function provides the USB device descriptor.
  * @param dev: USB Device handle reference
@@ -166,9 +159,29 @@ static uint16_t USBD_ConfigDesc(USBD_HandleType *dev, uint8_t *data)
  */
 static uint16_t USBD_GetStringDesc(const char *str, uint8_t *data)
 {
-    data[0] = 2 + strlen(str) * 2;
+    uint16_t *dst = (uint16_t*)&data[2];
+    data[0] = 2;
     data[1] = USB_DESC_TYPE_STRING;
-    Ascii2Unicode(str, &data[2]);
+
+    /* If ASCII, convert to Unicode */
+    if (str[1] != 0)
+    {
+        uint8_t  *src = (uint8_t*)str;
+        while (*src != 0)
+        {
+            *dst++ = (uint16_t)*src++;
+            data[0] += sizeof(uint16_t);
+        }
+    }
+    else /* If Unicode already, just copy */
+    {
+        uint16_t *src = (uint16_t*)str;
+        while (*src != 0)
+        {
+            *dst++ = *src++;
+            data[0] += sizeof(uint16_t);
+        }
+    }
     return data[0];
 }
 
@@ -227,14 +240,14 @@ USBD_ReturnType USBD_GetDescriptor(USBD_HandleType *dev)
 
 #if (USBD_SERIAL_BCD_SIZE > 0)
                 case USBD_ISTR_SERIAL:
-                    data[0] = len = sizeof(*dev->Desc->SerialNumber) * 4 + 2;
+                    data[0] = len = 2 + USBD_SERIAL_BCD_SIZE * 2;
                     data[1] = USB_DESC_TYPE_STRING;
                     Uint2Unicode((const uint8_t*)dev->Desc->SerialNumber,
-                            &data[2], sizeof(*dev->Desc->SerialNumber) * 2);
+                            &data[2], USBD_SERIAL_BCD_SIZE);
                     break;
 #endif
 
-                default: 
+                default:
                 {
                     const char* str = USBD_IfString(dev);
 
@@ -335,6 +348,25 @@ uint16_t USBD_EpDesc(USBD_HandleType *dev, uint8_t epAddr, uint8_t *data)
     desc->bInterval         = 1;
 
     return sizeof(USB_EndpointDescType);
+}
+
+/**
+ * @brief Converts milliseconds to HS descriptor bInterval format with approximation.
+ * @param interval_ms: the EP polling interval in ms
+ * @return The closest bInterval field value
+ */
+uint8_t USBD_EpHsInterval(uint32_t interval_ms)
+{
+    uint32_t i, interval_125us = (interval_ms * 1000) / 125;
+    for (i = 3; i < 16; i++)
+    {
+        if (interval_125us < ((uint32_t)2 << i))
+        {
+            i++;
+            break;
+        }
+    }
+    return (uint8_t)i;
 }
 
 /** @} */

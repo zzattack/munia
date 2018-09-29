@@ -93,21 +93,23 @@ typedef enum
 /** @brief USB string descriptor indexes */
 typedef enum
 {
-    USBD_ISTR_LANGID     = 0, /*!< Fixed by standard */
-    USBD_ISTR_VENDOR     = 1, /*!< Vendor name */
-    USBD_ISTR_PRODUCT    = 2, /*!< Product name */
-    USBD_ISTR_SERIAL     = 3, /*!< Serial number string */
-    USBD_ISTR_CONFIG     = 4, /*!< Configuration name */
-    USBD_ISTR_INTERFACES      /*!< Interfaces' names */
+    USBD_ISTR_LANGID     = 0x00, /*!< Fixed by standard */
+    USBD_ISTR_INTERFACES,        /*!< Interfaces' names */
+    USBD_ISTR_VENDOR     = 0x10, /*!< Vendor name */
+    USBD_ISTR_PRODUCT    = 0x20, /*!< Product name */
+    USBD_ISTR_SERIAL     = 0x30, /*!< Serial number string */
+    USBD_ISTR_CONFIG     = 0x40, /*!< Configuration name */
 }USBD_iStringType;
 
 
+#if (USBD_SERIAL_BCD_SIZE > 0)
 /** @brief USB serial number definition */
-typedef const uint8_t USBD_SerialNumberType[USBD_SERIAL_BCD_SIZE];
+typedef const uint8_t USBD_SerialNumberType[(USBD_SERIAL_BCD_SIZE + 1) / 2];
+#endif
 
 
 /** @brief USB device configuration structure */
-typedef struct __packed
+typedef struct
 {
     const char *Name;       /*!< String description of the configuration */
     uint16_t MaxCurrent_mA; /*!< Maximum current demand (2 .. 500 mA) */
@@ -132,7 +134,7 @@ typedef struct __packed
 
 
 /** @brief USB Device descriptors structure */
-typedef struct __packed
+typedef struct
 {
     USBD_ConfigurationType Config;  /*!< Device configuration */
 
@@ -156,11 +158,11 @@ typedef struct __packed
 #if (USBD_SERIAL_BCD_SIZE > 0)
     USBD_SerialNumberType *SerialNumber;/*!< Product serial number reference */
 #endif
-} USBD_DescriptionType;
+}USBD_DescriptionType;
 
 
 /** @brief USB endpoint handle structure */
-typedef struct __packed
+typedef struct
 {
     struct {
         uint8_t *Data;                  /*!< Current data for transfer */
@@ -225,7 +227,7 @@ typedef void            ( *USBD_IfEpCbkType )   ( struct _USBD_IfHandleType *itf
 
 
 /** @brief USB interface class callback (virtual functions) structure */
-typedef struct __packed
+typedef struct
 {
     USBD_IfDescCbkType  GetDescriptor;  /*!< Read the interface descriptor */
     USBD_IfStrCbkType   GetString;      /*!< Read the interface's string */
@@ -242,7 +244,7 @@ typedef struct __packed
 
 
 /** @brief USB interface handle base structure */
-typedef struct __packed _USBD_IfHandleType 
+typedef struct _USBD_IfHandleType
 {
     struct _USBD_HandleType *Device;    /*!< Reference of the related USB Device */
     const  USBD_ClassType   *Class;     /*!< Reference of the class specific methods */
@@ -252,7 +254,7 @@ typedef struct __packed _USBD_IfHandleType
 
 
 /** @brief USB Device handle structure */
-typedef struct __packed _USBD_HandleType 
+typedef struct _USBD_HandleType
 {
     const USBD_DescriptionType *Desc;       /*!< Reference of the device description */
     USB_SetupRequestType Setup;             /*!< Setup request is stored */
@@ -282,7 +284,7 @@ typedef struct __packed _USBD_HandleType
     }EP;                                            /*!< Endpoint management */
 
     uint8_t CtrlData[USBD_EP0_BUFFER_SIZE]; /*!< Control EP buffer for common use */
-} USBD_HandleType;
+}USBD_HandleType;
 
 /** @} */
 

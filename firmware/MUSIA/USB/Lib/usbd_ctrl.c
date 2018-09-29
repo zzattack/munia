@@ -21,9 +21,9 @@
   * See the License for the specific language governing permissions and
   * limitations under the License.
   */
-#include <usbd_private.h>
+#include <private/usbd_private.h>
 
-/** @ingroup USBD
+/** @ingroup USBD_Private
  * @defgroup USBD_Private_Functions_Ctrl USBD Control Request Handling
  * @{ */
 
@@ -156,11 +156,6 @@ USBD_ReturnType USBD_CtrlSendData(USBD_HandleType *dev, const uint8_t *data, uin
 
         dev->EP.IN[0].State = USB_EP_STATE_DATA;
         USBD_PD_EpSend(dev, 0x80, data, len);
-
-#if 0
-        /* Prepare endpoint for premature end of transfer */
-        USBD_CtrlReceiveStatus(dev);
-#endif
 
         retval = USBD_E_OK;
     }

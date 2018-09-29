@@ -48,6 +48,9 @@
     <Filter Include="CubeMX">
       <UniqueIdentifier>{d0d83956-4de1-42ad-8995-e30625832aeb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="USB\Lib\Inc\private">
+      <UniqueIdentifier>{131cf1c5-ec29-49f7-9d6b-503c6a9c0d24}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="stm32.props">
@@ -758,6 +761,27 @@
     </ClInclude>
     <ClInclude Include="..\CubeMX\Inc\usart.h">
       <Filter>CubeMX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\USB\Lib\Inc\private\usbd_internal.h">
+      <Filter>USB\Lib\Inc\private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\USB\Lib\Inc\private\usbd_msc_private.h">
+      <Filter>USB\Lib\Inc\private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\USB\Lib\Inc\private\usbd_private.h">
+      <Filter>USB\Lib\Inc\private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\USB\XPD\xpd_rcc_cc.h">
+      <Filter>USB\XPD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\USB\XPD\xpd_exti.h">
+      <Filter>USB\XPD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\USB\XPD\xpd_gpio.h">
+      <Filter>USB\XPD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\USB\XPD\xpd_mco.h">
+      <Filter>USB\XPD</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

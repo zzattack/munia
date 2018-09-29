@@ -21,10 +21,9 @@
   * See the License for the specific language governing permissions and
   * limitations under the License.
   */
-#define USBD_DEVICE_API
-#include <usbd_private.h>
+#include <private/usbd_private.h>
 
-/** @ingroup USBD
+/** @ingroup USBD_Private
  * @defgroup USBD_Private_Functions_If USBD Interface Management
  * @{ */
 
@@ -45,6 +44,7 @@ void USBD_IfConfig(USBD_HandleType *dev, uint8_t cfgNum)
             for (ifNum = 0; ifNum < dev->IfCount; ifNum++)
             {
                 USBD_IfClass_Deinit(dev->IF[ifNum]);
+                dev->IF[ifNum]->AltSelector = 0;
             }
         }
 

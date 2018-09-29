@@ -78,9 +78,9 @@ USBD_HID_IfHandleType hconfigurator_if = {
 	.App = &cfgApp,
 	.Base.AltCount = 1,
 	.Config.InEp.Size = CFG_CMD_REPORT_SIZE,
-	.Config.InEp.Interval = 20,
+	.Config.InEp.Interval_ms = 20,
 	.Config.OutEp.Size = CFG_CMD_REPORT_SIZE,
-	.Config.OutEp.Interval = 20,
+	.Config.OutEp.Interval_ms = 20,
 }, *const configurator_if = &hconfigurator_if;
 
 void Configurator_Init() {

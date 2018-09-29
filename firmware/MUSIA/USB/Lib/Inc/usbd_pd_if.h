@@ -25,8 +25,7 @@
 #define __USBD_PD_IF_H_
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 #include <xpd_common.h>
