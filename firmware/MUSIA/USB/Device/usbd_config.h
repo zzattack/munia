@@ -23,12 +23,10 @@
 #ifndef __USBD_CONFIG_H_
 #define __USBD_CONFIG_H_
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
+/** @defgroup USBD_Templates Templates
+ * @{ */
 
-/** @addtogroup USBD_Exported_Macros
+/** @defgroup USBD_Exported_Macro_Templates USBD precompiler configuration
  * @{ */
 
 /** @brief Must be set according to the highest number of interfaces for a given USB Device. */
@@ -45,17 +43,41 @@ extern "C"
 #define USBD_HS_SUPPORT             0
 
 /** @brief When set to 0, no SerialNumber is readable by the host.
- * Otherwise the SerialNumber will be converted from USBD_SERIAL_BCD_SIZE
+ * Otherwise the SerialNumber will be converted from USBD_SERIAL_BCD_SIZE / 2
  * amount of raw bytes to string BCD format and sent to the host. */
 #define USBD_SERIAL_BCD_SIZE        8
 
-/* Any class-specific configuration may follow, e.g.
- *      USBD_HID_OUT_SUPPORT        1 */
+
+
+/** @brief Set to 1 if notifications are sent by a CDC-ACM interface.
+ * In this case notification EP will be allocated and opened if its address is valid. */
+#define USBD_CDC_NOTEP_USED         0
+
+/** @brief Set to 1 if SEND_BREAK request is used by a CDC-ACM interface. */
+#define USBD_CDC_BREAK_SUPPORT      0
+
+
+
+/** @brief Set to 1 if a DFU interface holds more than one applications as alternate settings. */
+#define USBD_DFU_ALTSETTINGS        0
+
+/** @brief Set to 1 if DFU STMicroelectronics Extension
+ *  protocol (v1.1A) shall be used instead of the standard DFU (v1.1). */
+#define USBD_DFU_ST_EXTENSION       0
+
+
+
+/** @brief Set to 1 if a HID interface holds more than one applications as alternate settings. */
+#define USBD_HID_ALTSETTINGS        0
+
+/** @brief Set to 1 if a HID interface uses an OUT endpoint. */
 #define USBD_HID_OUT_SUPPORT        1
+
+/** @brief Set to 1 if a HID interface defines strings in its report descriptor. */
+#define USBD_HID_REPORT_STRINGS     1
+
 /** @} */
 
-#ifdef __cplusplus
-}
-#endif
+/** @} */
 
 #endif /* __USBD_CONFIG_H_ */
