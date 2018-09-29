@@ -1,7 +1,7 @@
 /**
   ******************************************************************************
-  * @file    xpd_usb.c
-  * @author  Benedek Kupper
+ * @file    xpd_usb.c
+ * @author  Benedek Kupper
   * @version 0.3
   * @date    2018-01-28
   * @brief   STM32 eXtensible Peripheral Drivers Universal Serial Bus Module
@@ -19,7 +19,7 @@
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
-  */
+ */
 #include <xpd_usb.h>
 #include <xpd_rcc.h>
 #include <xpd_utils.h>
@@ -30,7 +30,7 @@
  * @{ */
 
 /* The packet buffer memory SRAM access scheme differs in earlier versions */
-#ifdef USB_LPMCSR_LPMEN
+#ifdef USB_LPMCSR_LMPEN
 typedef struct {
          uint16_t TX_ADDR;
     __IO uint16_t TX_COUNT;
@@ -299,15 +299,15 @@ void USB_vInit(USB_HandleType * pxUSB, const USB_InitType * pxConfig)
     /* Set Btable Address */
     USB->BTABLE = USB_BTABLE_VALUE;
 
-#ifdef USB_LPMCSR_LPMEN
+#ifdef USB_LPMCSR_LMPEN
     /* Set Link Power Management feature (L1 sleep mode support) */
     if (pxConfig->LPM != DISABLE)
     {
-        SET_BIT(USB->LPMCSR.w, USB_LPMCSR_LPMEN | USB_LPMCSR_LPMACK);
+        SET_BIT(USB->LPMCSR.w, USB_LPMCSR_LMPEN | USB_LPMCSR_LPMACK);
     }
     else
     {
-        CLEAR_BIT(USB->LPMCSR.w, USB_LPMCSR_LPMEN | USB_LPMCSR_LPMACK);
+        CLEAR_BIT(USB->LPMCSR.w, USB_LPMCSR_LMPEN | USB_LPMCSR_LPMACK);
     }
 #endif
 
@@ -342,9 +342,9 @@ void USB_vStart_IT(USB_HandleType * pxUSB)
 {
     /*Set interrupt mask */
     uint32_t ulCNTR = USB_CNTR_CTRM | USB_CNTR_WKUPM | USB_CNTR_SUSPM | USB_CNTR_RESETM;
-#ifdef USB_LPMCSR_LPMEN
+#ifdef USB_LPMCSR_LMPEN
     /* Set Link Power Management feature (L1 sleep mode support) */
-    if (USB_REG_BIT(pxUSB, LPMCSR, LPMEN) != 0)
+    if (USB_REG_BIT(pxUSB, LPMCSR, LMPEN) != 0)
     {
         ulCNTR |= USB_CNTR_L1REQM;
     }
@@ -784,10 +784,10 @@ void USB_vIRQHandler(USB_HandleType * pxUSB)
     /* Handle L1 suspend request */
     if ((usISTR & USB_ISTR_L1REQ) != 0)
     {
-        USB_FLAG_CLEAR(pxUSB, L1REQ);
-
         /* Force suspend and low-power mode before going to L1 state */
         SET_BIT(USB->CNTR.w, USB_CNTR_FSUSP | USB_CNTR_LPMODE);
+
+        USB_FLAG_CLEAR(pxUSB, L1REQ);
 
         /* Set the target Link State */
         pxUSB->LinkState = USB_LINK_STATE_SLEEP;
@@ -798,10 +798,10 @@ void USB_vIRQHandler(USB_HandleType * pxUSB)
     /* Handle suspend request */
     if ((usISTR & USB_ISTR_SUSP) != 0)
     {
-        USB_FLAG_CLEAR(pxUSB, SUSP);
-
+	    USB_FLAG_CLEAR(pxUSB, SUSP);
         /* Force low-power mode in the macrocell */
         SET_BIT(USB->CNTR.w, USB_CNTR_FSUSP | USB_CNTR_LPMODE);
+
 
         if (USB_FLAG_STATUS(pxUSB, WKUP) == 0)
         {
@@ -947,14 +947,8 @@ __weak void USB_vAllocateEPs(USB_HandleType * pxUSB)
         /* Reserve place for BTABLE */
         usPmaTail = ucRegId * sizeof(USB_BufferDescriptorType);
 
-        /* EP0 is half-duplex, IN and OUT can share the memory */
-        pxEP = &pxUSB->EP.IN[0];
-        USB_EP_BDT[pxEP->RegId].TX_ADDR = usPmaTail;
-        USB_EP_BDT[pxEP->RegId].RX_ADDR = usPmaTail;
-        usPmaTail += (pxEP->MaxPacketSize + 1) & (~1);
-
         /* Allocate packet memory for all endpoints (unused ones' MPS = 0) */
-        for (ulEpNum = 1; ulEpNum < USBD_MAX_EP_COUNT; ulEpNum++)
+        for (ulEpNum = 0; ulEpNum < USBD_MAX_EP_COUNT; ulEpNum++)
         {
             pxEP = &pxUSB->EP.IN[ulEpNum];
             if (pxEP->MaxPacketSize > 0)
@@ -995,7 +989,7 @@ __weak void USB_vAllocateEPs(USB_HandleType * pxUSB)
             }
         }
 
-#ifdef USB_LPMCSR_LPMEN
+#ifdef USB_LPMCSR_LMPEN
         /* TODO: usPmaTail shall not exceed 1024 (or 768 if CAN is enabled) */
 #else
         /* TODO: usPmaTail shall not exceed 512 */
