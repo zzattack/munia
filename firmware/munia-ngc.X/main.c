@@ -52,7 +52,7 @@ void main() {
     memset(usbInBuffer, 0, sizeof(usbInBuffer));
     
 	while (1) {
-        ClrWdt();                
+        ClrWdt();
         USBDeviceTasks();
         
         if (PIR2bits.TMR3IF) {
@@ -60,7 +60,10 @@ void main() {
             PIR2bits.TMR3IF = 0;
             pollNeeded = true;
         }
-        
+
+        LED_GC_ORANGE = USBDeviceState >= CONFIGURED_STATE;
+        LED_GC_GREEN = !USBSuspendControl;
+                
         ngc_tasks();
         usb_tasks();
         pollNeeded = false;
