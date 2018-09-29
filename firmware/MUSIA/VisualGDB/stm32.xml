@@ -7,7 +7,7 @@
     <Revision>3</Revision>
   </ToolchainVersion>
   <BspID>com.sysprogs.arm.stm32</BspID>
-  <BspVersion>4.7R3</BspVersion>
+  <BspVersion>2018.08</BspVersion>
   <McuID>STM32F042C6</McuID>
   <MCUDefinitionFile>STM32F0xxxx/DeviceDefinitions/stm32f042x6.xml</MCUDefinitionFile>
   <MCUProperties>

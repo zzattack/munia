@@ -9,7 +9,7 @@
 <!-- In order to build this project manually (outside VisualGDB), please provide TOOLCHAIN_ROOT, BSP_ROOT, EFP_BASE and TESTFW_BASE variables via Environment or Make command line -->
 	<ItemDefinitionGroup>
 		<ClCompile>
-			<PreprocessorDefinitions>ARM_MATH_CM0;STM32F042C6;flash_layout;STM32F042x6;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
+			<PreprocessorDefinitions>ARM_MATH_CM0;flash_layout;STM32F042C6;STM32F042x6;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
 			<AdditionalIncludeDirectories>$(ProjectDir);$(BSP_ROOT)/STM32F0xxxx/STM32F0xx_HAL_Driver/Inc;$(BSP_ROOT)/STM32F0xxxx/STM32F0xx_HAL_Driver/Inc/Legacy;$(BSP_ROOT)/STM32F0xxxx/CMSIS_HAL/Device/ST/STM32F0xx/Include;$(BSP_ROOT)/STM32F0xxxx/CMSIS_HAL/Include;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 		</ClCompile>
 	</ItemDefinitionGroup>
