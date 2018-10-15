@@ -256,7 +256,9 @@ void handlePollerPacket() {
 		resyncDetect = 0;
 		resyncFail = 0;
 		usbJoy.updateState(&ps2State);
+#ifndef WITHOUT_LCD
 		menu_packet(&ps2State);
+#endif
 	}
 	upd->isNew = false;
 	prevWasValid = validPacket;

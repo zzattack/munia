@@ -165,6 +165,8 @@ void USBD_ResetCallback(USBD_HandleType *dev, USB_SpeedType speed)
 
     /* Reset any previous configuration */
     USBD_IfConfig(dev, 0);
+
+	usb_printf("USBD_ResetCallback(), ISTR:%04x\n", USB->ISTR.w);
 }
 
 /** @} */
@@ -287,7 +289,9 @@ static USBD_ReturnType USBD_ClearFeature(USBD_HandleType *dev)
  */
 USBD_ReturnType USBD_DevRequest(USBD_HandleType *dev)
 {
-    USBD_ReturnType retval = USBD_E_INVALID;
+	usb_printf("USBD_DevRequest() rt=%x rq=%x, ISTR:%04x\n", dev->Setup.RequestType.Type, dev->Setup.Request, USB->ISTR.w);
+	
+	USBD_ReturnType retval = USBD_E_INVALID;
 
     /* On device level only (the below) standard requests are supported */
     if (dev->Setup.RequestType.Type == USB_REQ_TYPE_STANDARD)

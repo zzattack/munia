@@ -59,7 +59,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|VisualGDB'">
     <ClCompile>
       <AdditionalIncludeDirectories>..;../EEPROM;../CubeMX/Inc;../USB;../USB/Device;../USB/Interfaces;../USB/Lib/Inc;../USB/XPD;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>DEBUG=1;DEBUG_DEFAULT_INTERRUPT_HANDLERS=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>DEBUG=1;DEBUG_DEFAULT_INTERRUPT_HANDLERS=1;WITHOUT_LCD=1;WITHOUT_MENU;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
       <ForcedIncludeFiles>..\retarget.h</ForcedIncludeFiles>
       <AdditionalOptions />
       <CLanguageStandard />

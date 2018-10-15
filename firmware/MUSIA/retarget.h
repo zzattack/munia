@@ -24,7 +24,7 @@ EXTERNC int _read(int fd, char* ptr, int len);
 #define hal_printf(x, ...) // sync_printf_pfx("HAL", x, ##__VA_ARGS__)
 #define sys_printf(x, ...) // sync_printf_pfx("SYS", x, ##__VA_ARGS__)
 #define ps2_printf(x, ...) // sync_printf_pfx("PS2", x, ##__VA_ARGS__)
-#define usb_printf(x, ...) // sync_printf_pfx("USB", x, ##__VA_ARGS__)
+#define usb_printf(x, ...) sync_printf_pfx("USB", x, ##__VA_ARGS__)
 #define printf_payload(x, len)  do { char* c = x; int i = len ; while (i--) { sync_printf("%02x ", *c++);  } } while (0);
 
 #else

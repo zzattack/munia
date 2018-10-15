@@ -58,4 +58,5 @@ void UsbDevice_Init() {
 
 void UsbDevice_Deinit() {
 	USBD_Deinit(UsbDevice);
+	printf("soms"); 
 }
