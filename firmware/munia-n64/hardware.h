@@ -9,17 +9,11 @@
 #define HW_REVISION 0x00
 #define MUNIA_DEVICETYPE DEVTYPE_MUNIA_N64
 
-
 #define _XTAL_FREQ 48000000
 
 #define N64_DAT PORTCbits.RC1
 #define N64_DAT_TRIS TRISCbits.TRISC1
 
 #define SWITCH2 LATBbits.LATB2 // for n64
-
-#define BUTTON_COUNT 1
-#define BUTTON_0 BTN_MENU
-#define BTN_MENU (!PORTEbits.RE3)
-#define BTN_MENU_PRESSED bcPressed[0]
 
 #endif	/* HARDWARE_H */

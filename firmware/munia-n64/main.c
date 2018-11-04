@@ -11,7 +11,6 @@
 #include "usb_requests.h"
 #include "config.h"
 
-
 void init_pll();
 void init_io();
 void init_timers();

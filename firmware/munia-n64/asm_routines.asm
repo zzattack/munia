@@ -10,7 +10,6 @@ PSECT vars,class=RAM,space=1,abs,ovrld
 
     packet_state: ds 1
     bit_count: ds 1
-    PWMCycle: ds 1
     
     GMEM: ds 2
     sample_w: ds 2  ; sample buffer ptr

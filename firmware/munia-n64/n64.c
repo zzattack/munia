@@ -1,9 +1,9 @@
 #include "n64.h"
 #include "hardware.h"
 #include "globals.h"
-#include <usb/usb_device_hid.h>
 #include "gamepad.h"
 #include "asm_decl.h"
+#include <usb/usb_device_hid.h>
 #include "config.h"
 
 extern config_t config;

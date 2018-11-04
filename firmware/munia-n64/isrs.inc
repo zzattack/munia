@@ -13,13 +13,13 @@ PSECT ISR_jumps,local,class=CODE,delta=1,reloc=2,abs
     goto isr_low    
 #endif
     
+    
 PSECT ISR_routines,local,class=CODE,delta=1,reloc=2
 isr_low:
     retfie
     
     
 isr_high:
-    movf PORTC, w, c ; determine which port got triggered    
     clrf TMR1L, c ; reset timer 1, used to determine how long current bit is low
     
     ; no need to check IF flag because IOCIF is the only enabled interrupt
