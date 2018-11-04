@@ -113,9 +113,13 @@ namespace MUNIA.Forms {
 		private void ActivateConfig(IController ctrlr, Skin skin) {
 			if (skin?.LoadResult != SkinLoadResult.Ok) return;
 
+			skin.Activate();
 			// apply remap if it was previously selected
 			if (skin is SvgSkin svg && ConfigManager.SelectedRemaps[svg] is ColorRemap rmp) {
 				rmp.ApplyToSkin(svg);
+			}
+			else if (skin is NintendoSpySkin nspySkin && ConfigManager.SelectedNSpyBackgrounds.ContainsKey(nspySkin)) {
+				nspySkin.SelectBackground(ConfigManager.SelectedNSpyBackgrounds[nspySkin]);
 			}
 
 			ConfigManager.ActiveSkin = skin;
@@ -444,9 +448,26 @@ namespace MUNIA.Forms {
 
 					tsmiApplyTheme.DropDownItems.Add(tsmiSkin);
 				}
+				tsmiBackground.Visible = true;
 			}
 			else {
 				tsmiApplyTheme.Enabled = false;
+				tsmiBackground.Visible = false;
+			}
+
+			if (ConfigManager.ActiveSkin is NintendoSpySkin nspy) {
+				tsmiBackground.Visible = false;
+				tsmiBackgroundNSpy.Visible = true;
+				tsmiBackgroundNSpy.DropDownItems.Clear();
+				foreach (var bg in nspy.Backgrounds) {
+					ToolStripMenuItem item = new ToolStripMenuItem(bg.Key);
+					item.Click += (o, args) => nspy.SelectBackground(bg.Key);
+					item.Checked = bg.Value == nspy.SelectedBackground;
+					tsmiBackgroundNSpy.DropDownItems.Add(item);
+				}
+			}
+			else {
+				tsmiBackgroundNSpy.Visible = false;
 			}
 		}
 

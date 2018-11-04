@@ -94,6 +94,13 @@ namespace MUNIA.Skinning {
 			catch { LoadResult = SkinLoadResult.Fail; }
 		}
 
+		public override void Activate() {
+			// todo: move bitmap creation here
+		}
+		public override void Cleanup() {
+			// todo: clean textures here
+		}
+
 		private static Button ReadIniButton(IniFile.IniSection sec, FileInfo pi) {
 			if (sec == null) return null;
 			var ret = new Button {

@@ -20,6 +20,7 @@ namespace MUNIA {
 		public static Color BackgroundColor { get; set; } = Color.Gray;
 		public static Dictionary<Skin, Size> WindowSizes { get; } = new Dictionary<Skin, Size>();
 		public static Dictionary<SvgSkin, ColorRemap> SelectedRemaps { get; } = new Dictionary<SvgSkin, ColorRemap>();
+		public static Dictionary<NintendoSpySkin, string> SelectedNSpyBackgrounds{ get; } = new Dictionary<NintendoSpySkin, string>();
 		public static Dictionary<string, BindingList<ColorRemap>> AvailableRemaps { get; } 
 			= new Dictionary<string, BindingList<ColorRemap>>();
 		public static readonly ArduinoMapping ArduinoMapping = new ArduinoMapping();
@@ -82,6 +83,17 @@ namespace MUNIA {
 						foreach (string iniPath in Directory.GetFiles(padpyghtDir, "*.ini")) {
 							var pp = new PadpyghtSkin();
 							pp.Load(iniPath);
+							if (pp.LoadResult == SkinLoadResult.Ok)
+								Skins.Add(pp);
+						}
+					}
+				}
+
+				if ((dir.Types & SkinType.NintendoSpy) != 0) {
+					foreach (string nspyDir in Directory.GetDirectories(dir.Path)) {
+						foreach (string xmlPath in Directory.GetFiles(nspyDir, "skin.xml")) {
+							var pp = new NintendoSpySkin();
+							pp.Load(xmlPath);
 							if (pp.LoadResult == SkinLoadResult.Ok)
 								Skins.Add(pp);
 						}
@@ -165,6 +177,10 @@ namespace MUNIA {
 							SelectedRemaps[svg] = skinList.First(r => r.UUID == uuid);
 						}
 					}
+
+					else if (skin is NintendoSpySkin nspySkin && skinCfg.Attributes["ActiveBackground"] != null) {
+						SelectedNSpyBackgrounds[nspySkin] = skinCfg.Attributes["ActiveBackground"].Value;
+					}
 				}
 
 				// load arduino map, then controllers
@@ -242,7 +258,10 @@ namespace MUNIA {
 					if (skin is SvgSkin svg && SelectedRemaps[svg] is ColorRemap r) {
 						xw.WriteAttributeString("ActiveRemap", r.UUID.ToString());
 					}
-						
+					else if (skin is NintendoSpySkin nspySkin && nspySkin.SelectedBackground != null) {
+						xw.WriteAttributeString("ActiveBackground", nspySkin.SelectedBackground.Name);
+					}
+
 					xw.WriteEndElement(); // skin
 				}
 				xw.WriteEndElement(); // skin_settings

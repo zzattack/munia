@@ -123,6 +123,7 @@
       <DependentUpon>SkinFoldersForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="Skinning\NintendoSpyMapping.cs" />
     <Compile Include="Util\ColorPickerControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

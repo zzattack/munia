@@ -17,6 +17,9 @@ namespace MUNIA.Skinning {
 			return !Equals(oldState, State);
 		}
 		protected ControllerState State;
+
+		public abstract void Activate();
+		public abstract void Cleanup();
 	}
 
 

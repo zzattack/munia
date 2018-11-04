@@ -23,20 +23,6 @@ namespace MUNIA.Skinning {
 				SvgDocument = SvgDocument.Open(svgPath);
 				_dimensions = SvgDocument.GetDimensions();
 
-				// cleanup
-				Buttons.ForEach(b => {
-					if (b.PressedTexture != -1) GL.DeleteTexture(b.PressedTexture);
-					if (b.Texture != -1) GL.DeleteTexture(b.Texture);
-				});
-				Sticks.ForEach(s => {
-					if (s.Texture != -1) GL.DeleteTexture(s.Texture);
-					if (s.PressedTexture != -1) GL.DeleteTexture(s.PressedTexture);
-				});
-				Triggers.ForEach(t => { if (t.Texture != -1) GL.DeleteTexture(t.Texture); });
-				Buttons.Clear();
-				Sticks.Clear();
-				Triggers.Clear();
-
 				// load button/stick/trigger mapping from svg
 				RecursiveGetElements(SvgDocument);
 
@@ -45,7 +31,28 @@ namespace MUNIA.Skinning {
 			catch { LoadResult = SkinLoadResult.Fail; }
 		}
 
-		private void RecursiveGetElements(SvgElement e) {
+		public override void Activate() {
+			// texture resource are created upon first render/resize, so no need
+			// to clear/cache anything here
+		}
+
+		public override void Cleanup() {
+			// cleanup
+			Buttons.ForEach(b => {
+				if (b.PressedTexture != -1) GL.DeleteTexture(b.PressedTexture);
+				if (b.Texture != -1) GL.DeleteTexture(b.Texture);
+			});
+			Sticks.ForEach(s => {
+				if (s.Texture != -1) GL.DeleteTexture(s.Texture);
+				if (s.PressedTexture != -1) GL.DeleteTexture(s.PressedTexture);
+			});
+			Triggers.ForEach(t => { if (t.Texture != -1) GL.DeleteTexture(t.Texture); });
+			Buttons.Clear();
+			Sticks.Clear();
+			Triggers.Clear();
+		}
+
+			private void RecursiveGetElements(SvgElement e) {
 			foreach (var c in e.Children) {
 				if (c.ElementName == "info") {
 					if (c.CustomAttributes.ContainsKey("device-name")) {

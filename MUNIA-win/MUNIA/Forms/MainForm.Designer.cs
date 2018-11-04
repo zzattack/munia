@@ -50,9 +50,10 @@ namespace MUNIA.Forms {
 			this.pbProgress = new System.Windows.Forms.ToolStripProgressBar();
 			this.tooltip = new System.Windows.Forms.ToolTip(this.components);
 			this.popup = new System.Windows.Forms.ContextMenuStrip(this.components);
-			this.tsmiBackgroundColor = new System.Windows.Forms.ToolStripMenuItem();
-			this.tsmiBackgroundChange = new System.Windows.Forms.ToolStripMenuItem();
+			this.tsmiBackground = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiBackgroundTransparent = new System.Windows.Forms.ToolStripMenuItem();
+			this.tsmiBackgroundNSpy = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiColorRemapping = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiApplyTheme = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiManageThemes = new System.Windows.Forms.ToolStripMenuItem();
@@ -235,39 +236,44 @@ namespace MUNIA.Forms {
 			// popup
 			// 
 			this.popup.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiBackgroundColor,
+            this.tsmiBackground,
+            this.tsmiBackgroundNSpy,
             this.tsmiColorRemapping});
 			this.popup.Name = "popup";
-			this.popup.Size = new System.Drawing.Size(169, 48);
+			this.popup.Size = new System.Drawing.Size(169, 70);
 			this.popup.Opening += new System.ComponentModel.CancelEventHandler(this.popup_Opening);
 			// 
-			// tsmiBackgroundColor
+			// tsmiBackground
 			// 
-			this.tsmiBackgroundColor.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiBackgroundChange,
+			this.tsmiBackground.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem2,
             this.tsmiBackgroundTransparent});
-			this.tsmiBackgroundColor.Name = "tsmiBackgroundColor";
-			this.tsmiBackgroundColor.Size = new System.Drawing.Size(168, 22);
-			this.tsmiBackgroundColor.Text = "&Background color";
+			this.tsmiBackground.Name = "tsmiBackground";
+			this.tsmiBackground.Size = new System.Drawing.Size(168, 22);
+			this.tsmiBackground.Text = "&Background color";
 			// 
-			// tsmiBackgroundChange
+			// toolStripMenuItem2
 			// 
-			this.tsmiBackgroundChange.Name = "tsmiBackgroundChange";
-			this.tsmiBackgroundChange.Size = new System.Drawing.Size(136, 22);
-			this.tsmiBackgroundChange.Text = "&Change";
-			this.tsmiBackgroundChange.Click += new System.EventHandler(this.tsmiBackgroundChange_Click);
+			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+			this.toolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItem2.Text = "&Change";
 			// 
 			// tsmiBackgroundTransparent
 			// 
 			this.tsmiBackgroundTransparent.Checked = true;
 			this.tsmiBackgroundTransparent.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.tsmiBackgroundTransparent.Name = "tsmiBackgroundTransparent";
-			this.tsmiBackgroundTransparent.Size = new System.Drawing.Size(136, 22);
+			this.tsmiBackgroundTransparent.Size = new System.Drawing.Size(180, 22);
 			this.tsmiBackgroundTransparent.Text = "&Transparent";
 			this.tsmiBackgroundTransparent.ToolTipText = "If checked, background will have an alpha channel of 0 allowing OBS to blend the " +
     "background with overlapping content.\r\nIn your OBS scene, use a game capture sour" +
     "ce with transparency enabled.";
-			this.tsmiBackgroundTransparent.Click += new System.EventHandler(this.tsmiBackgroundTransparent_Click);
+			// 
+			// tsmiBackgroundNSpy
+			// 
+			this.tsmiBackgroundNSpy.Name = "tsmiBackgroundNSpy";
+			this.tsmiBackgroundNSpy.Size = new System.Drawing.Size(168, 22);
+			this.tsmiBackgroundNSpy.Text = "&Background";
 			// 
 			// tsmiColorRemapping
 			// 
@@ -281,13 +287,13 @@ namespace MUNIA.Forms {
 			// tsmiApplyTheme
 			// 
 			this.tsmiApplyTheme.Name = "tsmiApplyTheme";
-			this.tsmiApplyTheme.Size = new System.Drawing.Size(180, 22);
+			this.tsmiApplyTheme.Size = new System.Drawing.Size(159, 22);
 			this.tsmiApplyTheme.Text = "&Apply theme";
 			// 
 			// tsmiManageThemes
 			// 
 			this.tsmiManageThemes.Name = "tsmiManageThemes";
-			this.tsmiManageThemes.Size = new System.Drawing.Size(180, 22);
+			this.tsmiManageThemes.Size = new System.Drawing.Size(159, 22);
 			this.tsmiManageThemes.Text = "&Manage themes";
 			this.tsmiManageThemes.Click += new System.EventHandler(this.tsmiManageThemes_Click);
 			// 
@@ -335,16 +341,17 @@ namespace MUNIA.Forms {
 		private System.Windows.Forms.ToolStripMenuItem tsmiMapArduinoDevices;
 		private System.Windows.Forms.ToolTip tooltip;
 		private System.Windows.Forms.ContextMenuStrip popup;
-		private System.Windows.Forms.ToolStripMenuItem tsmiBackgroundColor;
+		private System.Windows.Forms.ToolStripMenuItem tsmiBackgroundNSpy;
 		private System.Windows.Forms.ToolStripMenuItem tsmiColorRemapping;
 		private System.Windows.Forms.ToolStripMenuItem tsmiManageThemes;
-		private System.Windows.Forms.ToolStripMenuItem tsmiBackgroundChange;
-		private System.Windows.Forms.ToolStripMenuItem tsmiBackgroundTransparent;
 		private System.Windows.Forms.ToolStripMenuItem tsmiApplyTheme;
 		private System.Windows.Forms.ToolStripMenuItem tsmiSkinFolders;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
 		private System.Windows.Forms.ToolStripMenuItem tsmiManageSkinThemes;
+		private System.Windows.Forms.ToolStripMenuItem tsmiBackground;
+		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
+		private System.Windows.Forms.ToolStripMenuItem tsmiBackgroundTransparent;
 	}
 }
 
