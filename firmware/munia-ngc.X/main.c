@@ -159,7 +159,7 @@ void init_interrupts() {
     
 	RCONbits.IPEN = 1; // Enable priority levels on interrupts
 	INTCONbits.GIEH = 1; // Enable high priority interrupts
-	INTCONbits.GIEL = 1; // Enable low priority interrupts
+	INTCONbits.GIEL = 0; // Enable low priority interrupts
 }
 
 void load_config() {
