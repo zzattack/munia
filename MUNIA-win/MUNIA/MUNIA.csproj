@@ -259,8 +259,6 @@
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
     <None Include="Properties\DataSources\MUNIA.Skins.ColorRemap.datasource" />
-    <None Include="Resources\notok.png" />
-    <None Include="Resources\ok.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -272,10 +270,19 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\warn.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="munia256.ico" />
+    <None Include="Resources\warn.png" />
+    <None Include="Resources\ok.png" />
+    <None Include="Resources\notok.png" />
+    <None Include="Resources\snes.png" />
+    <None Include="Resources\arduino.png" />
+    <None Include="Resources\n64.png" />
+    <None Include="Resources\ngc.png" />
+    <None Include="Resources\generic.png" />
+    <None Include="Resources\ps.png" />
+    <None Include="Resources\svg.png" />
+    <None Include="Resources\padpy.png" />
+    <None Include="Resources\nspy.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

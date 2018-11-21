@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MUNIA.Controllers;
 using MUNIA.Interop;
+using MUNIA.Properties;
 using MUNIA.Skinning;
 using MUNIA.Util;
 using OpenTK.Graphics.OpenGL;
@@ -75,9 +76,11 @@ namespace MUNIA.Forms {
 					tsmiSkin.Enabled = true;
 					tsmiSkin.ToolTipText = skin.Path;
 					tsmiSkin.Click += (sender, args) => ActivateConfig(ctrlr, skin);
+					tsmiSkin.Image = GetSkinImage(skin);
 					tsmiController.DropDownItems.Add(tsmiSkin);
 				}
 
+				tsmiController.Image = GetControllerImage(ctrlr);
 				tsmiControllers.DropDownItems.Add(tsmiController);
 			}
 
@@ -88,6 +91,8 @@ namespace MUNIA.Forms {
 			if (availableControllers.Count() < allControllerTypes.Count())
 				tsmiControllers.DropDownItems.Add(new ToolStripSeparator());
 
+			// make 'empty'  menu entries for controllers that aren't detected,
+			// so that we can still look at the skins for them
 			foreach (var controller in allControllerTypes.Except(availableControllers).OrderBy(c => c.ToString())) {
 				var tsmiSkin = new ToolStripMenuItem(controller.ToString());
 
@@ -98,6 +103,8 @@ namespace MUNIA.Forms {
 					var skinPrev = tsmiSkin.DropDownItems.Add(skin.Name);
 					skinPrev.Enabled = true;
 					skinPrev.Click += (sender, args) => ActivateConfig(null, skin);
+					skinPrev.Image = GetSkinImage(skin);
+					tsmiSkin.Image = GetControllerImage(controller);
 				}
 
 				tsmiControllers.DropDownItems.Add(tsmiSkin);
@@ -108,6 +115,34 @@ namespace MUNIA.Forms {
 			if (numFail > 0)
 				skinText += $" ({numFail} skins failed to load)";
 			lblSkins.Text = skinText;
+		}
+
+		private static Image GetControllerImage(IController ctrlr) {
+			if (ctrlr is ArduinoController) return Resources.arduino;
+			else return GetControllerImage(ctrlr.Type);
+		}
+
+		private static Image GetControllerImage(ControllerType ctrlrType) {
+			switch (ctrlrType) {
+				case ControllerType.SNES:
+					return Resources.snes;
+				case ControllerType.N64:
+					return Resources.n64;
+				case ControllerType.NGC:
+					return Resources.ngc;
+				case ControllerType.PS2:
+					return Resources.ps;
+				case ControllerType.Unknown:
+					return Resources.generic;
+			}
+			return null;
+		}
+
+		private static Image GetSkinImage(Skin skin) {
+			if (skin is SvgSkin) return Resources.svg;
+			else if (skin is NintendoSpySkin) return Resources.nspy;
+			else if (skin is PadpyghtSkin) return Resources.padpy;
+			else return null;
 		}
 
 		private void ActivateConfig(IController ctrlr, Skin skin) {

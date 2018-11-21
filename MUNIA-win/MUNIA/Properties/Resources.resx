@@ -117,57 +117,41 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="notok" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAtxJREFUOE9l
-        kllIVHEYxS8hOmNuhbk7juaoqYmMoYyaOa02LVoKlpiJiqRYgRSUJaIp40K9BBbiIJQWFC1kmVgPLQ/h
-        eygGhRYSNy2duXPnzurp/11vL/nBgcP5zu/Pd4fh/h8xz2ha0RcO/zlezi+XV9pJv0xlPJ+dP2zNLTYp
-        tY0jGkvUVv3uKWt9A8SHd+GaHIF7/A4844Nwvh7B6tggvtfUYDHLMOU0mtQKtj6rew6qrNlFi46BLrjf
-        jcJtuQ7nrRasffssi7yXZb73o/hhbsdcRu6itPeISsE5bkVfNOns74T7UT+k7kaI16rg+fgC/4Y8ZVJP
-        I/D4JubbL2EhyzApw3yesUSsrYN7tBtSRy0rNcNx9TS8nyYUHPBOT8HRcRaSuQVSZx18Yz2YrTyFJcZy
-        SwWHLM6eVkg3GpiaIPVehONKFbwfxhWcXTAxBrHWCKntDLuwCd6B8/jddxlfDfss3PLRMt7VdY4t2Ott
-        9XDUm2DPi4FrqFfBIXshMwx2YyrsxSlwVhggXKjA/OFjPLdcWip5elvgqN4PsUjHYC2EtBAG9Sk4PdCn
-        PJDOHkiDPT8Z7uIkzMTFStzP8pOSqzQHtqxoCHlJEApTYNUFwznUr+CQPWVCQQqEfB1sTJ4DOzAXES5x
-        XxITeZdeA0G/HUIO065kWLWhsFeXYs3nlUWeMtpRx5aTBI9Bh5mICJ6bDgyxiBlaiFns9EymnYmwpcbC
-        FqmGo+aELPKU0Y461BUzEjAdtMXCvVWFlCzERcGTrmVnamBLScBqaADE1mblAyB7ymhHHeoSQ6z8X3il
-        Dpm0xcfCnahhp8Zj1W8TXGazgrMfkXnKaEcd6hIjwzRPVZtVLwODF4XIaPhiNBBDt8K6LRquJ89kkaeM
-        dtShLjEKvj73/QPV9wJUU7Oh4XCERwFBYQDnty7mKaMddairYBvntl+A6YG/evi5Koh/ow62k8hTRjul
-        pgzH/QWoKTDVVvn/jgAAAABJRU5ErkJggg==
-</value>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="arduino" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\arduino.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="ok" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAuVJREFUOE91
-        kllI1FEYxW+UtgwmqdGIOi65pORGiaZFUiFj6YgpNbmMG5Y9SKZRYQ/WQxFhRJQLgqU56qiZlmk2SC6I
-        FeVuJq4zmsuMEiKalcbp//1nEkQ6cODjO+d37324bIMkTMySWK51irHG7ZZokUwz7fjsv5IxQyZlSlmp
-        D+rVGZhDGVbwljfNtKOMOnx3nZKYAUtk2qL+ZMz/qcHYkhzvNZlonclEy/Q9tGnuY3SpmM+oQ12eWVMU
-        U5YO3cDMajVqJ6+ifCIeJSoZStQ6F3Nz9dR5VE1cgupXKRTD6SBGB8ewgKRqCdSrCjxTx+Cp6iyKVJGQ
-        q6PXXDEZh5xhCWKVYqS0RKNRmw1iiGWb0jbn1U7cQdl0POTj0SgZj+VujeFdzN1eOZmArMEgyN4EY3Je
-        C1JiQxxejN0EsczlrrWmduEyFN/ikDUUxEGRKB6Ng3wkARXjCcgeDEZsfQhmFr7z8NSCFsdrXFAznwxi
-        mcdDi+WGxetIbw9ERuMVBNW54kKvPVIH3BDx2RzSWjEP/YM9Sx0R2+WAdz+uwY1j2eEC5+VCbSKiXkn5
-        Atn99U54NDIE1vlibnFhDT6g2IsjzVtxccAeL+fT4JfvvMz251hqUtWucFVY6Mo/dWX5lzLM6p/dO9uF
-        gxx8rGUH4vuFCO80RZraA265lhomfLAt73S3EJJPZhAVCHSHrHDUb57lD/PiYN8mAc71ihDWaQlpjwih
-        nUIQy3bdFgQcVe5BxIAtAtpM4agwWfdsn3JHHGoyQkiPDQI7RAhut4L0qw2IIZb/ClaPBcpgLjzTZwfx
-        x91wf26Jwp58BFR5w6/ZDJIea5zi8pPt3Au4g6hLDA+TRI8EBvsKjbSSLhHC+2wR1mUDl7ot8G8V4mSH
-        FU58ECK024bPqENdYvS4TnZ52w2dnhgp/ZvNEdRhDemwPaJGnHjTTDvKqENdPbZRDvkCsWelca5XtYnG
-        u850kUwz7SjT1/Ri7C8B4iFORfolbwAAAABJRU5ErkJggg==
-</value>
+  <data name="generic" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\generic.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="warn" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAnpJREFUOE+1
-        kXtIk1EYxr8i1MjIysSclkJGc7rMxKQk1DRmoOQiS4KswAjJhNIQBCXNIKkgL5DFGGlMu+INLMzS0hil
-        KS2mNoVZthm6y+dpTufy6ez4gUQX6o8e+MG5vM9zznkP91+lV+7LGlYm5wvTf9OoIrHUoi6AqfssBioT
-        SoXlv9PYrYQIc2cuMHkBMGRh/EkGNFWyCGH7zzLUJrkb69O08x8LYVRnY7wnHxg8Am11slZTmeQulP1e
-        hhs75d8GSqBXH0NhcSXyCq6xkNlXR/HmaoJcKPu1JupknpbWTMB6mZGecR5RManAZ/ocyuCdg+ivlnsK
-        5T9rsjZROT1cAViKGCHSOPgHRQK6NMbUi0N4WbJLKZT/KJNKFmRTF2F2rATQyxm+G6OwTrQd6ApmONq3
-        4G3hGjxK44IE26JMyvjuGV02SO8O2jRqoniv3wYvn1BAHcawPZaCPBSj8cSKTsG2oMmLHgemWpNgH9kP
-        0rMbGIllcEvE4JaKgddShrVRgvk2KQbKRKhP91hsqLkq8It97DRsfTH0BvFwaPYwFLneUOT5YK4jnMG3
-        SDD1QAxnkwTNmZ78grnY7czX3pOY/pACW/9eFuB8FwvL0wD2A65GmpvWwtGxFTw18jTA0SDGp/IA3Ex1
-        y+eIKtJhN7hOj6e4AuKAoRhm4lZGg1sWxsboCgXfLIGVBvCqzcD9YLTnrAJH6qMxw5+DfTgZdl0K7EMy
-        YJTSFwHtXX+Ga+xi9nk4HLSRc/QmaAlBmyvAUuZ13HI72GluCCeme2FkQiUhxpoQYq3bRPQVvkRf7keM
-        ChHRXQ8kg1c2kPeXRERT6kee5ax21hxefuo7TxKxNckS+tEAAAAASUVORK5CYII=
-</value>
+  <data name="n64" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\n64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ngc" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ngc.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="notok" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\notok.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="nspy" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\nspy.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ok" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ok.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="padpy" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\padpy.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ps" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ps.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="snes" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\snes.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="svg" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\svg.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="warn" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\warn.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

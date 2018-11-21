@@ -64,6 +64,7 @@ namespace MUNIA.Forms {
 			// 
 			// menu
 			// 
+			this.menu.ImageScalingSize = new System.Drawing.Size(32, 32);
 			this.menu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsmiControllers,
             this.tsmiOptions,
@@ -255,7 +256,7 @@ namespace MUNIA.Forms {
 			// toolStripMenuItem2
 			// 
 			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-			this.toolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItem2.Size = new System.Drawing.Size(136, 22);
 			this.toolStripMenuItem2.Text = "&Change";
 			// 
 			// tsmiBackgroundTransparent
@@ -263,7 +264,7 @@ namespace MUNIA.Forms {
 			this.tsmiBackgroundTransparent.Checked = true;
 			this.tsmiBackgroundTransparent.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.tsmiBackgroundTransparent.Name = "tsmiBackgroundTransparent";
-			this.tsmiBackgroundTransparent.Size = new System.Drawing.Size(180, 22);
+			this.tsmiBackgroundTransparent.Size = new System.Drawing.Size(136, 22);
 			this.tsmiBackgroundTransparent.Text = "&Transparent";
 			this.tsmiBackgroundTransparent.ToolTipText = "If checked, background will have an alpha channel of 0 allowing OBS to blend the " +
     "background with overlapping content.\r\nIn your OBS scene, use a game capture sour" +
