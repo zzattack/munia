@@ -64,6 +64,9 @@ namespace MUNIA {
 
 		public static void LoadSkins() {
 			foreach (var dir in SkinFolders) {
+				if (!Directory.Exists(dir.Path))
+					continue;
+
 				if ((dir.Types & SkinType.Svg) != 0) {
 					foreach (string svgPath in Directory.GetFiles(dir.Path, "*.svg")) {
 						var svg = new SvgSkin();
