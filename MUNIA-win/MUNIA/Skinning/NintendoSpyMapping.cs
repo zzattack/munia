@@ -9,7 +9,6 @@ namespace MUNIA.Skinning {
 
 	public class ControllerMap {
 		public Dictionary<string, int> ButtonMap = new Dictionary<string, int>();
-		public Dictionary<string, int> TriggerMap = new Dictionary<string, int>();
 		public Dictionary<string, int> AxisMap = new Dictionary<string, int>();
 	}
 
@@ -19,7 +18,7 @@ namespace MUNIA.Skinning {
 			["n64"] = ControllerType.N64,
 			["gamecube"] = ControllerType.NGC,
 			["snes"] = ControllerType.SNES,
-			["pc360"] = ControllerType.Unknown, // todo
+			// ["pc360"] = ControllerType.Unknown, // todo
 		};
 
 		// mapping between NintendoSpy and MUNIA button/axes indices
@@ -86,10 +85,8 @@ namespace MUNIA.Skinning {
 				AxisMap = {
 					["lstick_x"] = 0,
 					["lstick_y"] = 1,
-					["rstick_x"] = 4,
-					["rstick_y"] = 5
-				},
-				TriggerMap = {
+					["cstick_x"] = 5,
+					["cstick_y"] = 4,
 					["trig_l"] = 2,
 					["trig_r"] = 3,
 				}
