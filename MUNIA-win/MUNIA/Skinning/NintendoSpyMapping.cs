@@ -19,6 +19,8 @@ namespace MUNIA.Skinning {
 			["gamecube"] = ControllerType.NGC,
 			["snes"] = ControllerType.SNES,
 			// ["pc360"] = ControllerType.Unknown, // todo
+			// ["classiccontroller"] = ControllerType.ClassicController, // todo
+			// ["generic"] = ControllerType.Generic, // todo.. maybe?
 		};
 
 		// mapping between NintendoSpy and MUNIA button/axes indices
