@@ -26,19 +26,9 @@ namespace MUNIA.Skinning {
 				using (var iniFile = File.OpenRead(iniPath))
 					ini = new IniFile(iniFile);
 
-				// cleanup old textures
-				Buttons.ForEach(b => {
-					if (b.PressedTexture != -1) GL.DeleteTexture(b.PressedTexture);
-					if (b.Texture != -1) GL.DeleteTexture(b.Texture);
-				});
-				Sticks.ForEach(s => { if (s.Texture != -1) GL.DeleteTexture(s.Texture); });
-				Triggers.ForEach(t => { if (t.Texture != -1) GL.DeleteTexture(t.Texture); });
-				Buttons.Clear();
-				Sticks.Clear();
-				Triggers.Clear();
-
 				Name = pi.Directory.Name;
 
+				Deactivate();
 				var general = ini.GetSection("General");
 				// _dimensions = new Size(general.ReadInt("Width"), general.ReadInt("Height"));
 				_baseImg = (Bitmap)Image.FromFile(System.IO.Path.Combine(pi.DirectoryName, general.ReadString("File_Background")));
@@ -97,8 +87,18 @@ namespace MUNIA.Skinning {
 		public override void Activate() {
 			// todo: move bitmap creation here
 		}
-		public override void Cleanup() {
-			// todo: clean textures here
+		public override void Deactivate() {
+			_baseImg?.Dispose();
+			// cleanup old textures
+			Buttons.ForEach(b => {
+				if (b.PressedTexture != -1) GL.DeleteTexture(b.PressedTexture);
+				if (b.Texture != -1) GL.DeleteTexture(b.Texture);
+			});
+			Sticks.ForEach(s => { if (s.Texture != -1) GL.DeleteTexture(s.Texture); });
+			Triggers.ForEach(t => { if (t.Texture != -1) GL.DeleteTexture(t.Texture); });
+			Buttons.Clear();
+			Sticks.Clear();
+			Triggers.Clear();
 		}
 
 		private static Button ReadIniButton(IniFile.IniSection sec, FileInfo pi) {

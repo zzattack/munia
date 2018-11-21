@@ -19,7 +19,7 @@ namespace MUNIA.Skinning {
 		protected ControllerState State;
 
 		public abstract void Activate();
-		public abstract void Cleanup();
+		public abstract void Deactivate();
 	}
 
 

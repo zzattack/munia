@@ -36,7 +36,7 @@ namespace MUNIA.Skinning {
 			// to clear/cache anything here
 		}
 
-		public override void Cleanup() {
+		public override void Deactivate() {
 			// cleanup
 			Buttons.ForEach(b => {
 				if (b.PressedTexture != -1) GL.DeleteTexture(b.PressedTexture);

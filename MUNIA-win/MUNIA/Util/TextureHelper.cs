@@ -9,8 +9,7 @@ namespace MUNIA.Util {
         public static int CreateTexture(Bitmap bmp) {
             GL.Enable(EnableCap.Texture2D);
 
-            int texture;
-            GL.GenTextures(1, out texture);
+			GL.GenTextures(1, out int texture);
             GL.BindTexture(TextureTarget.Texture2D, texture);
 
             var data = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height),
