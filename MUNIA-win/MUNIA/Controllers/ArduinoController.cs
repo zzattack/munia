@@ -66,7 +66,7 @@ namespace MUNIA.Controllers {
 			// repack data bytes
 			// can't believe the firmware is implemented like this... but oh well
 			List<byte> packet = new List<byte>();
-			
+
 			byte x = 0x80, y = 0;
 			foreach (byte b in _buffer) {
 				if (b == '1') y |= x;
@@ -82,30 +82,28 @@ namespace MUNIA.Controllers {
 		protected abstract bool Parse(List<byte> buffer);
 		public event EventHandler StateUpdated;
 		protected virtual void OnStateUpdated() { StateUpdated?.Invoke(this, EventArgs.Empty); }
-	}
 
-
-	public class ArduinoControllerManager {
 		public static List<ArduinoController> ListDevices() {
 			var ret = new List<ArduinoController>();
 			var ports = SerialPortInfo.GetPorts();
 			foreach (var entry in ConfigManager.ArduinoMapping) {
 				var port = ports.FirstOrDefault(p => p.Name == entry.Key && p.IsConnected);
 				if (port != null) {
-					switch (entry.Value) {
-					case ControllerType.SNES:
-						ret.Add(new ArduinoSnes(port));
-						break;
-					case ControllerType.N64:
-						ret.Add(new ArduinoN64(port));
-						break;
-					case ControllerType.NGC:
-						ret.Add(new ArduinoNgc(port));
-						break;
-					}
+					ret.Add(CreateDevice(port, entry.Value));
 				}
 			}
 			return ret;
+		}
+		public static ArduinoController CreateDevice(SerialPortInfo port, ControllerType type) {
+			switch (type) {
+			case ControllerType.SNES:
+				return new ArduinoSnes(port);
+			case ControllerType.N64:
+				return new ArduinoN64(port);
+			case ControllerType.NGC:
+				return new ArduinoNgc(port);
+			}
+			return null;
 		}
 	}
 }

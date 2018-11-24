@@ -98,7 +98,7 @@ namespace MUNIA.Controllers {
 				yield return new MusiaConfigInterface(dev);
 		}
 
-		class StreamAndBuffer {
+		public class StreamAndBuffer {
 			public byte[] buffer;
 			public Stream stream;
 		}

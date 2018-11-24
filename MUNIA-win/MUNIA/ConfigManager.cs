@@ -111,7 +111,7 @@ namespace MUNIA {
 			foreach (var dev in MuniaController.ListDevices()) {
 				Controllers.Add(dev);
 			}
-			foreach (var dev in ArduinoControllerManager.ListDevices()) {
+			foreach (var dev in ArduinoController.ListDevices()) {
 				Controllers.Add(dev);
 			}
 		}
