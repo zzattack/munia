@@ -57,6 +57,7 @@ namespace MUNIA.Forms {
 			this.tsmiColorRemapping = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiApplyTheme = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiManageThemes = new System.Windows.Forms.ToolStripMenuItem();
+			this.tsmiTestController = new System.Windows.Forms.ToolStripMenuItem();
 			this.menu.SuspendLayout();
 			this.status.SuspendLayout();
 			this.popup.SuspendLayout();
@@ -92,7 +93,8 @@ namespace MUNIA.Forms {
             this.tsmiFirmwareUpdate,
             this.tsmiMapArduinoDevices,
             this.toolStripSeparator2,
-            this.tsmiManageSkinThemes});
+            this.tsmiManageSkinThemes,
+            this.tsmiTestController});
 			this.tsmiOptions.Name = "tsmiOptions";
 			this.tsmiOptions.Size = new System.Drawing.Size(61, 20);
 			this.tsmiOptions.Text = "&Options";
@@ -298,6 +300,13 @@ namespace MUNIA.Forms {
 			this.tsmiManageThemes.Text = "&Manage themes";
 			this.tsmiManageThemes.Click += new System.EventHandler(this.tsmiManageThemes_Click);
 			// 
+			// tsmiTestController
+			// 
+			this.tsmiTestController.Name = "tsmiTestController";
+			this.tsmiTestController.Size = new System.Drawing.Size(188, 22);
+			this.tsmiTestController.Text = "&Test controllers";
+			this.tsmiTestController.Click += new System.EventHandler(this.testControllerToolStripMenuItem_Click);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -353,6 +362,7 @@ namespace MUNIA.Forms {
 		private System.Windows.Forms.ToolStripMenuItem tsmiBackground;
 		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
 		private System.Windows.Forms.ToolStripMenuItem tsmiBackgroundTransparent;
+		private System.Windows.Forms.ToolStripMenuItem tsmiTestController;
 	}
 }
 

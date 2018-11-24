@@ -59,6 +59,13 @@ namespace MUNIA.Forms {
 			if (spi != null)
 				Mapping[spi.Name] = (ControllerType)cbDeviceType.SelectedItem;
 		}
+
+		private void btnTest_Click(object sender, EventArgs e) {
+			var dev = ArduinoController.CreateDevice(lbSerialPorts.SelectedItem as SerialPortInfo, (ControllerType)cbDeviceType.SelectedItem);
+			if (dev != null) {
+				new GamepadTester(dev).ShowDialog();
+			}
+		}
 	}
 
 	public class ArduinoMapping : Dictionary<string, ControllerType> {

@@ -464,6 +464,10 @@ namespace MUNIA.Forms {
 				SelectRemap(managerForm.SelectedRemap);
 			}
 		}
+		
+		private void testControllerToolStripMenuItem_Click(object sender, EventArgs e) {
+			new GamepadTester().ShowDialog();
+		}
 
 		private void popup_Opening(object sender, System.ComponentModel.CancelEventArgs e) {
 			tsmiManageThemes.Enabled = ConfigManager.ActiveSkin is SvgSkin;
@@ -515,7 +519,6 @@ namespace MUNIA.Forms {
 				Render();
 			}
 		}
-
 	}
 
 }
