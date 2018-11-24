@@ -161,7 +161,7 @@ namespace MUNIA.Skinning {
 			all.Sort((l, r) => l.Z.CompareTo(r.Z));
 
 			GL.Enable(EnableCap.Blend);
-			GL.BlendFunc(BlendingFactorSrc.One, BlendingFactorDest.OneMinusSrcAlpha);
+			GL.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
 			GL.Enable(EnableCap.Texture2D);
 
 			int i, cut = all.FindIndex(item => item.Z >= 0);

@@ -173,7 +173,7 @@ namespace MUNIA.Skinning {
 		public override void Render(int width, int height, bool force = false) {
 			_destSize = new Size(width, height);
 			GL.Enable(EnableCap.Blend);
-			GL.BlendFunc(BlendingFactorSrc.One, BlendingFactorDest.OneMinusSrcAlpha);
+			GL.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
 			GL.Enable(EnableCap.Texture2D);
 
 			GL.TexParameter(TextureTarget.ProxyTexture2D, TextureParameterName.TextureMagFilter, (int)TextureMinFilter.LinearMipmapNearest);

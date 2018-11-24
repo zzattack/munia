@@ -178,7 +178,7 @@ namespace MUNIA.Skinning {
 			all.Sort((tuple, tuple1) => tuple.Item1.Z.CompareTo(tuple1.Item1.Z));
 
 			GL.Enable(EnableCap.Blend);
-			GL.BlendFunc(BlendingFactorSrc.One, BlendingFactorDest.OneMinusSrcAlpha);
+			GL.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
 			GL.Enable(EnableCap.Texture2D);
 
 			var allOrdered = all.OrderBy(x => x.Item1.Z);
