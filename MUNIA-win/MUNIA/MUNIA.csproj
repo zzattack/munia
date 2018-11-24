@@ -50,8 +50,8 @@
     <ApplicationIcon>munia256.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HidSharp, Version=2.0.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\HidSharp.2.0.2\lib\net35\HidSharp.dll</HintPath>
+    <Reference Include="HidSharp, Version=2.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HidSharp.2.0.5\lib\net35\HidSharp.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.3.3, Culture=neutral, PublicKeyToken=8985beaab7ea3f04, processorArchitecture=MSIL">
@@ -63,13 +63,11 @@
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <HintPath>..\packages\OpenTK.1.1.2225.0\lib\net20\OpenTK.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="OpenTK, Version=3.0.1.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>..\packages\OpenTK.3.0.1\lib\net20\OpenTK.dll</HintPath>
     </Reference>
-    <Reference Include="OpenTK.GLControl, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <HintPath>..\packages\OpenTK.GLControl.1.1.1589.5942\lib\NET40\OpenTK.GLControl.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="OpenTK.GLControl, Version=3.0.1.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>..\packages\OpenTK.GLControl.3.0.1\lib\net20\OpenTK.GLControl.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -84,6 +82,7 @@
     <Compile Include="Controllers\ArduinoNgc.cs" />
     <Compile Include="Controllers\ArduinoSnes.cs" />
     <Compile Include="Controllers\ConfigInterface.cs" />
+    <Compile Include="Controllers\GenericController.cs" />
     <Compile Include="Controllers\MusiaPS2.cs" />
     <Compile Include="Forms\AboutBox.cs">
       <SubType>Form</SubType>
@@ -110,6 +109,12 @@
     <Compile Include="Controllers\BufferedController.cs" />
     <Compile Include="Controllers\IController.cs" />
     <Compile Include="Controllers\MusiaDeviceInfo.cs" />
+    <Compile Include="Forms\GamepadTester.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\GamepadTester.Designer.cs">
+      <DependentUpon>GamepadTester.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\RemapManagerForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -218,6 +223,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DelayValuePicker.resx">
       <DependentUpon>DelayValuePicker.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\GamepadTester.resx">
+      <DependentUpon>GamepadTester.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
