@@ -43,11 +43,15 @@ namespace MUNIA.Controllers {
 			_axes[0] = packet[2] - 128;
 			_axes[1] = 128 - packet[3];
 			_axes[2] = packet[6];
-			_axes[3] = packet[7];
-			_axes[4] = 128 - packet[5];
-			_axes[5] = packet[4] - 128;
-			
+			_axes[3] = packet[4] - 128;
+			_axes[4] = 128 - packet[5]; 
+			_axes[5] = packet[7]; 
+
 			return true;
+		}
+
+		public override string ToString() {
+			return "NSpy NGC @ " + Port?.PortName;
 		}
 	}
 }

@@ -6,7 +6,7 @@ namespace MUNIA.Controllers {
         public MusiaPS2(HidDevice hidDevice) : base(hidDevice) {
             _buttons.EnsureSize(16);
             _hats.EnsureSize(1);
-            _axes.EnsureSize(4);
+            _axes.EnsureSize(6);
         }
 
         public override ControllerType Type => ControllerType.PS2;
@@ -45,8 +45,10 @@ namespace MUNIA.Controllers {
 
             _axes[0] = ev[3] - 128;
             _axes[1] = ev[4] - 128;
-            _axes[2] = ev[5] - 128;
-            _axes[3] = ev[6] - 128;
+			// axis 2 is for trigger 1
+            _axes[3] = ev[5] - 128;
+            _axes[4] = ev[6] - 128;
+			// axis 5 is for trigger 2
 
             return true;
         }
