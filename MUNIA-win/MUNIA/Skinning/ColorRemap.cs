@@ -93,7 +93,7 @@ namespace MUNIA.Skinning {
 			return ret;
 		}
 
-		public void Saveto(XmlTextWriter xw) {
+		public void SaveTo(XmlTextWriter xw) {
 			// there's no point in saving the default as it
 			// should be recreated at application load and may not be edited
 			if (IsSkinDefault) return;

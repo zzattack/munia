@@ -314,7 +314,7 @@ namespace MUNIA {
 
 					foreach (var remap in kvp.Value)
 						if (!remap.IsSkinDefault)
-							remap.Saveto(xw);
+							remap.SaveTo(xw);
 					xw.WriteEndElement(); // skin
 				}
 
