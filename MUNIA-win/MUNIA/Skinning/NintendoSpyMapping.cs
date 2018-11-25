@@ -87,10 +87,10 @@ namespace MUNIA.Skinning {
 				AxisMap = {
 					["lstick_x"] = 0,
 					["lstick_y"] = 1,
-					["cstick_x"] = 5,
+					["cstick_x"] = 3,
 					["cstick_y"] = 4,
 					["trig_l"] = 2,
-					["trig_r"] = 3,
+					["trig_r"] = 5,
 				}
 			},
 
