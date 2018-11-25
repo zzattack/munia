@@ -112,6 +112,12 @@ namespace MUNIA.Forms {
 				tsmiControllers.DropDownItems.Add(tsmiSkin);
 			}
 
+			tsmiControllers.DropDownItems.Add(new ToolStripSeparator());
+			var tsmiMapGeneric = tsmiSkinFolders.DropDownItems.Add("Map generic controller");
+			tsmiMapGeneric.Click += TsmiMapGenericOnClick;
+			tsmiMapGeneric.Image = Resources.x360;
+			tsmiControllers.DropDownItems.Add(tsmiMapGeneric);
+
 			string skinText = $"Loaded {ConfigManager.Skins.Count} skins ({ConfigManager.Controllers.Count} devices available)";
 			int numFail = ConfigManager.Skins.Count(s => s.LoadResult != SkinLoadResult.Ok);
 			if (numFail > 0)
@@ -136,6 +142,7 @@ namespace MUNIA.Forms {
 				_previewParams.skin = skin;
 				_previewDelayTimer.Change(50, Timeout.Infinite); // slight delay
 			};
+			tsmi.MouseLeave += (sender, args) => EndSkinPreview();
 		}
 		#endregion
 
@@ -203,13 +210,19 @@ namespace MUNIA.Forms {
 				_busyRendering = false;
 			}
 		}
-
-		private void tsmiControllers_DropDownClosed(object sender, EventArgs e) {
+		private void EndSkinPreview() {
+			if (_previewDelayTimer != null) {
+				_previewDelayTimer.Change(Timeout.Infinite, Timeout.Infinite); // disable
+			}
 			if (_activeSkinPreview != null) {
 				_activeSkinPreview?.Hide();
 				_activeSkinPreview.Dispose();
 				_activeSkinPreview = null;
 			}
+		}
+
+		private void tsmiControllers_DropDownClosed(object sender, EventArgs e) {
+			EndSkinPreview();
 		}
 
 		private static Image GetControllerImage(IController ctrlr) {
@@ -241,6 +254,7 @@ namespace MUNIA.Forms {
 		}
 
 		private void ActivateConfig(IController ctrlr, Skin skin) {
+			EndSkinPreview();
 			if (skin?.LoadResult != SkinLoadResult.Ok) return;
 
 			skin.Activate();
