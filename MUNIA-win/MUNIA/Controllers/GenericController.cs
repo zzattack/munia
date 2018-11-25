@@ -14,20 +14,23 @@ using MUNIA.Util;
 namespace MUNIA.Controllers {
 	public class GenericController : IController {
 		// The controller is the DeviceItem on HidDevice. One HidDevice may expose multiple DeviceItems.
-		private readonly HidDevice HidDevice;
-		private readonly DeviceItem DeviceItem;
-		public ControllerType Type => ControllerType.Generic;
+		internal readonly HidDevice HidDevice;
+		internal readonly DeviceItem DeviceItem;
+		public readonly int DeviceItemIndex;
+
+		public virtual ControllerType Type => ControllerType.Generic;
 
 		public GenericController(HidDevice device, DeviceItem deviceItem) {
 			HidDevice = device;
 			DeviceItem = deviceItem;
+			DeviceItemIndex = DeviceItem.ParentItem.ChildItems.IndexOf(deviceItem);
 		}
 
 		// internal state
 		protected readonly List<bool> _buttons = new List<bool>();
 		protected readonly List<double> _axes = new List<double>();
 		protected readonly List<Hat> _hats = new List<Hat>();
-		public ControllerState GetState() => new ControllerState(_axes, _buttons, _hats);
+		public virtual ControllerState GetState() => new ControllerState(_axes, _buttons, _hats);
 		public event EventHandler StateUpdated;
 
 		public string DevicePath => HidDevice.DevicePath;
@@ -99,6 +102,10 @@ namespace MUNIA.Controllers {
 			_stream = null;
 			_reportCache.Clear();
 		}
+		public virtual bool IsAxisTrigger(int axisNum) {
+			Usage usage = Usage.GenericDesktopX + (uint)axisNum;
+			return IsTriggerAxisByDefault(usage);
+		}
 
 		private void Callback(IAsyncResult ar) {
 			var sb = (MuniaController.StreamAndBuffer)ar.AsyncState;
@@ -142,8 +149,7 @@ namespace MUNIA.Controllers {
 						else if (usage == Usage.GenericDesktopHatSwitch) {
 							// can only support 1 hat..
 							_hats.EnsureSize(1);
-							//Debug.WriteLine("Logical hat: " + dataValue.GetLogicalValue());
-							_hats[0] = ControllerState.HatLookup[(byte)dataValue.GetLogicalValue()];
+							_hats[0] = ExtractHat(dataValue);
 						}
 						else if (Usage.GenericDesktopX <= usage && usage <= Usage.GenericDesktopRz) {
 							int axisIdx = (int)(usage - (int)Usage.GenericDesktopX);
@@ -178,20 +184,39 @@ namespace MUNIA.Controllers {
 			var di = dataValue.DataItem;
 			double val;
 			if (di.LogicalMinimum < di.LogicalMaximum) {
-				val = dataValue.GetLogicalValue() / (double)(di.LogicalMaximum - di.LogicalMaximum);
+				val = (dataValue.GetLogicalValue() - di.LogicalMinimum) / (double)(di.LogicalRange);
 			}
 			else {
 				int range = 1 << di.ElementBits;
 				val = dataValue.GetLogicalValue() / (double)range;
 			}
 
-			if (IsTrigger((Usage)dataValue.Usages.First()))
+			if (!IsAxisTrigger((int)(dataValue.Usages.First() - Usage.GenericDesktopX)))
 				val -= 0.5;
 
 			return val;
 		}
+		private Hat ExtractHat(DataValue dataValue) {
+			double phys = dataValue.GetPhysicalValue();
+			if (double.IsNaN(phys))
+				return Hat.None;
 
-		private bool IsTrigger(Usage usage) {
+			// first see if this item has a logical min/max defined
+			var di = dataValue.DataItem;
+			int logical;
+			if (di.LogicalMinimum < di.LogicalMaximum) {
+				logical = dataValue.GetLogicalValue() - di.LogicalMinimum;
+			}
+			else {
+				int range = 1 << di.ElementBits;
+				logical = dataValue.GetLogicalValue() / range;
+			}
+			
+			byte idx = (byte)(logical % 9);
+			return ControllerState.HatLookup[idx];
+		}
+
+		private bool IsTriggerAxisByDefault(Usage usage) {
 			return usage == Usage.GenericDesktopRz || usage == Usage.GenericDesktopZ;
 		}
 
@@ -208,7 +233,7 @@ namespace MUNIA.Controllers {
 			}
 		}
 
-		public static IEnumerable<GenericController> ListDevices() {
+		internal static IEnumerable<GenericController> ListDevices() {
 			// find all devices with a gamepad or joystick usage page
 			foreach (var dev in DeviceList.Local.GetHidDevices()) {
 
