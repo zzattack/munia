@@ -315,8 +315,9 @@ namespace MUNIA.Skinning {
 				}
 				ImagePath = System.IO.Path.Combine(skin.WorkingDir, xnode.Attributes["image"].Value);
 			}
-
 		}
+		public override string ToString() => Name;
+
 		public class Button : ControllerItem {
 		}
 

@@ -52,7 +52,7 @@ namespace MUNIA.Skinning {
 			Triggers.Clear();
 		}
 
-			private void RecursiveGetElements(SvgElement e) {
+		private void RecursiveGetElements(SvgElement e) {
 			foreach (var c in e.Children) {
 				if (c.ElementName == "info") {
 					if (c.CustomAttributes.ContainsKey("device-name")) {
@@ -451,6 +451,8 @@ namespace MUNIA.Skinning {
 				if (elem.Stroke is SvgColourServer s) s.Colour = remapEntry.Value.Item2;
 			}
 		}
+
+		public override string ToString() => Name;
 
 		public class ControllerItem {
 			public int Id; // stick, button or trigger Id on controller

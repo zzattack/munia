@@ -298,7 +298,7 @@ namespace MUNIA.Skinning {
 			return new PointF(x, y);
 		}
 
-
+		public override string ToString() => Name;
 
 		public class ControllerItem {
 			public Bitmap Bitmap;
