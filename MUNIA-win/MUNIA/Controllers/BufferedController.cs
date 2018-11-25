@@ -93,6 +93,7 @@ namespace MUNIA.Controllers {
 		public ControllerType Type => _real.Type;
 		public bool Activate() { return _real.Activate(); }
 		public void Deactivate() { _real.Deactivate(); }
+		public bool IsAxisTrigger(int axisNum) => _real.IsAxisTrigger(axisNum);
 
 		public event EventHandler StateUpdated;
 		protected virtual void OnStateUpdated() { StateUpdated?.Invoke(this, EventArgs.Empty); }
