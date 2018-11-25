@@ -49,6 +49,7 @@ namespace MUNIA.Controllers {
 
 			return true;
 		}
+		public override bool IsAxisTrigger(int axisNum) => axisNum == 2 || axisNum == 5;
 
 		public override string ToString() {
 			return "NSpy NGC @ " + Port?.PortName;

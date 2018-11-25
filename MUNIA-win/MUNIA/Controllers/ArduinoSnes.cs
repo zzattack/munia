@@ -44,5 +44,7 @@ namespace MUNIA.Controllers {
 
 			return true;
 		}
+
+		public override bool IsAxisTrigger(int axisNum) => false;
 	}
 }

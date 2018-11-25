@@ -41,6 +41,8 @@ namespace MUNIA.Controllers {
 			Port?.Close();
 		}
 
+		public abstract bool IsAxisTrigger(int axisNum);
+
 		private void OnDataReceived(object sender, SerialDataReceivedEventArgs args) {
 			byte[] buff = new byte[512];
 			while (Port.BytesToRead > 0) {

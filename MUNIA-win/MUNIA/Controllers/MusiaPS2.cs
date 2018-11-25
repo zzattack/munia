@@ -53,5 +53,6 @@ namespace MUNIA.Controllers {
             return true;
         }
 
-    }
+		public override bool IsAxisTrigger(int axisNum) => axisNum > 4 || axisNum == 2;
+	}
 }

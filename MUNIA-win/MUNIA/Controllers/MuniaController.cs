@@ -163,6 +163,7 @@ namespace MUNIA.Controllers {
 		}
 
 		protected abstract bool Parse(byte[] ev);
+		public abstract bool IsAxisTrigger(int axisNum);
 
 	}
 }

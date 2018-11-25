@@ -39,6 +39,8 @@ namespace MUNIA.Controllers {
             _axes[1] = (ev[4] - 128) / 128.0;
 			
             return true;
-        }
-    }
+		}
+
+		public override bool IsAxisTrigger(int axisNum) => false;
+	}
 }
