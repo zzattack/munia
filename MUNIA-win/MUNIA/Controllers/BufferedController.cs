@@ -100,15 +100,15 @@ namespace MUNIA.Controllers {
 
 	public class TimedControllerState : ControllerState {
 		public TimeSpan Time { get; private set; }
-		public TimedControllerState() : base(new List<int>(), new List<bool>(), new List<Hat>()) { }
+		public TimedControllerState() : base(new List<double>(), new List<bool>(), new List<Hat>()) { }
 
-		public TimedControllerState(TimeSpan t, List<int> axes, List<bool> buttons, List<Hat> hats) : base(axes, buttons, hats) {
+		public TimedControllerState(TimeSpan t, List<double> axes, List<bool> buttons, List<Hat> hats) : base(axes, buttons, hats) {
 			Time = t;
 		}
 
 		internal bool Used = false;
 
-		public void SetState(TimeSpan elapsed, List<int> axes, List<bool> buttons, List<Hat> hats) {
+		public void SetState(TimeSpan elapsed, List<double> axes, List<bool> buttons, List<Hat> hats) {
 			Time = elapsed;
 			Axes.EnsureSize(axes.Count);
 			Buttons.EnsureSize(buttons.Count);

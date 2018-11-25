@@ -12,7 +12,7 @@ namespace MUNIA.Controllers {
 			Port.DataReceived += OnDataReceived;
 		}
 
-		protected List<int> _axes { get; } = new List<int>();
+		protected List<double> _axes { get; } = new List<double>();
 		protected List<bool> _buttons { get; } = new List<bool>();
 		protected List<Hat> _hats { get; } = new List<Hat>();
 

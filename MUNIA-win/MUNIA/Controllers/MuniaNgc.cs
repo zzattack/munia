@@ -34,12 +34,12 @@ namespace MUNIA.Controllers {
             _buttons[10] = hat.HasFlag(Hat.Left);
             _buttons[11] = hat.HasFlag(Hat.Right);
 
-            _axes[0] = ev[3] - 128;
-            _axes[1] = ev[4] - 128;
-			_axes[2] = ev[7];
-			_axes[3] = ev[5] - 128;
-			_axes[4] = ev[6] - 128;
-            _axes[5] = ev[8];
+            _axes[0] = (ev[3] - 128) / 128.0;
+            _axes[1] = (ev[4] - 128) / 128.0;
+			_axes[2] = ev[7] / 256.0;
+			_axes[3] = (ev[5] - 128) / 128.0;
+			_axes[4] = (ev[6] - 128) / 128.0;
+            _axes[5] = ev[8] / 256.0;
 
             return true;
         }

@@ -25,7 +25,7 @@ namespace MUNIA.Controllers {
 
 		// internal state
 		protected readonly List<bool> _buttons = new List<bool>();
-		protected readonly List<int> _axes = new List<int>();
+		protected readonly List<double> _axes = new List<double>();
 		protected readonly List<Hat> _hats = new List<Hat>();
 		public ControllerState GetState() => new ControllerState(_axes, _buttons, _hats);
 		public event EventHandler StateUpdated;
@@ -131,7 +131,7 @@ namespace MUNIA.Controllers {
 					while (_inputParser.HasChanged) {
 						int changedIndex = _inputParser.GetNextChangedIndex();
 						var dataValue = _inputParser.GetValue(changedIndex);
-
+						
 						Usage usage = (Usage)dataValue.Usages.FirstOrDefault();
 						if (Usage.Button1 <= usage && usage <= Usage.Button31) {
 							int btnIdx = (int)(usage - (int)Usage.Button1);
@@ -148,9 +148,7 @@ namespace MUNIA.Controllers {
 						else if (Usage.GenericDesktopX <= usage && usage <= Usage.GenericDesktopRz) {
 							int axisIdx = (int)(usage - (int)Usage.GenericDesktopX);
 							_axes.EnsureSize(axisIdx + 1);
-							_axes[axisIdx] = IsTrigger(usage) 
-								? dataValue.GetLogicalValue()
-								: dataValue.GetLogicalValue() - 128;
+							_axes[axisIdx] = ScaleAxis(dataValue);
 						}
 						else {
 							// unrecognized usage
@@ -173,6 +171,24 @@ namespace MUNIA.Controllers {
 			}
 			catch { }
 			return false;
+		}
+
+		private double ScaleAxis(DataValue dataValue) {
+			// first see if this item has a logical min/max defined
+			var di = dataValue.DataItem;
+			double val;
+			if (di.LogicalMinimum < di.LogicalMaximum) {
+				val = dataValue.GetLogicalValue() / (double)(di.LogicalMaximum - di.LogicalMaximum);
+			}
+			else {
+				int range = 1 << di.ElementBits;
+				val = dataValue.GetLogicalValue() / (double)range;
+			}
+
+			if (IsTrigger((Usage)dataValue.Usages.First()))
+				val -= 0.5;
+
+			return val;
 		}
 
 		private bool IsTrigger(Usage usage) {

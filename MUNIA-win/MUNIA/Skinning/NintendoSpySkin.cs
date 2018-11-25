@@ -228,9 +228,9 @@ namespace MUNIA.Skinning {
 			if (stick.Texture >= 0) {
 				Point loc = stick.Location;
 				if (stick.HorizontalAxis != -1)
-					loc.X += (int)(State.Axes[stick.HorizontalAxis] / 128.0 * stick.XRange + 0.5) * (stick.XReverse ? -1 : 1);
+					loc.X += (int)(State.Axes[stick.HorizontalAxis] * stick.XRange + 0.5) * (stick.XReverse ? -1 : 1);
 				if (stick.VerticalAxis != -1)
-					loc.Y += (int)(State.Axes[stick.VerticalAxis] / 128.0 * stick.YRange + 0.5) * (stick.YReverse ? -1 : 1);
+					loc.Y += (int)(State.Axes[stick.VerticalAxis] * stick.YRange + 0.5) * (stick.YReverse ? -1 : 1);
 				GL.BindTexture(TextureTarget.Texture2D, stick.Texture);
 				TextureHelper.RenderTexture(Scale(loc, stick.Size));
 			}
@@ -239,7 +239,7 @@ namespace MUNIA.Skinning {
 		private void RenderTrigger(Trigger trigger) {
 			if (trigger.Texture >= 0) {
 				var r = Scale(trigger.Location, trigger.Size);
-				float o = State?.Axes[trigger.Id] ?? 0f;
+				float o = (float)(State?.Axes[trigger.Id] * 256.0 ?? 0f);
 				o = trigger.Range.Clip(o);
 
 				RectangleF crop = new RectangleF(PointF.Empty, new SizeF(1.0f, 1.0f));

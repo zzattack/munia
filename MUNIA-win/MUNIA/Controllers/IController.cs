@@ -29,13 +29,13 @@ namespace MUNIA.Controllers {
 
 	public class ControllerState {
 
-		public ControllerState(List<int> axes, List<bool> buttons, List<Hat> hats) {
+		public ControllerState(List<double> axes, List<bool> buttons, List<Hat> hats) {
 			Axes.AddRange(axes);
 			Buttons.AddRange(buttons);
 			Hats.AddRange(hats);
 		}
 
-		public List<int> Axes { get; } = new List<int>();
+		public List<double> Axes { get; } = new List<double>();
 		public List<bool> Buttons { get; } = new List<bool>();
 		public List<Hat> Hats { get; } = new List<Hat>(); // usually copied to buttons for simplicity
 

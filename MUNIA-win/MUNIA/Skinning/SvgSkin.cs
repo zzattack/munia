@@ -199,9 +199,9 @@ namespace MUNIA.Skinning {
 			float x, y;
 
 			if (State != null) {
-				x = State.Axes[stick.HorizontalAxis];
+				x = (float)(State.Axes[stick.HorizontalAxis] * 128.0f);
 				if (Math.Abs(x) < stick.Deadzone) x = 0;
-				y = State.Axes[stick.VerticalAxis];
+				y = (float)(State.Axes[stick.VerticalAxis] * 128.0f);
 				if (Math.Abs(y) < stick.Deadzone) y = 0;
 			}
 			else {
@@ -220,7 +220,7 @@ namespace MUNIA.Skinning {
 
 		private void RenderTrigger(Trigger trigger) {
 			var r = trigger.Bounds;
-			float o = State?.Axes[trigger.Axis] ?? 0f;
+			float o = (float)(State?.Axes[trigger.Axis] ?? 0.0f) * 256.0f;
 			o = trigger.Range.Clip(o);
 
 			if (trigger.Type == TriggerType.Slide) {

@@ -216,8 +216,8 @@ namespace MUNIA.Skinning {
 			var r = stick.Bounds;
 			float x, y;
 			if (State != null) {
-				x = State.Axes[stick.HorizontalAxis];
-				y = State.Axes[stick.VerticalAxis];
+				x = (float)(State.Axes[stick.HorizontalAxis] * 128.0f);
+				y = (float)(State.Axes[stick.VerticalAxis] * 128.0f);
 			}
 			else {
 				x = y = 0f;
@@ -235,7 +235,7 @@ namespace MUNIA.Skinning {
 		private void RenderTrigger(int i) {
 			var trigger = Triggers[i];
 			var r = trigger.Bounds;
-			float o = State?.Axes[trigger.Axis] ?? 0f;
+			float o = (float)(State?.Axes[trigger.Axis] ?? 0.0f) * 256.0f;
 
 			SizeF img = GetCorrectedDimensions(_baseImg.Size);
 			o *= img.Height / _dimensions.Height * trigger.OffsetScale;

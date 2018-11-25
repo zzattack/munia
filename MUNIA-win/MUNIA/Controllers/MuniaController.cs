@@ -20,7 +20,7 @@ namespace MUNIA.Controllers {
 		public abstract ControllerType Type { get; }
 
 		protected readonly List<bool> _buttons = new List<bool>();
-		protected readonly List<int> _axes = new List<int>();
+		protected readonly List<double> _axes = new List<double>();
 		protected readonly List<Hat> _hats = new List<Hat>();
 		public ControllerState GetState() => new ControllerState(_axes, _buttons, _hats);
 
