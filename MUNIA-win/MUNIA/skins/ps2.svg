@@ -118,8 +118,8 @@
 		<g transform="translate(-259.501,-472.992)" id="stick-right">
 			<circle r="24.1" cy="962.2" cx="110.2" style="fill:#333;stroke:black;stroke-width:1.5652;stroke-linecap:round;stroke-linejoin:round" id="stick-right-base" />
 			<circle r="18.6" cy="962.2" cx="110.2" style="fill-opacity:0.5185;stroke:black;stroke-width:2.0282;stroke-linecap:round;stroke-linejoin:round" id="stick-right-outer" />
-			<circle r="16.2" cy="962.2" cx="110.2" style="fill:#4d4d4d;fill-opacity:0.9;stroke:black;stroke-width:2.3226;stroke-linecap:round;stroke-linejoin:round" munia:deadzone="21" munia:offset-scale="0.6" munia:axis-v="3" munia:axis-h="2" munia:button-state="released" munia:button-id="7" munia:stick-id="1" id="stick-right-inner" />
-			<circle r="16.2" cy="962.2" cx="110.2" style="display:none;fill:#ddd;fill-opacity:0.8;stroke:black;stroke-width:2.3226;stroke-linecap:round;stroke-linejoin:round" munia:deadzone="21" munia:offset-scale="0.6" munia:axis-v="3" munia:axis-h="2" munia:button-state="pressed" munia:button-id="7" munia:stick-id="1" id="stick-right-inner-hl" />
+			<circle r="16.2" cy="962.2" cx="110.2" style="fill:#4d4d4d;fill-opacity:0.9;stroke:black;stroke-width:2.3226;stroke-linecap:round;stroke-linejoin:round" munia:deadzone="21" munia:offset-scale="0.6" munia:axis-v="4" munia:axis-h="3" munia:button-state="released" munia:button-id="7" munia:stick-id="1" id="stick-right-inner" />
+			<circle r="16.2" cy="962.2" cx="110.2" style="display:none;fill:#ddd;fill-opacity:0.8;stroke:black;stroke-width:2.3226;stroke-linecap:round;stroke-linejoin:round" munia:deadzone="21" munia:offset-scale="0.6" munia:axis-v="4" munia:axis-h="3" munia:button-state="pressed" munia:button-id="7" munia:stick-id="1" id="stick-right-inner-hl" />
 		</g>
 	</g>
 </svg>
