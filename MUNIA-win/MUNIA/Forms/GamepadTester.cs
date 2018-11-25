@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using HidSharp;
 using MUNIA.Controllers;
+using MUNIA.Interop;
 
 namespace MUNIA.Forms {
 	public partial class GamepadTester : Form {
@@ -17,18 +18,14 @@ namespace MUNIA.Forms {
 		public GamepadTester() {
 			InitializeComponent();
 
-			munias = MuniaController.ListDevices().ToList();
-			lbMuniaDevices.DataSource = munias;
-
-			nspys = ArduinoController.ListDevices().ToList();
-			lbNintendoSpyDevices.DataSource = nspys;
-
-			generics = GenericController.ListDevices().ToList();
-			lbGenericDevices.DataSource = generics;
-
+			UpdateDevices();
 			lbMuniaDevices.SelectedItem = null;
 			lbNintendoSpyDevices.SelectedItem = null;
 			lbGenericDevices.SelectedItem = null;
+			UpdateUI();
+
+			UsbNotification.DeviceArrival += (sender, args) => UpdateDevices();
+			UsbNotification.DeviceRemovalComplete += (sender, args) => UpdateDevices();
 		}
 		
 		public GamepadTester(IController selectedController) : this() {
@@ -88,6 +85,42 @@ namespace MUNIA.Forms {
 			}
 		}
 
+		void UpdateDevices() {
+			munias = MuniaController.ListDevices().ToList();
+			lbMuniaDevices.DataSource = munias;
+
+			nspys = ArduinoController.ListDevices().ToList();
+			lbNintendoSpyDevices.DataSource = nspys;
+
+			generics = GenericController.ListDevices().ToList();
+			lbGenericDevices.DataSource = generics;
+		}
+		void UpdateUI(object sender, EventArgs args) {
+			UpdateUI();
+		}
+		void UpdateUI() {
+			btnTestMUNIA.Enabled = lbMuniaDevices.SelectedItem is MuniaController;
+			btnTestNSpy.Enabled = lbNintendoSpyDevices.SelectedItem is ArduinoController;
+			btnTestGeneric.Enabled = lbGenericDevices.SelectedItem is GenericController;
+		}
+
+		private void lbMuniaDevices_MouseDoubleClick(object sender, MouseEventArgs e) {
+			int index = lbMuniaDevices.IndexFromPoint(e.Location);
+			if (index != ListBox.NoMatches)
+				btnTestMUNIA_Click(null, null);
+		}
+
+		private void lbNintendoSpyDevices_MouseDoubleClick(object sender, MouseEventArgs e) {
+			int index = lbNintendoSpyDevices.IndexFromPoint(e.Location);
+			if (index != ListBox.NoMatches)
+				btnTestNSpy_Click(null, null);
+		}
+
+		private void lbGenericDevices_MouseDoubleClick(object sender, MouseEventArgs e) {
+			int index = lbGenericDevices.IndexFromPoint(e.Location);
+			if (index != ListBox.NoMatches)
+				btnTestGeneric_Click(null, null);
+		}
 	}
 
 	public sealed class ControllerStatePainter : Control {
@@ -138,8 +171,8 @@ namespace MUNIA.Forms {
 			gfx.DrawString($"{buttonNum}: {(buttonState?"X":"O")}", DefaultFont, Brushes.Black, x, y);
 		}
 
-		private void DrawAxis(Graphics gfx, int axisNum, int axisValue, int x, int y) {
-			gfx.DrawString($"{axisNum}: {axisValue}", DefaultFont, Brushes.Black, x, y);
+		private void DrawAxis(Graphics gfx, int axisNum, double axisValue, int x, int y) {
+			gfx.DrawString($"{axisNum}: {axisValue:f2}", DefaultFont, Brushes.Black, x, y);
 		}
 
 	}

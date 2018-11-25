@@ -49,6 +49,8 @@
 			this.lbMuniaDevices.Name = "lbMuniaDevices";
 			this.lbMuniaDevices.Size = new System.Drawing.Size(188, 95);
 			this.lbMuniaDevices.TabIndex = 0;
+			this.lbMuniaDevices.SelectedValueChanged += new System.EventHandler(this.UpdateUI);
+			this.lbMuniaDevices.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lbMuniaDevices_MouseDoubleClick);
 			// 
 			// label1
 			// 
@@ -75,6 +77,8 @@
 			this.lbNintendoSpyDevices.Name = "lbNintendoSpyDevices";
 			this.lbNintendoSpyDevices.Size = new System.Drawing.Size(188, 95);
 			this.lbNintendoSpyDevices.TabIndex = 2;
+			this.lbNintendoSpyDevices.SelectedValueChanged += new System.EventHandler(this.UpdateUI);
+			this.lbNintendoSpyDevices.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lbNintendoSpyDevices_MouseDoubleClick);
 			// 
 			// lblGenericGamepads
 			// 
@@ -92,6 +96,8 @@
 			this.lbGenericDevices.Name = "lbGenericDevices";
 			this.lbGenericDevices.Size = new System.Drawing.Size(188, 95);
 			this.lbGenericDevices.TabIndex = 4;
+			this.lbGenericDevices.SelectedValueChanged += new System.EventHandler(this.UpdateUI);
+			this.lbGenericDevices.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lbGenericDevices_MouseDoubleClick);
 			// 
 			// btnConfigure
 			// 
