@@ -62,12 +62,18 @@ namespace Svg
             return (element != null) ? element.Path(renderer) : null;
         }
 
-        public override System.Drawing.RectangleF Bounds
-        {
-            get { return new System.Drawing.RectangleF(); }
-        }
+        public override System.Drawing.RectangleF Bounds {
+			get
+			{
+				var element = this.OwnerDocument.IdManager.GetElementById(this.ReferencedElement) as SvgVisualElement;
+				if (element != null) {
+					return element.Bounds;
+				}
+				return new System.Drawing.RectangleF();
+			}
+		}
 
-        protected override bool Renderable { get { return false; } }
+		protected override bool Renderable { get { return false; } }
 
         protected override void Render(ISvgRenderer renderer)
         {

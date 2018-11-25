@@ -257,9 +257,9 @@ namespace Svg
             for (var i = 0; i < path.Length; i++)
             {
                 string command;
-                if (char.IsLetter(path[i]) && path[i] != 'e') //e is used in scientific notiation. but not svg path
+				if (char.IsLetter(path[i]) && path[i] != 'e' && path[i] != 'E') //e is used in scientific notiation. but not svg path
                 {
-                    command = path.Substring(commandStart, i - commandStart).Trim();
+					command = path.Substring(commandStart, i - commandStart).Trim();
                     commandStart = i;
 
                     if (!string.IsNullOrEmpty(command))
