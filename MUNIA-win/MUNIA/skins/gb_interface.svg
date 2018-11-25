@@ -1,0 +1,17 @@
+<svg xmlns:munia="http://www.munia.io/namespaces/munia" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 703.274 243.445 ">
+    <munia:info munia:skin-name="GameBoyInterface" munia:device-type="NGC"/>
+    <g transform="translate(-228.722 -272.55)" stroke-linecap="round">
+        <ellipse munia:button-id="3" munia:button-state="released" cx="758.301" cy="434.584" rx="53.455" ry="53.072" fill="#7f0c47" stroke="#460727" stroke-width="5.944"/>
+        <ellipse munia:button-id="1" munia:button-state="released" cx="875.57" cy="329.625" rx="53.455" ry="53.072" fill="#7f0c47" stroke="#460727" stroke-width="5.944"/>
+        <rect munia:button-id="4" munia:button-state="released" width="96.52" height="31.979" x="140.2" y="736.244" ry="15.989" transform="matrix(.80017 -.59977 .61773 .7864 0 0)" fill="#484848" stroke="#202020" stroke-width="4.678"/>
+        <rect munia:button-id="5" munia:button-state="released" width="96.52" height="31.979" x="56.218" y="672.192" ry="15.989" transform="matrix(.80017 -.59977 .61773 .7864 0 0)" fill="#484848" stroke="#202020" stroke-width="4.678"/>
+        <g transform="translate(50.508 5.05)">
+            <path d="M268.572 270a17.107 17.107 0 0 0-17.144 17.143v53.572h-53.57a17.105 17.105 0 0 0-17.143 17.142v38.573a17.105 17.105 0 0 0 17.142 17.142h53.57v53.57a17.107 17.107 0 0 0 17.145 17.143h38.57a17.105 17.105 0 0 0 17.143-17.142v-53.57h53.572A17.105 17.105 0 0 0 395 396.43v-38.573a17.105 17.105 0 0 0-17.143-17.142h-53.572v-53.572A17.105 17.105 0 0 0 307.143 270h-38.57z" fill="#484848" stroke="#202020" stroke-width="5"/>
+            <circle r="26.011" cy="377.143" cx="287.857" fill="#383838" stroke-width="5"/>
+            <path munia:button-id="10" munia:button-state="released" transform="matrix(.82582 0 0 .7713 11.435 85.544)" d="M223.24 378.063l43.19-24.936V403z" fill="#383838" stroke="#383838" stroke-width="12.53" stroke-linejoin="round"/>
+            <path munia:button-id="11" munia:button-state="released" transform="matrix(-.82582 0 0 .7713 563.825 85.544)" d="M223.24 378.063l43.19-24.936V403z" fill="#383838" stroke="#383838" stroke-width="12.53" stroke-linejoin="round"/>
+            <path munia:button-id="9" munia:button-state="released" transform="matrix(0 -.82582 .7713 0 -3.74 653.232)" d="M223.24 378.063l43.19-24.936V403z" fill="#383838" stroke="#383838" stroke-width="12.53" stroke-linejoin="round"/>
+            <path munia:button-id="8" munia:button-state="released" transform="matrix(0 .82582 .7713 0 -3.74 100.842)" d="M223.24 378.063l43.19-24.936V403z" fill="#383838" stroke="#383838" stroke-width="12.53" stroke-linejoin="round"/>
+        </g>
+    </g>
+</svg>

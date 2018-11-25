@@ -1,0 +1,84 @@
+<svg id="svg3336" xmlns:munia="http://www.munia.io/namespaces/munia" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3384.7 2226">
+    <style>
+        .st1{display:none}
+		.st2{display:inline}
+		.st13,.st2{fill:#c8c8c8;stroke:#969696;stroke-width:16}
+		.st14{fill:#fff;stroke:#fff}
+    </style>
+    <munia:info munia:device-type="NGC" munia:skin-name="Gamecube NoDpCs Filled"/>
+    <g id="Shoulder_Buttons" transform="translate(-1267.953 -78)" opacity=".93">
+        <g id="L" transform="translate(0 -66)" munia:offset-scale="1.2" munia:trigger-axis="2" munia:trigger-id="0" munia:z-index="-2" class="st1">
+            <ellipse id="ellipse3348" class="st2" cx="2307.3" cy="829.5" rx="469.6" ry="504.9"/>
+        </g>
+        <g id="R" transform="translate(0 -66)" munia:offset-scale="1.2" munia:trigger-axis="5" munia:trigger-id="1" munia:z-index="-2" class="st1">
+            <ellipse id="ellipse3363" class="st2" cx="3706.1" cy="838.2" rx="469.6" ry="504.9"/>
+        </g>
+        <g id="L_Pressed" transform="translate(-1106.75 -117.701)" munia:button-id="7" munia:button-state="pressed" munia:z-index="-3">
+            <radialGradient id="ellipse3348-1_1_" cx="8173.005" cy="-1139.957" r="671.312" gradientTransform="matrix(1 0 0 .952 -4749.405 2015.439)" gradientUnits="userSpaceOnUse">
+                <stop offset="0" stop-color="#fff"/>
+                <stop offset=".565" stop-color="red"/>
+                <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+            </radialGradient>
+            <ellipse id="ellipse3348-1" cx="3423.6" cy="930.2" rx="671.3" ry="639.1" opacity=".93" fill="url(#ellipse3348-1_1_)"/>
+        </g>
+        <g id="R_Pressed" transform="translate(2675.148 -80.918)" munia:button-id="6" munia:button-state="pressed" munia:z-index="-3">
+            <radialGradient id="ellipse3348-1-1_1_" cx="-975.509" cy="-1357.716" r="671.303" gradientTransform="matrix(.8719 0 0 .8537 1886.046 2012.682)" gradientUnits="userSpaceOnUse">
+                <stop offset="0" stop-color="#fff"/>
+                <stop offset=".565" stop-color="red"/>
+                <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+            </radialGradient>
+            <ellipse id="ellipse3348-1-1" cx="1035.5" cy="853.6" rx="585.3" ry="573.1" opacity=".93" fill="url(#ellipse3348-1-1_1_)"/>
+        </g>
+    </g>
+    <g id="Z_Button" transform="translate(-1267.953 -78)" stroke-width="16">
+        <path id="Z" munia:button-id="5" munia:button-state="released" munia:z-index="-1" d="M3419.2 537c-14.6-18.2-239.8-74.4-410.3-76.2-170.5-1.7-351.9 41.2-371.3 57.2-19.3 16 11 103.5 11 103.5l760 40.4c.1 0 25.3-106.7 10.6-124.9z" fill="#462683" stroke="#490094"/>
+        <path id="Z_Pressed" munia:button-id="5" munia:button-state="pressed" munia:z-index="-1" d="M3419.2 539.7c-14.6-17.8-221.2-78.3-410.3-82.2-219.6 3.8-351.9 48-371.3 63.6-19.3 15.6 11 101.2 11 101.2l760 39.5c.1.1 25.3-104.3 10.6-122.1z" fill="#b299fb" stroke="#b299fb"/>
+    </g>
+    <g id="Controller" transform="translate(-1267.953 -78)">
+        <g id="XMLID_1_">
+            <path d="M4567.2 1670.6l-1.7 5.3c-131.6 415.9-572.6 650.7-990.3 525-162.8-49-359.6-81.4-595.2-81.4-253 0-458.9 33-625.5 83.1-414 124.3-851.8-101.9-987.6-512.2l-1.3-3.9c-141.1-426.5 96.7-885.9 526.8-1015.9 315.5-95.3 698.2-176.4 1087.6-176.4 377.6 0 748.5 77.8 1055.5 170 427 128.2 666.2 581.3 531.7 1006.4zm-911.1 319.2c314.8 0 570-252.6 570-564.2s-255.2-564.2-570-564.2-570 252.6-570 564.2 255.3 564.2 570 564.2z"/>
+            <path d="M4245.9 1425.6c0 322.4-264.1 583.8-589.8 583.8s-589.8-261.4-589.8-583.8 264.1-583.8 589.8-583.8c325.8.1 589.8 261.5 589.8 583.8z"/>
+        </g>
+    </g>
+    <g id="Stick_Bases" transform="translate(-1267.953 -78)">
+        <radialGradient id="Control_Stick_Base_1_" cx="4511.021" cy="-845.264" r="413.257" gradientTransform="matrix(.893 0 0 .8801 -1711.542 2089.617)" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#bebebe"/>
+            <stop offset=".85" stop-color="#bebebe"/>
+            <stop offset="1" stop-color="#8c8c8c"/>
+        </radialGradient>
+        <path id="Control_Stick_Base" d="M2316.8 1748.6l-284.9-118-118-284.9 118-284.9 284.9-118 284.9 118 118 284.9-118 284.9-284.9 118z" opacity=".14" fill="url(#Control_Stick_Base_1_)" stroke="#655f73" stroke-width="15.406"/>
+    </g>
+    <g id="Sticks" transform="translate(-1267.953 -78)">
+        <g id="Control_Stick" transform="translate(8.618 -28.433)" munia:axis-h="0" munia:axis-v="1" munia:offset-scale="1.8" munia:stick-id="0">
+            <ellipse id="ellipse3475" cx="2308.2" cy="1374.2" rx="305.3" ry="293.4" fill="#eee" stroke="#6a6a6a" stroke-width="16.942"/>
+        </g>
+    </g>
+    <g id="Face_Buttons" transform="translate(-1267.953 -78)">
+        <g id="A" munia:button-id="0" munia:button-state="released">
+            <circle id="A_Button" cx="3661.8" cy="1415.8" r="275.7" fill="#1e725a" stroke="#005741" stroke-width="16"/>
+        </g>
+        <g id="A_Pressed" munia:button-id="0" munia:button-state="pressed">
+            <circle id="circle4282" cx="3661.8" cy="1415.8" r="275.7" fill="#85ffe1" stroke="#85ffe1" stroke-width="16"/>
+        </g>
+        <g id="B" munia:button-id="1" munia:button-state="released">
+            <circle id="B_Button" cx="3174.5" cy="1399.3" r="118.8" fill="#a71608" stroke="#7d1010" stroke-width="16"/>
+        </g>
+        <g id="B-Pressed" munia:button-id="1" munia:button-state="pressed">
+            <circle id="circle4294" cx="3174.5" cy="1399.3" r="118.8" fill="#fcadad" stroke="#fcadad" stroke-width="16"/>
+        </g>
+        <g id="Y" munia:button-id="3" munia:button-state="released">
+            <path id="Y_Button" class="st13" d="M3759.4 885c-10.9-138.3-291.2-76.7-337.1-56s-254.8 119.2-165.7 238.9c102.4 105.9 168.1-13.8 259.8-57.4 119.3-46.1 247.2 19.5 243-125.5z"/>
+        </g>
+        <g id="Y_Pressed" transform="translate(.033 -.557)" munia:button-id="3" munia:button-state="pressed">
+            <path id="path4337" class="st14" d="M3759.4 884.9c-10.9-138.3-291.2-76.7-337.1-56s-254.8 119.2-165.7 238.9c102.4 105.9 168.1-13.8 259.8-57.4 119.3-46.2 247.2 19.5 243-125.5z"/>
+        </g>
+        <g id="X" munia:button-id="2" munia:button-state="released">
+            <path id="X_Button" class="st13" d="M4263.9 1180.9c-20.7-45.9-119.2-254.8-238.9-165.7-105.9 102.4 13.8 168.1 57.4 259.8 46.2 119.3-19.4 247.2 125.6 243 138.2-11 76.6-291.2 55.9-337.1z"/>
+        </g>
+        <g id="X_Pressed" transform="translate(-.133 -.117)" munia:button-id="2" munia:button-state="pressed">
+            <path id="path4349" class="st14" d="M4263.8 1180.9c-20.7-45.9-119.2-254.8-238.9-165.7-105.9 102.4 13.8 168.1 57.4 259.8 46.2 119.3-19.4 247.2 125.6 243 138.3-11 76.6-291.3 55.9-337.1z"/>
+        </g>
+        <circle id="Start" munia:button-id="4" munia:button-state="released" cx="3008.9" cy="723.1" r="100.9" fill="#c8c8c8" stroke="#9a9a9a" stroke-width="16"/>
+        <circle id="Start_Pressed" munia:button-id="4" munia:button-state="pressed" class="st14" cx="3008.9" cy="723.1" r="100.9"/>
+    </g>
+</svg>
