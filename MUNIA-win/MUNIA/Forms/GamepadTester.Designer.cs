@@ -173,10 +173,13 @@
 			// 
 			// statePainter
 			// 
-			this.statePainter.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.statePainter.Location = new System.Drawing.Point(0, 70);
+			this.statePainter.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.statePainter.Location = new System.Drawing.Point(0, 76);
 			this.statePainter.Name = "statePainter";
-			this.statePainter.Size = new System.Drawing.Size(644, 161);
+			this.statePainter.Padding = new System.Windows.Forms.Padding(5);
+			this.statePainter.Size = new System.Drawing.Size(644, 155);
 			this.statePainter.TabIndex = 0;
 			this.statePainter.Text = "controllerStatePainter1";
 			// 

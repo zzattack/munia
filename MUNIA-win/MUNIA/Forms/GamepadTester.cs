@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Xml;
 using HidSharp;
 using MUNIA.Controllers;
 using MUNIA.Interop;
@@ -27,7 +29,7 @@ namespace MUNIA.Forms {
 			UsbNotification.DeviceArrival += (sender, args) => UpdateDevices();
 			UsbNotification.DeviceRemovalComplete += (sender, args) => UpdateDevices();
 		}
-		
+
 		public GamepadTester(IController selectedController) : this() {
 			if (selectedController is MuniaController mc)
 				lbMuniaDevices.SelectedItem = munias.FirstOrDefault(d => d.DevicePath == mc.DevicePath);
@@ -41,23 +43,11 @@ namespace MUNIA.Forms {
 			StartTesting(lbMuniaDevices.SelectedItem as MuniaController);
 		}
 
-		private void btnTestNSpy_Click(object sender, EventArgs e) {
-			StartTesting(lbNintendoSpyDevices.SelectedItem as ArduinoController);
-		}
-
-		private void btnTestGeneric_Click(object sender, EventArgs e) {
-			StartTesting(lbGenericDevices.SelectedItem as GenericController);
-		}
-
 		private void StartTesting(IController controller) {
-			StopTesting();
 			if (controller != null) {
-				_activeController = controller;
-				_activeController.StateUpdated += OnControllerStateUpdated;
-				if (_activeController.Activate()) {
-					rtb.AppendText($"Started testing controller {_activeController.Name}, press some buttons\r\n");
-					statePainter.UpdateState(_activeController.GetState());
-					statePainter.Invalidate();
+				if (controller.Activate()) {
+					rtb.AppendText($"Started testing controller {controller.Name}, press some buttons\r\n");
+					statePainter.StartTesting(controller);
 				}
 				else {
 					rtb.AppendText($"Could not activate controller\r\n");
@@ -68,22 +58,14 @@ namespace MUNIA.Forms {
 			}
 		}
 
-		private void StopTesting() {
-			if (_activeController != null) {
-				_activeController.StateUpdated -= OnControllerStateUpdated;
-				_activeController.Deactivate();
-				rtb.AppendText($"Stopped testing controller {_activeController.Name}\r\n");
-				_activeController = null;
-			}
+		private void btnTestNSpy_Click(object sender, EventArgs e) {
+			StartTesting(lbNintendoSpyDevices.SelectedItem as ArduinoController);
 		}
 
-		private void OnControllerStateUpdated(object sender, EventArgs e) {
-			if (InvokeRequired) BeginInvoke((Action<object, EventArgs>)OnControllerStateUpdated, sender, e);
-			else {
-				statePainter.UpdateState(_activeController.GetState());
-				statePainter.Invalidate();
-			}
+		private void btnTestGeneric_Click(object sender, EventArgs e) {
+			StartTesting(lbGenericDevices.SelectedItem as GenericController);
 		}
+
 
 		void UpdateDevices() {
 			munias = MuniaController.ListDevices().ToList();
@@ -124,55 +106,154 @@ namespace MUNIA.Forms {
 	}
 
 	public sealed class ControllerStatePainter : Control {
+		private IController _controller;
 		private ControllerState _state;
 		public ControllerStatePainter() {
 			DoubleBuffered = true;
 		}
-		public void UpdateState(ControllerState state) {
-			_state = state;
+
+		public void StartTesting(IController controller) {
+			StopTesting();
+			_controller = controller;
+			_controller.StateUpdated += OnControllerStateUpdated;
+		}
+		
+		public void StopTesting() {
+			if (_controller != null) {
+				_controller.StateUpdated -= OnControllerStateUpdated;
+				_controller.Deactivate();
+				_controller = null;
+			}
+		}
+
+		private void OnControllerStateUpdated(object sender, EventArgs e) {
+			_state = _controller.GetState();
+			if (InvokeRequired) BeginInvoke((Action)Invalidate);
+			else Invalidate();
 		}
 
 		protected override void OnPaint(PaintEventArgs pe) {
 			var gfx = pe.Graphics;
+			gfx.SmoothingMode = SmoothingMode.AntiAlias;
+
 			gfx.Clear(BackColor);
 			if (_state == null) {
-				gfx.DrawString("No controller state yet, press some buttons", DefaultFont, Brushes.Black, 5, 5);
+				gfx.DrawString("No controller state yet, press some buttons", 
+					new Font(DefaultFont.FontFamily, 20, FontStyle.Regular),
+					Brushes.Black, 5, 5);
 			}
 			else {
+				const int baseLineY = 4;
+
 				int x = 10;
-				gfx.DrawString("Hats", DefaultFont, Brushes.Black, 5, 5);
-				for (int i = 0; i < _state.Hats.Count; i++) {
-					var hat = _state.Hats[i];
-					DrawHat(gfx, i, hat, x, 20);
-					x += 100;
+				int y = baseLineY + 20;
+				if (_state.Hats.Any()) {
+					gfx.DrawString("Hats", DefaultFont, Brushes.Black, 0, 0);
+					for (int i = 0; i < _state.Hats.Count; i++) {
+						var hat = _state.Hats[i];
+						DrawHat(gfx, i, hat, x, y);
+						x += 80;
+					}
 				}
 
-				x = 10;
-				gfx.DrawString("Buttons", DefaultFont, Brushes.Black, 5, 45);
-				for (int i = 0; i < _state.Buttons.Count; i++) {
-					DrawButton(gfx, i, _state.Buttons[i], x, 60);
-					x += 40;
+				int btnX = x;
+				int btnY = 20;
+				const int maxButtonsPerRow = 8;
+				gfx.DrawString("Buttons", DefaultFont, Brushes.Black, x, 0);
+				for (int i = 0; i < _state.Buttons.Count;) {
+					DrawButton(gfx, i, _state.Buttons[i], btnX, btnY);
+					btnX += 40;
+					++i;
+					if (i % maxButtonsPerRow == 0) {
+						btnX = x;
+						btnY += 35;
+					}
 				}
 
-				x = 10;
-				gfx.DrawString("Axes", DefaultFont, Brushes.Black, 5, 85);
+				x += Math.Min(maxButtonsPerRow, _state.Buttons.Count) * 40;
+				x += 10; // spacing
+				y = 12;
+				gfx.DrawString("Axes", DefaultFont, Brushes.Black, x, 0);
 				for (int i = 0; i < _state.Axes.Count; i++) {
-					DrawAxis(gfx, i, _state.Axes[i], x, 100);
-					x += 40;
+					DrawAxis(gfx, i, _state.Axes[i], _controller != null && _controller.IsAxisTrigger(i), x, y);
+					x += 30;
 				}
 			}
 		}
 
 		private void DrawHat(Graphics gfx, int hatNum, Hat hat, int x, int y) {
-			gfx.DrawString($"{hatNum}: {hat}", DefaultFont, Brushes.Black, x, y);
+			// set x,y to center of hat
+			x += 25; y += 25;
+
+			// construct right-pointing arrow
+			var area = new Rectangle(0, 0, 24, 14);
+			float bodyHeight = (area.Height / 3);
+			float headWidth = (area.Width / 3);
+			float bodyWidth = area.Width - headWidth;
+			PointF[] points = new PointF[7];
+			points[0] = new PointF(area.Left, area.Top + bodyHeight);
+			points[1] = new PointF(area.Left + bodyWidth, area.Top + bodyHeight);
+			points[2] = new PointF(area.Left + bodyWidth, area.Top);
+			points[3] = new PointF(area.Right, area.Top + (area.Height / 2));
+			points[4] = new PointF(area.Left + bodyWidth, area.Bottom);
+			points[5] = new PointF(area.Left + bodyWidth, area.Bottom - bodyHeight);
+			points[6] = new PointF(area.Left, area.Bottom - bodyHeight);
+
+			for (int i = 0; i < 8; i++) {
+				// 8 possible directions
+				GraphicsPath path = new GraphicsPath();
+				path.AddPolygon(points);
+
+				var transform = new Matrix();
+				transform.RotateAt(45.0f * i, new PointF(area.Left, area.Top + area.Height / 2));
+				transform.Translate(12.0f, 0.0f); // move away from center
+
+				transform.Translate(x, y, MatrixOrder.Append);
+				path.Transform(transform);
+
+				Hat current = ControllerState.HatLookup[(byte)((i + 2) % 8)];
+				using (var pen = new Pen(Color.Black, 1.0f)) {
+					gfx.DrawPath(pen, path);
+				}
+				gfx.FillPath(hat == current ? Brushes.Green : Brushes.Red, path);
+			}
 		}
 
 		private void DrawButton(Graphics gfx, int buttonNum, bool buttonState, int x, int y) {
-			gfx.DrawString($"{buttonNum}: {(buttonState?"X":"O")}", DefaultFont, Brushes.Black, x, y);
+			var rect = new RectangleF(x, y, 26f, 26f);
+			gfx.FillEllipse(buttonState ? Brushes.Green : Brushes.Red, rect);
+			using (var pen = new Pen(Color.Black, 2.0f))
+				gfx.DrawEllipse(pen, rect);
+
+			var sf = new StringFormat(StringFormatFlags.FitBlackBox);
+			sf.Alignment = StringAlignment.Center;
+			sf.LineAlignment = StringAlignment.Center;
+			gfx.DrawString($"{buttonNum}", DefaultFont, Brushes.White, rect, sf);
 		}
 
-		private void DrawAxis(Graphics gfx, int axisNum, double axisValue, int x, int y) {
-			gfx.DrawString($"{axisNum}: {axisValue:f2}", DefaultFont, Brushes.Black, x, y);
+		private void DrawAxis(Graphics gfx, int axisNum, double axisValue, bool isTrigger, int x, int y) {
+			var rect = new Rectangle(x, y, 12, 72);
+			RectangleF fill;
+			if (isTrigger) {
+				fill = RectangleF.FromLTRB(rect.Left, (float)(rect.Bottom - axisValue * rect.Height), rect.Right, rect.Bottom);
+			}
+			else {
+				float mid = rect.Top + rect.Height / 2.0f;
+				if (axisValue > 0)
+					fill = RectangleF.FromLTRB(rect.Left, (float)(mid - rect.Height / 2.0f * axisValue), rect.Right, mid);
+				else
+					fill = RectangleF.FromLTRB(rect.Left, mid, rect.Right, (float)(mid + rect.Height / 2.0f * -axisValue));
+			}
+
+			gfx.FillRectangle(Brushes.White, rect);
+			gfx.FillRectangle(Brushes.Red, fill);
+			using (var pen = new Pen(Color.Black, 1.0f))
+				gfx.DrawRectangle(pen, rect);
+			var r = new RectangleF(x, rect.Bottom + 3, rect.Width, 15);
+			var sf = new StringFormat();
+			sf.Alignment = StringAlignment.Center;
+			sf.LineAlignment = StringAlignment.Near;
+			gfx.DrawString(axisNum.ToString(), DefaultFont, Brushes.Black, r, sf);
 		}
 
 	}
