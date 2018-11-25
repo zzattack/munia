@@ -127,8 +127,15 @@
     <Compile Include="Forms\SkinFoldersForm.Designer.cs">
       <DependentUpon>SkinFoldersForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\SkinPreviewWindow.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\SkinPreviewWindow.Designer.cs">
+      <DependentUpon>SkinPreviewWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Skinning\NintendoSpyMapping.cs" />
+    <Compile Include="Skinning\SkinToBitmapRenderer.cs" />
     <Compile Include="Util\ColorPickerControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -155,6 +162,7 @@
     <Compile Include="Util\ColorDialog2.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Util\DrawingSurface.cs" />
     <Compile Include="Util\ExtensionMethods.cs" />
     <Compile Include="Util\CircularBuffer.cs" />
     <Compile Include="Forms\DelayValuePicker.cs">
@@ -241,6 +249,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SkinFoldersForm.resx">
       <DependentUpon>SkinFoldersForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SkinPreviewWindow.resx">
+      <DependentUpon>SkinPreviewWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SkinRemapperForm.resx">
       <DependentUpon>SkinRemapperForm.cs</DependentUpon>

@@ -6,12 +6,14 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Forms;
 using MUNIA.Controllers;
 using MUNIA.Interop;
 using MUNIA.Properties;
 using MUNIA.Skinning;
 using MUNIA.Util;
+using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
 namespace MUNIA.Forms {
@@ -68,15 +70,14 @@ namespace MUNIA.Forms {
 			tsmiControllers.DropDownItems.Clear();
 
 			// first show the controllers which are available
-			foreach (var ctrlr in ConfigManager.Controllers.OrderBy(c => c.Name)) {
+			foreach (var ctrlr in ConfigManager.Controllers.OrderBy(c => c.Type)) {
 				var tsmiController = new ToolStripMenuItem(ctrlr.Name);
-
 				foreach (var skin in ConfigManager.Skins.Where(s => s.Controllers.Contains(ctrlr.Type))) {
 					var tsmiSkin = new ToolStripMenuItem($"{skin.Name}");
 					tsmiSkin.Enabled = true;
-					tsmiSkin.ToolTipText = skin.Path;
 					tsmiSkin.Click += (sender, args) => ActivateConfig(ctrlr, skin);
 					tsmiSkin.Image = GetSkinImage(skin);
+					HookHoverEvents(tsmiSkin, skin);
 					tsmiController.DropDownItems.Add(tsmiSkin);
 				}
 
@@ -95,6 +96,7 @@ namespace MUNIA.Forms {
 			// so that we can still look at the skins for them
 			foreach (var controller in allControllerTypes.Except(availableControllers).OrderBy(c => c.ToString())) {
 				var tsmiSkin = new ToolStripMenuItem(controller.ToString());
+				tsmiSkin.Image = GetControllerImage(controller);
 
 				var preview = tsmiSkin.DropDownItems.Add("No controllers - preview only");
 				preview.Enabled = false;
@@ -104,7 +106,7 @@ namespace MUNIA.Forms {
 					skinPrev.Enabled = true;
 					skinPrev.Click += (sender, args) => ActivateConfig(null, skin);
 					skinPrev.Image = GetSkinImage(skin);
-					tsmiSkin.Image = GetControllerImage(controller);
+					HookHoverEvents(skinPrev, skin);
 				}
 
 				tsmiControllers.DropDownItems.Add(tsmiSkin);
@@ -117,6 +119,99 @@ namespace MUNIA.Forms {
 			lblSkins.Text = skinText;
 		}
 
+		#region Skin preview timer
+
+		private System.Threading.Timer _previewDelayTimer;
+		private PreviewParams _previewParams = new PreviewParams();
+		struct PreviewParams {
+			public ToolStripItem tsmi;
+			public Skin skin;
+		}
+		private void HookHoverEvents(ToolStripItem tsmi, Skin skin) {
+			if (_previewDelayTimer == null) {
+				_previewDelayTimer = new System.Threading.Timer(CreateSkinPreview);
+			}
+			tsmi.MouseMove += (sender, args) => {
+				_previewParams.tsmi = tsmi;
+				_previewParams.skin = skin;
+				_previewDelayTimer.Change(50, Timeout.Infinite); // slight delay
+			};
+		}
+		#endregion
+
+		private void CreateSkinPreview(object state) {
+			BeginInvoke((Action)delegate {
+				HoverSkinPreview(_previewParams.tsmi, _previewParams.skin);
+			});
+		}
+
+
+		SkinPreviewWindow _activeSkinPreview;
+		private bool _busyRendering;
+		private void HoverSkinPreview(object sender, Skin skin) {
+			if (skin == null || skin.Path == _activeSkinPreview?.Skin?.Path || _busyRendering)
+				return;
+
+			try {
+				// create a clone of requested skin
+				var clonedSkin = Skin.Clone(skin);
+				if (clonedSkin.LoadResult != SkinLoadResult.Ok)
+					return;
+
+				_activeSkinPreview?.Skin?.Deactivate();
+				_activeSkinPreview?.Hide();
+
+				Point loc = this.PointToClient(Cursor.Position);
+				if (sender is ToolStripMenuItem tsmi) {
+					// make sure preview is at least to the right of the toolstrip item
+					int r = menu.Left;
+					int t = menu.Bottom;
+					ToolStripItem item = tsmi;
+					while (item != null) {
+						if (item.Owner != menu)
+							r += item.Bounds.Width;
+
+						// add vertical offset
+						var parent = item.OwnerItem as ToolStripMenuItem;
+						int i = 0;
+						while (parent != null && i < parent.DropDownItems.Count) {
+							if (parent.DropDownItems[i] == item) break;
+							t += parent.DropDownItems[i].Height;
+							i++;
+						}
+						item = parent;
+					}
+					loc = new Point(r, t);
+					loc.Offset(5, 5); // small margin
+				}
+
+				if (_activeSkinPreview == null) {
+					_activeSkinPreview = new SkinPreviewWindow(clonedSkin);
+					_activeSkinPreview.Location = loc;
+					Controls.Add(_activeSkinPreview);
+					_activeSkinPreview.BringToFront();
+				}
+				else {
+					_activeSkinPreview.Location = loc;
+					_activeSkinPreview.ChangeSkin(clonedSkin);
+				}
+
+				_activeSkinPreview.RenderSkin();
+				_activeSkinPreview.Show();
+			}
+			finally {
+				_busyRendering = false;
+			}
+		}
+
+		private void tsmiControllers_DropDownClosed(object sender, EventArgs e) {
+			if (_activeSkinPreview != null) {
+				_activeSkinPreview?.Hide();
+				_activeSkinPreview.Dispose();
+				_activeSkinPreview = null;
+			}
+		}
+
 		private static Image GetControllerImage(IController ctrlr) {
 			if (ctrlr is ArduinoController) return Resources.arduino;
 			else return GetControllerImage(ctrlr.Type);
@@ -125,15 +220,15 @@ namespace MUNIA.Forms {
 		private static Image GetControllerImage(ControllerType ctrlrType) {
 			switch (ctrlrType) {
 				case ControllerType.SNES:
-					return Resources.snes;
+				return Resources.snes;
 				case ControllerType.N64:
-					return Resources.n64;
+				return Resources.n64;
 				case ControllerType.NGC:
-					return Resources.ngc;
+				return Resources.ngc;
 				case ControllerType.PS2:
-					return Resources.ps;
-				case ControllerType.Unknown:
-					return Resources.generic;
+				return Resources.ps;
+				case ControllerType.Generic:
+				return Resources.generic;
 			}
 			return null;
 		}
@@ -174,7 +269,6 @@ namespace MUNIA.Forms {
 		}
 
 		private void glControl_Load(object sender, EventArgs e) {
-			glControl.MakeCurrent();
 			glControl.VSync = true;
 		}
 
@@ -200,6 +294,8 @@ namespace MUNIA.Forms {
 
 
 		private void Render() {
+			if (ConfigManager.ActiveSkin == null) return;
+
 			glControl.MakeCurrent();
 			GL.ClearColor(Color.FromArgb(0, ConfigManager.BackgroundColor));
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
@@ -211,7 +307,7 @@ namespace MUNIA.Forms {
 			GL.LoadIdentity();
 			GL.Ortho(0, glControl.Width, glControl.Height, 0, 0.0, 4.0);
 
-			ConfigManager.ActiveSkin?.Render(glControl.Width, glControl.Height);
+			ConfigManager.ActiveSkin.Render(glControl.Width, glControl.Height);
 			glControl.SwapBuffers();
 		}
 
@@ -298,7 +394,7 @@ namespace MUNIA.Forms {
 				if (msgBox) MessageBox.Show("You are already using the latest version available", "Already latest", MessageBoxButtons.OK, MessageBoxIcon.Information);
 				UpdateStatus("already latest version", 100);
 				Task.Delay(2000).ContinueWith(task => {
-					if (InvokeRequired && IsHandleCreated) Invoke((Action)delegate { pbProgress.Visible = false; });
+					if (InvokeRequired && IsHandleCreated) BeginInvoke((Action)delegate { pbProgress.Visible = false; });
 				});
 			};
 			uc.Connected += (o, e) => UpdateStatus("connected", 10);
@@ -307,7 +403,7 @@ namespace MUNIA.Forms {
 			uc.UpdateCheckFailed += (o, e) => {
 				UpdateStatus("update check failed", 100);
 				if (msgBox) MessageBox.Show("Update check failed", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				Task.Delay(2000).ContinueWith(task => Invoke((Action)delegate { pbProgress.Visible = false; }));
+				Task.Delay(2000).ContinueWith(task => BeginInvoke((Action)delegate { pbProgress.Visible = false; }));
 			};
 			uc.UpdateAvailable += (o, e) => {
 				UpdateStatus("update available", 100);
@@ -464,7 +560,11 @@ namespace MUNIA.Forms {
 				SelectRemap(managerForm.SelectedRemap);
 			}
 		}
-		
+
+		private void TsmiMapGenericOnClick(object sender, EventArgs e) {
+			new GenericControllerMapper().ShowDialog();
+		}
+
 		private void testControllerToolStripMenuItem_Click(object sender, EventArgs e) {
 			new GamepadTester().ShowDialog();
 		}
@@ -476,11 +576,11 @@ namespace MUNIA.Forms {
 			tsmiApplyTheme.DropDownItems.Clear();
 			if (ConfigManager.ActiveSkin is SvgSkin svg) {
 				var remaps = ConfigManager.AvailableRemaps[svg.Path];
-				tsmiApplyTheme.Enabled = remaps.Any(r=>!r.IsSkinDefault);
+				tsmiApplyTheme.Enabled = remaps.Any(r => !r.IsSkinDefault);
 
 				var selectedRemap = ConfigManager.SelectedRemaps[svg];
 				foreach (var remap in ConfigManager.AvailableRemaps[svg.Path]) {
-					var tsmiSkin = new ToolStripMenuItem(remap.Name, null, (_,__) => SelectRemap(remap));
+					var tsmiSkin = new ToolStripMenuItem(remap.Name, null, (_, __) => SelectRemap(remap));
 
 					// put a checkmark in front if this is the selected remap
 					tsmiSkin.Checked = remap.Equals(selectedRemap);

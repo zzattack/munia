@@ -81,6 +81,7 @@ namespace MUNIA.Forms {
 			this.tsmiControllers.Name = "tsmiControllers";
 			this.tsmiControllers.Size = new System.Drawing.Size(104, 20);
 			this.tsmiControllers.Text = "&Select controller";
+			this.tsmiControllers.DropDownClosed += new System.EventHandler(this.tsmiControllers_DropDownClosed);
 			// 
 			// tsmiOptions
 			// 
@@ -239,9 +240,7 @@ namespace MUNIA.Forms {
 			// 
 			// tooltip
 			// 
-			this.tooltip.AutoPopDelay = 3000;
-			this.tooltip.InitialDelay = 500;
-			this.tooltip.ReshowDelay = 100;
+			this.tooltip.AutomaticDelay = 100;
 			// 
 			// popup
 			// 
@@ -250,7 +249,7 @@ namespace MUNIA.Forms {
             this.tsmiBackgroundNSpy,
             this.tsmiColorRemapping});
 			this.popup.Name = "popup";
-			this.popup.Size = new System.Drawing.Size(181, 92);
+			this.popup.Size = new System.Drawing.Size(169, 70);
 			this.popup.Opening += new System.ComponentModel.CancelEventHandler(this.popup_Opening);
 			// 
 			// tsmiBackground
@@ -259,13 +258,13 @@ namespace MUNIA.Forms {
             this.tsmiBackGroundColor,
             this.tsmiBackgroundTransparent});
 			this.tsmiBackground.Name = "tsmiBackground";
-			this.tsmiBackground.Size = new System.Drawing.Size(180, 22);
+			this.tsmiBackground.Size = new System.Drawing.Size(168, 22);
 			this.tsmiBackground.Text = "&Background color";
 			// 
 			// tsmiBackGroundColor
 			// 
 			this.tsmiBackGroundColor.Name = "tsmiBackGroundColor";
-			this.tsmiBackGroundColor.Size = new System.Drawing.Size(180, 22);
+			this.tsmiBackGroundColor.Size = new System.Drawing.Size(136, 22);
 			this.tsmiBackGroundColor.Text = "&Change";
 			this.tsmiBackGroundColor.Click += new System.EventHandler(this.tsmiBackgroundChange_Click);
 			// 
@@ -274,7 +273,7 @@ namespace MUNIA.Forms {
 			this.tsmiBackgroundTransparent.Checked = true;
 			this.tsmiBackgroundTransparent.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.tsmiBackgroundTransparent.Name = "tsmiBackgroundTransparent";
-			this.tsmiBackgroundTransparent.Size = new System.Drawing.Size(180, 22);
+			this.tsmiBackgroundTransparent.Size = new System.Drawing.Size(136, 22);
 			this.tsmiBackgroundTransparent.Text = "&Transparent";
 			this.tsmiBackgroundTransparent.ToolTipText = "If checked, background will have an alpha channel of 0 allowing OBS to blend the " +
     "background with overlapping content.\r\nIn your OBS scene, use a game capture sour" +
@@ -284,7 +283,7 @@ namespace MUNIA.Forms {
 			// tsmiBackgroundNSpy
 			// 
 			this.tsmiBackgroundNSpy.Name = "tsmiBackgroundNSpy";
-			this.tsmiBackgroundNSpy.Size = new System.Drawing.Size(180, 22);
+			this.tsmiBackgroundNSpy.Size = new System.Drawing.Size(168, 22);
 			this.tsmiBackgroundNSpy.Text = "&Background";
 			// 
 			// tsmiColorRemapping
@@ -293,19 +292,19 @@ namespace MUNIA.Forms {
             this.tsmiApplyTheme,
             this.tsmiManageThemes});
 			this.tsmiColorRemapping.Name = "tsmiColorRemapping";
-			this.tsmiColorRemapping.Size = new System.Drawing.Size(180, 22);
+			this.tsmiColorRemapping.Size = new System.Drawing.Size(168, 22);
 			this.tsmiColorRemapping.Text = "Color &remapping";
 			// 
 			// tsmiApplyTheme
 			// 
 			this.tsmiApplyTheme.Name = "tsmiApplyTheme";
-			this.tsmiApplyTheme.Size = new System.Drawing.Size(180, 22);
+			this.tsmiApplyTheme.Size = new System.Drawing.Size(159, 22);
 			this.tsmiApplyTheme.Text = "&Apply theme";
 			// 
 			// tsmiManageThemes
 			// 
 			this.tsmiManageThemes.Name = "tsmiManageThemes";
-			this.tsmiManageThemes.Size = new System.Drawing.Size(180, 22);
+			this.tsmiManageThemes.Size = new System.Drawing.Size(159, 22);
 			this.tsmiManageThemes.Text = "&Manage themes";
 			this.tsmiManageThemes.Click += new System.EventHandler(this.tsmiManageThemes_Click);
 			// 
