@@ -402,7 +402,7 @@ namespace MUNIA.Forms {
 			frm.ShowDialog(this);
 		}
 
-		private void tsmiMapArduinoDevicesClick(object sender, EventArgs args) {
+		private void tsmiMapArduinoDevices_Click(object sender, EventArgs args) {
 			var frm = new ArduinoMapperForm(ConfigManager.ArduinoMapping) {
 				StartPosition = FormStartPosition.CenterParent
 			};
