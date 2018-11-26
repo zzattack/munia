@@ -15,6 +15,8 @@ namespace MUNIA.Controllers {
 
 		bool Activate();
 		void Deactivate();
+
+		bool IsAxisTrigger(int axisNum);
 	}
 
 	[Flags]
@@ -28,7 +30,7 @@ namespace MUNIA.Controllers {
 	}
 
 	public class ControllerState {
-
+		public ControllerState() : this(new List<double>(), new List<bool>(), new List<Hat>()) { }
 		public ControllerState(List<double> axes, List<bool> buttons, List<Hat> hats) {
 			Axes.AddRange(axes);
 			Buttons.AddRange(buttons);
