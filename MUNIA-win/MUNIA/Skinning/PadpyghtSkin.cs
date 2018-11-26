@@ -12,11 +12,9 @@ namespace MUNIA.Skinning {
 		public List<Button> Buttons = new List<Button>();
 		public List<Stick> Sticks = new List<Stick>();
 		public List<Trigger> Triggers = new List<Trigger>();
+		private ControllerItem _background;
 		private SizeF _baseDimension = SizeF.Empty;
 		private SizeF _dimensions = SizeF.Empty;
-
-		private int _baseTexture;
-		private Bitmap _baseImg;
 
 		public void Load(string iniPath) {
 			try {
@@ -31,9 +29,7 @@ namespace MUNIA.Skinning {
 				Deactivate();
 				var general = ini.GetSection("General");
 				// _dimensions = new Size(general.ReadInt("Width"), general.ReadInt("Height"));
-				_baseImg = (Bitmap)Image.FromFile(System.IO.Path.Combine(pi.DirectoryName, general.ReadString("File_Background")));
-				_baseDimension = _baseImg.Size;
-				_baseTexture = TextureHelper.CreateTexture(_baseImg);
+				_background.ImagePath = System.IO.Path.Combine(pi.DirectoryName, general.ReadString("File_Background"));
 
 				// first process the buttons
 				foreach (var sec in ini.Sections) {
@@ -85,20 +81,39 @@ namespace MUNIA.Skinning {
 		}
 
 		public override void Activate() {
-			// todo: move bitmap creation here
+			_background.LoadFromBitmap();
+			Buttons.ForEach(b => {
+				b.LoadFromBitmap();
+				b.LoadPressedFromBitmap();
+			});
+			Sticks.ForEach(s => {
+				s.LoadFromBitmap();
+			});
+			Triggers.ForEach(t => {
+				t.LoadFromBitmap();
+			});
 		}
+
 		public override void Deactivate() {
-			_baseImg?.Dispose();
 			// cleanup old textures
+
+			if (_background.Texture != -1) GL.DeleteTexture(_background.Texture);
+			_background.Texture = -1;
+			
 			Buttons.ForEach(b => {
 				if (b.PressedTexture != -1) GL.DeleteTexture(b.PressedTexture);
 				if (b.Texture != -1) GL.DeleteTexture(b.Texture);
+				b.Texture = -1;
+				b.PressedTexture = -1;
 			});
-			Sticks.ForEach(s => { if (s.Texture != -1) GL.DeleteTexture(s.Texture); });
-			Triggers.ForEach(t => { if (t.Texture != -1) GL.DeleteTexture(t.Texture); });
-			Buttons.Clear();
-			Sticks.Clear();
-			Triggers.Clear();
+			Sticks.ForEach(s => {
+				if (s.Texture != -1) GL.DeleteTexture(s.Texture);
+				s.Texture = -1;
+			});
+			Triggers.ForEach(t => {
+				if (t.Texture != -1) GL.DeleteTexture(t.Texture);
+				t.Texture = -1;
+			});
 		}
 
 		private static Button ReadIniButton(IniFile.IniSection sec, FileInfo pi) {
@@ -108,12 +123,10 @@ namespace MUNIA.Skinning {
 				Size = sec.ReadSize("Size"),
 			};
 			if (sec.HasKey("File_Free", false)) {
-				ret.Bitmap = (Bitmap)Image.FromFile(System.IO.Path.Combine(pi.DirectoryName, sec.ReadString("File_Free", "", false)));
-				ret.Texture = TextureHelper.CreateTexture(ret.Bitmap);
+				ret.ImagePath = System.IO.Path.Combine(pi.DirectoryName, sec.ReadString("File_Free", "", false));
 			}
 			if (sec.HasKey("File_Push", false)) {
-				ret.Pressed = (Bitmap)Image.FromFile(System.IO.Path.Combine(pi.DirectoryName, sec.ReadString("File_Push", "", false)));
-				ret.PressedTexture = TextureHelper.CreateTexture(ret.Pressed);
+				ret.PressedImagePath = System.IO.Path.Combine(pi.DirectoryName, sec.ReadString("File_Push", "", false));
 			}
 			return ret;
 		}
@@ -127,8 +140,7 @@ namespace MUNIA.Skinning {
 			ret.Axis = sec.ReadInt("Axis");
 			ret.OffsetScale = 0.08f;
 			if (sec.HasKey("File_Trigger", false)) {
-				ret.Bitmap = (Bitmap)Image.FromFile(System.IO.Path.Combine(pi.DirectoryName, sec.ReadString("File_Trigger", "", false)));
-				ret.Texture = TextureHelper.CreateTexture(ret.Bitmap);
+				ret.ImagePath = System.IO.Path.Combine(pi.DirectoryName, sec.ReadString("File_Trigger", "", false));
 			}
 			ret.Z = -1; // default to behind controller
 			return ret;
@@ -144,8 +156,7 @@ namespace MUNIA.Skinning {
 			ret.HorizontalAxis = axes.X;
 			ret.VerticalAxis = axes.Y;
 			ret.OffsetScale = 0.15f;
-			ret.Bitmap = (Bitmap)Image.FromFile(System.IO.Path.Combine(pi.DirectoryName, sec.ReadString("File_Stick", "", false)));
-			ret.Texture = TextureHelper.CreateTexture(ret.Bitmap);
+			ret.ImagePath = System.IO.Path.Combine(pi.DirectoryName, sec.ReadString("File_Stick", "", false));
 			return ret;
 		}
 
@@ -185,7 +196,7 @@ namespace MUNIA.Skinning {
 			foreach (var ci in allOrdered.Where(x => x.Item1.Z < 0))
 				RenderItem(ci.Item1, ci.Item2);
 
-			GL.BindTexture(TextureTarget.Texture2D, _baseTexture);
+			GL.BindTexture(TextureTarget.Texture2D, _background.Texture);
 			TextureHelper.RenderTexture(0, _dimensions.Width, 0, _dimensions.Height);
 
 			foreach (var ci in allOrdered.Where(x => x.Item1.Z >= 0))
@@ -202,11 +213,11 @@ namespace MUNIA.Skinning {
 		private void RenderButton(int i) {
 			var btn = Buttons[i];
 			bool pressed = State != null && State.Buttons[i];
-			if (pressed && btn.Pressed != null) {
+			if (pressed && btn.PressedTexture != -1) {
 				GL.BindTexture(TextureTarget.Texture2D, btn.PressedTexture);
 				TextureHelper.RenderTexture(btn.Bounds);
 			}
-			else if (!pressed && btn.Bitmap != null) {
+			else if (!pressed && btn.Texture != -1) {
 				GL.BindTexture(TextureTarget.Texture2D, btn.Texture);
 				TextureHelper.RenderTexture(btn.Bounds);
 			}
@@ -223,7 +234,7 @@ namespace MUNIA.Skinning {
 				x = y = 0f;
 			}
 
-			SizeF img = GetCorrectedDimensions(_baseImg.Size);
+			SizeF img = GetCorrectedDimensions(_background.Size);
 			x *= img.Width / _dimensions.Width * stick.OffsetScale;
 			y *= img.Height / _dimensions.Height * stick.OffsetScale;
 			r.Offset(new PointF(x, y));
@@ -237,7 +248,7 @@ namespace MUNIA.Skinning {
 			var r = trigger.Bounds;
 			float o = (float)(State?.Axes[trigger.Axis] ?? 0.0f) * 256.0f;
 
-			SizeF img = GetCorrectedDimensions(_baseImg.Size);
+			SizeF img = GetCorrectedDimensions(_background.Size);
 			o *= img.Height / _dimensions.Height * trigger.OffsetScale;
 
 			r.Offset(new PointF(0, o));
@@ -301,16 +312,28 @@ namespace MUNIA.Skinning {
 		public override string ToString() => Name;
 
 		public class ControllerItem {
-			public Bitmap Bitmap;
 			public RectangleF Bounds;
 			public int Z;
 			public int Texture = -1;
 			public Point Offset;
 			public Size Size;
+
+			public string ImagePath;
+			public void LoadFromBitmap() {
+				using (var bm = Bitmap.FromFile(ImagePath) as Bitmap) {
+					Texture = TextureHelper.CreateTexture(bm);
+				}
+			}
 		}
 		public class Button : ControllerItem {
-			public Bitmap Pressed;
 			public int PressedTexture = -1;
+			public string PressedImagePath;
+
+			public void LoadPressedFromBitmap() {
+				using (var bm = Bitmap.FromFile(PressedImagePath) as Bitmap) {
+					PressedTexture = TextureHelper.CreateTexture(bm);
+				}
+			}
 		}
 		public class Stick : ControllerItem {
 			public float OffsetScale;
