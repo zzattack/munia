@@ -15,6 +15,7 @@ namespace MUNIA.Skinning {
 		private ControllerItem _background;
 		private SizeF _baseDimension = SizeF.Empty;
 		private SizeF _dimensions = SizeF.Empty;
+		protected internal string WorkingDir;
 
 		public void Load(string iniPath) {
 			try {
@@ -24,36 +25,37 @@ namespace MUNIA.Skinning {
 				using (var iniFile = File.OpenRead(iniPath))
 					ini = new IniFile(iniFile);
 
-				Name = pi.Directory.Name;
+				Name = pi.Directory.Name; // skin name based on folder name
+				WorkingDir = pi.Directory.FullName;
 
 				Deactivate();
 				var general = ini.GetSection("General");
 				// _dimensions = new Size(general.ReadInt("Width"), general.ReadInt("Height"));
-				_background.ImagePath = System.IO.Path.Combine(pi.DirectoryName, general.ReadString("File_Background"));
+				_background.ImagePath = System.IO.Path.Combine(WorkingDir, general.ReadString("File_Background"));
 
 				// first process the buttons
 				foreach (var sec in ini.Sections) {
 					if (sec.Name.StartsWith("Button")) {
 						int buttonNum = int.Parse(sec.Name.Substring(6));
 						Buttons.EnsureSize(buttonNum);
-						Buttons[buttonNum - 1] = ReadIniButton(sec, pi);
+						Buttons[buttonNum - 1] = ReadIniButton(sec, WorkingDir);
 					}
 				}
 
 				// now we can determine the index for the up/down/left/right hat
 				int numButtons = Buttons.Count;
 				Buttons.EnsureSize(numButtons + 4);
-				Buttons[numButtons] = ReadIniButton(ini.GetSection("Up"), pi);
-				Buttons[numButtons + 1] = ReadIniButton(ini.GetSection("Down"), pi);
-				Buttons[numButtons + 2] = ReadIniButton(ini.GetSection("Left"), pi);
-				Buttons[numButtons + 3] = ReadIniButton(ini.GetSection("Right"), pi);
+				Buttons[numButtons] = ReadIniButton(ini.GetSection("Up"), WorkingDir);
+				Buttons[numButtons + 1] = ReadIniButton(ini.GetSection("Down"), WorkingDir);
+				Buttons[numButtons + 2] = ReadIniButton(ini.GetSection("Left"), WorkingDir);
+				Buttons[numButtons + 3] = ReadIniButton(ini.GetSection("Right"), WorkingDir);
 
 				// triggers
 				foreach (var sec in ini.Sections) {
 					if (sec.Name.StartsWith("Trigger")) {
 						int trigNum = int.Parse(sec.Name.Substring(7));
 						Triggers.EnsureSize(trigNum);
-						Triggers[trigNum - 1] = ReadIniTrigger(sec, pi);
+						Triggers[trigNum - 1] = ReadIniTrigger(sec, WorkingDir);
 					}
 				}
 
@@ -62,7 +64,7 @@ namespace MUNIA.Skinning {
 					if (sec.Name.StartsWith("Stick")) {
 						int stickNum = int.Parse(sec.Name.Substring(5));
 						Sticks.EnsureSize(stickNum);
-						Sticks[stickNum - 1] = ReadIniStick(sec, pi);
+						Sticks[stickNum - 1] = ReadIniStick(sec, WorkingDir);
 					}
 				}
 
@@ -116,22 +118,22 @@ namespace MUNIA.Skinning {
 			});
 		}
 
-		private static Button ReadIniButton(IniFile.IniSection sec, FileInfo pi) {
+		private static Button ReadIniButton(IniFile.IniSection sec, string workingDir) {
 			if (sec == null) return null;
 			var ret = new Button {
 				Offset = sec.ReadPoint("Position"),
 				Size = sec.ReadSize("Size"),
 			};
 			if (sec.HasKey("File_Free", false)) {
-				ret.ImagePath = System.IO.Path.Combine(pi.DirectoryName, sec.ReadString("File_Free", "", false));
+				ret.ImagePath = System.IO.Path.Combine(workingDir, sec.ReadString("File_Free", "", false));
 			}
 			if (sec.HasKey("File_Push", false)) {
-				ret.PressedImagePath = System.IO.Path.Combine(pi.DirectoryName, sec.ReadString("File_Push", "", false));
+				ret.PressedImagePath = System.IO.Path.Combine(workingDir, sec.ReadString("File_Push", "", false));
 			}
 			return ret;
 		}
 
-		private static Trigger ReadIniTrigger(IniFile.IniSection sec, FileInfo pi) {
+		private static Trigger ReadIniTrigger(IniFile.IniSection sec, string workingDir) {
 			if (sec == null) return null;
 			var ret = new Trigger {
 				Offset = sec.ReadPoint("Position"),
@@ -140,13 +142,13 @@ namespace MUNIA.Skinning {
 			ret.Axis = sec.ReadInt("Axis");
 			ret.OffsetScale = 0.08f;
 			if (sec.HasKey("File_Trigger", false)) {
-				ret.ImagePath = System.IO.Path.Combine(pi.DirectoryName, sec.ReadString("File_Trigger", "", false));
+				ret.ImagePath = System.IO.Path.Combine(workingDir, sec.ReadString("File_Trigger", "", false));
 			}
 			ret.Z = -1; // default to behind controller
 			return ret;
 		}
 
-		private static Stick ReadIniStick(IniFile.IniSection sec, FileInfo pi) {
+		private static Stick ReadIniStick(IniFile.IniSection sec, string workingDir) {
 			if (sec == null) return null;
 			var ret = new Stick {
 				Offset = sec.ReadPoint("Position"),
@@ -156,7 +158,7 @@ namespace MUNIA.Skinning {
 			ret.HorizontalAxis = axes.X;
 			ret.VerticalAxis = axes.Y;
 			ret.OffsetScale = 0.15f;
-			ret.ImagePath = System.IO.Path.Combine(pi.DirectoryName, sec.ReadString("File_Stick", "", false));
+			ret.ImagePath = System.IO.Path.Combine(workingDir, sec.ReadString("File_Stick", "", false));
 			return ret;
 		}
 
