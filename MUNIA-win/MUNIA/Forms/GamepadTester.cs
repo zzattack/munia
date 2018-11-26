@@ -116,6 +116,7 @@ namespace MUNIA.Forms {
 			StopTesting();
 			_controller = controller;
 			_controller.StateUpdated += OnControllerStateUpdated;
+			OnControllerStateUpdated(null, null); // initial update
 		}
 		
 		public void StopTesting() {

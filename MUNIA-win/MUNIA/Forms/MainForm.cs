@@ -268,6 +268,7 @@ namespace MUNIA.Forms {
 
 			ConfigManager.ActiveSkin = skin;
 			ConfigManager.SetActiveController(ctrlr);
+			skin.UpdateState(ctrlr.GetState()); // initial read
 			
 			// find desired window size
 			if (ConfigManager.WindowSizes.ContainsKey(skin)) {
