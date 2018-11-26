@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using HidSharp;
 using HidSharp.Reports;
 using HidSharp.Reports.Input;
@@ -227,7 +225,6 @@ namespace MUNIA.Controllers {
 				var ret = HidDevice.TryOpen(out s);
 				if (!ret) return false;
 				ret = s.CanRead;
-				ret &= HidDevice.GetReportDescriptor().DeviceItems.Contains(DeviceItem);
 				s.Close();
 				return ret;
 			}
