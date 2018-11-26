@@ -63,7 +63,7 @@ namespace MUNIA.Forms {
 		private void btnTest_Click(object sender, EventArgs e) {
 			var dev = ArduinoController.CreateDevice(lbSerialPorts.SelectedItem as SerialPortInfo, (ControllerType)cbDeviceType.SelectedItem);
 			if (dev != null) {
-				new GamepadTester(dev).ShowDialog();
+				new GamepadTesterForm(dev).ShowDialog();
 			}
 		}
 	}

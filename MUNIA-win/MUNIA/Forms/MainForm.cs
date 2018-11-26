@@ -577,11 +577,11 @@ namespace MUNIA.Forms {
 		}
 
 		private void TsmiMapGenericOnClick(object sender, EventArgs e) {
-			new GenericControllerMapper().ShowDialog();
+			new ControllerMapperForm().ShowDialog();
 		}
 
 		private void testControllerToolStripMenuItem_Click(object sender, EventArgs e) {
-			new GamepadTester().ShowDialog();
+			new GamepadTesterForm().ShowDialog();
 		}
 
 		private void popup_Opening(object sender, System.ComponentModel.CancelEventArgs e) {

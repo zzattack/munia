@@ -143,7 +143,7 @@ namespace MUNIA {
 		}
 
 		private static void AskBugReport(Exception exc) {
-			var form = new SubmitBug();
+			var form = new SubmitBugForm();
 			form.Email = ConfigManager.Email;
 			if (form.ShowDialog() == DialogResult.OK) {
 				//if (!string.IsNullOrWhiteSpace(form.Email))

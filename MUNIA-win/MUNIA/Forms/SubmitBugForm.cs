@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 
 namespace MUNIA.Forms {
-	public class SubmitBug : Form {
+	public class SubmitBugForm : Form {
 		private string _email;
 		public string Email {
 			get { return _email; }
@@ -11,7 +11,7 @@ namespace MUNIA.Forms {
 				tbEmail.Text = _email;
 			}
 		}
-		public SubmitBug() {
+		public SubmitBugForm() {
 			InitializeComponent();
 		}
 		
@@ -55,7 +55,7 @@ namespace MUNIA.Forms {
 		/// the contents of this method with the code editor.
 		/// </summary>
 		private void InitializeComponent() {
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SubmitBug));
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SubmitBugForm));
 			this.tbEmail = new System.Windows.Forms.TextBox();
 			this.btnCancel = new System.Windows.Forms.Button();
 			this.btnOK = new System.Windows.Forms.Button();

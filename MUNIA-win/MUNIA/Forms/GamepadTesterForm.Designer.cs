@@ -1,5 +1,5 @@
 ﻿namespace MUNIA.Forms {
-	partial class GamepadTester {
+	partial class GamepadTesterForm {
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -23,7 +23,7 @@
 		/// the contents of this method with the code editor.
 		/// </summary>
 		private void InitializeComponent() {
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GamepadTester));
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GamepadTesterForm));
 			this.lbMuniaDevices = new System.Windows.Forms.ListBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.lblNSpyDevices = new System.Windows.Forms.Label();

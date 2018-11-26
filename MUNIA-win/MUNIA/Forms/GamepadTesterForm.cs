@@ -11,13 +11,13 @@ using MUNIA.Controllers;
 using MUNIA.Interop;
 
 namespace MUNIA.Forms {
-	public partial class GamepadTester : Form {
+	public partial class GamepadTesterForm : Form {
 		List<MuniaController> munias;
 		List<ArduinoController> nspys;
 		List<GenericController> generics;
 		private IController _activeController;
 
-		public GamepadTester() {
+		public GamepadTesterForm() {
 			InitializeComponent();
 
 			UpdateDevices();
@@ -30,7 +30,7 @@ namespace MUNIA.Forms {
 			UsbNotification.DeviceRemovalComplete += (sender, args) => UpdateDevices();
 		}
 
-		public GamepadTester(IController selectedController) : this() {
+		public GamepadTesterForm(IController selectedController) : this() {
 			if (selectedController is MuniaController mc)
 				lbMuniaDevices.SelectedItem = munias.FirstOrDefault(d => d.DevicePath == mc.DevicePath);
 			else if (selectedController is ArduinoController ac)
