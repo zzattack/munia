@@ -26,12 +26,12 @@ namespace MUNIA {
 		public static readonly ArduinoMapping ArduinoMapping = new ArduinoMapping();
 
 		public static BindingList<SkinDirectoryEntry> SkinFolders { get; private set; } = new BindingList<SkinDirectoryEntry>();
-		
+		public static BindingList<ControllerMapping> ControllerMappings { get; private set; } = new BindingList<ControllerMapping>();
+
 		private static TimeSpan _delay;
 		private static IController _activeController;
 		private static BufferedController _bufferedActiveController;
 		public static Skin ActiveSkin { get; set; }
-
 		
 		public static List<IController> Controllers { get; } = new List<IController>();
 		public static List<Skin> Skins { get; } = new List<Skin>();
@@ -104,14 +104,16 @@ namespace MUNIA {
 				}
 			}
 		}
-
-
+		
 		public static void LoadControllers() {
 			Controllers.Clear();
 			foreach (var dev in MuniaController.ListDevices()) {
 				Controllers.Add(dev);
 			}
 			foreach (var dev in ArduinoController.ListDevices()) {
+				Controllers.Add(dev);
+			}
+			foreach (var dev in MappedGenericController.ListDevices()) {
 				Controllers.Add(dev);
 			}
 		}
@@ -186,12 +188,21 @@ namespace MUNIA {
 					}
 				}
 
-				// load arduino map, then controllers
+				// load arduino mappings
 				var arduinoMap = xroot["ArduinoMapping"];
 				if (arduinoMap != null) {
 					foreach (XmlNode e in arduinoMap.ChildNodes) {
 						ArduinoMapping[e.Attributes["port"].Value] =
 							(ControllerType)Enum.Parse(typeof(ControllerType), e.Attributes["type"].Value, true);
+					}
+				}
+
+				// load generic controller mappings
+				var mappings = xroot["ControllerMappings"];
+				if (mappings != null) {
+					foreach (XmlNode m in mappings.ChildNodes) {
+						var mapping = new ControllerMapping(m);
+						ControllerMappings.Add(mapping);
 					}
 				}
 			}
