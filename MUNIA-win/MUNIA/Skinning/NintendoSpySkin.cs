@@ -16,7 +16,7 @@ namespace MUNIA.Skinning {
 		public Dictionary<string, NspyBackground> Backgrounds = new Dictionary<string, NspyBackground>();
 		public NspyBackground SelectedBackground { get; private set; }
 		private Size _destSize;
-		internal protected string WorkingDir;
+		protected internal string WorkingDir;
 
 		public void Load(string xmlPath) {
 			this.Path = xmlPath;
@@ -124,22 +124,22 @@ namespace MUNIA.Skinning {
 		public override void Activate() {
 			// texture resources are created here
 			foreach (var bg in Backgrounds)
-				bg.Value.LoadFromBitmap(bg.Value.ImagePath);
+				bg.Value.LoadFromBitmap();
 
 			Buttons.ForEach(b => {
-				b.LoadFromBitmap(b.ImagePath);
+				b.LoadFromBitmap();
 			});
 			RangeButtons.ForEach(b => {
-				b.LoadFromBitmap(b.ImagePath);
+				b.LoadFromBitmap();
 			});
 			Sticks.ForEach(s => {
-				s.LoadFromBitmap(s.ImagePath);
+				s.LoadFromBitmap();
 			});
 			Triggers.ForEach(t => {
-				t.LoadFromBitmap(t.ImagePath);
+				t.LoadFromBitmap();
 			});
 			Details.ForEach(d => {
-				d.LoadFromBitmap(d.ImagePath);
+				d.LoadFromBitmap();
 			});
 		}
 
@@ -291,7 +291,7 @@ namespace MUNIA.Skinning {
 			public Size Size = Size.Empty;
 			public string ImagePath;
 			public List<string> IgnoredInSkins = new List<string>();
-			public void LoadFromBitmap(string bitmapPath) {
+			public void LoadFromBitmap() {
 				using (var bm = Bitmap.FromFile(ImagePath) as Bitmap) {
 					Texture = TextureHelper.CreateTexture(bm);
 					// if set, should scale to given dimension(s), else use img dimensions
