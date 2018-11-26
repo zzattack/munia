@@ -241,6 +241,9 @@ namespace MUNIA.Forms {
 			// tooltip
 			// 
 			this.tooltip.AutomaticDelay = 100;
+			this.tooltip.AutoPopDelay = 15000;
+			this.tooltip.InitialDelay = 100;
+			this.tooltip.ReshowDelay = 20;
 			// 
 			// popup
 			// 
