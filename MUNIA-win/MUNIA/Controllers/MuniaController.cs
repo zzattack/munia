@@ -18,6 +18,7 @@ namespace MUNIA.Controllers {
 		public string DevicePath => HidDevice.DevicePath;
 		public virtual string Name => HidDevice.ProductName;
 		public abstract ControllerType Type { get; }
+		public bool RequiresPolling => false;
 
 		protected readonly List<bool> _buttons = new List<bool>();
 		protected readonly List<double> _axes = new List<double>();

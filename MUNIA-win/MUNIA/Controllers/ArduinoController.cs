@@ -22,6 +22,8 @@ namespace MUNIA.Controllers {
 
 		public string Name => "Arduino " + Type;
 		public abstract ControllerType Type { get; }
+		public bool RequiresPolling => false;
+
 		public SerialPortInfo PortInfo { get; set; }
 		protected SerialPort Port;
 

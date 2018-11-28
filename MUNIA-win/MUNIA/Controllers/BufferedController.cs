@@ -15,6 +15,7 @@ namespace MUNIA.Controllers {
 		private ControllerState _taskDelayedState;
 		private ControllerState _realState;
 		private bool _realStateUpdated;
+		private PollingController _poller;
 
 		public enum DelayMethod { Queue, Task }
 
@@ -22,7 +23,13 @@ namespace MUNIA.Controllers {
 
 		public BufferedController(IController real, TimeSpan delay) {
 			_real = real;
-			_real.StateUpdated += RealOnStateUpdated;
+			if (real.RequiresPolling) {
+				_poller = new PollingController(real, 1000 / 60);
+				_poller.StateUpdated += RealOnStateUpdated;
+			}
+			else {
+				_real.StateUpdated += RealOnStateUpdated;
+			}
 			Delay = delay;
 		}
 
@@ -40,7 +47,7 @@ namespace MUNIA.Controllers {
 
 
 		private void RealOnStateUpdated(object sender, EventArgs eventArgs) {
-			var newState = _real.GetState();
+			var newState = (sender as IController).GetState();
 			if (Method == DelayMethod.Task) {
 				Task.Delay(Delay).ContinueWith(t => {
 					_taskDelayedState = newState;
@@ -86,11 +93,13 @@ namespace MUNIA.Controllers {
 		}
 
 		public string Name => _real.Name;
-		public bool IsActive => _real.IsActive;
 		public bool IsAvailable => _real.IsAvailable;
 		public string DevicePath => _real.DevicePath;
 
 		public ControllerType Type => _real.Type;
+
+		public bool RequiresPolling => false;
+
 		public bool Activate() { return _real.Activate(); }
 		public void Deactivate() { _real.Deactivate(); }
 		public bool IsAxisTrigger(int axisNum) => _real.IsAxisTrigger(axisNum);
