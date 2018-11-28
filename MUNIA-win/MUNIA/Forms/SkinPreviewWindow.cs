@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using MUNIA.Controllers;
 using MUNIA.Skinning;
@@ -9,15 +8,18 @@ using MUNIA.Util;
 namespace MUNIA.Forms {
 	public partial class SkinPreviewWindow : UserControl {
 		public Skin Skin;
-		private SkinToBitmapRenderer _renderer;
 
-		private SkinPreviewWindow() {
+		internal SkinPreviewWindow() {
 			InitializeComponent();
-			_renderer = new SkinToBitmapRenderer(pbPreview.Width, pbPreview.Height);
 		}
 
 		public SkinPreviewWindow(Skin skin) : this() {
 			ChangeSkin(skin);
+		}
+
+		public bool DescriptionPanelVisible {
+			get => pnlTop.Visible;
+			set => pnlTop.Visible = value;
 		}
 
 		public void ChangeSkin(Skin skin) {
@@ -39,7 +41,7 @@ namespace MUNIA.Forms {
 
 		public void RenderSkin() {
 			pbPreview.BackColor = GetContrastingColor(ConfigManager.BackgroundColor);
-			pbPreview.Image = _renderer.Render(Skin, pbPreview.BackColor);
+			pbPreview.Image = SkinToBitmapRenderer.Render(Skin, this.Size, pbPreview.BackColor);
 			pbPreview.Refresh();
 		}
 
@@ -55,12 +57,10 @@ namespace MUNIA.Forms {
 		/// </summary>
 		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
 		protected override void Dispose(bool disposing) {
-			if (disposing && (components != null)) {
-				components.Dispose();
-			}
+			if (disposing)
+				components?.Dispose();
+
 			base.Dispose(disposing);
-			_renderer?.Dispose();
-			_renderer = null;
 		}
 
 	}
