@@ -52,6 +52,12 @@ namespace MUNIA.Skinning {
 			Triggers.Clear();
 		}
 
+		public override void GetNumberOfElements(out int numButtons, out int numAxes) {
+			numButtons = Buttons.Count;
+			numAxes = Triggers.Count(t => t.Id >= 0) + Sticks.Sum(s => (s.HorizontalAxis != -1 ? 1 : 0)
+																		+ (s.VerticalAxis != -1 ? 1 : 0));
+		}
+
 		private void RecursiveGetElements(SvgElement e) {
 			foreach (var c in e.Children) {
 				if (c.ElementName == "info") {

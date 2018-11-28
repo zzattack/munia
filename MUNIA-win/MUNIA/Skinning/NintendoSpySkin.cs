@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Xml;
@@ -358,6 +357,12 @@ namespace MUNIA.Skinning {
 
 		public void SelectBackground(string backgroundName) {
 			SelectedBackground = Backgrounds[backgroundName];
+		}
+
+		public override void GetNumberOfElements(out int numButtons, out int numAxes) {
+			numButtons = Buttons.Count;
+			numAxes = Triggers.Count(t => t.Id >= 0) + Sticks.Sum(s => (s.HorizontalAxis != -1 ? 1 : 0)
+																		+ (s.VerticalAxis != -1 ? 1 : 0));
 		}
 	}
 

@@ -43,6 +43,8 @@ namespace MUNIA.Skinning {
 
 			return null;
 		}
+
+		public abstract void GetNumberOfElements(out int numButtons, out int numAxes);
 	}
 
 

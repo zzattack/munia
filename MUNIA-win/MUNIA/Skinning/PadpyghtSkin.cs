@@ -118,6 +118,12 @@ namespace MUNIA.Skinning {
 			});
 		}
 
+		public override void GetNumberOfElements(out int numButtons, out int numAxes) {
+			numButtons = Buttons.Count;
+			numAxes = Triggers.Count(t => t.Axis >= 0) + Sticks.Sum(s => (s.HorizontalAxis != -1 ? 1 : 0)
+																		+ (s.VerticalAxis != -1 ? 1 : 0));
+		}
+
 		private static Button ReadIniButton(IniFile.IniSection sec, string workingDir) {
 			if (sec == null) return null;
 			var ret = new Button {
