@@ -6,14 +6,12 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Timers;
 using System.Windows.Forms;
 using MUNIA.Controllers;
 using MUNIA.Interop;
 using MUNIA.Properties;
 using MUNIA.Skinning;
 using MUNIA.Util;
-using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
 namespace MUNIA.Forms {
@@ -564,7 +562,7 @@ namespace MUNIA.Forms {
 
 		private void tsmiManageThemes_Click(object sender, EventArgs e) {
 			if (ConfigManager.ActiveSkin is SvgSkin svg) {
-				var managerForm = new RemapManagerForm(svg, ConfigManager.SelectedRemaps[svg],
+				var managerForm = new SkinRemapManagerForm(svg, ConfigManager.SelectedRemaps[svg],
 					ConfigManager.AvailableRemaps[svg.Path]);
 
 				managerForm.SelectedRemapChanged += (o, args) =>
