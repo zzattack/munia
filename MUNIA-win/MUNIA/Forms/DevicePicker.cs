@@ -40,8 +40,8 @@ namespace MUNIA.Forms {
 				DialogResult = DialogResult.OK;
 				Close();
 			}
-
 		}
+
 	}
 
 }

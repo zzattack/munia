@@ -2,13 +2,12 @@
 using MUNIA.Controllers;
 
 namespace MUNIA.Skinning {
-
-	public class ControllerMap {
-		public Dictionary<string, int> ButtonMap = new Dictionary<string, int>();
-		public Dictionary<string, int> AxisMap = new Dictionary<string, int>();
-	}
-
+	
 	static class NintendoSpyMapping {
+		public class ControllerMap {
+			public Dictionary<string, int> ButtonMap = new Dictionary<string, int>();
+			public Dictionary<string, int> AxisMap = new Dictionary<string, int>();
+		}
 
 		public static readonly Dictionary<string, ControllerType> TypeMap = new Dictionary<string, ControllerType> {
 			["n64"] = ControllerType.N64,

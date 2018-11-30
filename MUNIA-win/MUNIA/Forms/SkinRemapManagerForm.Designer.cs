@@ -1,5 +1,5 @@
 ﻿namespace MUNIA.Forms {
-	partial class RemapManagerForm {
+	partial class SkinRemapManagerForm {
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -24,7 +24,7 @@
 		/// </summary>
 		private void InitializeComponent() {
 			this.components = new System.ComponentModel.Container();
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RemapManagerForm));
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SkinRemapManagerForm));
 			this.list = new System.Windows.Forms.ListBox();
 			this.btnNew = new System.Windows.Forms.Button();
 			this.btnEdit = new System.Windows.Forms.Button();
@@ -166,7 +166,7 @@
 			this.lblExport.TabIndex = 2;
 			this.lblExport.Text = "To make your changes permanent, export them to a new SVG file";
 			// 
-			// RemapManagerForm
+			// SkinRemapManagerForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -177,9 +177,9 @@
 			this.Controls.Add(this.gb);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MinimumSize = new System.Drawing.Size(400, 386);
-			this.Name = "RemapManagerForm";
+			this.Name = "SkinRemapManagerForm";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-			this.Text = "Manage remap schemes";
+			this.Text = "Manage skin remap schemes";
 			this.gb.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();

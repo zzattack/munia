@@ -53,9 +53,63 @@ namespace MUNIA.Skinning {
 		}
 
 		public override void GetNumberOfElements(out int numButtons, out int numAxes) {
-			numButtons = Buttons.Count;
-			numAxes = Triggers.Count(t => t.Id >= 0) + Sticks.Sum(s => (s.HorizontalAxis != -1 ? 1 : 0)
-																		+ (s.VerticalAxis != -1 ? 1 : 0));
+			var buttons = Buttons.Select(b => b.Id)
+				.Union(Sticks.Where(s => s.ButtonId != -1).Select(s => s.ButtonId))
+				.Distinct();
+			numButtons = Math.Max(buttons.Max() + 1, buttons.Count());
+
+			var axes = Triggers.Where(t => t.Id != -1).Select(t => t.Axis)
+				.Union(Sticks.Where(s => s.HorizontalAxis != -1).Select(s => s.HorizontalAxis))
+				.Union(Sticks.Where(s => s.VerticalAxis != -1).Select(s => s.VerticalAxis))
+				.Distinct();
+			numAxes = Math.Max(axes.Max() + 1, axes.Count());
+		}
+
+		public override bool GetElementsAtLocation(Point location, Size skinSize,
+			List<ControllerMapping.Button> buttons, List<ControllerMapping.Axis[]> axes) {
+
+			if (SvgDocument.Width != skinSize.Width || SvgDocument.Height != skinSize.Height)
+				return false;
+
+			List<Tuple<int, double>> buttonDistances = new List<Tuple<int, double>>();
+			List<Tuple<int, double>> triggerDistances = new List<Tuple<int, double>>();
+			List<Tuple<int, double>> sticksDistances = new List<Tuple<int, double>>();
+
+			foreach (var btn in Buttons) {
+				if (btn.Bounds.Contains(location) || btn.PressedBounds.Contains(location))
+					buttonDistances.Add(Tuple.Create(btn.Id, Distance(location, btn.Bounds)));
+			}
+
+			foreach (var trig in Triggers) {
+				if (trig.Bounds.Contains(location))
+					triggerDistances.Add(Tuple.Create(trig.Id, Distance(location, trig.Bounds)));
+			}
+
+			foreach (var stick in Sticks) {
+				if (stick.Bounds.Contains(location)) {
+					sticksDistances.Add(Tuple.Create(stick.Id, Distance(location, stick.Bounds)));
+				}
+			}
+
+			buttons.AddRange(buttonDistances.OrderBy(b => b.Item2).Select(b => b.Item1).Distinct()
+				.Cast<ControllerMapping.Button>());
+
+			axes.AddRange(triggerDistances.OrderBy(t => t.Item2).Select(t => t.Item1).Distinct()
+				.Select(t => new[] { (ControllerMapping.Axis)Triggers[t].Axis }));
+
+			axes.AddRange(sticksDistances.OrderBy(s => s.Item2).Select(s => s.Item1).Distinct()
+				.Select(t => new[] {
+					(ControllerMapping.Axis)Sticks[t].HorizontalAxis,
+					(ControllerMapping.Axis)Sticks[t].VerticalAxis
+				})
+			);
+
+			return true;
+		}
+
+		private double Distance(Point location, RectangleF bounds) {
+			PointF center = new PointF(bounds.Left + bounds.Width / 2.0f, bounds.Top + bounds.Height / 2.0f);
+			return Math.Sqrt(Math.Pow((center.X - location.X), 2) + Math.Pow((center.Y - location.Y), 2)); ;
 		}
 
 		private void RecursiveGetElements(SvgElement e) {
@@ -189,7 +243,7 @@ namespace MUNIA.Skinning {
 			if (i is Trigger t) RenderTrigger(t);
 		}
 		private void RenderButton(Button btn) {
-			bool pressed = State != null && State.Buttons[btn.Id];
+			bool pressed = State != null && State.Buttons.Count > btn.Id && State.Buttons[btn.Id];
 			if (pressed && btn.Pressed != null) {
 				GL.BindTexture(TextureTarget.Texture2D, btn.PressedTexture);
 				TextureHelper.RenderTexture(btn.PressedBounds);
@@ -200,14 +254,18 @@ namespace MUNIA.Skinning {
 			}
 		}
 		private void RenderStick(Stick stick) {
-			bool pressed = State != null && stick.PressedTexture != -1 && stick.ButtonId != -1 && State.Buttons[stick.ButtonId];
+			bool pressed = State != null && stick.PressedTexture != -1 && stick.ButtonId != -1
+							&& State.Buttons.Count > stick.ButtonId && State.Buttons[stick.ButtonId];
 			var r = pressed ? stick.PressedBounds : stick.Bounds;
-			float x, y;
+			float x = 0.0f, y = 0.0f;
 
 			if (State != null) {
-				x = (float)(State.Axes[stick.HorizontalAxis] * 128.0f);
+				if (stick.HorizontalAxis < State.Axes.Count)
+					x = (float)(State.Axes[stick.HorizontalAxis] * 128.0f);
 				if (Math.Abs(x) < stick.Deadzone) x = 0;
-				y = (float)(State.Axes[stick.VerticalAxis] * 128.0f);
+
+				if (stick.VerticalAxis < State.Axes.Count)
+					y = (float)(State.Axes[stick.VerticalAxis] * 128.0f);
 				if (Math.Abs(y) < stick.Deadzone) y = 0;
 			}
 			else {
@@ -225,46 +283,51 @@ namespace MUNIA.Skinning {
 		}
 
 		private void RenderTrigger(Trigger trigger) {
-			var r = trigger.Bounds;
-			float o = (float)(State?.Axes[trigger.Axis] ?? 0.0f) * 256.0f;
-			o = trigger.Range.Clip(o);
+			if (State != null) {
+				var r = trigger.Bounds;
+				float o = 0.0f;
+				if (State != null && State.Axes.Count > trigger.Axis)
+					o = (float)State.Axes[trigger.Axis];
+				o *= 256.0f;
+				o = trigger.Range.Clip(o);
 
-			if (trigger.Type == TriggerType.Slide) {
-				SizeF img = GetCorrectedDimensions(new SizeF(SvgDocument.Width, SvgDocument.Height));
-				if (trigger.Orientation == TriggerOrientation.Vertical) {
-					o *= img.Height / _dimensions.Height * trigger.OffsetScale;
-					r.Offset(new PointF(0, o));
-				}
-				else {
-					o *= img.Width / _dimensions.Width * trigger.OffsetScale;
-					r.Offset(new PointF(o, 0));
-				}
-				GL.BindTexture(TextureTarget.Texture2D, trigger.Texture);
-				TextureHelper.RenderTexture(r);
-			}
-
-			else if (trigger.Type == TriggerType.Bar) {
-				RectangleF crop = new RectangleF(PointF.Empty, new SizeF(1.0f, 1.0f));
-				float pressRate = (o - trigger.Range.LowerBound) / (trigger.Range.UpperBound - trigger.Range.LowerBound);
-				if (trigger.Inverse) pressRate = 1.0f - pressRate;
-
-				if (trigger.Orientation == TriggerOrientation.Horizontal) {
-					crop.X = trigger.Reverse ^ trigger.Inverse ? 1.0f - pressRate : 0;
-					crop.Width = pressRate;
-				}
-				else {
-					crop.Y = trigger.Reverse ^ trigger.Inverse ? 1.0f - pressRate : 0;
-					crop.Height = pressRate;
+				if (trigger.Type == TriggerType.Slide) {
+					SizeF img = GetCorrectedDimensions(new SizeF(SvgDocument.Width, SvgDocument.Height));
+					if (trigger.Orientation == TriggerOrientation.Vertical) {
+						o *= img.Height / _dimensions.Height * trigger.OffsetScale;
+						r.Offset(new PointF(0, o));
+					}
+					else {
+						o *= img.Width / _dimensions.Width * trigger.OffsetScale;
+						r.Offset(new PointF(o, 0));
+					}
+					GL.BindTexture(TextureTarget.Texture2D, trigger.Texture);
+					TextureHelper.RenderTexture(r);
 				}
 
-				// compensate texture size for crop rate
-				r.X += r.Width * crop.X;
-				r.Y += r.Height * crop.Y;
-				r.Width *= crop.Width;
-				r.Height *= crop.Height;
+				else if (trigger.Type == TriggerType.Bar) {
+					RectangleF crop = new RectangleF(PointF.Empty, new SizeF(1.0f, 1.0f));
+					float pressRate = (o - trigger.Range.LowerBound) / (trigger.Range.UpperBound - trigger.Range.LowerBound);
+					if (trigger.Inverse) pressRate = 1.0f - pressRate;
 
-				GL.BindTexture(TextureTarget.Texture2D, trigger.Texture);
-				TextureHelper.RenderTexture(crop, r);
+					if (trigger.Orientation == TriggerOrientation.Horizontal) {
+						crop.X = trigger.Reverse ^ trigger.Inverse ? 1.0f - pressRate : 0;
+						crop.Width = pressRate;
+					}
+					else {
+						crop.Y = trigger.Reverse ^ trigger.Inverse ? 1.0f - pressRate : 0;
+						crop.Height = pressRate;
+					}
+
+					// compensate texture size for crop rate
+					r.X += r.Width * crop.X;
+					r.Y += r.Height * crop.Y;
+					r.Width *= crop.Width;
+					r.Height *= crop.Height;
+
+					GL.BindTexture(TextureTarget.Texture2D, trigger.Texture);
+					TextureHelper.RenderTexture(crop, r);
+				}
 			}
 		}
 
@@ -442,7 +505,7 @@ namespace MUNIA.Skinning {
 				m.TransformPoints(points);
 				x = x.Parent;
 			}
-			float minX = points.Min(p => p.X); 
+			float minX = points.Min(p => p.X);
 			float minY = points.Min(p => p.Y);
 			float maxX = points.Max(p => p.X);
 			float maxY = points.Max(p => p.Y);

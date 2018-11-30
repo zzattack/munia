@@ -113,7 +113,7 @@ namespace MUNIA {
 			foreach (var dev in ArduinoController.ListDevices()) {
 				Controllers.Add(dev);
 			}
-			foreach (var dev in MappedGenericController.ListDevices()) {
+			foreach (var dev in MappedController.ListDevices()) {
 				Controllers.Add(dev);
 			}
 		}
@@ -288,6 +288,14 @@ namespace MUNIA {
 					xw.WriteEndElement();
 				}
 				xw.WriteEndElement(); // ArduinoMapping
+
+				xw.WriteStartElement("ControllerMappings");
+				foreach (var mapEntry in ControllerMappings) {
+					xw.WriteStartElement("mapping");
+					mapEntry.SaveTo(xw);
+					xw.WriteEndElement();
+				}
+				xw.WriteEndElement(); // ControllerMappings
 
 				xw.WriteEndElement(); // settings
 				xw.WriteEndDocument();

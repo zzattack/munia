@@ -124,6 +124,11 @@ namespace MUNIA.Skinning {
 																		+ (s.VerticalAxis != -1 ? 1 : 0));
 		}
 
+		public override bool GetElementsAtLocation(Point location, Size skinSize,
+			List<ControllerMapping.Button> buttons, List<ControllerMapping.Axis[]> axes) {
+			return false; // not implemented
+		}
+
 		private static Button ReadIniButton(IniFile.IniSection sec, string workingDir) {
 			if (sec == null) return null;
 			var ret = new Button {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using MUNIA.Util;
 
 namespace MUNIA.Controllers {
 	public interface IController {
@@ -80,9 +81,9 @@ namespace MUNIA.Controllers {
 
 		public override int GetHashCode() {
 			unchecked {
-				var hashCode = Axes.GetHashCode();
-				hashCode = (hashCode*397) ^ Buttons.GetHashCode();
-				hashCode = (hashCode*397) ^ Hats.GetHashCode();
+				var hashCode = Axes.GetSequenceHashCode();
+				hashCode = (hashCode*397) ^ Buttons.GetSequenceHashCode();
+				hashCode = (hashCode*397) ^ Hats.GetSequenceHashCode();
 				return hashCode;
 			}
 		}

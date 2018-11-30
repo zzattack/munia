@@ -41,6 +41,8 @@ namespace MUNIA.Forms {
 			BuildMenu();
 			ActivateConfig(ConfigManager.GetActiveController(), ConfigManager.ActiveSkin);
 
+			ConfigManager.ControllerMappings.ListChanged += (o, args) => ScheduleBuildMenu();
+
 			Application.Idle += OnApplicationOnIdle;
 			if (!_skipUpdateCheck)
 				PerformUpdateCheck();
@@ -201,7 +203,12 @@ namespace MUNIA.Forms {
 					_activeSkinPreview.ChangeSkin(clonedSkin);
 				}
 
-				_activeSkinPreview.RenderSkin();
+				ControllerState state = new ControllerState();
+				skin.GetNumberOfElements(out int numButtons, out int numAxes);
+				state.Buttons.EnsureSize(numButtons);
+				state.Axes.EnsureSize(numAxes);
+				_activeSkinPreview.RenderSkin(state);
+
 				_activeSkinPreview.Show();
 			}
 			finally {
@@ -266,7 +273,8 @@ namespace MUNIA.Forms {
 
 			ConfigManager.ActiveSkin = skin;
 			ConfigManager.SetActiveController(ctrlr);
-			skin.UpdateState(ctrlr.GetState()); // initial read
+			if (skin != null && ctrlr != null)
+				skin.UpdateState(ctrlr.GetState()); // initial read
 			
 			// find desired window size
 			if (ConfigManager.WindowSizes.ContainsKey(skin)) {

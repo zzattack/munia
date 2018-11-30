@@ -174,15 +174,17 @@ namespace MUNIA.Controllers {
 			var di = dataValue.DataItem;
 			double val;
 			if (di.LogicalMinimum < di.LogicalMaximum) {
-				val = (dataValue.GetLogicalValue() - di.LogicalMinimum) / (double)(di.LogicalRange);
+				val = (dataValue.GetLogicalValue() - di.LogicalMinimum) / (double)di.LogicalRange;
 			}
 			else {
 				int range = 1 << di.ElementBits;
 				val = dataValue.GetLogicalValue() / (double)range;
 			}
 
-			if (!IsAxisTrigger((int)(dataValue.Usages.First() - Usage.GenericDesktopX)))
+			if (!IsAxisTrigger((int)(dataValue.Usages.First() - Usage.GenericDesktopX))) {
 				val -= 0.5;
+				val *= 2.0;
+			}
 
 			return val;
 		}

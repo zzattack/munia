@@ -6,17 +6,17 @@ using System.Windows.Forms;
 using MUNIA.Skinning;
 
 namespace MUNIA.Forms {
-	public partial class RemapManagerForm : Form {
+	public partial class SkinRemapManagerForm : Form {
 		private readonly SvgSkin _skin;
 		private readonly BindingList<ColorRemap> _remaps;
 		private readonly ColorRemap _defaultRemap;
 		public ColorRemap SelectedRemap { get; private set; }
 		public event EventHandler SelectedRemapChanged;
 
-		private RemapManagerForm() {
+		private SkinRemapManagerForm() {
 			InitializeComponent();
 		}
-		public RemapManagerForm(SvgSkin skin, ColorRemap selectedRemap, BindingList<ColorRemap> remaps) : this() {
+		public SkinRemapManagerForm(SvgSkin skin, ColorRemap selectedRemap, BindingList<ColorRemap> remaps) : this() {
 			_skin = skin;
 			_remaps = remaps;
 			if (_remaps.Count(r => r.IsSkinDefault) == 0) {

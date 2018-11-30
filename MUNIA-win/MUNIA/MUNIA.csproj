@@ -69,6 +69,12 @@
     <Reference Include="OpenTK.GLControl, Version=3.0.1.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <HintPath>..\packages\OpenTK.GLControl.3.0.1\lib\net20\OpenTK.GLControl.dll</HintPath>
     </Reference>
+    <Reference Include="SharpDX, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.4.2.0\lib\net45\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.XInput, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.XInput.4.2.0\lib\net45\SharpDX.XInput.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -83,7 +89,12 @@
     <Compile Include="Controllers\ArduinoSnes.cs" />
     <Compile Include="Controllers\ConfigInterface.cs" />
     <Compile Include="Controllers\GenericController.cs" />
+    <Compile Include="Controllers\MappedController.cs" />
+    <Compile Include="Controllers\ControllerMapping.cs" />
     <Compile Include="Controllers\MusiaPS2.cs" />
+    <Compile Include="Controllers\PollingController.cs" />
+    <Compile Include="Controllers\RawInputController.cs" />
+    <Compile Include="Controllers\XInputController.cs" />
     <Compile Include="Forms\AboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -109,29 +120,50 @@
     <Compile Include="Controllers\BufferedController.cs" />
     <Compile Include="Controllers\IController.cs" />
     <Compile Include="Controllers\MusiaDeviceInfo.cs" />
-    <Compile Include="Forms\GamepadTester.cs">
+    <Compile Include="Forms\ControllerMapperEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\ControllerMapperEditor.Designer.cs">
+      <DependentUpon>ControllerMapperEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ControllerMapperForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\GamepadTester.Designer.cs">
-      <DependentUpon>GamepadTester.cs</DependentUpon>
+    <Compile Include="Forms\ControllerMapperForm.Designer.cs">
+      <DependentUpon>ControllerMapperForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\RemapManagerForm.cs">
+    <Compile Include="Forms\GamepadViewerControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Forms\GamepadTesterForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\RemapManagerForm.Designer.cs">
-      <DependentUpon>RemapManagerForm.cs</DependentUpon>
+    <Compile Include="Forms\GamepadTesterForm.Designer.cs">
+      <DependentUpon>GamepadTesterForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SkinFoldersForm.cs">
-      <SubType>Form</SubType>
+    <Compile Include="Forms\ControllerMapperManager.cs">
+      <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\SkinFoldersForm.Designer.cs">
-      <DependentUpon>SkinFoldersForm.cs</DependentUpon>
+    <Compile Include="Forms\ControllerMapperManager.Designer.cs">
+      <DependentUpon>ControllerMapperManager.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\SkinPreviewWindow.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Forms\SkinPreviewWindow.Designer.cs">
       <DependentUpon>SkinPreviewWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SkinRemapManagerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SkinRemapManagerForm.Designer.cs">
+      <DependentUpon>SkinRemapManagerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SkinFoldersForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SkinFoldersForm.Designer.cs">
+      <DependentUpon>SkinFoldersForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Skinning\NintendoSpyMapping.cs" />
@@ -162,7 +194,7 @@
     <Compile Include="Util\ColorDialog2.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Util\DrawingSurface.cs" />
+    <Compile Include="Util\CRC32.cs" />
     <Compile Include="Util\ExtensionMethods.cs" />
     <Compile Include="Util\CircularBuffer.cs" />
     <Compile Include="Forms\DelayValuePicker.cs">
@@ -204,7 +236,7 @@
     <Compile Include="ConfigManager.cs" />
     <Compile Include="Skinning\Skin.cs" />
     <Compile Include="Skinning\SvgSkin.cs" />
-    <Compile Include="Forms\SubmitBug.cs">
+    <Compile Include="Forms\SubmitBugForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UpdateChecker.cs" />
@@ -226,14 +258,23 @@
       <LastGenOutput>BootloaderForm1.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ControllerMapperEditor.resx">
+      <DependentUpon>ControllerMapperEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ControllerMapperForm.resx">
+      <DependentUpon>ControllerMapperForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\DevicePicker.resx">
       <DependentUpon>DevicePicker.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DelayValuePicker.resx">
       <DependentUpon>DelayValuePicker.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\GamepadTester.resx">
-      <DependentUpon>GamepadTester.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\GamepadTesterForm.resx">
+      <DependentUpon>GamepadTesterForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ControllerMapperManager.resx">
+      <DependentUpon>ControllerMapperManager.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -244,14 +285,14 @@
     <EmbeddedResource Include="Forms\MusiaSettingsDialog.resx">
       <DependentUpon>MusiaSettingsDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\RemapManagerForm.resx">
-      <DependentUpon>RemapManagerForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\SkinPreviewWindow.resx">
+      <DependentUpon>SkinPreviewWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SkinRemapManagerForm.resx">
+      <DependentUpon>SkinRemapManagerForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SkinFoldersForm.resx">
       <DependentUpon>SkinFoldersForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SkinPreviewWindow.resx">
-      <DependentUpon>SkinPreviewWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SkinRemapperForm.resx">
       <DependentUpon>SkinRemapperForm.cs</DependentUpon>
@@ -266,8 +307,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="Forms\SubmitBug.resx">
-      <DependentUpon>SubmitBug.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\SubmitBugForm.resx">
+      <DependentUpon>SubmitBugForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\WindowSizePicker.resx">
       <DependentUpon>WindowSizePicker.cs</DependentUpon>
@@ -277,6 +318,8 @@
     </EmbeddedResource>
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\MUNIA.Controllers.ControllerMapping+AxisMap.datasource" />
+    <None Include="Properties\DataSources\MUNIA.Controllers.ControllerMapping+ButtonMap.datasource" />
     <None Include="Properties\DataSources\MUNIA.Skins.ColorRemap.datasource" />
   </ItemGroup>
   <ItemGroup>
@@ -290,6 +333,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="munia256.ico" />
+    <None Include="Resources\x360.png" />
     <None Include="Resources\warn.png" />
     <None Include="Resources\ok.png" />
     <None Include="Resources\notok.png" />

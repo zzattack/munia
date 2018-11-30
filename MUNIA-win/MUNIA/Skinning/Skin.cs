@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using MUNIA.Controllers;
 
 namespace MUNIA.Skinning {
@@ -45,8 +46,10 @@ namespace MUNIA.Skinning {
 		}
 
 		public abstract void GetNumberOfElements(out int numButtons, out int numAxes);
-	}
 
+		public abstract bool GetElementsAtLocation(Point location, Size skinSize,
+			List<ControllerMapping.Button> buttons, List<ControllerMapping.Axis[]> axes);
+	}
 
 	public enum SkinLoadResult {
 		Fail,

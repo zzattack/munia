@@ -150,10 +150,10 @@ namespace MUNIA.Forms {
 			}
 			else {
 				float mid = rect.Top + rect.Height / 2.0f;
-				if (axisValue > 0)
-					fill = RectangleF.FromLTRB(rect.Left, (float)(mid - rect.Height / 2.0f * axisValue), rect.Right, mid);
+				if (axisValue < 0)
+					fill = RectangleF.FromLTRB(rect.Left, (float)(mid - rect.Height / 2.0f * -axisValue), rect.Right, mid);
 				else
-					fill = RectangleF.FromLTRB(rect.Left, mid, rect.Right, (float)(mid + rect.Height / 2.0f * -axisValue));
+					fill = RectangleF.FromLTRB(rect.Left, mid, rect.Right, (float)(mid + rect.Height / 2.0f * axisValue));
 			}
 
 			gfx.FillRectangle(Brushes.White, rect);

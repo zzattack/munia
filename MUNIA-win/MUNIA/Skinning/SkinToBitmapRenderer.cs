@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using MUNIA.Util;
 using OpenTK.Graphics.OpenGL;
 using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
 namespace MUNIA.Skinning {
 	public static class SkinToBitmapRenderer {
-		public static Bitmap Render(Skin skin, Size size, Color background) {
-			var surface = new DrawingSurface(size.Width, size.Height, PixelFormat.Format32bppArgb);
-			SetupFrameBuffer(size);
+		public static void Render(Skin skin, Size size, Color background, Bitmap buffer) {
+			SetupFrameBuffer(size, out int rgbBuffer);
 			GL.PushAttrib(AttribMask.ViewportBit);
-			{
-				GL.Viewport(0, 0, surface.Width, surface.Height);
+
+			if (rgbBuffer != -1) {
+				GL.Viewport(0, 0, buffer.Width, buffer.Height);
 				GL.ClearColor(background);
 				GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
@@ -21,26 +22,27 @@ namespace MUNIA.Skinning {
 				GL.MatrixMode(MatrixMode.Projection);
 				GL.LoadIdentity();
 				GL.Scale(1.0, -1.0, 1.0); // invert now because readpixels reads rows in flipped vertical order
-				GL.Ortho(0, surface.Width, surface.Height, 0, 0.0, 4.0);
+				GL.Ortho(0, buffer.Width, buffer.Height, 0, 0.0, 4.0);
 
 				// draw the preview
 				skin.Activate();
-				skin.Render(surface.Width, surface.Height, true);
+				skin.Render(buffer.Width, buffer.Height);
 
 				// read pixels back to surface
-				surface.Lock();
-				GL.ReadPixels(0, 0, surface.BitmapData.Width, surface.BitmapData.Height,
-					OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, surface.BitmapData.Scan0);
-				surface.Unlock();
+				var bitmapData = buffer.LockBits(new Rectangle(0, 0, buffer.Width, buffer.Height),
+					ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
+				GL.ReadPixels(0, 0, bitmapData.Width, bitmapData.Height,
+					OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, bitmapData.Scan0);
+				buffer.UnlockBits(bitmapData);
+
+				GL.Ext.DeleteFramebuffer(rgbBuffer);
 			}
 			// deactivate framebuffer again
 			GL.PopAttrib();
 			GL.Ext.BindFramebuffer(FramebufferTarget.FramebufferExt, 0); // disable rendering into the FBO
-
-			return surface.Bitmap;
 		}
 
-		private static bool SetupFrameBuffer(Size size) {
+		private static bool SetupFrameBuffer(Size size, out int rgbBuffer) {
 			try {
 				int fbo;
 				GL.Ext.GenFramebuffers(1, out fbo);
@@ -49,19 +51,15 @@ namespace MUNIA.Skinning {
 				GL.ReadBuffer(ReadBufferMode.ColorAttachment0);
 			}
 			catch (Exception exc) {
+				rgbBuffer = -1;
 				return false;
 			}
-			int depthbuffer;
-			GL.Ext.GenRenderbuffers(1, out depthbuffer);
-			GL.Ext.BindRenderbuffer(RenderbufferTarget.RenderbufferExt, depthbuffer);
-			GL.Ext.RenderbufferStorage(RenderbufferTarget.RenderbufferExt, RenderbufferStorage.DepthComponent32, size.Width, size.Height);
-			GL.Ext.FramebufferRenderbuffer(FramebufferTarget.FramebufferExt, FramebufferAttachment.DepthAttachmentExt, RenderbufferTarget.RenderbufferExt, depthbuffer);
 
-			int rgb_rb;
-			GL.Ext.GenRenderbuffers(1, out rgb_rb);
-			GL.Ext.BindRenderbuffer(RenderbufferTarget.RenderbufferExt, rgb_rb);
+			GL.Ext.GenRenderbuffers(1, out rgbBuffer);
+			GL.Ext.BindRenderbuffer(RenderbufferTarget.RenderbufferExt, rgbBuffer);
 			GL.Ext.RenderbufferStorage(RenderbufferTarget.RenderbufferExt, RenderbufferStorage.Rgba8, size.Width, size.Height);
-			GL.Ext.FramebufferRenderbuffer(FramebufferTarget.FramebufferExt, FramebufferAttachment.ColorAttachment0Ext, RenderbufferTarget.RenderbufferExt, rgb_rb);
+			GL.Ext.FramebufferRenderbuffer(FramebufferTarget.FramebufferExt, FramebufferAttachment.ColorAttachment0Ext,
+				RenderbufferTarget.RenderbufferExt, rgbBuffer);
 
 			return GL.CheckFramebufferStatus(FramebufferTarget.FramebufferExt) == FramebufferErrorCode.FramebufferCompleteExt;
 		}

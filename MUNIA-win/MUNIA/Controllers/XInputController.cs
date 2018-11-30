@@ -12,7 +12,7 @@ namespace MUNIA.Controllers {
 			Index = (int)controller.UserIndex;
 
 			_axes.EnsureSize(6); // 2 sticks, 2 triggers
-			_buttons.EnsureSize(12);
+			_buttons.EnsureSize(12 + 4); // 12 buttons + 4 for dpad
 			_hats.EnsureSize(1);
 		}
 
@@ -52,17 +52,6 @@ namespace MUNIA.Controllers {
 				_buttons[i++] = (state.Gamepad.Buttons & GamepadButtonFlags.Start) != 0;
 				_buttons[i++] = (state.Gamepad.Buttons & GamepadButtonFlags.LeftThumb) != 0;
 				_buttons[i++] = (state.Gamepad.Buttons & GamepadButtonFlags.RightThumb) != 0;
-				// remaining buttons are not available when using raw input
-				_buttons[i++] = (state.Gamepad.Buttons & GamepadButtonFlags.LeftShoulder) != 0;
-				_buttons[i++] = (state.Gamepad.Buttons & GamepadButtonFlags.RightShoulder) != 0;
-				
-				i = 0;
-				_axes[i++] = state.Gamepad.LeftThumbX / 32768.0;
-				_axes[i++] = state.Gamepad.LeftThumbY / 32768.0;
-				_axes[i++] = state.Gamepad.LeftTrigger / 65535.0;
-				_axes[i++] = state.Gamepad.RightThumbX / 32768.0;
-				_axes[i++] = state.Gamepad.RightThumbY / 32768.0;
-				_axes[i++] = state.Gamepad.RightTrigger / 65535.0;
 
 				Hat hat = Hat.None;
 				if ((state.Gamepad.Buttons & GamepadButtonFlags.DPadUp) != 0) hat |= Hat.Up;
@@ -70,13 +59,32 @@ namespace MUNIA.Controllers {
 				if ((state.Gamepad.Buttons & GamepadButtonFlags.DPadLeft) != 0) hat |= Hat.Left;
 				if ((state.Gamepad.Buttons & GamepadButtonFlags.DPadRight) != 0) hat |= Hat.Right;
 				_hats[0] = hat;
+
+				// for skinning simplicity sake, map hats also to buttons
+				for (int h = 0; h < _hats.Count; h++) {
+					// UP DOWN LEFT RIGHT
+					_buttons[i++] = _hats[h].HasFlag(Hat.Up);
+					_buttons[i++] = _hats[h].HasFlag(Hat.Down);
+					_buttons[i++] = _hats[h].HasFlag(Hat.Left);
+					_buttons[i++] = _hats[h].HasFlag(Hat.Right);
+				}
+
+
+				i = 0;
+				_axes[i++] = state.Gamepad.LeftThumbX / (double)short.MaxValue;
+				_axes[i++] = state.Gamepad.LeftThumbY / -(double)short.MaxValue;
+				_axes[i++] = state.Gamepad.LeftTrigger / (double)byte.MaxValue;
+				_axes[i++] = state.Gamepad.RightThumbX / (double)short.MaxValue;
+				_axes[i++] = state.Gamepad.RightThumbY / -(double)short.MaxValue;
+				_axes[i++] = state.Gamepad.RightTrigger / (double)byte.MaxValue;
+
 			}
 
 			return base.GetState();
 		}
 
 		public override bool IsAxisTrigger(int axisNum) {
-			return axisNum > 4;
+			return axisNum == 2 || axisNum >= 5;
 		}
 
 		public new static IEnumerable<XInputController> ListDevices() {
