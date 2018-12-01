@@ -127,15 +127,22 @@ namespace MUNIA.Forms {
 			panel.RowCount--;
 		}
 
+		private bool busyRendering = false;
 		private void OnControllerStateUpdate(object sender, EventArgs e) {
-			if (IsHandleCreated && !IsDisposed) {
+			if (IsHandleCreated && !IsDisposed && !busyRendering) {
 				try {
+					busyRendering = true;
 					BeginInvoke((Action)delegate {
-						// update mapping
-						if (_seqMapPos >= 0)
-							SequentialMappingUpdate(_realController.GetState());
-						else // simply show mapped controller state
-							skinPreview.RenderSkin(_mappedController.GetState());
+						try {
+							// update mapping
+							if (_seqMapPos >= 0)
+								SequentialMappingUpdate(_realController.GetState());
+							else // simply show mapped controller state
+								skinPreview.RenderSkin(_mappedController.GetState());
+						}
+						finally {
+							busyRendering = false;
+						}
 					});
 				}
 				catch (InvalidOperationException) { }

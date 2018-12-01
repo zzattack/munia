@@ -4,18 +4,18 @@ using SharpDX.XInput;
 
 namespace MUNIA.Controllers {
 	public class XInputController : GenericController {
-		private readonly Controller _controller;
+		private Controller _controller;
 		private int _previousPacketNumber = -1;
 
-		public XInputController(Controller controller) {
-			this._controller = controller;
-			Index = (int)controller.UserIndex;
-
+		public XInputController() {
 			_axes.EnsureSize(6); // 2 sticks, 2 triggers
 			_buttons.EnsureSize(12 + 4); // 12 buttons + 4 for dpad
 			_hats.EnsureSize(1);
 		}
 
+		public XInputController(Controller controller) : this() {
+			_controller = controller;
+		}
 
 		public override bool IsAvailable => _controller.IsConnected;
 
@@ -23,7 +23,12 @@ namespace MUNIA.Controllers {
 
 		public override string Name => DevicePath;
 
-		public int Index { get; private set; }
+		public override ControllerType Type => ControllerType.XInput;
+
+		public int Index {
+			get => (int?)_controller?.UserIndex ?? -1;
+			set => _controller = new Controller((UserIndex)value);
+		}
 
 		public override bool RequiresPolling => true;
 

@@ -112,7 +112,7 @@ namespace MUNIA.Forms {
 				pbPreview.Image = new Bitmap(pbPreview.Width, pbPreview.Height, PixelFormat.Format32bppArgb);
 			}
 			SkinToBitmapRenderer.Render(Skin, pbPreview.Size, pbPreview.BackColor, pbPreview.Image as Bitmap);
-			pbPreview.Refresh();
+			pbPreview.Invalidate();
 		}
 
 	}

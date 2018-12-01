@@ -56,7 +56,8 @@ namespace MUNIA.Forms {
 			this.tsmiBackgroundTransparent = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiBackgroundNSpy = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiColorRemapping = new System.Windows.Forms.ToolStripMenuItem();
-			this.tsmiApplyTheme = new System.Windows.Forms.ToolStripMenuItem();
+			this.tsmiApplySkinTheme = new System.Windows.Forms.ToolStripMenuItem();
+			this.tsmiApplyCustomTheme = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiManageThemes = new System.Windows.Forms.ToolStripMenuItem();
 			this.menu.SuspendLayout();
 			this.status.SuspendLayout();
@@ -252,7 +253,7 @@ namespace MUNIA.Forms {
             this.tsmiBackgroundNSpy,
             this.tsmiColorRemapping});
 			this.popup.Name = "popup";
-			this.popup.Size = new System.Drawing.Size(169, 70);
+			this.popup.Size = new System.Drawing.Size(181, 92);
 			this.popup.Opening += new System.ComponentModel.CancelEventHandler(this.popup_Opening);
 			// 
 			// tsmiBackground
@@ -261,7 +262,7 @@ namespace MUNIA.Forms {
             this.tsmiBackGroundColor,
             this.tsmiBackgroundTransparent});
 			this.tsmiBackground.Name = "tsmiBackground";
-			this.tsmiBackground.Size = new System.Drawing.Size(168, 22);
+			this.tsmiBackground.Size = new System.Drawing.Size(180, 22);
 			this.tsmiBackground.Text = "&Background color";
 			// 
 			// tsmiBackGroundColor
@@ -286,28 +287,35 @@ namespace MUNIA.Forms {
 			// tsmiBackgroundNSpy
 			// 
 			this.tsmiBackgroundNSpy.Name = "tsmiBackgroundNSpy";
-			this.tsmiBackgroundNSpy.Size = new System.Drawing.Size(168, 22);
+			this.tsmiBackgroundNSpy.Size = new System.Drawing.Size(180, 22);
 			this.tsmiBackgroundNSpy.Text = "&Background";
 			// 
 			// tsmiColorRemapping
 			// 
 			this.tsmiColorRemapping.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiApplyTheme,
+            this.tsmiApplySkinTheme,
+            this.tsmiApplyCustomTheme,
             this.tsmiManageThemes});
 			this.tsmiColorRemapping.Name = "tsmiColorRemapping";
-			this.tsmiColorRemapping.Size = new System.Drawing.Size(168, 22);
+			this.tsmiColorRemapping.Size = new System.Drawing.Size(180, 22);
 			this.tsmiColorRemapping.Text = "Color &remapping";
 			// 
-			// tsmiApplyTheme
+			// tsmiApplySkinTheme
 			// 
-			this.tsmiApplyTheme.Name = "tsmiApplyTheme";
-			this.tsmiApplyTheme.Size = new System.Drawing.Size(159, 22);
-			this.tsmiApplyTheme.Text = "&Apply theme";
+			this.tsmiApplySkinTheme.Name = "tsmiApplySkinTheme";
+			this.tsmiApplySkinTheme.Size = new System.Drawing.Size(185, 22);
+			this.tsmiApplySkinTheme.Text = "Apply skin &theme";
+			// 
+			// tsmiApplyCustomTheme
+			// 
+			this.tsmiApplyCustomTheme.Name = "tsmiApplyCustomTheme";
+			this.tsmiApplyCustomTheme.Size = new System.Drawing.Size(185, 22);
+			this.tsmiApplyCustomTheme.Text = "&Apply custom theme";
 			// 
 			// tsmiManageThemes
 			// 
 			this.tsmiManageThemes.Name = "tsmiManageThemes";
-			this.tsmiManageThemes.Size = new System.Drawing.Size(159, 22);
+			this.tsmiManageThemes.Size = new System.Drawing.Size(185, 22);
 			this.tsmiManageThemes.Text = "&Manage themes";
 			this.tsmiManageThemes.Click += new System.EventHandler(this.tsmiManageThemes_Click);
 			// 
@@ -358,7 +366,7 @@ namespace MUNIA.Forms {
 		private System.Windows.Forms.ToolStripMenuItem tsmiBackgroundNSpy;
 		private System.Windows.Forms.ToolStripMenuItem tsmiColorRemapping;
 		private System.Windows.Forms.ToolStripMenuItem tsmiManageThemes;
-		private System.Windows.Forms.ToolStripMenuItem tsmiApplyTheme;
+		private System.Windows.Forms.ToolStripMenuItem tsmiApplyCustomTheme;
 		private System.Windows.Forms.ToolStripMenuItem tsmiSkinFolders;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
@@ -367,6 +375,7 @@ namespace MUNIA.Forms {
 		private System.Windows.Forms.ToolStripMenuItem tsmiBackGroundColor;
 		private System.Windows.Forms.ToolStripMenuItem tsmiBackgroundTransparent;
 		private System.Windows.Forms.ToolStripMenuItem tsmiTestController;
+		private System.Windows.Forms.ToolStripMenuItem tsmiApplySkinTheme;
 	}
 }
 
