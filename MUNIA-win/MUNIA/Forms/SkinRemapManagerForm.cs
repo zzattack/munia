@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace MUNIA.Forms {
 	public partial class SkinRemapManagerForm : Form {
 		private readonly SvgSkin _skin;
 		private readonly BindingList<ColorRemap> _remaps;
-		private readonly ColorRemap _defaultRemap;
+
 		public ColorRemap SelectedRemap { get; private set; }
 		public event EventHandler SelectedRemapChanged;
 
@@ -19,13 +20,6 @@ namespace MUNIA.Forms {
 		public SkinRemapManagerForm(SvgSkin skin, ColorRemap selectedRemap, BindingList<ColorRemap> remaps) : this() {
 			_skin = skin;
 			_remaps = remaps;
-			if (_remaps.Count(r => r.IsSkinDefault) == 0) {
-				_defaultRemap = ColorRemap.CreateFromSkin(skin);
-				_remaps.Add(_defaultRemap);
-			}
-			else {
-				_defaultRemap = _remaps.First(r => r.IsSkinDefault);
-			}
 
 			// initialize listbox
 			list.DataSource = _remaps;
@@ -38,9 +32,10 @@ namespace MUNIA.Forms {
 		}
 
 		private void btnNew_Click(object sender, EventArgs e) {
-			var remap = _defaultRemap.Clone();
+			var remap = ColorRemap.CreateFromSkin(_skin);
 			_remaps.Add(remap);
 			(new SkinRemapperForm(_skin.Path, remap)).ShowDialog(this);
+			_remaps.ResetBindings();
 		}
 
 		private void btnEdit_Click(object sender, EventArgs e) {
@@ -61,9 +56,11 @@ namespace MUNIA.Forms {
 
 			var curr = list.SelectedItem as ColorRemap;
 			if (curr != null) {
+				lblHint.Visible = curr.IsSkinDefault;
 				SelectedRemap = curr;
 				SelectedRemapChanged?.Invoke(this, EventArgs.Empty);
 			}
+			else lblHint.Visible = false;
 
 			btnEdit.Enabled = btnDelete.Enabled = curr != null && !curr.IsSkinDefault;
 			btnClone.Enabled = curr != null;

@@ -314,17 +314,20 @@ namespace MUNIA.Forms {
 		}
 
 		private void pbSvg_MouseDown(object sender, MouseEventArgs e) {
-			var clickedElems = FindElemsAt(e.Location);
-			foreach (var elem in clickedElems) {
-				// find the smallest clicked elem that belongs to any group
-				var group = (lbGroups.DataSource as List<GroupedSvgElems>).FirstOrDefault(g => g.Contains(elem));
+			try {
+				var clickedElems = FindElemsAt(e.Location);
+				foreach (var elem in clickedElems) {
+					// find the smallest clicked elem that belongs to any group
+					var group = (lbGroups.DataSource as List<GroupedSvgElems>).FirstOrDefault(g => g.Contains(elem));
 
-				// select
-				if (group != null) {
-					lbGroups.SelectedItem = group;
-					return;
+					// select
+					if (group != null) {
+						lbGroups.SelectedItem = group;
+						return;
+					}
 				}
 			}
+			catch (Exception exc) { /* probably concurrency issue while skin is rendering on other thread */ }
 		}
 
 		private IEnumerable<SvgVisualElement> FindElemsAt(Point loc) {
@@ -350,6 +353,15 @@ namespace MUNIA.Forms {
 
 			// select innermost box
 			return candidates.OrderBy(e => e.Bounds.Width * e.Bounds.Height);
+		}
+
+		private void btnSaveRemap_Click(object sender, EventArgs e) {
+			Close();
+		}
+
+		protected override void OnFormClosed(FormClosedEventArgs e) {
+			base.OnFormClosed(e);
+			ConfigManager.SaveRemaps();
 		}
 
 	}

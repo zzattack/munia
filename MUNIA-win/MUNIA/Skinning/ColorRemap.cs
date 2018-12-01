@@ -14,7 +14,7 @@ namespace MUNIA.Skinning {
 		private string _name;
 
 		private List<GroupedSvgElems> _groups = new List<GroupedSvgElems>();
-		public readonly bool IsSkinDefault;
+		public bool IsSkinDefault;
 		public Guid UUID { get; private set; } = Guid.Empty;
 
 		public List<GroupedSvgElems> Groups => _groups;
@@ -92,6 +92,20 @@ namespace MUNIA.Skinning {
 			}
 			return ret;
 		}
+		public static ColorRemap LoadFrom(SvgElement xRemap) {
+			ColorRemap ret = new ColorRemap();
+			ret.Name = xRemap.CustomAttributes["name"];
+			ret.UUID = Guid.Parse(xRemap.CustomAttributes["UUID"]);
+
+			foreach (SvgElement x in xRemap.Children) {
+				string id = x.ID;
+				Color fill = new Color(), stroke = new Color();
+				if (x.Fill is SvgColourServer cf) fill = cf.Colour;
+				if (x.Stroke is SvgColourServer cs) stroke = cs.Colour;
+				ret.Elements[id] = Tuple.Create(fill, stroke);
+			}
+			return ret;
+		}
 
 		public void SaveTo(XmlTextWriter xw) {
 			// there's no point in saving the default as it
@@ -118,6 +132,7 @@ namespace MUNIA.Skinning {
 
 			foreach (var kvp in this.Elements)
 				ret.Elements[kvp.Key] = kvp.Value;
+			ret.IsSkinDefault = false;
 
 			return ret;
 		}
@@ -153,7 +168,7 @@ namespace MUNIA.Skinning {
 		}
 
 		public override string ToString() {
-			return $"{Name}";
+			return $"{(IsSkinDefault?"[D] ":"")}{Name}";
 		}
 	}
 

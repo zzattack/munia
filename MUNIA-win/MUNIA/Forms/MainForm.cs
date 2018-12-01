@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -246,6 +247,7 @@ namespace MUNIA.Forms {
 				case ControllerType.PS2:
 				return Resources.ps;
 				case ControllerType.Generic:
+				case ControllerType.XInput:
 				return Resources.generic;
 			}
 			return null;
@@ -275,7 +277,7 @@ namespace MUNIA.Forms {
 			ConfigManager.SetActiveController(ctrlr);
 			if (skin != null && ctrlr != null)
 				skin.UpdateState(ctrlr.GetState()); // initial read
-			
+
 			// find desired window size
 			if (ConfigManager.WindowSizes.ContainsKey(skin)) {
 				var wsz = ConfigManager.WindowSizes[skin];
@@ -594,24 +596,32 @@ namespace MUNIA.Forms {
 			tsmiManageThemes.Enabled = ConfigManager.ActiveSkin is SvgSkin;
 
 			// populate the available themes list
-			tsmiApplyTheme.DropDownItems.Clear();
+			tsmiApplySkinTheme.DropDownItems.Clear();
+			tsmiApplyCustomTheme.DropDownItems.Clear();
 			if (ConfigManager.ActiveSkin is SvgSkin svg) {
-				var remaps = ConfigManager.AvailableRemaps[svg.Path];
-				tsmiApplyTheme.Enabled = remaps.Any(r => !r.IsSkinDefault);
-
 				var selectedRemap = ConfigManager.SelectedRemaps[svg];
-				foreach (var remap in ConfigManager.AvailableRemaps[svg.Path]) {
-					var tsmiSkin = new ToolStripMenuItem(remap.Name, null, (_, __) => SelectRemap(remap));
 
+				IList<ColorRemap> remaps = svg.EmbeddedRemaps;
+				tsmiApplySkinTheme.Enabled = remaps.Any();
+				foreach (var remap in remaps) {
+					var tsmiSkin = new ToolStripMenuItem(remap.Name, null, (_, __) => SelectRemap(remap));
 					// put a checkmark in front if this is the selected remap
 					tsmiSkin.Checked = remap.Equals(selectedRemap);
+					tsmiApplySkinTheme.DropDownItems.Add(tsmiSkin);
+				}
 
-					tsmiApplyTheme.DropDownItems.Add(tsmiSkin);
+				remaps = ConfigManager.AvailableRemaps[svg.Path];
+				tsmiApplyCustomTheme.Enabled = remaps.Any(r => !r.IsSkinDefault);
+				foreach (var remap in ConfigManager.AvailableRemaps[svg.Path].Where(r => !r.IsSkinDefault)) {
+					var tsmiSkin = new ToolStripMenuItem(remap.Name, null, (_, __) => SelectRemap(remap));
+					// put a checkmark in front if this is the selected remap
+					tsmiSkin.Checked = remap.Equals(selectedRemap);
+					tsmiApplyCustomTheme.DropDownItems.Add(tsmiSkin);
 				}
 				tsmiBackground.Visible = true;
 			}
 			else {
-				tsmiApplyTheme.Enabled = false;
+				tsmiApplyCustomTheme.Enabled = false;
 				tsmiBackground.Visible = false;
 			}
 
@@ -632,7 +642,7 @@ namespace MUNIA.Forms {
 		}
 
 		private void SelectRemap(ColorRemap remap) {
-			if (remap != null && ConfigManager.ActiveSkin is SvgSkin svg) {
+			if (ConfigManager.ActiveSkin is SvgSkin svg) {
 				svg.ApplyRemap(remap);
 				ConfigManager.SelectedRemaps[svg] = remap;
 				// force redraw of the base

@@ -42,6 +42,7 @@ namespace MUNIA.Forms {
 			this.timer = new System.Windows.Forms.Timer(this.components);
 			this.tableLeft = new System.Windows.Forms.TableLayoutPanel();
 			this.pnlTopLeft = new System.Windows.Forms.Panel();
+			this.btnSaveRemap = new System.Windows.Forms.Button();
 			this.tbSkinName = new System.Windows.Forms.TextBox();
 			this.lblSkinName = new System.Windows.Forms.Label();
 			this.gbSvgGroups = new System.Windows.Forms.GroupBox();
@@ -236,6 +237,7 @@ namespace MUNIA.Forms {
 			// 
 			// pnlTopLeft
 			// 
+			this.pnlTopLeft.Controls.Add(this.btnSaveRemap);
 			this.pnlTopLeft.Controls.Add(this.tbSkinName);
 			this.pnlTopLeft.Controls.Add(this.lblSkinName);
 			this.pnlTopLeft.Controls.Add(this.gbSvgGroups);
@@ -245,19 +247,30 @@ namespace MUNIA.Forms {
 			this.pnlTopLeft.Size = new System.Drawing.Size(418, 194);
 			this.pnlTopLeft.TabIndex = 0;
 			// 
+			// btnSaveRemap
+			// 
+			this.btnSaveRemap.DialogResult = System.Windows.Forms.DialogResult.OK;
+			this.btnSaveRemap.Location = new System.Drawing.Point(306, 17);
+			this.btnSaveRemap.Name = "btnSaveRemap";
+			this.btnSaveRemap.Size = new System.Drawing.Size(102, 23);
+			this.btnSaveRemap.TabIndex = 10;
+			this.btnSaveRemap.Text = "Save && close";
+			this.btnSaveRemap.UseVisualStyleBackColor = true;
+			this.btnSaveRemap.Click += new System.EventHandler(this.btnSaveRemap_Click);
+			// 
 			// tbSkinName
 			// 
 			this.tbSkinName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbSkinName.Location = new System.Drawing.Point(88, 18);
+			this.tbSkinName.Location = new System.Drawing.Point(82, 19);
 			this.tbSkinName.Name = "tbSkinName";
-			this.tbSkinName.Size = new System.Drawing.Size(263, 20);
+			this.tbSkinName.Size = new System.Drawing.Size(212, 20);
 			this.tbSkinName.TabIndex = 0;
 			// 
 			// lblSkinName
 			// 
 			this.lblSkinName.AutoSize = true;
-			this.lblSkinName.Location = new System.Drawing.Point(25, 21);
+			this.lblSkinName.Location = new System.Drawing.Point(19, 22);
 			this.lblSkinName.Name = "lblSkinName";
 			this.lblSkinName.Size = new System.Drawing.Size(57, 13);
 			this.lblSkinName.TabIndex = 7;
@@ -337,6 +350,7 @@ namespace MUNIA.Forms {
 			// 
 			// SkinRemapperForm
 			// 
+			this.AcceptButton = this.btnSaveRemap;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(870, 556);
@@ -394,5 +408,6 @@ namespace MUNIA.Forms {
 		private System.Windows.Forms.Label lblItemsToShow;
 		private System.Windows.Forms.ToolStrip toolStrip1;
 		private System.Windows.Forms.ToolStripLabel toolStripLabel1;
+		private System.Windows.Forms.Button btnSaveRemap;
 	}
 }

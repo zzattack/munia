@@ -14,6 +14,9 @@ namespace MUNIA.Skinning {
 		public List<Button> Buttons = new List<Button>();
 		public List<Stick> Sticks = new List<Stick>();
 		public List<Trigger> Triggers = new List<Trigger>();
+		public List<ColorRemap> EmbeddedRemaps = new List<ColorRemap>();
+		public ColorRemap DefaultRemap;
+
 		private SizeF _dimensions;
 		private int _baseTexture;
 
@@ -25,6 +28,10 @@ namespace MUNIA.Skinning {
 
 				// load button/stick/trigger mapping from svg
 				RecursiveGetElements(SvgDocument);
+
+				DefaultRemap = ColorRemap.CreateFromSkin(this);
+				EmbeddedRemaps.Insert(0, DefaultRemap);
+				EmbeddedRemaps.ForEach(r => r.IsSkinDefault = true);
 
 				LoadResult = Controllers.Any() ? SkinLoadResult.Ok : SkinLoadResult.Fail;
 			}
@@ -56,13 +63,13 @@ namespace MUNIA.Skinning {
 			var buttons = Buttons.Select(b => b.Id)
 				.Union(Sticks.Where(s => s.ButtonId != -1).Select(s => s.ButtonId))
 				.Distinct();
-			numButtons = Math.Max(buttons.Max() + 1, buttons.Count());
+			numButtons = Math.Max(buttons.DefaultIfEmpty().Max() + 1, buttons.Count());
 
 			var axes = Triggers.Where(t => t.Id != -1).Select(t => t.Axis)
 				.Union(Sticks.Where(s => s.HorizontalAxis != -1).Select(s => s.HorizontalAxis))
 				.Union(Sticks.Where(s => s.VerticalAxis != -1).Select(s => s.VerticalAxis))
 				.Distinct();
-			numAxes = Math.Max(axes.Max() + 1, axes.Count());
+			numAxes = Math.Max(axes.DefaultIfEmpty().Max() + 1, axes.Count());
 		}
 
 		public override bool GetElementsAtLocation(Point location, Size skinSize,
@@ -200,6 +207,10 @@ namespace MUNIA.Skinning {
 						trigger.Inverse = IniFile.IniSection.TrueValues.Contains(c.CustomAttributes["trigger-inverse"].ToLowerInvariant());
 
 					Triggers.Add(trigger);
+				}
+
+				else if (c.ElementName == "remap") {
+					EmbeddedRemaps.Add(ColorRemap.LoadFrom(c));
 				}
 				RecursiveGetElements(c);
 			}
@@ -513,6 +524,7 @@ namespace MUNIA.Skinning {
 		}
 
 		public void ApplyRemap(ColorRemap remap) {
+			if (remap == null) remap = DefaultRemap;
 			foreach (var remapEntry in remap.Elements) {
 				var elem = this.SvgDocument.GetElementById(remapEntry.Key);
 				if (elem == null) continue;

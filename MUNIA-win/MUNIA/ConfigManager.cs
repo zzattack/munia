@@ -71,13 +71,14 @@ namespace MUNIA {
 					foreach (string svgPath in Directory.GetFiles(dir.Path, "*.svg")) {
 						var svg = new SvgSkin();
 						svg.Load(svgPath);
-						Skins.Add(svg);
-
-						// create default remaps
-						AvailableRemaps[svg.Path] = new BindingList<ColorRemap>() {
-							ColorRemap.CreateFromSkin(svg),
-						};
-						SelectedRemaps[svg] = null;
+						if (svg.LoadResult == SkinLoadResult.Ok) {
+							Skins.Add(svg);
+							var b = new BindingList<ColorRemap>();
+							foreach (var map in svg.EmbeddedRemaps)
+								b.Add(map);
+							AvailableRemaps[svg.Path] = b;
+							SelectedRemaps[svg] = null;
+						}
 					}
 				}
 
@@ -111,6 +112,9 @@ namespace MUNIA {
 				Controllers.Add(dev);
 			}
 			foreach (var dev in ArduinoController.ListDevices()) {
+				Controllers.Add(dev);
+			}
+			foreach (var dev in XInputController.ListDevices()) {
 				Controllers.Add(dev);
 			}
 			foreach (var dev in MappedController.ListDevices()) {
