@@ -106,4 +106,67 @@
 			<path d="m -175.734,453.184 -8.5,3.3 c -0.8,0.3 -1.6,-0.7 -1.6,-1.6 v -3.5 c 0,-0.9 0.8,-1.9 1.6,-1.6 z" style="display:none;fill:#ddd;stroke:white;stroke-linecap:round;stroke-linejoin:round" id="btn-start-hl" munia:button-id="5" munia:button-state="pressed" />
 		</g>
 	</g>
+
+	<remap name="Orange theme" UUID="40011be0-a1fd-4168-9ff4-79abf3859121">
+		<entry id="back-base" fill="#3F3F3F" stroke="#000000" />
+		<entry id="rect1782" fill="#EA8B1D" stroke="#F4F4F4" />
+		<entry id="rect1788" fill="#EA8B1D" stroke="#F4F4F4" />
+		<entry id="rect1794" fill="#EA8B1D" stroke="#F4F4F4" />
+		<entry id="rect1800" fill="#EA8B1D" stroke="#F4F4F4" />
+		<entry id="text1861" fill="#FFFFFF" stroke="#000000" />
+		<entry id="tspan1859" fill="#FFFFFF" stroke="#000000" />
+		<entry id="text1882" fill="#FEFDFD" stroke="#FEFDFD" />
+		<entry id="tspan1880" fill="#FEFDFD" stroke="#FEFDFD" />
+		<entry id="text1888" fill="#FFFFFF" stroke="#000000" />
+		<entry id="tspan1886" fill="#FFFFFF" stroke="#000000" />
+		<entry id="text1894" fill="#FEFDFD" stroke="#FEFDFD" />
+		<entry id="tspan1892" fill="#FEFDFD" stroke="#FEFDFD" />
+		<entry id="text1900" fill="#FFFFFF" stroke="#000000" />
+		<entry id="tspan1898" fill="#FFFFFF" stroke="#000000" />
+		<entry id="text1906" fill="#FEFDFD" stroke="#FEFDFD" />
+		<entry id="tspan1904" fill="#FEFDFD" stroke="#FEFDFD" />
+		<entry id="text1912" fill="#FFFFFF" stroke="#000000" />
+		<entry id="tspan1910" fill="#FFFFFF" stroke="#000000" />
+		<entry id="text1918" fill="#FEFDFD" stroke="#FEFDFD" />
+		<entry id="tspan1916" fill="#FEFDFD" stroke="#FEFDFD" />
+		<entry id="rect1785" fill="#737373" stroke="#737373" />
+		<entry id="rect1791" fill="#737373" stroke="#737373" />
+		<entry id="rect1797" fill="#737373" stroke="#737373" />
+		<entry id="rect1803" fill="#737373" stroke="#737373" />
+		<entry id="dpad-base_1_" fill="#262626" stroke="#000000" />
+		<entry id="face-buttons-base" fill="#262626" stroke="#000000" />
+		<entry id="dpad-outer-up" fill="#BFAAAA" stroke="#000000" />
+		<entry id="dpad-outer-down" fill="#BFAAAA" stroke="#000000" />
+		<entry id="dpad-outer-right" fill="#BFAAAA" stroke="#000000" />
+		<entry id="dpad-outer-left" fill="#BFAAAA" stroke="#000000" />
+		<entry id="dpad-up" fill="#5A5A5A" stroke="#737373" />
+		<entry id="dpad_down" fill="#5A5A5A" stroke="#737373" />
+		<entry id="dpad-left" fill="#5A5A5A" stroke="#737373" />
+		<entry id="dpad-right" fill="#5A5A5A" stroke="#737373" />
+		<entry id="path3246" fill="#5A5A5A" stroke="#737373" />
+		<entry id="path3250" fill="#5A5A5A" stroke="#737373" />
+		<entry id="path3248" fill="#5A5A5A" stroke="#737373" />
+		<entry id="path3244" fill="#5A5A5A" stroke="#737373" />
+		<entry id="dpad-up-hl" fill="#EA8B1D" stroke="#EA8B1D" />
+		<entry id="dpad_down-hl" fill="#EA8B1D" stroke="#EA8B1D" />
+		<entry id="dpad-left-hl" fill="#EA8B1D" stroke="#EA8B1D" />
+		<entry id="dpad-right-hl" fill="#EA8B1D" stroke="#EA8B1D" />
+		<entry id="btn-select-hl" fill="#EA8B1D" stroke="#EA8B1D" />
+		<entry id="btn-start-hl" fill="#EA8B1D" stroke="#EA8B1D" />
+		<entry id="path3313" fill="#BFAAAA" stroke="#BFAAAA" />
+		<entry id="circle1725" fill="#EA8B1D" stroke="#EA8B1D" />
+		<entry id="circle1733" fill="#EA8B1D" stroke="#EA8B1D" />
+		<entry id="circle1741" fill="#EA8B1D" stroke="#EA8B1D" />
+		<entry id="circle1749" fill="#EA8B1D" stroke="#EA8B1D" />
+		<entry id="path1727" fill="#F9F8F8" stroke="#F9F8F8" />
+		<entry id="rect1735" fill="#F9F8F8" stroke="#F9F8F8" />
+		<entry id="circle1743" fill="#F9F8F8" stroke="#F9F8F8" />
+		<entry id="path1751" fill="#F9F8F8" stroke="#F9F8F8" />
+		<entry id="rect3307" fill="#BFAAAA" stroke="#BFAAAA" />
+		<entry id="path3311" fill="#BFAAAA" stroke="#BFAAAA" />
+		<entry id="path3309" fill="#D5D3D3" stroke="#BFAAAA" />
+		<entry id="btn-select" fill="#564B4B" stroke="#737373" />
+		<entry id="btn-start" fill="#564B4B" stroke="#737373" />
+	</remap>
+	
 </svg>
