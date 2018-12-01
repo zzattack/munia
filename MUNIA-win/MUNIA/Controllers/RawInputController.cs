@@ -17,8 +17,12 @@ namespace MUNIA.Controllers {
 		public readonly int DeviceItemIndex;
 		public override string DevicePath => HidDevice.DevicePath;
 		public override string Name => HidDevice.ProductName;
+
+		public override ControllerType Type => ControllerType.Generic;
+
 		public override bool RequiresPolling => false;
 
+		public RawInputController() { }
 		public RawInputController(HidDevice device, DeviceItem deviceItem) {
 			HidDevice = device;
 			DeviceItem = deviceItem;

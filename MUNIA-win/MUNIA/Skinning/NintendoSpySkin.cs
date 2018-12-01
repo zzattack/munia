@@ -367,13 +367,13 @@ namespace MUNIA.Skinning {
 
 		public override void GetNumberOfElements(out int numButtons, out int numAxes) {
 			var buttons = Buttons.Where(b => b.Id != -1).Select(b => b.Id).Distinct();
-			numButtons = Math.Max(buttons.Max() + 1, buttons.Count());
+			numButtons = Math.Max(buttons.DefaultIfEmpty().Max() + 1, buttons.Count());
 
 			var axes = Triggers.Where(t => t.Id != -1).Select(t => t.Id)
 				.Union(Sticks.Where(s => s.HorizontalAxis != -1).Select(s => s.HorizontalAxis))
 				.Union(Sticks.Where(s => s.VerticalAxis != -1).Select(s => s.VerticalAxis))
 				.Distinct();
-			numAxes = Math.Max(axes.Max() + 1, axes.Count());
+			numAxes = Math.Max(axes.DefaultIfEmpty().Max() + 1, axes.Count());
 		}
 
 		public override bool GetElementsAtLocation(Point location, Size skinSize,

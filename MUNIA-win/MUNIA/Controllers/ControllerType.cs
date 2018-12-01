@@ -6,6 +6,7 @@ namespace MUNIA.Controllers {
         NGC,
         PS2,
 		Generic,
+		XInput,
         Unknown
 	}
 
@@ -18,9 +19,11 @@ namespace MUNIA.Controllers {
 				return new MuniaN64(null);
             case ControllerType.NGC:
                 return new MuniaNgc(null);
-            case ControllerType.PS2:
-                return new MusiaPS2(null);
-            default:
+			case ControllerType.Generic:
+				return new RawInputController();
+			case ControllerType.XInput:
+				return new XInputController();
+			default:
 				return null;
 			}
 		}

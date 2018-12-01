@@ -6,7 +6,7 @@ namespace MUNIA.Controllers {
 		// The controller is the DeviceItem on HidDevice. One HidDevice may expose multiple DeviceItems.
 
 		public abstract string Name { get; }
-		public virtual ControllerType Type => ControllerType.Generic;
+		public abstract ControllerType Type { get; }
 		public abstract bool RequiresPolling { get; }
 
 		public abstract bool Activate();
