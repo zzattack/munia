@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns:munia="http://www.munia.io/namespaces/munia" 
+     xmlns:dc="http://purl.org/dc/elements/1.1/" 
+     xmlns:cc="http://creativecommons.org/ns#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:svg="http://www.w3.org/2000/svg" 
+     xmlns="http://www.w3.org/2000/svg" 
+     xmlns:xlink="http://www.w3.org/1999/xlink" 
+     version="1.1" width="471.824" height="341.657" id="svg3412" viewBox="0 0 471.827 341.657">
+
+	<munia:info munia:device-type="XInput" munia:skin-name="Xbox One" />
+    
+	<style>
+        text{font-size:19px;line-height:25px;font-family:sans-serif;fill:black;stroke-width:1px;text-anchor:middle;baseline-shift:-6;}
+		.stick{stroke:#454545;stroke-width:2.9;}
+		.pressed{fill:white;stroke:white;display:none;}
+        .pressed button{stroke-width:2.5;}
+    </style>
+
+    <defs id="defs">
+        <linearGradient id="linearGradient1752">
+            <stop id="stop1750" offset="0" style="stop-color:#bd8a2b;stop-opacity:0.5;" />
+            <stop id="stop1748" offset="1" style="stop-color:#bd8a2b;stop-opacity:1;" />
+        </linearGradient>
+        <linearGradient id="linearGradient1718">
+            <stop id="stop1714" offset="0" style="stop-color:#bd8a2b;stop-opacity:1;" />
+            <stop id="stop1716" offset="1" style="stop-color:#bd8a2b;stop-opacity:0.5;" />
+        </linearGradient>
+        <linearGradient id="linearGradient1724" x1="112.698" y1="-36.0965" x2="28.5502" y2="-36.4722" gradientTransform="translate(28.6147,-6.13299)" gradientUnits="userSpaceOnUse" xlink:href="#linearGradient1752" />
+        <linearGradient id="linearGradient1746" x1="112.698" y1="-36.0965" x2="28.5502" y2="-36.4722" gradientTransform="translate(28.6147,-6.13299)" gradientUnits="userSpaceOnUse" xlink:href="#linearGradient1718" />
+    </defs>
+
+    <g id="Base-elems">
+		<path id="outline" style="fill:black" d="M 39.6997,338.79 C 19.6023,331.794 7.82648,318.338 2.15918,295.892 0.263379,288.383 -0.035321,284.543 0.003079,268.176 0.050079,248.146 1.36648,236.44 6.01908,214.676 12.9655,182.18 28.1686,136.572 46.3404,93.7137 54.1598,75.2727 56.3948,71.5322 62.0028,67.5044 c 3.609,-2.5914 5.381,-4.9807 8.424,-11.3569 l 3.854,-8.075 12.828,-6.1736 C 103.802,33.865 124.94,25.9225 133.567,24.4433 c 11.522,-1.9759 24.552,1.3596 34.519,8.8366 l 3.173,2.38 64.673,-0.014 64.673,-0.014 3.154,-2.3661 c 9.95,-7.4629 22.988,-10.7971 34.502,-8.8227 8.626,1.4792 29.765,9.4217 46.458,17.4556 l 12.827,6.1736 3.854,8.075 c 3.043,6.3762 4.816,8.7655 8.424,11.3569 5.609,4.0278 7.844,7.7683 15.663,26.2095 18.172,42.8583 33.375,88.4663 40.321,120.9623 4.653,21.764 5.969,33.47 6.016,53.5 0.04,16.367 -0.26,20.207 -2.156,27.716 -5.749,22.771 -18.096,36.592 -38.664,43.283 -7.584,2.467 -8.882,2.631 -11.806,1.493 -2.02,-0.786 -12.907,-10.982 -28.284,-26.488 -23.033,-23.226 -41.361,-39.978 -51.198,-46.795 -2.172,-1.505 -6.492,-3.631 -9.601,-4.723 -5.475,-1.924 -8.417,-1.986 -94.201,-1.986 -85.784,0 -88.727,0.06 -94.202,1.986 -3.108,1.092 -7.429,3.218 -9.601,4.723 -9.941,6.89 -28.146,23.522 -50.1972,45.862 -22.604,22.9 -28.9346,28.434 -32.5003,28.411 -0.825,0 -5.1962,-1.296 -9.7138,-2.868 z"/>
+		<path id="front_face" style="fill:#333" d="m 334.61,44.6905 c -9.681,0.037 -12.046,1.7888 -30.875,22.5937 -9.403,10.389 -18.621,20.3295 -20.469,22.0935 -6.346,6.059 -8.173,6.306 -48.719,6.282 -33.393,-0.02 -36.996,-0.199 -40.687,-1.875 -2.896,-1.316 -8.897,-7.209 -21.094,-20.7192 C 152.237,50.3252 148.813,47.1217 143.235,45.5967 135.089,43.3699 113.562,47.4816 92.7028,55.253 79.6388,60.1203 62.5468,68.233 59.5468,70.9717 52.8711,77.0676 28.4119,138.816 15.9533,181.065 9.55258,202.77 5.91018,218.712 3.39078,235.877 c -8.6912,59.217 3.2475,91.025 38.46882,102.438 3.8786,1.257 7.5512,2.288 8.1562,2.312 0.605,0.02 2.9453,-1.29 5.219,-2.937 2.273,-1.647 10.316,-9.41 17.875,-17.25 25.619,-26.576 39.4652,-39.571 54.4682,-51.063 13.629,-10.439 5.566,-9.687 108.344,-9.687 102.779,0 94.684,-0.752 108.313,9.687 15.017,11.502 28.284,23.942 55,51.563 7.857,8.123 16.036,15.951 18.187,17.375 l 3.906,2.562 7.313,-2.187 c 36.225,-10.935 48.606,-42.902 39.812,-102.813 -2.519,-17.165 -6.193,-33.107 -12.593,-54.812 -8.946,-30.335 -25.142,-73.9 -36.438,-97.9993 -5.316,-11.3415 -7.799,-13.653 -21.344,-19.9065 -17.581,-8.117 -53.286,-18.5079 -63.468,-18.4687 z" />
+		<circle id="xbox_logo" r="23" cx="235" cy="68" style="display:inline;fill:white" />
+		<path id="top_area" style="fill:#4d4d4d;stroke:4px black;" d="m 297.203,36.6592 -61.593,0.25 -61.563,0.2813 -0.719,2.6875 c -0.395,1.4808 -3.064,6.5881 -5.937,11.3437 l -5.219,8.625 3.938,4.1563 c 2.159,2.2885 8.63,9.3201 14.375,15.5937 6.607,7.216 11.907,12.082 14.437,13.25 3.697,1.706 6.843,1.827 41.5,1.594 l 37.5,-0.25 4.188,-2.5 c 3.933,-2.338 30.312,-30.3218 30.312,-32.1565 0,-0.4606 -2.262,-4.7746 -5.031,-9.5937 -2.769,-4.8192 -5.309,-9.7896 -5.625,-11.0313 z m -61.25,11.375 c 3.322,-0.03 6.617,0.4885 8.188,1.4688 0.813,0.5075 -0.389,1.4667 -3.5,2.7812 l -4.75,2.0313 -5,-2.2188 -4.969,-2.1875 4.406,-1.1875 c 1.616,-0.4398 3.633,-0.6697 5.625,-0.6875 z m -15.531,6.5938 4,2.0625 c 2.201,1.1228 4,2.3068 4,2.6562 0,0.3494 -1.077,2.0481 -2.375,3.75 -1.297,1.7019 -3.706,5.7938 -5.375,9.0938 l -3.031,6 -1.219,-4.4375 c -1.439,-5.3406 -0.638,-11.4857 2.031,-15.875 z m 31,0 1.969,3.25 c 1.083,1.7812 2.246,5.1477 2.594,7.4687 0.401,2.6764 0.09,5.7963 -0.844,8.5313 l -1.469,4.3125 -2.469,-5.5625 c -1.37,-3.0545 -3.98,-7.2298 -5.781,-9.2813 -1.801,-2.0515 -3.117,-3.9048 -2.906,-4.0937 0.211,-0.189 2.318,-1.2895 4.656,-2.4688 z m -15.969,9.6875 4.032,3.9375 c 4.229,4.1249 9.937,12.3067 9.937,14.2497 0,0.625 -1.462,1.881 -3.25,2.813 -7.642,3.984 -16.985,3.254 -23.437,-1.844 -1.487,-1.174 2.681,-8.2784 8.656,-14.75 z" />
+	</g>
+
+	<g id="Buttons" transform="translate(-46.3592,-19.7783)">
+		<g id="Face">
+
+			<g munia:button-id="0" munia:button-state="released" >
+				<circle id="A"    r="16" cx="405" cy="175" class="button" style="fill:green" />
+				<text id="text_A"         x="405"  y="175" xml:space="preserve">A</text>
+			</g>
+			<circle id="A-pressed" munia:button-id="0" munia:button-state="pressed" r="16" cx="405" cy="175" class="button pressed" />
+
+			<g munia:button-id="1" munia:button-state="released" >
+				<circle id="B"    r="16" cx="438" cy="142" class="button" style="fill:red" />
+				<text id="text_B"         x="438"  y="142" xml:space="preserve">B</text>
+			</g>
+			<circle id="B-pressed" munia:button-id="1" munia:button-state="pressed" r="16" cx="438" cy="142" class="button pressed" />
+
+			<g munia:button-id="2" munia:button-state="released" >
+				<circle id="X"    r="16" cx="372" cy="142" class="button" style="fill:blue" />
+				<text id="text_X"         x="372"  y="142" xml:space="preserve">X</text>
+			</g>
+			<circle id="X-pressed" munia:button-id="2" munia:button-state="pressed" r="16" cx="372" cy="142" class="button pressed" />
+				
+			<g munia:button-id="3" munia:button-state="released" >
+				<circle id="Y"    r="16" cx="405" cy="109" class="button" style="fill:yellow" />
+				<text id="text_Y"         x="405"  y="109" xml:space="preserve">Y</text>
+			</g>
+			<circle id="Y-pressed" munia:button-id="3" munia:button-state="pressed" r="16" cx="405" cy="109" class="button pressed" />
+
+            <g id="Select" munia:button-id="6" munia:button-state="released" >
+                <circle r="10" cx="248" cy="140" class="button" style="fill:#1a1a1a" />
+                <rect y="138.905" x="246.216" height="5.54506" width="7.10567" id="rect1650" style="fill:none;stroke:white;stroke-width:0.4;" />
+                <path id="path1656" d="m 249.982,137.815 v -2.444 h -7.036 v 5.881 h 1.848"  style="fill:none;stroke:white;stroke-width:0.4;" />
+            </g>
+			<circle id="Select-pressed" munia:button-id="6" munia:button-state="pressed" r="10" cx="248" cy="140" class="button pressed" />
+
+            <g id="Start" munia:button-id="7" munia:button-state="released" >
+                <circle id="Start" r="10" cx="315" cy="140" class="button" style="fill:#1a1a1a" />
+                <path style="fill:none;stroke:#fffffb;stroke-width:0.6;" d="m 309.335,140.269 h 11.754" />
+                <path id="path1643" d="m 309.335,144.599 h 11.754" style="fill:none;stroke:#fffffb;stroke-width:0.6;" />
+                <path id="path1645" d="m 309.335,135.939 h 11.754" style="fill:none;stroke:#fffffb;stroke-width:0.6;" />
+            </g>
+			<circle id="Start-pressed"  munia:button-id="7" munia:button-state="pressed"  r="10" cx="315" cy="140" class="button pressed" />
+
+
+		</g>
+
+		<g id="Shoulder_buttons">
+			<path id="Shoulder_left"          munia:button-id="4" munia:button-state="released" style="fill:black" d="m 125.961,79.0972 c 16.439,-7.5604 38.569,-13.8708 53.437,-15.2374 10.319,-0.9485 14.508,0.5716 22.315,8.0977 l 6.56,6.3234 5.25,-9.2348 c 2.887,-5.0791 5.23,-9.8776 5.206,-10.6632 -0.06,-1.9722 -10.458,-8.5533 -17.333,-10.9694 -9.031,-3.1744 -16.027,-3.5051 -25.174,-1.1902 -15.306,3.8741 -53.688,20.6173 -55.546,24.2312 -0.424,0.825 -2.1,4.2819 -3.723,7.682 -3.395,7.1086 -4.178,7.0251 9.008,0.9607 z" />
+			<path id="Shoulder_left-pressed"  munia:button-id="4" munia:button-state="pressed"  class="pressed" d="m 125.961,79.0972 c 16.439,-7.5604 38.569,-13.8708 53.437,-15.2374 10.319,-0.9485 14.508,0.5716 22.315,8.0977 l 6.56,6.3234 5.25,-9.2348 c 2.887,-5.0791 5.23,-9.8776 5.206,-10.6632 -0.06,-1.9722 -10.458,-8.5533 -17.333,-10.9694 -9.031,-3.1744 -16.027,-3.5051 -25.174,-1.1902 -15.306,3.8741 -53.688,20.6173 -55.546,24.2312 -0.424,0.825 -2.1,4.2819 -3.723,7.682 -3.395,7.1086 -4.178,7.0251 9.008,0.9607 z"/>
+			<path id="Shoulder_right"         munia:button-id="5" munia:button-state="released" style="fill:black" d="m 447.627,78.2045 c -1.643,-3.4375 -3.333,-6.925 -3.758,-7.75 -1.858,-3.6139 -40.239,-20.3571 -55.546,-24.2312 -12.919,-3.2697 -24.553,-0.9691 -37.092,7.3344 -4.546,3.0106 -6.133,4.6149 -5.718,5.7818 0.315,0.8883 2.836,5.5359 5.602,10.3281 l 5.028,8.7131 5.565,-5.9203 c 6.649,-7.0735 10.831,-9.0059 19.49,-9.0059 10.971,0 45.964,10.0652 62.98,18.1153 3.352,1.5857 6.171,2.8835 6.265,2.884 0.09,4e-4 -1.174,-2.8118 -2.816,-6.2493 z"/>
+			<path id="Shoulder_right-pressed" munia:button-id="5" munia:button-state="pressed"  class="pressed" d="m 447.627,78.2045 c -1.643,-3.4375 -3.333,-6.925 -3.758,-7.75 -1.858,-3.6139 -40.239,-20.3571 -55.546,-24.2312 -12.919,-3.2697 -24.553,-0.9691 -37.092,7.3344 -4.546,3.0106 -6.133,4.6149 -5.718,5.7818 0.315,0.8883 2.836,5.5359 5.602,10.3281 l 5.028,8.7131 5.565,-5.9203 c 6.649,-7.0735 10.831,-9.0059 19.49,-9.0059 10.971,0 45.964,10.0652 62.98,18.1153 3.352,1.5857 6.171,2.8835 6.265,2.884 0.09,4e-4 -1.174,-2.8118 -2.816,-6.2493 z"/>
+		</g>
+		
+		<g id="D-Pad" transform="matrix(0.277426,0,0,0.277426,141.02,110.719)">
+			<circle id="Base" r="140" cx="290" cy="379"  style="fill:black;" d="m 125.961,79.0972 c 16.439,-7.5604 38.569,-13.8708 53.437,-15.2374 10.319,-0.9485 14.508,0.5716 22.315,8.0977 l 6.56,6.3234 5.25,-9.2348 c 2.887,-5.0791 5.23,-9.8776 5.206,-10.6632 -0.06,-1.9722 -10.458,-8.5533 -17.333,-10.9694 -9.031,-3.1744 -16.027,-3.5051 -25.174,-1.1902 -15.306,3.8741 -53.688,20.6173 -55.546,24.2312 -0.424,0.825 -2.1,4.2819 -3.723,7.682 -3.395,7.1086 -4.178,7.0251 9.008,0.9607 z" />
+			<path id="D-up"    munia:button-id="10" munia:button-state="pressed" class="button pressed" d="m 268.572,270 c -9.497,0 -17.144,7.645 -17.144,17.143 v 53.572 h 72.857 V 287.143 C 324.285,277.645 316.64,270 307.143,270 Z" />
+			<path id="D-down"  munia:button-id="11" munia:button-state="pressed" class="button pressed" d="m 251.428,413.572 v 53.571 c 0,9.497 7.647,17.142 17.144,17.142 h 38.571 c 9.497,0 17.142,-7.645 17.142,-17.142 v -53.571 z" />
+			<path id="D-left"  munia:button-id="12" munia:button-state="pressed" class="button pressed" d="m 251.428,340.715 h -53.571 c -9.497,0 -17.142,7.645 -17.142,17.142 v 38.573 c 0,9.497 7.645,17.142 17.142,17.142 h 53.571 z" />
+			<path id="D-right" munia:button-id="13" munia:button-state="pressed" class="button pressed" d="m 324.285,413.572 h 53.572 c 9.498,0 17.143,-7.645 17.143,-17.142 v -38.573 c 0,-9.497 -7.645,-17.142 -17.143,-17.142 h -53.572 z" />
+			<path id="NonPressedArea" style="fill:#484848;stroke:#202020;stroke-width:4.5;" d="m 268.572,270 c -9.497,0 -17.144,7.645 -17.144,17.143 v 53.572 h -53.571 c -9.497,0 -17.142,7.645 -17.142,17.142 v 38.573 c 0,9.497 7.645,17.142 17.142,17.142 h 53.571 v 53.571 c 0,9.497 7.647,17.142 17.144,17.142 h 38.571 c 9.497,0 17.142,-7.645 17.142,-17.142 v -53.571 h 53.572 c 9.498,0 17.143,-7.645 17.143,-17.142 v -38.573 c 0,-9.497 -7.645,-17.142 -17.143,-17.142 H 324.285 V 287.143 C 324.285,277.645 316.64,270 307.143,270 Z" />
+		</g>
+
+	</g>
+
+	<g id="Sticks" transform="translate(-46.3592,-19.7783)">
+        <circle id="Stick_left_outer"  r="37" cx="163.36" cy="137.86" style="fill:black;" />
+        <circle id="Stick_right_outer" r="37" cx="345.10" cy="211.48" style="fill:black;" />
+		<circle id="Stick_left"          munia:stick-id="0" munia:deadzone="21" munia:offset-scale="0.2" munia:axis-h="0" munia:axis-v="1"  munia:button-state="released" munia:button-id="8" cx="163.36" cy="137.86" r="25" class="stick button" style="fill:#333;" />
+		<circle id="Stick_left-pressed"  munia:stick-id="0" munia:deadzone="21" munia:offset-scale="0.2" munia:axis-h="0" munia:axis-v="1"  munia:button-state="pressed"  munia:button-id="8" cx="163.36" cy="137.86" r="25" class="stick button pressed"  />
+		<circle id="Stick_right"         munia:stick-id="1" munia:deadzone="21" munia:offset-scale="0.2" munia:axis-h="3" munia:axis-v="4"  munia:button-state="released" munia:button-id="9" cx="345.10" cy="211.48" r="25" class="stick button" style="fill:#333;" />
+		<circle id="Stick_right-pressed" munia:stick-id="1" munia:deadzone="21" munia:offset-scale="0.2" munia:axis-h="3" munia:axis-v="4"  munia:button-state="pressed"  munia:button-id="9" cx="345.10" cy="211.48" r="25" class="stick button pressed" />
+	</g>
+
+    <g id="Trigger-left" transform="translate(-12.2191,50.9787)">
+        <rect id="Trigger-left-bar"      munia:trigger-id="0" munia:trigger-axis="2" munia:trigger-type="bar" munia:trigger-orientation="horizontal" munia:trigger-reverse="yes" x="76.4287" y="-50.6797" width="86.5965" height="18.0631" style="fill:url(#linearGradient1724);fill-opacity:1;stroke:none;" />
+        <rect id="Trigger-left-outline"  x="76.4287" y="-50.6797" width="86.5965" height="18.0631" style="fill:none;stroke:black;stroke-width:0.6;stroke-opacity:1"  />
+    </g>
+    <g  id="Trigger-right" transform="translate(243.851,50.9787)">
+        <rect id="Trigger-right-bar"     munia:trigger-id="1" munia:trigger-axis="5" munia:trigger-type="bar" munia:trigger-orientation="horizontal" munia:trigger-reverse="no"  x="76.4287" y="-50.6797" width="86.5965" height="18.0631" style="fill:url(#linearGradient1746);fill-opacity:1;stroke:none;" />
+        <rect id="Trigger-right-outline" x="76.4287" y="-50.6797" width="86.5965" height="18.0631" style="fill:none;stroke:black;stroke-width:0.6;" />
+    </g>
+</svg>
