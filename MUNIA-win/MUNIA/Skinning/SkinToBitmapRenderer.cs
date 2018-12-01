@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
-using MUNIA.Util;
 using OpenTK.Graphics.OpenGL;
 using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
 namespace MUNIA.Skinning {
 	public static class SkinToBitmapRenderer {
 		public static void Render(Skin skin, Size size, Color background, Bitmap buffer) {
-			SetupFrameBuffer(size, out int rgbBuffer);
-			GL.PushAttrib(AttribMask.ViewportBit);
+			SetupFrameBuffer(size, out int fboHandle, out int rgbBuffer);
 
-			if (rgbBuffer != -1) {
+			if (fboHandle != -1 && rgbBuffer != -1) {
+				GL.PushAttrib(AttribMask.ViewportBit);
 				GL.Viewport(0, 0, buffer.Width, buffer.Height);
 				GL.ClearColor(background);
 				GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
@@ -34,25 +33,28 @@ namespace MUNIA.Skinning {
 				GL.ReadPixels(0, 0, bitmapData.Width, bitmapData.Height,
 					OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, bitmapData.Scan0);
 				buffer.UnlockBits(bitmapData);
-
-				GL.Ext.DeleteFramebuffer(rgbBuffer);
+				GL.PopAttrib(); // deactivate framebuffer again
 			}
-			// deactivate framebuffer again
-			GL.PopAttrib();
 			GL.Ext.BindFramebuffer(FramebufferTarget.FramebufferExt, 0); // disable rendering into the FBO
+
+
+			// Clean up what we allocated
+			if (rgbBuffer >= 0)
+				GL.Ext.DeleteRenderbuffers(1, ref rgbBuffer);
+			if (fboHandle >= 0)
+				GL.Ext.DeleteFramebuffers(1, ref fboHandle);
 		}
 
-		private static bool SetupFrameBuffer(Size size, out int rgbBuffer) {
+		private static bool SetupFrameBuffer(Size size, out int fboHandle, out int rgbBuffer) {
 			try {
-				int fbo;
-				GL.Ext.GenFramebuffers(1, out fbo);
-				GL.Ext.BindFramebuffer(FramebufferTarget.FramebufferExt, fbo);
+				GL.Ext.GenFramebuffers(1, out fboHandle);
+				GL.Ext.BindFramebuffer(FramebufferTarget.FramebufferExt, fboHandle);
 				GL.DrawBuffer(DrawBufferMode.ColorAttachment0);
 				GL.ReadBuffer(ReadBufferMode.ColorAttachment0);
 			}
 			catch (Exception exc) {
 				rgbBuffer = -1;
-				return false;
+				fboHandle = -1;
 			}
 
 			GL.Ext.GenRenderbuffers(1, out rgbBuffer);
