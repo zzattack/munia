@@ -84,7 +84,11 @@ namespace MUNIA.Skinning {
 			ret.UUID = Guid.Parse(xRemap.Attributes["UUID"].Value);
 
 			foreach (XmlNode x in xRemap.ChildNodes) {
-				string id = x.Attributes["id"].Value;
+				string id;
+				if (x.Attributes["tgt-id"] != null) id = x.Attributes["tgt-id"].Value;
+				else if (x.Attributes["id"] != null) id = x.Attributes["id"].Value; // legacy but can only contain one remap per skin if using id
+				else continue;
+
 				Color fill = ColorTranslator.FromHtml(x.Attributes["fill"].Value);
 				Color stroke = ColorTranslator.FromHtml(x.Attributes["stroke"].Value);
 
@@ -98,7 +102,10 @@ namespace MUNIA.Skinning {
 			ret.UUID = Guid.Parse(xRemap.CustomAttributes["UUID"]);
 
 			foreach (SvgElement x in xRemap.Children) {
-				string id = x.ID;
+				string id;
+				if (x.CustomAttributes.ContainsKey("tgt-id")) id = x.CustomAttributes["tgt-id"];
+				else id = x.ID; // legacy thing
+
 				Color fill = new Color(), stroke = new Color();
 				if (x.Fill is SvgColourServer cf) fill = cf.Colour;
 				if (x.Stroke is SvgColourServer cs) stroke = cs.Colour;
@@ -118,7 +125,7 @@ namespace MUNIA.Skinning {
 
 			foreach (var kvp in Elements) {
 				xw.WriteStartElement("entry");
-				xw.WriteAttributeString("id", kvp.Key);
+				xw.WriteAttributeString("tgt-id", kvp.Key);
 				xw.WriteAttributeString("fill", kvp.Value.Item1.ToHexValue());
 				xw.WriteAttributeString("stroke", kvp.Value.Item2.ToHexValue());
 				xw.WriteEndElement(); // entry
