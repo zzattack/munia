@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Xml;
-using HidSharp;
 using MUNIA.Util;
 
 namespace MUNIA.Controllers {
@@ -13,13 +11,19 @@ namespace MUNIA.Controllers {
 		public int ProductID { get; set; }
 		public int DeviceIndex { get; set; }
 		public uint ReportHash { get; set; }
+		public Guid UUID { get; set; } = Guid.Empty;
+		public bool IsBuiltIn { get; internal set; }
 
 		public ControllerType MappedType { get; set; }
 		public enum SourceType { RawInput, XInput }
 		public SourceType Source { get; set; }
-		
+
 		public List<AxisMap> AxisMaps = new List<AxisMap>();
 		public List<ButtonMap> ButtonMaps = new List<ButtonMap>();
+		public List<AxisToButtonMap> AxisToButtonMaps = new List<AxisToButtonMap>();
+		public List<ButtonToAxisMap> ButtonToAxisMaps = new List<ButtonToAxisMap>();
+
+		internal ControllerMapping() { }
 
 		public ControllerMapping(XmlNode xn) {
 			LoadFrom(xn);
@@ -27,7 +31,7 @@ namespace MUNIA.Controllers {
 
 		public ControllerMapping(GenericController controller, ControllerType type) {
 			MappedType = type;
-
+			UUID = Guid.NewGuid();
 			if (controller is XInputController xi) {
 				Source = SourceType.XInput;
 				DeviceIndex = xi.Index;
@@ -41,11 +45,12 @@ namespace MUNIA.Controllers {
 			}
 		}
 
+
 		public override string ToString() {
 			// see if the controller for this mapping exists, if so
 			// use its name in the string representation
 			var dev = GenericController.ListDevices().FirstOrDefault(AppliesTo);
-			return (dev != null ? dev.Name : "?") + " -> " + MappedType;
+			return (IsBuiltIn ? "[Built-in] " : "") + (dev != null ? dev.Name : "?") + " -> " + MappedType;
 		}
 
 		public ControllerState ApplyMap(ControllerState state) {
@@ -59,6 +64,15 @@ namespace MUNIA.Controllers {
 				}
 			}
 
+			foreach (var item in ButtonToAxisMaps) {
+				if (state.Buttons.Count > (int)item.Source) {
+					if (item.Target != Axis.Unmapped) {
+						ret.Axes.EnsureSize((int)(item.Target + 1));
+						ret.Axes[(int)item.Target] = item.AxisValue;
+					}
+				}
+			}
+
 			foreach (var item in AxisMaps) {
 				if (state.Axes.Count > (int)item.Source) {
 					if (item.Target != Axis.Unmapped) {
@@ -67,6 +81,22 @@ namespace MUNIA.Controllers {
 					}
 				}
 			}
+
+			foreach (var item in AxisToButtonMaps) {
+				if (state.Axes.Count > (int)item.Source) {
+					if (item.Target != Button.Unmapped) {
+						ret.Buttons.EnsureSize((int)(item.Target + 1));
+						double axisVal = state.Axes[(int)item.Source];
+						if (item.Mode == AxisToButtonMapMode.WhenAboveThreshold && axisVal > item.Threshold)
+							ret.Buttons[(int)item.Target] = true;
+						else if (item.Mode == AxisToButtonMapMode.WhenBelowThreshold && axisVal < item.Threshold)
+							ret.Buttons[(int)item.Target] = true;
+						else
+							ret.Buttons[(int)item.Target] = false;
+					}
+				}
+			}
+
 
 			return ret;
 		}
@@ -88,6 +118,7 @@ namespace MUNIA.Controllers {
 		public void LoadFrom(XmlNode xn) {
 			MappedType = (ControllerType)Enum.Parse(typeof(ControllerType), xn.Attributes["type"].Value, true);
 			Source = (SourceType)Enum.Parse(typeof(SourceType), xn.Attributes["source"].Value, true);
+			UUID = xn.Attributes["uuid"] != null ? Guid.Parse(xn.Attributes["uuid"].Value) : Guid.NewGuid();
 
 			if (Source == SourceType.RawInput) {
 				VendorID = int.Parse(xn.Attributes["vid"].Value, NumberStyles.HexNumber);
@@ -107,11 +138,25 @@ namespace MUNIA.Controllers {
 				axis.LoadFrom(n);
 				AxisMaps.Add(axis);
 			}
+
+			foreach (XmlNode n in xn["buttons_to_axis"].ChildNodes) {
+				var button = new ButtonToAxisMap();
+				button.LoadFrom(n);
+				ButtonToAxisMaps.Add(button);
+			}
+
+			foreach (XmlNode n in xn["axis_to_buttons"].ChildNodes) {
+				var axis = new AxisToButtonMap();
+				axis.LoadFrom(n);
+				AxisToButtonMaps.Add(axis);
+			}
 		}
 
 		public void SaveTo(XmlTextWriter xw) {
 			xw.WriteAttributeString("type", MappedType.ToString());
 			xw.WriteAttributeString("source", Source.ToString());
+			xw.WriteAttributeString("uuid", UUID.ToString());
+
 			if (Source == SourceType.RawInput) {
 				xw.WriteAttributeString("vid", VendorID.ToString("X"));
 				xw.WriteAttributeString("pid", ProductID.ToString("X"));
@@ -128,9 +173,31 @@ namespace MUNIA.Controllers {
 			foreach (var axis in AxisMaps)
 				axis.SaveTo(xw);
 			xw.WriteEndElement();
+
+			xw.WriteStartElement("buttons_to_axis");
+			foreach (var btn in ButtonToAxisMaps)
+				btn.SaveTo(xw);
+			xw.WriteEndElement();
+
+			xw.WriteStartElement("axis_to_buttons");
+			foreach (var axis in AxisToButtonMaps)
+				axis.SaveTo(xw);
+			xw.WriteEndElement();
 		}
 
 		public class AxisMap {
+			public AxisMap() { }
+			public AxisMap(Axis source, Axis target, bool isTrigger) {
+				Source = source;
+				Target = target;
+				IsTrigger = isTrigger;
+			}
+			public AxisMap(int source, int target, bool isTrigger) {
+				Source = (Axis)source;
+				Target = (Axis)target;
+				IsTrigger = isTrigger;
+			}
+
 			public Axis Source { get; set; }
 			public Axis Target { get; set; }
 			public bool IsTrigger { get; set; }
@@ -151,7 +218,61 @@ namespace MUNIA.Controllers {
 			public override string ToString() => $"{Source} --> {Target}";
 			public AxisMap Clone() { return (AxisMap)MemberwiseClone(); }
 		}
+
+		public class AxisToButtonMap {
+			public AxisToButtonMap() { }
+			public AxisToButtonMap(Axis source, Button target, int threshold, AxisToButtonMapMode mode) {
+				Source = source;
+				Target = target;
+				Threshold = threshold;
+				Mode = mode;
+			}
+			public AxisToButtonMap(int source, int target, double threshold) {
+				Source = (Axis)source;
+				Target = (Button)target;
+				Threshold = threshold;
+				Mode = threshold > 0.0 ? AxisToButtonMapMode.WhenAboveThreshold : AxisToButtonMapMode.WhenBelowThreshold;
+			}
+
+			public Axis Source { get; set; }
+			public Button Target { get; set; }
+			public double Threshold { get; set; }
+			public AxisToButtonMapMode Mode { get; set; }
+
+			public void LoadFrom(XmlNode xn) {
+				Source = (Axis)int.Parse(xn.Attributes["source"].Value);
+				Target = (Button)int.Parse(xn.Attributes["target"].Value);
+				Threshold = double.Parse(xn.Attributes["threshold"].Value);
+				Mode = (AxisToButtonMapMode)Enum.Parse(typeof(AxisToButtonMapMode), xn.Attributes["mode"].Value);
+			}
+
+			public void SaveTo(XmlTextWriter xw) {
+				xw.WriteStartElement("axis_to_button");
+				xw.WriteAttributeString("source", ((int)Source).ToString());
+				xw.WriteAttributeString("target", ((int)Target).ToString());
+				xw.WriteAttributeString("threshold", Threshold.ToString(CultureInfo.InvariantCulture));
+				xw.WriteAttributeString("mode", Mode.ToString());
+				xw.WriteEndElement();
+			}
+			public override string ToString() => $"{Source} --> {Target}";
+			public AxisToButtonMap Clone() { return (AxisToButtonMap)MemberwiseClone(); }
+		}
+		public enum AxisToButtonMapMode {
+			WhenAboveThreshold,
+			WhenBelowThreshold
+		};
+
 		public class ButtonMap {
+			public ButtonMap() { }
+			public ButtonMap(Button source, Button target) {
+				Source = source;
+				Target = target;
+			}
+			public ButtonMap(int source, int target) {
+				Source = (Button)source;
+				Target = (Button)target;
+			}
+
 			public Button Source { get; set; }
 			public Button Target { get; set; }
 
@@ -169,6 +290,41 @@ namespace MUNIA.Controllers {
 
 			public override string ToString() => $"{Source} --> {Target}";
 			public ButtonMap Clone() { return (ButtonMap)MemberwiseClone(); }
+		}
+
+		public class ButtonToAxisMap {
+			public ButtonToAxisMap() { }
+			public ButtonToAxisMap(Button source, Axis target, double axisValue) {
+				Source = source;
+				Target = target;
+				AxisValue = axisValue;
+			}
+			public ButtonToAxisMap(int source, int target, double axisValue) {
+				Source = (Button)source;
+				Target = (Axis)target;
+				AxisValue = axisValue;
+			}
+
+			public Button Source { get; set; }
+			public Axis Target { get; set; }
+			public double AxisValue { get; set; }
+
+			public void LoadFrom(XmlNode xn) {
+				Source = (Button)int.Parse(xn.Attributes["source"].Value);
+				Target = (Axis)int.Parse(xn.Attributes["target"].Value);
+				AxisValue = double.Parse(xn.Attributes["axisValue"].Value);
+			}
+
+			public void SaveTo(XmlTextWriter xw) {
+				xw.WriteStartElement("button_to_axis");
+				xw.WriteAttributeString("source", ((int)Source).ToString());
+				xw.WriteAttributeString("target", ((int)Target).ToString());
+				xw.WriteAttributeString("axisValue", AxisValue.ToString(CultureInfo.InvariantCulture));
+				xw.WriteEndElement();
+			}
+
+			public override string ToString() => $"{Source} --> {Target}";
+			public ButtonToAxisMap Clone() { return (ButtonToAxisMap)MemberwiseClone(); }
 		}
 
 		public enum Button : int {
@@ -193,6 +349,27 @@ namespace MUNIA.Controllers {
 			Axis20, Axis21, Axis22, Axis23,
 			Axis24, Axis25, Axis26, Axis27,
 			Axis28, Axis29, Axis30, Axis31
+		}
+
+		public ControllerMapping Clone() {
+			var ret = new ControllerMapping();
+			ret.IsBuiltIn = false;
+			ret.Source = this.Source;
+			ret.MappedType = this.MappedType;
+			ret.UUID = Guid.NewGuid();
+			ret.DeviceIndex = this.DeviceIndex;
+			ret.VendorID = this.VendorID;
+			ret.ProductID = this.ProductID;
+			ret.ReportHash = this.ReportHash;
+			foreach (var x in this.ButtonMaps)
+				ret.ButtonMaps.Add(x.Clone());
+			foreach (var x in this.ButtonToAxisMaps)
+				ret.ButtonToAxisMaps.Add(x.Clone());
+			foreach (var x in this.AxisMaps)
+				ret.AxisMaps.Add(x.Clone());
+			foreach (var x in this.AxisToButtonMaps)
+				ret.AxisToButtonMaps.Add(x.Clone());
+			return ret;
 		}
 
 	}

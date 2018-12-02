@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MUNIA.Controllers {
 	public abstract class GenericController : IController {
@@ -19,13 +20,14 @@ namespace MUNIA.Controllers {
 		protected readonly List<Hat> _hats = new List<Hat>();
 		public virtual ControllerState GetState() => new ControllerState(_axes, _buttons, _hats);
 		public event EventHandler StateUpdated;
+
 		public abstract bool IsAvailable { get; }
 		public abstract string DevicePath { get; }
 
 		internal static IEnumerable<GenericController> ListDevices() {
 			foreach (var controller in RawInputController.ListDevices())
 				yield return controller;
-			foreach (var controller in XInputController.ListDevices())
+			foreach (var controller in XInputController.ListDevices().Where(x => x.IsAvailable))
 				yield return controller;
 		}
 
@@ -34,5 +36,6 @@ namespace MUNIA.Controllers {
 		}
 
 		public override string ToString() => Name;
+		public abstract void Dispose();
 	}
 }

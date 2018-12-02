@@ -16,6 +16,7 @@ namespace MUNIA.Controllers {
 		internal readonly DeviceItem DeviceItem;
 		public readonly int DeviceItemIndex;
 		public override string DevicePath => HidDevice.DevicePath;
+
 		public override string Name => HidDevice.ProductName;
 
 		public override ControllerType Type => ControllerType.Generic;
@@ -33,8 +34,7 @@ namespace MUNIA.Controllers {
 		private HidStream _stream;
 		private DeviceItemInputParser _inputParser;
 		private readonly Dictionary<byte, Report> _reportCache = new Dictionary<byte, Report>();
-
-
+		
 		public override bool Activate() {
 			_inputParser = DeviceItem.CreateDeviceItemInputParser();
 			try {
@@ -248,6 +248,9 @@ namespace MUNIA.Controllers {
 					}
 				}
 			}
+		}
+
+		public override void Dispose() {
 		}
 
 	}

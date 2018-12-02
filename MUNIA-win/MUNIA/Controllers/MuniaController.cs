@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using HidSharp;
+using MUNIA.Interop;
 
 namespace MUNIA.Controllers {
 	public abstract class MuniaController : IController, IDisposable {
@@ -24,9 +25,7 @@ namespace MUNIA.Controllers {
 		protected readonly List<double> _axes = new List<double>();
 		protected readonly List<Hat> _hats = new List<Hat>();
 		public ControllerState GetState() => new ControllerState(_axes, _buttons, _hats);
-
-		public event EventHandler StateUpdated;
-
+		
 		protected MuniaController(HidDevice hidDevice) {
 			this.HidDevice = hidDevice;
 		}
@@ -146,7 +145,7 @@ namespace MUNIA.Controllers {
 				int numBytes = sb.stream.EndRead(ar);
 				if (numBytes > 0) {
 					if (Parse(sb.buffer))
-						StateUpdated?.Invoke(this, EventArgs.Empty);
+						OnStateUpdated();
 					sb.stream.BeginRead(sb.buffer, 0, sb.buffer.Length, Callback, sb);
 				}
 			}
@@ -158,6 +157,13 @@ namespace MUNIA.Controllers {
 			catch (ObjectDisposedException) { }
 			catch (NullReferenceException) { }
 		}
+
+
+		public event EventHandler StateUpdated;
+		protected virtual void OnStateUpdated() {
+			StateUpdated?.Invoke(this, EventArgs.Empty);
+		}
+
 
 		public void Dispose() {
 			_stream?.Dispose();

@@ -16,8 +16,6 @@ namespace MUNIA.Controllers {
 			return _polledState;
 		}
 
-		public event EventHandler StateUpdated;
-
 		public bool IsAvailable => _controller.IsAvailable;
 
 		public string DevicePath => _controller.DevicePath;
@@ -41,6 +39,8 @@ namespace MUNIA.Controllers {
 			_controller.Deactivate();
 			StopPollingThread();
 		}
+
+		public event EventHandler StateUpdated;
 
 		private readonly int _updateDelay;
 		private bool _killThread;
@@ -80,5 +80,11 @@ namespace MUNIA.Controllers {
 		protected virtual void OnStateUpdated() {
 			StateUpdated?.Invoke(this, EventArgs.Empty);
 		}
+
+		public void Dispose() {
+			Deactivate();
+			_controller.Dispose();
+		}
 	}
+
 }

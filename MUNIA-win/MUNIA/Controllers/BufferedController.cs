@@ -44,8 +44,6 @@ namespace MUNIA.Controllers {
 			}
 		}
 
-
-
 		private void RealOnStateUpdated(object sender, EventArgs eventArgs) {
 			var newState = (sender as IController).GetState();
 			if (Method == DelayMethod.Task) {
@@ -93,6 +91,7 @@ namespace MUNIA.Controllers {
 		}
 
 		public string Name => _real.Name;
+
 		public bool IsAvailable => _real.IsAvailable;
 		public string DevicePath => _real.DevicePath;
 
@@ -106,6 +105,9 @@ namespace MUNIA.Controllers {
 
 		public event EventHandler StateUpdated;
 		protected virtual void OnStateUpdated() { StateUpdated?.Invoke(this, EventArgs.Empty); }
+		public void Dispose() {
+			_real.Dispose();
+		}
 	}
 
 	public class TimedControllerState : ControllerState {
