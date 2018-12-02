@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns:munia="http://www.munia.io/namespaces/munia"
+	xmlns:dc="http://purl.org/dc/elements/1.1/" 
+	xmlns:cc="http://creativecommons.org/ns#" 
+	xmlns:svg="http://www.w3.org/2000/svg" 
+	xmlns="http://www.w3.org/2000/svg"
+	viewBox="0 0 355 174" version="1.1">
+
+	<munia:info munia:skin-name="SNES simple" munia:device-type="SNES"/>
+
+	<style>
+		.released{fill:#4d4d4d;}
+        .pressed {fill:#ffffff;display:none;}
+	</style>
+
+	<g transform="translate(-50,-26)">
+		<rect id="Left"           munia:button-id="10" munia:button-state="released"  x="50"  y="100" width="50" height="50" ry="1.05" class="released"/>
+		<rect id="Up"             munia:button-id="8"  munia:button-state="released"  x="100" y="50"  width="50" height="50" ry="1.05" class="released"/>
+		<rect id="Down"           munia:button-id="9"  munia:button-state="released"  x="100" y="150" width="50" height="50"  ry="1.05" class="released"/>
+		<rect id="Right"          munia:button-id="11" munia:button-state="released"  x="150" y="100" width="50" height="50"  ry="1.05" class="released"/>
+		<circle id="Y"            munia:button-id="2"  munia:button-state="released"  cx="280" cy="125" r="25" class="released"/>
+		<circle id="A"            munia:button-id="7"  munia:button-state="released"  cx="380" cy="125" r="25" class="released"/>
+		<circle id="X"            munia:button-id="6"  munia:button-state="released"  cx="330" cy="75"  r="25" class="released"/>
+		<circle id="B"            munia:button-id="3"  munia:button-state="released"  cx="330" cy="175" r="25" class="released"/>
+		<rect id="Start"          munia:button-id="0"  munia:button-state="released"  x="235" y="169" width="35" height="16" ry="1.05" class="released"/>
+		<rect id="Select"         munia:button-id="1"  munia:button-state="released"  x="185" y="169" width="35" height="16" ry="1.05" class="released"/>
+		<rect id="L"              munia:button-id="5"  munia:button-state="released"  x="58"  y="26"  width="56" height="16" ry="1.05" class="released"/>
+		<rect id="R"              munia:button-id="4"  munia:button-state="released"  x="342" y="26"  width="56" height="16" ry="1.05" class="released"/>
+
+		<rect id="Left-pressed"   munia:button-id="10" munia:button-state="pressed"   x="50"  y="100" width="50" height="50" ry="1.05" class="pressed"/>
+		<rect id="Up-pressed"     munia:button-id="8"  munia:button-state="pressed"   x="100" y="50"  width="50" height="50" ry="1.05" class="pressed"/>
+		<rect id="Down-pressed"   munia:button-id="9"  munia:button-state="pressed"   x="100" y="150" width="50" height="50"  ry="1.05" class="pressed"/>
+		<rect id="Right-pressed"  munia:button-id="11" munia:button-state="pressed"   x="150" y="100" width="50" height="50"  ry="1.05" class="pressed"/>
+		<circle id="Y-pressed"    munia:button-id="2"  munia:button-state="pressed"   cx="280" cy="125" r="25" class="pressed"/>
+		<circle id="A-pressed"    munia:button-id="7"  munia:button-state="pressed"   cx="380" cy="125" r="25" class="pressed"/>
+		<circle id="X-pressed"    munia:button-id="6"  munia:button-state="pressed"   cx="330" cy="75"  r="25" class="pressed"/>
+		<circle id="B-pressed"    munia:button-id="3"  munia:button-state="pressed"   cx="330" cy="175" r="25" class="pressed"/>
+		<rect id="Start-pressed"  munia:button-id="0"  munia:button-state="pressed"   x="235" y="169" width="35" height="16" ry="1.05" class="pressed"/>
+		<rect id="Select-pressed" munia:button-id="1"  munia:button-state="pressed"   x="185" y="169" width="35" height="16" ry="1.05" class="pressed"/>
+		<rect id="L-pressed"      munia:button-id="5"  munia:button-state="pressed"   x="58"  y="26"  width="56" height="16" ry="1.05" class="pressed"/>
+		<rect id="R-pressed"      munia:button-id="4"  munia:button-state="pressed"   x="342" y="26"  width="56" height="16" ry="1.05" class="pressed"/>
+	</g>
+
+	<remap name="Red" UUID="973a79aa-eee8-41e0-adc9-86da400cdf6b">
+		<entry tgt-id="Left-pressed" fill="#F10E0E" stroke="#000000" />
+		<entry tgt-id="Up-pressed" fill="#F10E0E" stroke="#000000" />
+		<entry tgt-id="Down-pressed" fill="#F10E0E" stroke="#000000" />
+		<entry tgt-id="Right-pressed" fill="#F10E0E" stroke="#000000" />
+		<entry tgt-id="Y-pressed" fill="#F10E0E" stroke="#000000" />
+		<entry tgt-id="A-pressed" fill="#F10E0E" stroke="#000000" />
+		<entry tgt-id="X-pressed" fill="#F10E0E" stroke="#000000" />
+		<entry tgt-id="B-pressed" fill="#F10E0E" stroke="#000000" />
+		<entry tgt-id="Start-pressed" fill="#F10E0E" stroke="#000000" />
+		<entry tgt-id="Select-pressed" fill="#F10E0E" stroke="#000000" />
+		<entry tgt-id="L-pressed" fill="#F10E0E" stroke="#000000" />
+		<entry tgt-id="R-pressed" fill="#F10E0E" stroke="#000000" />
+	</remap>
+	<remap name="Green" UUID="fb5ccb70-015a-4575-b76d-0a31a60ad720">
+		<entry tgt-id="Left-pressed" fill="#F10E0E" stroke="#000000" />
+		<entry tgt-id="Up-pressed" fill="#F10E0E" stroke="#000000" />
+		<entry tgt-id="Down-pressed" fill="#F10E0E" stroke="#000000" />
+		<entry tgt-id="Right-pressed" fill="#F10E0E" stroke="#000000" />
+		<entry tgt-id="Y-pressed" fill="#F10E0E" stroke="#000000" />
+		<entry tgt-id="A-pressed" fill="#F10E0E" stroke="#000000" />
+		<entry tgt-id="X-pressed" fill="#F10E0E" stroke="#000000" />
+		<entry tgt-id="B-pressed" fill="#F10E0E" stroke="#000000" />
+		<entry tgt-id="Start-pressed" fill="#F10E0E" stroke="#000000" />
+		<entry tgt-id="Select-pressed" fill="#F10E0E" stroke="#000000" />
+		<entry tgt-id="L-pressed" fill="#F10E0E" stroke="#000000" />
+		<entry tgt-id="R-pressed" fill="#F10E0E" stroke="#000000" />
+	</remap>
+	<remap name="Blue" UUID="966b4a75-7a77-4cb9-b555-c709fe8028bd">
+		<entry tgt-id="Left-pressed" fill="#0C26CC" stroke="#000000" />
+		<entry tgt-id="Up-pressed" fill="#0C26CC" stroke="#000000" />
+		<entry tgt-id="Down-pressed" fill="#0C26CC" stroke="#000000" />
+		<entry tgt-id="Right-pressed" fill="#0C26CC" stroke="#000000" />
+		<entry tgt-id="Y-pressed" fill="#0C26CC" stroke="#000000" />
+		<entry tgt-id="A-pressed" fill="#0C26CC" stroke="#000000" />
+		<entry tgt-id="X-pressed" fill="#0C26CC" stroke="#000000" />
+		<entry tgt-id="B-pressed" fill="#0C26CC" stroke="#000000" />
+		<entry tgt-id="Start-pressed" fill="#0C26CC" stroke="#000000" />
+		<entry tgt-id="Select-pressed" fill="#0C26CC" stroke="#000000" />
+		<entry tgt-id="L-pressed" fill="#0C26CC" stroke="#000000" />
+		<entry tgt-id="R-pressed" fill="#0C26CC" stroke="#000000" />
+	</remap>
+	<remap name="Black" UUID="0b2ab152-3aaf-4862-a882-0fddee03ffa7">
+		<entry tgt-id="Left-pressed" fill="#000000" stroke="#000000" />
+		<entry tgt-id="Up-pressed" fill="#000000" stroke="#000000" />
+		<entry tgt-id="Down-pressed" fill="#000000" stroke="#000000" />
+		<entry tgt-id="Right-pressed" fill="#000000" stroke="#000000" />
+		<entry tgt-id="Y-pressed" fill="#000000" stroke="#000000" />
+		<entry tgt-id="A-pressed" fill="#000000" stroke="#000000" />
+		<entry tgt-id="X-pressed" fill="#000000" stroke="#000000" />
+		<entry tgt-id="B-pressed" fill="#000000" stroke="#000000" />
+		<entry tgt-id="Start-pressed" fill="#000000" stroke="#000000" />
+		<entry tgt-id="Select-pressed" fill="#000000" stroke="#000000" />
+		<entry tgt-id="L-pressed" fill="#000000" stroke="#000000" />
+		<entry tgt-id="R-pressed" fill="#000000" stroke="#000000" />
+	</remap>
+	<remap name="Orange" UUID="68630757-8eee-4e9d-88d8-fa0ce1f97502">
+		<entry tgt-id="Left-pressed" fill="#FF6713" stroke="#000000" />
+		<entry tgt-id="Up-pressed" fill="#FF6713" stroke="#000000" />
+		<entry tgt-id="Down-pressed" fill="#FF6713" stroke="#000000" />
+		<entry tgt-id="Right-pressed" fill="#FF6713" stroke="#000000" />
+		<entry tgt-id="Y-pressed" fill="#FF6713" stroke="#000000" />
+		<entry tgt-id="A-pressed" fill="#FF6713" stroke="#000000" />
+		<entry tgt-id="X-pressed" fill="#FF6713" stroke="#000000" />
+		<entry tgt-id="B-pressed" fill="#FF6713" stroke="#000000" />
+		<entry tgt-id="Start-pressed" fill="#FF6713" stroke="#000000" />
+		<entry tgt-id="Select-pressed" fill="#FF6713" stroke="#000000" />
+		<entry tgt-id="L-pressed" fill="#FF6713" stroke="#000000" />
+		<entry tgt-id="R-pressed" fill="#FF6713" stroke="#000000" />
+	</remap>
+	<remap name="Purple" UUID="16441eac-1920-4564-9aa7-13b43fb2c2f9">
+		<entry tgt-id="Left-pressed" fill="#8843AB" stroke="#000000" />
+		<entry tgt-id="Up-pressed" fill="#8843AB" stroke="#000000" />
+		<entry tgt-id="Down-pressed" fill="#8843AB" stroke="#000000" />
+		<entry tgt-id="Right-pressed" fill="#8843AB" stroke="#000000" />
+		<entry tgt-id="Y-pressed" fill="#8843AB" stroke="#000000" />
+		<entry tgt-id="A-pressed" fill="#8843AB" stroke="#000000" />
+		<entry tgt-id="X-pressed" fill="#8843AB" stroke="#000000" />
+		<entry tgt-id="B-pressed" fill="#8843AB" stroke="#000000" />
+		<entry tgt-id="Start-pressed" fill="#8843AB" stroke="#000000" />
+		<entry tgt-id="Select-pressed" fill="#8843AB" stroke="#000000" />
+		<entry tgt-id="L-pressed" fill="#8843AB" stroke="#000000" />
+		<entry tgt-id="R-pressed" fill="#8843AB" stroke="#000000" />
+	</remap>
+	<remap name="Yellow" UUID="d9018f8c-591a-42db-920b-b1fce22febef">
+		<entry tgt-id="Left-pressed" fill="#FFFD13" stroke="#000000" />
+		<entry tgt-id="Up-pressed" fill="#FFFD13" stroke="#000000" />
+		<entry tgt-id="Down-pressed" fill="#FFFD13" stroke="#000000" />
+		<entry tgt-id="Right-pressed" fill="#FFFD13" stroke="#000000" />
+		<entry tgt-id="Y-pressed" fill="#FFFD13" stroke="#000000" />
+		<entry tgt-id="A-pressed" fill="#FFFD13" stroke="#000000" />
+		<entry tgt-id="X-pressed" fill="#FFFD13" stroke="#000000" />
+		<entry tgt-id="B-pressed" fill="#FFFD13" stroke="#000000" />
+		<entry tgt-id="Start-pressed" fill="#FFFD13" stroke="#000000" />
+		<entry tgt-id="Select-pressed" fill="#FFFD13" stroke="#000000" />
+		<entry tgt-id="L-pressed" fill="#FFFD13" stroke="#000000" />
+		<entry tgt-id="R-pressed" fill="#FFFD13" stroke="#000000" />
+	</remap>
+</svg>
