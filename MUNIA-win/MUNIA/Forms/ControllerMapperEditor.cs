@@ -89,7 +89,7 @@ namespace MUNIA.Forms {
 				dgvButtons.DataSource = new BindingList<ControllerMapping.ButtonMap>(_mapping.ButtonMaps);
 			}
 			else {
-				panel1.Visible = dgvButtons.Visible = lblButtons.Visible = false;
+				tpButtons.Visible = dgvButtons.Visible = lblButtons.Visible = false;
 			}
 
 			if (numSkinAxes > 0 && numControllerAxes > 0) {
@@ -98,40 +98,15 @@ namespace MUNIA.Forms {
 			}
 			else {
 				// remove panel2 etc. to use more of available space
-				RemoveRow(layout, 1);
+				tpAxes.Visible = false;
 			}
 		}
-		public void RemoveRow(TableLayoutPanel panel, int rowIndex) {
-			if (rowIndex >= panel.RowCount) {
-				return;
-			}
 
-			// delete all controls of row that we want to delete
-			for (int i = 0; i < panel.ColumnCount; i++) {
-				var control = panel.GetControlFromPosition(i, rowIndex);
-				panel.Controls.Remove(control);
-			}
-
-			// move up row controls that comes after row we want to remove
-			for (int i = rowIndex + 1; i < panel.RowCount; i++) {
-				for (int j = 0; j < panel.ColumnCount; j++) {
-					var control = panel.GetControlFromPosition(j, i);
-					if (control != null) {
-						panel.SetRow(control, i - 1);
-					}
-				}
-			}
-
-			// remove last row
-			panel.RowStyles.RemoveAt(panel.RowCount - 1);
-			panel.RowCount--;
-		}
-
-		private bool busyRendering = false;
+		private bool _busyRendering = false;
 		private void OnControllerStateUpdate(object sender, EventArgs e) {
-			if (IsHandleCreated && !IsDisposed && !busyRendering) {
+			if (IsHandleCreated && !IsDisposed && !_busyRendering) {
 				try {
-					busyRendering = true;
+					_busyRendering = true;
 					BeginInvoke((Action)delegate {
 						try {
 							// update mapping
@@ -141,7 +116,7 @@ namespace MUNIA.Forms {
 								skinPreview.RenderSkin(_mappedController.GetState());
 						}
 						finally {
-							busyRendering = false;
+							_busyRendering = false;
 						}
 					});
 				}
@@ -331,5 +306,13 @@ namespace MUNIA.Forms {
 			}
 		}
 
+		private async void tabs_SelectedIndexChanged(object sender, EventArgs e) {
+			if (tabs.SelectedTab == tpButtons) {
+				lblHint.Visible = true;
+				await Task.Delay(3000);
+				lblHint.Visible = false;
+			}
+			else lblHint.Visible = false;
+		}
 	}
 }
