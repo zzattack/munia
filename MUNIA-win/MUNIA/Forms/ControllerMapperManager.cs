@@ -55,11 +55,16 @@ namespace MUNIA.Forms {
 
 			lblStep4.Font = new Font(lblStep4.Font, skin != null && mapping == null ? FontStyle.Bold : FontStyle.Regular);
 			lblPickMapping.Visible = btnAddMapping.Enabled = skin != null;
-			btnRemoveMapping.Enabled = mapping != null;
 
 			bool applies = mapping?.AppliesTo(controller) ?? false;
-			btnContinue.Enabled = applies;
-			lblMappingIncompatible.Visible = mapping != null && !applies;
+			btnClone.Enabled = mapping != null;
+			btnRemoveMapping.Enabled = mapping != null && !mapping.IsBuiltIn;
+			btnContinue.Enabled = applies && !mapping.IsBuiltIn;
+
+			if (applies && mapping.IsBuiltIn)
+				lblMappingBuiltIn.Visible = true;
+			else
+				lblMappingIncompatible.Visible = mapping != null && !applies;
 		}
 
 		private void lbControllerSource_SelectedIndexChanged(object sender, EventArgs e) {
@@ -127,6 +132,13 @@ namespace MUNIA.Forms {
 		private void btnRemoveMapping_Click(object sender, EventArgs e) {
 			if (lbMappings.SelectedItem is ControllerMapping mapping) {
 				ConfigManager.ControllerMappings.Remove(mapping);
+				UpdateFilter();
+			}
+		}
+
+		private void btnClone_Click(object sender, EventArgs e) {
+			if (lbMappings.SelectedItem is ControllerMapping mapping) {
+				ConfigManager.ControllerMappings.Add(mapping.Clone());
 				UpdateFilter();
 			}
 		}
