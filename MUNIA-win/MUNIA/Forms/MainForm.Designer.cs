@@ -55,7 +55,7 @@ namespace MUNIA.Forms {
 			this.tsmiBackGroundColor = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiBackgroundTransparent = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiBackgroundNSpy = new System.Windows.Forms.ToolStripMenuItem();
-			this.tsmiColorRemapping = new System.Windows.Forms.ToolStripMenuItem();
+			this.tsmiSkinTheme = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiApplySkinTheme = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiApplyCustomTheme = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiManageThemes = new System.Windows.Forms.ToolStripMenuItem();
@@ -251,7 +251,7 @@ namespace MUNIA.Forms {
 			this.popup.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsmiBackground,
             this.tsmiBackgroundNSpy,
-            this.tsmiColorRemapping});
+            this.tsmiSkinTheme});
 			this.popup.Name = "popup";
 			this.popup.Size = new System.Drawing.Size(181, 92);
 			this.popup.Opening += new System.ComponentModel.CancelEventHandler(this.popup_Opening);
@@ -268,7 +268,7 @@ namespace MUNIA.Forms {
 			// tsmiBackGroundColor
 			// 
 			this.tsmiBackGroundColor.Name = "tsmiBackGroundColor";
-			this.tsmiBackGroundColor.Size = new System.Drawing.Size(136, 22);
+			this.tsmiBackGroundColor.Size = new System.Drawing.Size(180, 22);
 			this.tsmiBackGroundColor.Text = "&Change";
 			this.tsmiBackGroundColor.Click += new System.EventHandler(this.tsmiBackgroundChange_Click);
 			// 
@@ -277,7 +277,7 @@ namespace MUNIA.Forms {
 			this.tsmiBackgroundTransparent.Checked = true;
 			this.tsmiBackgroundTransparent.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.tsmiBackgroundTransparent.Name = "tsmiBackgroundTransparent";
-			this.tsmiBackgroundTransparent.Size = new System.Drawing.Size(136, 22);
+			this.tsmiBackgroundTransparent.Size = new System.Drawing.Size(180, 22);
 			this.tsmiBackgroundTransparent.Text = "&Transparent";
 			this.tsmiBackgroundTransparent.ToolTipText = "If checked, background will have an alpha channel of 0 allowing OBS to blend the " +
     "background with overlapping content.\r\nIn your OBS scene, use a game capture sour" +
@@ -290,27 +290,27 @@ namespace MUNIA.Forms {
 			this.tsmiBackgroundNSpy.Size = new System.Drawing.Size(180, 22);
 			this.tsmiBackgroundNSpy.Text = "&Background";
 			// 
-			// tsmiColorRemapping
+			// tsmiSkinTheme
 			// 
-			this.tsmiColorRemapping.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.tsmiSkinTheme.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsmiApplySkinTheme,
             this.tsmiApplyCustomTheme,
             this.tsmiManageThemes});
-			this.tsmiColorRemapping.Name = "tsmiColorRemapping";
-			this.tsmiColorRemapping.Size = new System.Drawing.Size(180, 22);
-			this.tsmiColorRemapping.Text = "Color &remapping";
+			this.tsmiSkinTheme.Name = "tsmiSkinTheme";
+			this.tsmiSkinTheme.Size = new System.Drawing.Size(180, 22);
+			this.tsmiSkinTheme.Text = "Skin &theme";
 			// 
 			// tsmiApplySkinTheme
 			// 
 			this.tsmiApplySkinTheme.Name = "tsmiApplySkinTheme";
 			this.tsmiApplySkinTheme.Size = new System.Drawing.Size(185, 22);
-			this.tsmiApplySkinTheme.Text = "Apply skin &theme";
+			this.tsmiApplySkinTheme.Text = "&Apply skin theme";
 			// 
 			// tsmiApplyCustomTheme
 			// 
 			this.tsmiApplyCustomTheme.Name = "tsmiApplyCustomTheme";
 			this.tsmiApplyCustomTheme.Size = new System.Drawing.Size(185, 22);
-			this.tsmiApplyCustomTheme.Text = "&Apply custom theme";
+			this.tsmiApplyCustomTheme.Text = "Apply &custom theme";
 			// 
 			// tsmiManageThemes
 			// 
@@ -364,7 +364,7 @@ namespace MUNIA.Forms {
 		private System.Windows.Forms.ToolTip tooltip;
 		private System.Windows.Forms.ContextMenuStrip popup;
 		private System.Windows.Forms.ToolStripMenuItem tsmiBackgroundNSpy;
-		private System.Windows.Forms.ToolStripMenuItem tsmiColorRemapping;
+		private System.Windows.Forms.ToolStripMenuItem tsmiSkinTheme;
 		private System.Windows.Forms.ToolStripMenuItem tsmiManageThemes;
 		private System.Windows.Forms.ToolStripMenuItem tsmiApplyCustomTheme;
 		private System.Windows.Forms.ToolStripMenuItem tsmiSkinFolders;
