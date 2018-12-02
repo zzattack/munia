@@ -20,8 +20,8 @@ namespace MUNIA {
 		public static Color BackgroundColor { get; set; } = Color.Gray;
 		public static Dictionary<Skin, Size> WindowSizes { get; } = new Dictionary<Skin, Size>();
 		public static Dictionary<SvgSkin, ColorRemap> SelectedRemaps { get; } = new Dictionary<SvgSkin, ColorRemap>();
-		public static Dictionary<NintendoSpySkin, string> SelectedNSpyBackgrounds{ get; } = new Dictionary<NintendoSpySkin, string>();
-		public static Dictionary<string, BindingList<ColorRemap>> AvailableRemaps { get; } 
+		public static Dictionary<NintendoSpySkin, string> SelectedNSpyBackgrounds { get; } = new Dictionary<NintendoSpySkin, string>();
+		public static Dictionary<string, BindingList<ColorRemap>> AvailableRemaps { get; }
 			= new Dictionary<string, BindingList<ColorRemap>>();
 		public static readonly ArduinoMapping ArduinoMapping = new ArduinoMapping();
 
@@ -105,7 +105,7 @@ namespace MUNIA {
 				}
 			}
 		}
-		
+
 		public static void LoadControllers() {
 			Controllers.Clear();
 			foreach (var dev in MuniaController.ListDevices()) {
@@ -122,7 +122,7 @@ namespace MUNIA {
 			}
 		}
 
-		
+
 
 		#region Xml serialization
 		public static void Load() {
@@ -203,6 +203,8 @@ namespace MUNIA {
 
 				// load generic controller mappings
 				var mappings = xroot["ControllerMappings"];
+				foreach (var map in BuiltInMappings.Get())
+					ControllerMappings.Add(map);
 				if (mappings != null) {
 					foreach (XmlNode m in mappings.ChildNodes) {
 						var mapping = new ControllerMapping(m);
@@ -216,10 +218,29 @@ namespace MUNIA {
 
 			try {
 				// finally we can determine the active controller
-				if (xroot["ActiveDevice"] is XmlNode xActiveDev)
-					SetActiveController(Controllers.FirstOrDefault(c => c.DevicePath == xActiveDev.InnerText));
+				if (xroot["ActiveDevice"] is XmlNode xActiveDev) {
+					SetActiveControllerFromDevicePath(xActiveDev.InnerText);
+				}
 			}
 			catch { }
+		}
+
+		public static void SetActiveControllerFromDevicePath(string devicePath) {
+			if (devicePath.StartsWith("MAP$")) {
+				string guid = devicePath.Substring(4, devicePath.IndexOf('$', 5) - 4);
+				if (Guid.TryParse(guid, out Guid uuid)) {
+					var mapping = ControllerMappings.FirstOrDefault(m => m.UUID == uuid);
+					if (mapping != null) {
+						string devPath = devicePath.Substring(4 + guid.Length + 1);
+						var controller = Controllers.FirstOrDefault(c => c.DevicePath == devPath);
+						if (controller != null)
+							SetActiveController(new MappedController(mapping, controller));
+					}
+				}
+			}
+			else {
+				SetActiveController(Controllers.FirstOrDefault(c => c.DevicePath == devicePath));
+			}
 		}
 
 		private static void LoadRemaps() {
@@ -263,7 +284,7 @@ namespace MUNIA {
 
 				xw.WriteElementString("ActiveSkin", ActiveSkin?.Path ?? "");
 				xw.WriteElementString("ActiveDevice", GetActiveController()?.DevicePath ?? "");
-				
+
 				xw.WriteStartElement("SkinSettings");
 				foreach (var skin in Skins) {
 					xw.WriteStartElement("skin");
@@ -294,7 +315,7 @@ namespace MUNIA {
 				xw.WriteEndElement(); // ArduinoMapping
 
 				xw.WriteStartElement("ControllerMappings");
-				foreach (var mapEntry in ControllerMappings) {
+				foreach (var mapEntry in ControllerMappings.Where(e => !e.IsBuiltIn)) {
 					xw.WriteStartElement("mapping");
 					mapEntry.SaveTo(xw);
 					xw.WriteEndElement();
