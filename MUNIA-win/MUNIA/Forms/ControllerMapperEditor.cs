@@ -57,9 +57,10 @@ namespace MUNIA.Forms {
 			}
 			for (int i = 0; i < numControllerAxes; i++) {
 				if (_mapping.AxisMaps.All(b => b.Source != (ControllerMapping.Axis)i)) {
+					// default 1:1 map
 					_mapping.AxisMaps.Add(new ControllerMapping.AxisMap {
 						Source = (ControllerMapping.Axis)i,
-						Target = ControllerMapping.Axis.Unmapped,
+						Target = (ControllerMapping.Axis)i,
 						IsTrigger = realController.IsAxisTrigger(i)
 					});
 				}
@@ -73,7 +74,12 @@ namespace MUNIA.Forms {
 			_mapping.AxisMaps.Sort((self, other) => self.Source.CompareTo(other.Source));
 
 			dgvcSourceButton.DataSource = sourceButtons;
+			cbButtonToAxisSource.DataSource = sourceButtons;
+			cbButtonToAxisTarget.DataSource = sourceButtons;
+
 			dgvcSourceAxis.DataSource = sourceAxes;
+			cbAxisToButtonSource.DataSource = sourceAxes;
+			cbButtonToAxisTarget.DataSource = sourceAxes;
 
 			List<ControllerMapping.Button> targetButtons = new List<ControllerMapping.Button> { ControllerMapping.Button.Unmapped };
 			for (int i = 0; i < numSkinButtons; i++)
@@ -83,22 +89,33 @@ namespace MUNIA.Forms {
 			for (int i = 0; i < numSkinAxes; i++) 
 				targetAxes.Add((ControllerMapping.Axis)i);
 
+			
+
 			// enable dataGridViews only if there are actual elements in both controller and axis
 			if (numSkinButtons > 0 && numControllerButtons > 0) {
 				dgvcTargetButton.DataSource = targetButtons;
-				dgvButtons.DataSource = new BindingList<ControllerMapping.ButtonMap>(_mapping.ButtonMaps);
+				bsButtons.DataSource = new BindingList<ControllerMapping.ButtonMap>(_mapping.ButtonMaps);
+				dgvButtons.DataSource = bsButtons;
 			}
 			else {
 				tpButtons.Visible = dgvButtons.Visible = lblButtons.Visible = false;
 			}
 
+			tpAxesToButtons.Visible = numControllerAxes > 0;
+			tpButtonsToAxes.Visible = numControllerButtons > 0;
+
+			bsAxesToButtons.DataSource = new BindingList<ControllerMapping.AxisToButtonMap>(_mapping.AxisToButtonMaps);
+			bsButtonsToAxes.DataSource = new BindingList<ControllerMapping.ButtonToAxisMap>(_mapping.ButtonToAxisMaps);
+
 			if (numSkinAxes > 0 && numControllerAxes > 0) {
 				dgvcTargetAxis.DataSource = targetAxes;
-				dgvAxes.DataSource = new BindingList<ControllerMapping.AxisMap>(_mapping.AxisMaps);
+				bsAxes.DataSource = new BindingList<ControllerMapping.AxisMap>(_mapping.AxisMaps);
+				dgvAxes.DataSource = bsAxes;
+
 			}
 			else {
-				// remove panel2 etc. to use more of available space
 				tpAxes.Visible = false;
+				tpAxesToButtons.Visible = false;
 			}
 		}
 
@@ -314,5 +331,93 @@ namespace MUNIA.Forms {
 			}
 			else lblHint.Visible = false;
 		}
+
+		#region Button to axis
+		private void btnAddButtonToAxis_Click(object sender, EventArgs e) {
+			bsButtonsToAxes.AddNew();
+		}
+
+		private void btnRemoveButtonToAxis_Click(object sender, EventArgs e) {
+			if (bsButtonsToAxes.Current != null) bsButtonsToAxes.RemoveCurrent();
+		}
+
+		private void lbButtonsToAxes_SelectedIndexChanged(object sender, EventArgs e) {
+			if (lbButtonsToAxes.SelectedItem is ControllerMapping.ButtonToAxisMap map) {
+				gbButtonToAxis.Enabled = true;
+				LoadButtonToAxisMap(map);
+			}
+			else {
+				gbButtonToAxis.Enabled = false;
+			}
+		}
+
+		private void LoadButtonToAxisMap(ControllerMapping.ButtonToAxisMap map) {
+			cbButtonToAxisSource.SelectedItem = map.Source;
+			cbButtonToAxisTarget.SelectedItem = map.Target;
+			tkbAxisOffset.Value = (int)(map.AxisValue * 100);
+		}
+
+		private void cbButtonToAxisSource_SelectedIndexChanged(object sender, EventArgs e) {
+			if (lbButtonsToAxes.SelectedItem is ControllerMapping.ButtonToAxisMap map &&
+				cbButtonToAxisSource.SelectedItem is ControllerMapping.Button btn)
+				map.Source = btn;
+		}
+
+		private void cbButtonToAxisTarget_SelectedIndexChanged(object sender, EventArgs e) {
+			if (lbButtonsToAxes.SelectedItem is ControllerMapping.ButtonToAxisMap map &&
+				cbButtonToAxisTarget.SelectedItem is ControllerMapping.Axis axis)
+				map.Target = axis;
+		}
+
+		private void tkbAxisOffset_Scroll(object sender, EventArgs e) {
+			lblAxisOffset.Text = "Value: " + tkbAxisOffset.Value;
+			if (lbButtonsToAxes.SelectedItem is ControllerMapping.ButtonToAxisMap map)
+				map.AxisValue = tkbAxisOffset.Value / 100.0;
+		}
+
+
+
+		#endregion
+
+		#region Axis to Button
+		private void btnAddAxisToButtonMapping_Click(object sender, EventArgs e) {
+			bsAxesToButtons.AddNew();
+		}
+		private void btnRemoveAxisToButtonMapping_Click(object sender, EventArgs e) {
+			if (bsAxesToButtons.Current != null) bsAxesToButtons.RemoveCurrent();
+		}
+
+		private void lbAxesToButtons_SelectedIndexChanged(object sender, EventArgs e) {
+			if (lbAxesToButtons.SelectedItem is ControllerMapping.AxisToButtonMap map)
+				LoadAxisToButtonMap(map);
+		}
+
+		private void LoadAxisToButtonMap(ControllerMapping.AxisToButtonMap map) {
+			cbAxisToButtonSource.SelectedItem = map.Source;
+			cbAxisToButtonTarget.SelectedItem = map.Target;
+			tkbButtonThreshold.Value = (int)(map.Threshold * 100);
+		}
+		
+		private void cbAxisToButtonSource_SelectedIndexChanged(object sender, EventArgs e) {
+			if (lbAxesToButtons.SelectedItem is ControllerMapping.AxisToButtonMap map &&
+				cbAxisToButtonSource.SelectedItem is ControllerMapping.Axis axis)
+				map.Source = axis;
+		}
+
+		private void cbAxisToButtonTarget_SelectedIndexChanged(object sender, EventArgs e) {
+			if (lbAxesToButtons.SelectedItem is ControllerMapping.AxisToButtonMap map &&
+				cbAxisToButtonTarget.SelectedItem is ControllerMapping.Button btn)
+				map.Target = btn;
+		}
+
+		private void tkbButtonThreshold_Scroll(object sender, EventArgs e) {
+			lblThresholdValue.Text = "Value: " + tkbButtonThreshold.Value;
+			if (lbAxesToButtons.SelectedItem is ControllerMapping.AxisToButtonMap map)
+				map.Threshold = tkbButtonThreshold.Value / 100.0;
+		}
+
+
+		#endregion
+
 	}
 }

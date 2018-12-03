@@ -4,7 +4,7 @@ using System.Linq;
 using MUNIA.Util;
 
 namespace MUNIA.Controllers {
-	public interface IController {
+	public interface IController : IDisposable {
 		ControllerState GetState();
 		event EventHandler StateUpdated;
 

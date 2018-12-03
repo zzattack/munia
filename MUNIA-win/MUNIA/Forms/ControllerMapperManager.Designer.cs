@@ -27,6 +27,7 @@
 			this.lbControllerSource = new System.Windows.Forms.ListBox();
 			this.lbTargetControllerType = new System.Windows.Forms.ListBox();
 			this.gb = new System.Windows.Forms.GroupBox();
+			this.btnClone = new System.Windows.Forms.Button();
 			this.lblPickMapping = new System.Windows.Forms.Label();
 			this.lblPickSkin = new System.Windows.Forms.Label();
 			this.lblPickTarget = new System.Windows.Forms.Label();
@@ -42,6 +43,7 @@
 			this.btnContinue = new System.Windows.Forms.Button();
 			this.lblContinue = new System.Windows.Forms.Label();
 			this.lblMappingIncompatible = new System.Windows.Forms.Label();
+			this.lblMappingBuiltIn = new System.Windows.Forms.Label();
 			this.gb.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -86,6 +88,7 @@
 			this.gb.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.gb.Controls.Add(this.btnClone);
 			this.gb.Controls.Add(this.lblPickMapping);
 			this.gb.Controls.Add(this.lblPickSkin);
 			this.gb.Controls.Add(this.lblPickTarget);
@@ -106,6 +109,17 @@
 			this.gb.TabIndex = 3;
 			this.gb.TabStop = false;
 			this.gb.Text = "Controller and skin selection";
+			// 
+			// btnClone
+			// 
+			this.btnClone.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnClone.Location = new System.Drawing.Point(545, 304);
+			this.btnClone.Name = "btnClone";
+			this.btnClone.Size = new System.Drawing.Size(54, 23);
+			this.btnClone.TabIndex = 15;
+			this.btnClone.Text = "Clone";
+			this.btnClone.UseVisualStyleBackColor = true;
+			this.btnClone.Click += new System.EventHandler(this.btnClone_Click);
 			// 
 			// lblPickMapping
 			// 
@@ -156,9 +170,9 @@
 			// btnRemoveMapping
 			// 
 			this.btnRemoveMapping.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnRemoveMapping.Location = new System.Drawing.Point(580, 304);
+			this.btnRemoveMapping.Location = new System.Drawing.Point(605, 304);
 			this.btnRemoveMapping.Name = "btnRemoveMapping";
-			this.btnRemoveMapping.Size = new System.Drawing.Size(64, 23);
+			this.btnRemoveMapping.Size = new System.Drawing.Size(60, 23);
 			this.btnRemoveMapping.TabIndex = 10;
 			this.btnRemoveMapping.Text = "Remove";
 			this.btnRemoveMapping.UseVisualStyleBackColor = true;
@@ -167,9 +181,9 @@
 			// btnAddMapping
 			// 
 			this.btnAddMapping.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnAddMapping.Location = new System.Drawing.Point(650, 304);
+			this.btnAddMapping.Location = new System.Drawing.Point(671, 304);
 			this.btnAddMapping.Name = "btnAddMapping";
-			this.btnAddMapping.Size = new System.Drawing.Size(66, 23);
+			this.btnAddMapping.Size = new System.Drawing.Size(54, 23);
 			this.btnAddMapping.TabIndex = 9;
 			this.btnAddMapping.Text = "Add";
 			this.btnAddMapping.UseVisualStyleBackColor = true;
@@ -270,10 +284,22 @@
 			this.lblMappingIncompatible.Text = "Selected mapping does not apply to selected controller";
 			this.lblMappingIncompatible.Visible = false;
 			// 
+			// lblMappingBuiltIn
+			// 
+			this.lblMappingBuiltIn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.lblMappingBuiltIn.AutoSize = true;
+			this.lblMappingBuiltIn.Location = new System.Drawing.Point(283, 447);
+			this.lblMappingBuiltIn.Name = "lblMappingBuiltIn";
+			this.lblMappingBuiltIn.Size = new System.Drawing.Size(382, 13);
+			this.lblMappingBuiltIn.TabIndex = 12;
+			this.lblMappingBuiltIn.Text = "Select mapping is a built-in mapping and cannot be modified, but may be cloned";
+			this.lblMappingBuiltIn.Visible = false;
+			// 
 			// ControllerMapperManager
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.Controls.Add(this.lblMappingBuiltIn);
 			this.Controls.Add(this.lblMappingIncompatible);
 			this.Controls.Add(this.lblContinue);
 			this.Controls.Add(this.btnContinue);
@@ -310,5 +336,7 @@
 		private System.Windows.Forms.Label lblPickTarget;
 		private System.Windows.Forms.Label lblPickController;
 		private System.Windows.Forms.Label lblMappingIncompatible;
+		private System.Windows.Forms.Button btnClone;
+		private System.Windows.Forms.Label lblMappingBuiltIn;
 	}
 }

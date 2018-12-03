@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Xml;
+using MUNIA.Annotations;
 using MUNIA.Util;
 
 namespace MUNIA.Controllers {
@@ -66,7 +69,7 @@ namespace MUNIA.Controllers {
 
 			foreach (var item in ButtonToAxisMaps) {
 				if (state.Buttons.Count > (int)item.Source) {
-					if (item.Target != Axis.Unmapped) {
+					if (item.Target != Axis.Unmapped && state.Buttons[(int)item.Source]) {
 						ret.Axes.EnsureSize((int)(item.Target + 1));
 						ret.Axes[(int)item.Target] = item.AxisValue;
 					}
@@ -219,7 +222,7 @@ namespace MUNIA.Controllers {
 			public AxisMap Clone() { return (AxisMap)MemberwiseClone(); }
 		}
 
-		public class AxisToButtonMap {
+		public class AxisToButtonMap : INotifyPropertyChanged {
 			public AxisToButtonMap() { }
 			public AxisToButtonMap(Axis source, Button target, int threshold, AxisToButtonMapMode mode) {
 				Source = source;
@@ -234,8 +237,30 @@ namespace MUNIA.Controllers {
 				Mode = threshold > 0.0 ? AxisToButtonMapMode.WhenAboveThreshold : AxisToButtonMapMode.WhenBelowThreshold;
 			}
 
-			public Axis Source { get; set; }
-			public Button Target { get; set; }
+			private Axis _source;
+
+			public Axis Source {
+				get => _source;
+				set {
+					if (value == _source) return;
+					_source = value;
+					OnPropertyChanged();
+					OnPropertyChanged(nameof(Name));
+				}
+			}
+
+			private Button _target;
+
+			public Button Target {
+				get => _target;
+				set {
+					if (value == _target) return;
+					_target = value;
+					OnPropertyChanged();
+					OnPropertyChanged(nameof(Name));
+				}
+			}
+
 			public double Threshold { get; set; }
 			public AxisToButtonMapMode Mode { get; set; }
 
@@ -255,7 +280,14 @@ namespace MUNIA.Controllers {
 				xw.WriteEndElement();
 			}
 			public override string ToString() => $"{Source} --> {Target}";
+			public string Name => ToString();
 			public AxisToButtonMap Clone() { return (AxisToButtonMap)MemberwiseClone(); }
+			public event PropertyChangedEventHandler PropertyChanged;
+
+			[NotifyPropertyChangedInvocator]
+			protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+			}
 		}
 		public enum AxisToButtonMapMode {
 			WhenAboveThreshold,
@@ -292,7 +324,7 @@ namespace MUNIA.Controllers {
 			public ButtonMap Clone() { return (ButtonMap)MemberwiseClone(); }
 		}
 
-		public class ButtonToAxisMap {
+		public class ButtonToAxisMap : INotifyPropertyChanged {
 			public ButtonToAxisMap() { }
 			public ButtonToAxisMap(Button source, Axis target, double axisValue) {
 				Source = source;
@@ -305,8 +337,30 @@ namespace MUNIA.Controllers {
 				AxisValue = axisValue;
 			}
 
-			public Button Source { get; set; }
-			public Axis Target { get; set; }
+			private Button _source;
+
+			public Button Source {
+				get => _source;
+				set {
+					if (value == _source) return;
+					_source = value;
+					OnPropertyChanged();
+					OnPropertyChanged(nameof(Name));
+				}
+			}
+
+			private Axis _target;
+
+			public Axis Target {
+				get => _target;
+				set {
+					if (value == _target) return;
+					_target = value;
+					OnPropertyChanged();
+					OnPropertyChanged(nameof(Name));
+				}
+			}
+
 			public double AxisValue { get; set; }
 
 			public void LoadFrom(XmlNode xn) {
@@ -323,8 +377,16 @@ namespace MUNIA.Controllers {
 				xw.WriteEndElement();
 			}
 
+			public string Name => ToString();
 			public override string ToString() => $"{Source} --> {Target}";
+
 			public ButtonToAxisMap Clone() { return (ButtonToAxisMap)MemberwiseClone(); }
+			public event PropertyChangedEventHandler PropertyChanged;
+
+			[NotifyPropertyChangedInvocator]
+			protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+			}
 		}
 
 		public enum Button : int {
