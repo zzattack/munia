@@ -75,12 +75,12 @@ namespace MUNIA.Forms {
 
 			dgvcSourceButton.DataSource = sourceButtons;
 			cbButtonToAxisSource.DataSource = sourceButtons;
-			cbButtonToAxisTarget.DataSource = sourceButtons;
+			cbAxisToButtonTarget.DataSource = sourceButtons;
 
 			dgvcSourceAxis.DataSource = sourceAxes;
 			cbAxisToButtonSource.DataSource = sourceAxes;
 			cbButtonToAxisTarget.DataSource = sourceAxes;
-
+			
 			List<ControllerMapping.Button> targetButtons = new List<ControllerMapping.Button> { ControllerMapping.Button.Unmapped };
 			for (int i = 0; i < numSkinButtons; i++)
 				targetButtons.Add((ControllerMapping.Button)i);
@@ -141,6 +141,9 @@ namespace MUNIA.Forms {
 			}
 		}
 
+		private void skinPreview_Resize(object sender, EventArgs e) {
+			OnControllerStateUpdate(null, null);
+		}
 
 		#region Sequential button mapper
 
@@ -412,8 +415,12 @@ namespace MUNIA.Forms {
 
 		private void tkbButtonThreshold_Scroll(object sender, EventArgs e) {
 			lblThresholdValue.Text = "Value: " + tkbButtonThreshold.Value;
-			if (lbAxesToButtons.SelectedItem is ControllerMapping.AxisToButtonMap map)
+			if (lbAxesToButtons.SelectedItem is ControllerMapping.AxisToButtonMap map) {
 				map.Threshold = tkbButtonThreshold.Value / 100.0;
+				map.Mode = tkbButtonThreshold.Value > 0
+					? ControllerMapping.AxisToButtonMapMode.WhenAboveThreshold
+					: ControllerMapping.AxisToButtonMapMode.WhenBelowThreshold;
+			}
 		}
 
 

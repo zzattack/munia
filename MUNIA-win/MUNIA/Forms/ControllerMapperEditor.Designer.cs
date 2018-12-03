@@ -66,6 +66,7 @@
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.btnRemoveAxisToButtonMapping = new System.Windows.Forms.Button();
 			this.lbAxesToButtons = new System.Windows.Forms.ListBox();
+			this.bsAxesToButtons = new System.Windows.Forms.BindingSource(this.components);
 			this.btnAddAxisToButtonMapping = new System.Windows.Forms.Button();
 			this.gbAxisToButton = new System.Windows.Forms.GroupBox();
 			this.label5 = new System.Windows.Forms.Label();
@@ -73,10 +74,9 @@
 			this.lblThresholdValue = new System.Windows.Forms.Label();
 			this.cbAxisToButtonTarget = new System.Windows.Forms.ComboBox();
 			this.tkbButtonThreshold = new System.Windows.Forms.TrackBar();
-			this.label9 = new System.Windows.Forms.Label();
+			this.lblSourceAxis = new System.Windows.Forms.Label();
 			this.label7 = new System.Windows.Forms.Label();
 			this.lblAxisToButtonTarget = new System.Windows.Forms.Label();
-			this.bsAxesToButtons = new System.Windows.Forms.BindingSource(this.components);
 			this.skinPreview = new MUNIA.Forms.SkinPreviewWindow();
 			this.gamepadViewer = new MUNIA.Forms.GamepadViewerControl();
 			((System.ComponentModel.ISupportInitialize)(this.bsAxes)).BeginInit();
@@ -94,9 +94,9 @@
 			((System.ComponentModel.ISupportInitialize)(this.tkbAxisOffset)).BeginInit();
 			this.tpAxesToButtons.SuspendLayout();
 			this.groupBox1.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.bsAxesToButtons)).BeginInit();
 			this.gbAxisToButton.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.tkbButtonThreshold)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.bsAxesToButtons)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// bsAxes
@@ -556,6 +556,10 @@
 			this.lbAxesToButtons.TabIndex = 0;
 			this.lbAxesToButtons.SelectedIndexChanged += new System.EventHandler(this.lbAxesToButtons_SelectedIndexChanged);
 			// 
+			// bsAxesToButtons
+			// 
+			this.bsAxesToButtons.DataSource = typeof(MUNIA.Controllers.ControllerMapping.AxisToButtonMap);
+			// 
 			// btnAddAxisToButtonMapping
 			// 
 			this.btnAddAxisToButtonMapping.Location = new System.Drawing.Point(64, 252);
@@ -573,7 +577,7 @@
 			this.gbAxisToButton.Controls.Add(this.lblThresholdValue);
 			this.gbAxisToButton.Controls.Add(this.cbAxisToButtonTarget);
 			this.gbAxisToButton.Controls.Add(this.tkbButtonThreshold);
-			this.gbAxisToButton.Controls.Add(this.label9);
+			this.gbAxisToButton.Controls.Add(this.lblSourceAxis);
 			this.gbAxisToButton.Controls.Add(this.label7);
 			this.gbAxisToButton.Controls.Add(this.lblAxisToButtonTarget);
 			this.gbAxisToButton.Location = new System.Drawing.Point(206, 29);
@@ -610,7 +614,7 @@
 			this.lblThresholdValue.TabIndex = 11;
 			this.lblThresholdValue.Text = "Value: 0";
 			// 
-			// cbAxisToButonTarget
+			// cbAxisToButtonTarget
 			// 
 			this.cbAxisToButtonTarget.FormattingEnabled = true;
 			this.cbAxisToButtonTarget.Location = new System.Drawing.Point(12, 192);
@@ -630,14 +634,14 @@
 			this.tkbButtonThreshold.TickFrequency = 10;
 			this.tkbButtonThreshold.Scroll += new System.EventHandler(this.tkbButtonThreshold_Scroll);
 			// 
-			// label9
+			// lblSourceAxis
 			// 
-			this.label9.AutoSize = true;
-			this.label9.Location = new System.Drawing.Point(9, 13);
-			this.label9.Name = "label9";
-			this.label9.Size = new System.Drawing.Size(74, 13);
-			this.label9.TabIndex = 6;
-			this.label9.Text = "Source button";
+			this.lblSourceAxis.AutoSize = true;
+			this.lblSourceAxis.Location = new System.Drawing.Point(9, 13);
+			this.lblSourceAxis.Name = "lblSourceAxis";
+			this.lblSourceAxis.Size = new System.Drawing.Size(62, 13);
+			this.lblSourceAxis.TabIndex = 6;
+			this.lblSourceAxis.Text = "Source axis";
 			// 
 			// label7
 			// 
@@ -653,13 +657,9 @@
 			this.lblAxisToButtonTarget.AutoSize = true;
 			this.lblAxisToButtonTarget.Location = new System.Drawing.Point(9, 176);
 			this.lblAxisToButtonTarget.Name = "lblAxisToButtonTarget";
-			this.lblAxisToButtonTarget.Size = new System.Drawing.Size(59, 13);
+			this.lblAxisToButtonTarget.Size = new System.Drawing.Size(71, 13);
 			this.lblAxisToButtonTarget.TabIndex = 7;
-			this.lblAxisToButtonTarget.Text = "Target axis";
-			// 
-			// bsAxesToButtons
-			// 
-			this.bsAxesToButtons.DataSource = typeof(MUNIA.Controllers.ControllerMapping.AxisToButtonMap);
+			this.lblAxisToButtonTarget.Text = "Target button";
 			// 
 			// skinPreview
 			// 
@@ -673,6 +673,7 @@
 			this.skinPreview.ShowClickedElement = true;
 			this.skinPreview.Size = new System.Drawing.Size(607, 361);
 			this.skinPreview.TabIndex = 5;
+			this.skinPreview.Resize += new System.EventHandler(this.skinPreview_Resize);
 			// 
 			// gamepadViewer
 			// 
@@ -714,10 +715,10 @@
 			((System.ComponentModel.ISupportInitialize)(this.tkbAxisOffset)).EndInit();
 			this.tpAxesToButtons.ResumeLayout(false);
 			this.groupBox1.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.bsAxesToButtons)).EndInit();
 			this.gbAxisToButton.ResumeLayout(false);
 			this.gbAxisToButton.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.tkbButtonThreshold)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.bsAxesToButtons)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -769,7 +770,7 @@
 		private System.Windows.Forms.TrackBar tkbButtonThreshold;
 		private System.Windows.Forms.Label label7;
 		private System.Windows.Forms.Label lblAxisToButtonTarget;
-		private System.Windows.Forms.Label label9;
+		private System.Windows.Forms.Label lblSourceAxis;
 		private System.Windows.Forms.ComboBox cbAxisToButtonTarget;
 		private System.Windows.Forms.ComboBox cbAxisToButtonSource;
 		private System.Windows.Forms.Button btnRemoveAxisToButtonMapping;
