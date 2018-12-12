@@ -228,7 +228,9 @@ namespace MUNIA.Controllers {
 		}
 
 		private static Regex DevicePathRegex = new Regex(@"ig_(\d{1,2})[&#{}\b]", RegexOptions.Compiled);
-		internal static IEnumerable<RawInputController> ListDevices() {
+		internal new static IEnumerable<RawInputController> ListDevices() {
+			var ret = new List<RawInputController>();
+
 			// find all devices with a gamepad or joystick usage page
 			foreach (var dev in DeviceList.Local.GetHidDevices()) {
 				var matches = DevicePathRegex.Match(dev.DevicePath);
@@ -239,15 +241,22 @@ namespace MUNIA.Controllers {
 					continue;
 				}
 				else {
-					var reportDescriptor = dev.GetReportDescriptor();
-					foreach (var deviceItem in reportDescriptor.DeviceItems) {
-						bool isJoystickOrGamepad = deviceItem.Usages.GetAllValues().Contains((uint)Usage.GenericDesktopJoystick) ||
-													deviceItem.Usages.GetAllValues().Contains((uint)Usage.GenericDesktopGamepad);
-						if (isJoystickOrGamepad && deviceItem.InputReports.Any())
-							yield return new RawInputController(dev, deviceItem);
+					try {
+						var reportDescriptor = dev.GetReportDescriptor();
+						foreach (var deviceItem in reportDescriptor.DeviceItems) {
+							bool isJoystickOrGamepad = deviceItem.Usages.GetAllValues().Contains((uint)Usage.GenericDesktopJoystick) ||
+														deviceItem.Usages.GetAllValues().Contains((uint)Usage.GenericDesktopGamepad);
+							if (isJoystickOrGamepad && deviceItem.InputReports.Any())
+								ret.Add(new RawInputController(dev, deviceItem));
+						}
+					}
+					catch (NotSupportedException) {
+						// sometimes report descriptor is invalid or can for some reason not be reconstructed,
+						// we wouldn't be able to treat such controllers anyway
 					}
 				}
 			}
+			return ret;
 		}
 
 		public override void Dispose() {
