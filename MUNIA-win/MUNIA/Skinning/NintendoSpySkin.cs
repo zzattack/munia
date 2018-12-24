@@ -323,6 +323,7 @@ namespace MUNIA.Skinning {
 			}
 		}
 		public override string ToString() => Name;
+		public override Size DefaultSize => SelectedBackground?.Size ?? new Size(500, 500);
 
 		public class Button : ControllerItem { }
 

@@ -41,6 +41,7 @@
 			this.lblSource = new System.Windows.Forms.Label();
 			this.lblScene = new System.Windows.Forms.Label();
 			this.cbScene = new System.Windows.Forms.ComboBox();
+			this.btnSetToSkinDefault = new System.Windows.Forms.Button();
 			this.gb.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.nudHeight)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudWidth)).BeginInit();
@@ -51,7 +52,7 @@
 			// 
 			this.BtnAccept.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.BtnAccept.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.BtnAccept.Location = new System.Drawing.Point(154, 206);
+			this.BtnAccept.Location = new System.Drawing.Point(198, 249);
 			this.BtnAccept.Name = "BtnAccept";
 			this.BtnAccept.Size = new System.Drawing.Size(75, 23);
 			this.BtnAccept.TabIndex = 2;
@@ -63,7 +64,7 @@
 			// 
 			this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.btnCancel.Location = new System.Drawing.Point(73, 206);
+			this.btnCancel.Location = new System.Drawing.Point(117, 249);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(75, 23);
 			this.btnCancel.TabIndex = 1;
@@ -92,6 +93,7 @@
 			// 
 			this.gb.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.gb.Controls.Add(this.btnSetToSkinDefault);
 			this.gb.Controls.Add(this.btnReset);
 			this.gb.Controls.Add(this.label1);
 			this.gb.Controls.Add(this.lblPx);
@@ -101,7 +103,7 @@
 			this.gb.Controls.Add(this.lblWidth);
 			this.gb.Location = new System.Drawing.Point(12, 12);
 			this.gb.Name = "gb";
-			this.gb.Size = new System.Drawing.Size(222, 80);
+			this.gb.Size = new System.Drawing.Size(266, 107);
 			this.gb.TabIndex = 0;
 			this.gb.TabStop = false;
 			this.gb.Text = "Inner window dimensions";
@@ -109,7 +111,7 @@
 			// btnReset
 			// 
 			this.btnReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnReset.Location = new System.Drawing.Point(184, 36);
+			this.btnReset.Location = new System.Drawing.Point(228, 36);
 			this.btnReset.Name = "btnReset";
 			this.btnReset.Size = new System.Drawing.Size(27, 24);
 			this.btnReset.TabIndex = 4;
@@ -121,7 +123,7 @@
 			// 
 			this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(159, 54);
+			this.label1.Location = new System.Drawing.Point(203, 54);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(18, 13);
 			this.label1.TabIndex = 5;
@@ -131,7 +133,7 @@
 			// 
 			this.lblPx.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.lblPx.AutoSize = true;
-			this.lblPx.Location = new System.Drawing.Point(159, 31);
+			this.lblPx.Location = new System.Drawing.Point(203, 31);
 			this.lblPx.Name = "lblPx";
 			this.lblPx.Size = new System.Drawing.Size(18, 13);
 			this.lblPx.TabIndex = 2;
@@ -148,7 +150,7 @@
             0,
             0});
 			this.nudHeight.Name = "nudHeight";
-			this.nudHeight.Size = new System.Drawing.Size(81, 20);
+			this.nudHeight.Size = new System.Drawing.Size(125, 20);
 			this.nudHeight.TabIndex = 4;
 			this.nudHeight.Value = new decimal(new int[] {
             1,
@@ -168,7 +170,7 @@
             0,
             0});
 			this.nudWidth.Name = "nudWidth";
-			this.nudWidth.Size = new System.Drawing.Size(81, 20);
+			this.nudWidth.Size = new System.Drawing.Size(125, 20);
 			this.nudWidth.TabIndex = 1;
 			this.nudWidth.Value = new decimal(new int[] {
             1,
@@ -187,9 +189,9 @@
 			this.gbOBS.Controls.Add(this.lblSource);
 			this.gbOBS.Controls.Add(this.lblScene);
 			this.gbOBS.Controls.Add(this.cbScene);
-			this.gbOBS.Location = new System.Drawing.Point(12, 98);
+			this.gbOBS.Location = new System.Drawing.Point(12, 135);
 			this.gbOBS.Name = "gbOBS";
-			this.gbOBS.Size = new System.Drawing.Size(222, 101);
+			this.gbOBS.Size = new System.Drawing.Size(266, 101);
 			this.gbOBS.TabIndex = 3;
 			this.gbOBS.TabStop = false;
 			this.gbOBS.Text = "Grab from obs-studio";
@@ -210,7 +212,7 @@
 			this.cbSceneCollection.FormattingEnabled = true;
 			this.cbSceneCollection.Location = new System.Drawing.Point(72, 20);
 			this.cbSceneCollection.Name = "cbSceneCollection";
-			this.cbSceneCollection.Size = new System.Drawing.Size(141, 21);
+			this.cbSceneCollection.Size = new System.Drawing.Size(185, 21);
 			this.cbSceneCollection.TabIndex = 4;
 			this.cbSceneCollection.SelectedIndexChanged += new System.EventHandler(this.cbSceneCollection_SelectedIndexChanged);
 			// 
@@ -221,7 +223,7 @@
 			this.cbSource.FormattingEnabled = true;
 			this.cbSource.Location = new System.Drawing.Point(72, 70);
 			this.cbSource.Name = "cbSource";
-			this.cbSource.Size = new System.Drawing.Size(141, 21);
+			this.cbSource.Size = new System.Drawing.Size(185, 21);
 			this.cbSource.TabIndex = 3;
 			this.cbSource.SelectedIndexChanged += new System.EventHandler(this.cbSource_SelectedIndexChanged);
 			// 
@@ -250,9 +252,19 @@
 			this.cbScene.FormattingEnabled = true;
 			this.cbScene.Location = new System.Drawing.Point(72, 45);
 			this.cbScene.Name = "cbScene";
-			this.cbScene.Size = new System.Drawing.Size(141, 21);
+			this.cbScene.Size = new System.Drawing.Size(185, 21);
 			this.cbScene.TabIndex = 0;
 			this.cbScene.SelectedIndexChanged += new System.EventHandler(this.cbScene_SelectedIndexChanged);
+			// 
+			// btnSetToSkinDefault
+			// 
+			this.btnSetToSkinDefault.Location = new System.Drawing.Point(72, 78);
+			this.btnSetToSkinDefault.Name = "btnSetToSkinDefault";
+			this.btnSetToSkinDefault.Size = new System.Drawing.Size(108, 23);
+			this.btnSetToSkinDefault.TabIndex = 6;
+			this.btnSetToSkinDefault.Text = "Set to skin default";
+			this.btnSetToSkinDefault.UseVisualStyleBackColor = true;
+			this.btnSetToSkinDefault.Click += new System.EventHandler(this.btnSetToSkinDefault_Click);
 			// 
 			// WindowSizePicker
 			// 
@@ -260,7 +272,7 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.btnCancel;
-			this.ClientSize = new System.Drawing.Size(241, 241);
+			this.ClientSize = new System.Drawing.Size(285, 284);
 			this.Controls.Add(this.gbOBS);
 			this.Controls.Add(this.gb);
 			this.Controls.Add(this.btnCancel);
@@ -298,5 +310,6 @@
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.ComboBox cbSceneCollection;
 		private System.Windows.Forms.Button btnReset;
+		private System.Windows.Forms.Button btnSetToSkinDefault;
 	}
 }

@@ -9,6 +9,7 @@ namespace MUNIA.Skinning {
 		public string Path { get; set; }
 		public SkinLoadResult LoadResult { get; protected set; }
 		public List<ControllerType> Controllers { get; } = new List<ControllerType>();
+		public abstract Size DefaultSize { get; }
 
 		public abstract void Render(int width, int height, bool force = false);
 

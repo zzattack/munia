@@ -4,19 +4,29 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using MUNIA.Skinning;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace MUNIA.Forms {
 	public partial class WindowSizePicker : Form {
+		private readonly Skin _activeSkin;
 		private List<SceneCollection> _sceneCollections;
 		public Size ChosenSize;
 		private Size _preload;
 
-		private WindowSizePicker() {
+		private WindowSizePicker(Skin activeSkin) {
+			_activeSkin = activeSkin;
 			InitializeComponent();
 			LoadObsSceneCollection();
 		}
+
+		public WindowSizePicker(Size preload, Skin activeSkin) : this(activeSkin) {
+			_preload = preload;
+			nudWidth.Value = preload.Width;
+			nudHeight.Value = preload.Height;
+		}
+
 
 		private void LoadObsSceneCollection() {
 			_sceneCollections = new List<SceneCollection>();
@@ -52,12 +62,6 @@ namespace MUNIA.Forms {
 
 			gbOBS.Enabled = _sceneCollections.Any();
 			cbSceneCollection.Items.AddRange(_sceneCollections.ToArray());
-		}
-
-		public WindowSizePicker(Size preload) : this() {
-			_preload = preload;
-			nudWidth.Value = preload.Width;
-			nudHeight.Value = preload.Height;
 		}
 
 		private void BtnAccept_Click(object sender, EventArgs e) {
@@ -98,6 +102,11 @@ namespace MUNIA.Forms {
 		private void btnReset_Click(object sender, EventArgs e) {
 			nudWidth.Value = _preload.Width;
 			nudHeight.Value = _preload.Height;
+		}
+
+		private void btnSetToSkinDefault_Click(object sender, EventArgs e) {
+			nudWidth.Value = _activeSkin.DefaultSize.Width;
+			nudHeight.Value = _activeSkin.DefaultSize.Height;
 		}
 	}
 

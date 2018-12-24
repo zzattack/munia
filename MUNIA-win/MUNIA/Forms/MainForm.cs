@@ -384,7 +384,7 @@ namespace MUNIA.Forms {
 		}
 
 		private void tsmiSetWindowSize_Click(object sender, EventArgs e) {
-			var frm = new WindowSizePicker(glControl.Size) {
+			var frm = new WindowSizePicker(glControl.Size, ConfigManager.ActiveSkin) {
 				StartPosition = FormStartPosition.CenterParent
 			};
 			if (frm.ShowDialog() == DialogResult.OK) {

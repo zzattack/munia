@@ -323,6 +323,7 @@ namespace MUNIA.Skinning {
 		}
 
 		public override string ToString() => Name;
+		public override Size DefaultSize => new Size((int)_baseDimension.Width, (int)_baseDimension.Height);
 
 		public class ControllerItem {
 			public RectangleF Bounds;

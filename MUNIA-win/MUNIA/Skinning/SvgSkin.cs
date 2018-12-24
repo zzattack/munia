@@ -534,6 +534,7 @@ namespace MUNIA.Skinning {
 		}
 
 		public override string ToString() => Name;
+		public override Size DefaultSize => new Size((int)_dimensions.Width, (int)_dimensions.Height);
 
 		public class ControllerItem {
 			public int Id; // stick, button or trigger Id on controller
