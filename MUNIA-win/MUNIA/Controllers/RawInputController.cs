@@ -235,9 +235,9 @@ namespace MUNIA.Controllers {
 			foreach (var dev in DeviceList.Local.GetHidDevices()) {
 				var matches = DevicePathRegex.Match(dev.DevicePath);
 				if (matches.Success) {
-					// according to Microsoft, this is a 'good' way to distinguish XInput controllers
-					// from raw/directinput compatible ones. I have my doubts...
-					// https://docs.microsoft.com/en-us/windows/desktop/xinput/xinput-and-directinput
+					// according to Microsoft, this test (i.e. "ig_xx in device path) is a 'good' way to distinguish
+					// XInput controllers from raw/directinput compatible ones... 
+					// See https://docs.microsoft.com/en-us/windows/desktop/xinput/xinput-and-directinput
 					continue;
 				}
 				else {

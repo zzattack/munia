@@ -125,9 +125,7 @@ namespace MUNIA.Interop {
 			if (success) spiq.HardwareID = propertyBuffer.ToString();
 		}
 
-		public override string ToString() {
-			return string.Format("{0} ({1})", Name, Description);
-		}
+		public override string ToString() => $"{Name} ({Description})";
 
 		public override bool Equals(object obj) {
 			if (ReferenceEquals(null, obj)) return false;

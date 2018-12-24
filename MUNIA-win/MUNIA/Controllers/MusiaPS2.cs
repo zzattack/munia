@@ -10,9 +10,10 @@ namespace MUNIA.Controllers {
         }
 
         public override ControllerType Type => ControllerType.PS2;
-        public override string Name => string.IsNullOrEmpty(base.Name) ? "MUSIA PS2" : base.Name;
+		public override string Name => "MUSIA PS2";
+		public override string ToString() => Name;
 
-        protected override bool Parse(byte[] ev) {
+		protected override bool Parse(byte[] ev) {
             byte reportId = ev[0];
             if (reportId > 1) return false;
 
