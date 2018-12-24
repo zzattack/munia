@@ -6,19 +6,24 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Xml;
 using MUNIA.Annotations;
+using MUNIA.Interop;
 using MUNIA.Util;
 
 namespace MUNIA.Controllers {
 	public class ControllerMapping {
-		public int VendorID { get; set; }
-		public int ProductID { get; set; }
-		public int DeviceIndex { get; set; }
-		public uint ReportHash { get; set; }
-		public Guid UUID { get; set; } = Guid.Empty;
+		public int VendorID { get; set; } // For RawInputController
+		public int ProductID { get; set; } // For RawInputController
+		public uint ReportHash { get; set; } // for RawInputController
+		public int DeviceIndex { get; set; } // for RawInputController or XInput
+		public string DevicePath { get; internal set; } // for MUNIA controller
+		public SerialPortInfo ArduinoPort { get; internal set; } // for Arduino Controller
+		public ControllerType ArduinoSource { get; internal set; }
+
+		public Guid UUID { get; set; } = Guid.Empty; // Mappings' unique ID
 		public bool IsBuiltIn { get; internal set; }
 
 		public ControllerType MappedType { get; set; }
-		public enum SourceType { RawInput, XInput }
+		public enum SourceType { RawInput, XInput, MUNIA, Arduino }
 		public SourceType Source { get; set; }
 
 		public List<AxisMap> AxisMaps = new List<AxisMap>();
@@ -32,7 +37,7 @@ namespace MUNIA.Controllers {
 			LoadFrom(xn);
 		}
 
-		public ControllerMapping(GenericController controller, ControllerType type) {
+		public ControllerMapping(IController controller, ControllerType type) {
 			MappedType = type;
 			UUID = Guid.NewGuid();
 			if (controller is XInputController xi) {
@@ -46,13 +51,22 @@ namespace MUNIA.Controllers {
 				DeviceIndex = ri.DeviceItemIndex;
 				ReportHash = CRC32.Calc(ri.HidDevice.GetRawReportDescriptor());
 			}
+			else if (controller is MuniaController mc) {
+				Source = SourceType.MUNIA;
+				DevicePath = mc.DevicePath;
+			}
+			else if (controller is ArduinoController ac) {
+				Source = SourceType.Arduino;
+				ArduinoPort = ac.PortInfo;
+				ArduinoSource = ac.Type;
+			}
 		}
 
 
 		public override string ToString() {
 			// see if the controller for this mapping exists, if so
 			// use its name in the string representation
-			var dev = GenericController.ListDevices().FirstOrDefault(AppliesTo);
+			var dev = ConfigManager.Controllers.FirstOrDefault(AppliesTo);
 			return (IsBuiltIn ? "[Built-in] " : "") + (dev != null ? dev.Name : "?") + " -> " + MappedType;
 		}
 
@@ -67,20 +81,20 @@ namespace MUNIA.Controllers {
 				}
 			}
 
-			foreach (var item in ButtonToAxisMaps) {
-				if (state.Buttons.Count > (int)item.Source) {
-					if (item.Target != Axis.Unmapped && state.Buttons[(int)item.Source]) {
-						ret.Axes.EnsureSize((int)(item.Target + 1));
-						ret.Axes[(int)item.Target] = item.AxisValue;
-					}
-				}
-			}
-
 			foreach (var item in AxisMaps) {
 				if (state.Axes.Count > (int)item.Source) {
 					if (item.Target != Axis.Unmapped) {
 						ret.Axes.EnsureSize((int)(item.Target + 1));
 						ret.Axes[(int)item.Target] = state.Axes[(int)item.Source];
+					}
+				}
+			}
+
+			foreach (var item in ButtonToAxisMaps) {
+				if (state.Buttons.Count > (int)item.Source) {
+					if (item.Target != Axis.Unmapped && state.Buttons[(int)item.Source]) {
+						ret.Axes.EnsureSize((int)(item.Target + 1));
+						ret.Axes[(int)item.Target] = item.AxisValue;
 					}
 				}
 			}
@@ -104,7 +118,10 @@ namespace MUNIA.Controllers {
 			return ret;
 		}
 
-		public bool AppliesTo(GenericController controller) {
+		public bool AppliesTo(IController controller) {
+			if (controller is MappedController) {
+				return false; // prevent mapping over mapping constructs
+			}
 			if (Source == SourceType.RawInput && controller is RawInputController ri) {
 				return ri.HidDevice.ProductID == ProductID &&
 						ri.HidDevice.VendorID == VendorID &&
@@ -114,7 +131,12 @@ namespace MUNIA.Controllers {
 				// xinput devices are always compatible
 				return true;
 			}
-
+			else if (Source == SourceType.MUNIA && controller is MuniaController mc) {
+				return DevicePath == mc.DevicePath;
+			}
+			else if (Source == SourceType.Arduino && controller is ArduinoController ac) {
+				return Equals(ArduinoPort, ac.PortInfo) && ArduinoSource == ac.Type;
+			}
 			return false;
 		}
 
@@ -127,8 +149,19 @@ namespace MUNIA.Controllers {
 				VendorID = int.Parse(xn.Attributes["vid"].Value, NumberStyles.HexNumber);
 				ProductID = int.Parse(xn.Attributes["pid"].Value, NumberStyles.HexNumber);
 				ReportHash = uint.Parse(xn.Attributes["rpt_hash"].Value);
+				DeviceIndex = int.Parse(xn.Attributes["idx"].Value);
 			}
-			DeviceIndex = int.Parse(xn.Attributes["idx"].Value);
+			else if (Source == SourceType.XInput) {
+				DeviceIndex = int.Parse(xn.Attributes["idx"].Value);
+			}
+			else if (Source == SourceType.MUNIA) {
+				DevicePath = xn.Attributes["devicepath"].Value;
+			}
+			else if (Source == SourceType.Arduino) {
+				string port = xn.Attributes["arduino_port"].Value;
+				ArduinoPort = SerialPortInfo.GetPorts().FirstOrDefault(spi => spi.Name == port) ?? new SerialPortInfo { Name = port };
+				ArduinoSource = (ControllerType)Enum.Parse(typeof(ControllerType), xn.Attributes["arduino_type"].Value, true);
+			}
 
 			foreach (XmlNode n in xn["buttons"].ChildNodes) {
 				var btn = new ButtonMap();
@@ -164,8 +197,18 @@ namespace MUNIA.Controllers {
 				xw.WriteAttributeString("vid", VendorID.ToString("X"));
 				xw.WriteAttributeString("pid", ProductID.ToString("X"));
 				xw.WriteAttributeString("rpt_hash", ReportHash.ToString());
+				xw.WriteAttributeString("idx", DeviceIndex.ToString());
 			}
-			xw.WriteAttributeString("idx", DeviceIndex.ToString());
+			else if (Source == SourceType.XInput) {
+				xw.WriteAttributeString("idx", DeviceIndex.ToString());
+			}
+			else if (Source == SourceType.MUNIA) {
+				xw.WriteAttributeString("devicepath", DevicePath);
+			}
+			else if (Source == SourceType.Arduino) {
+				xw.WriteAttributeString("arduino_port", ArduinoPort.Name);
+				xw.WriteAttributeString("arduino_type", ArduinoSource.ToString());
+			}
 
 			xw.WriteStartElement("buttons");
 			foreach (var btn in ButtonMaps)
@@ -423,6 +466,9 @@ namespace MUNIA.Controllers {
 			ret.VendorID = this.VendorID;
 			ret.ProductID = this.ProductID;
 			ret.ReportHash = this.ReportHash;
+			ret.DevicePath = this.DevicePath;
+			ret.ArduinoPort = this.ArduinoPort;
+			ret.ArduinoSource = this.ArduinoSource;
 			foreach (var x in this.ButtonMaps)
 				ret.ButtonMaps.Add(x.Clone());
 			foreach (var x in this.ButtonToAxisMaps)

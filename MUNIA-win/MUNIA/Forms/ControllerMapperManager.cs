@@ -13,7 +13,7 @@ namespace MUNIA.Forms {
 			InitializeComponent();
 
 			_ignoreSelectedIndexChanged = true;
-			lbControllerSource.DataSource = GenericController.ListDevices().ToList();
+			lbControllerSource.DataSource = ConfigManager.Controllers.Where(c => !(c is MappedController)).ToList();
 			lbControllerSource.SelectedIndex = -1;
 			UpdateFilter();
 			lbMappings.SelectedIndex = -1;
@@ -23,13 +23,13 @@ namespace MUNIA.Forms {
 		}
 
 		private void UpdateUI() {
-			GenericController controller = null;
+			IController controller = null;
 			ControllerType target = ControllerType.Unknown;
 			Skin skin = null;
 			ControllerMapping mapping = null;
 
-			if (lbControllerSource.SelectedItem is GenericController g) {
-				controller = g;
+			if (lbControllerSource.SelectedItem is IController c) {
+				controller = c;
 				if (lbTargetControllerType.SelectedItem is ControllerType tgt) {
 					target = tgt;
 					if (lbSkins.SelectedItem is Skin s) {
@@ -69,7 +69,7 @@ namespace MUNIA.Forms {
 
 		private void lbControllerSource_SelectedIndexChanged(object sender, EventArgs e) {
 			if (_ignoreSelectedIndexChanged) return;
-			if (lbControllerSource.SelectedItem is GenericController) {
+			if (lbControllerSource.SelectedItem is IController) {
 				var controllerTypes = Enum.GetValues(typeof(ControllerType)).Cast<ControllerType>().ToList();
 				controllerTypes.Remove(ControllerType.Unknown);
 				controllerTypes.Remove(ControllerType.None);
@@ -122,7 +122,7 @@ namespace MUNIA.Forms {
 
 		private void btnAddMapping_Click(object sender, EventArgs e) {
 			if (lbTargetControllerType.SelectedItem is ControllerType target) {
-				if (lbControllerSource.SelectedItem is GenericController controller) {
+				if (lbControllerSource.SelectedItem is IController controller) {
 					ConfigManager.ControllerMappings.Add(new ControllerMapping(controller, target));
 					UpdateFilter();
 				}
@@ -144,11 +144,11 @@ namespace MUNIA.Forms {
 		}
 
 		private void btnContinue_Click(object sender, EventArgs e) {
-			if (lbControllerSource.SelectedItem is GenericController g) {
+			if (lbControllerSource.SelectedItem is IController c) {
 				if (lbTargetControllerType.SelectedItem is ControllerType tgt) {
 					if (lbSkins.SelectedItem is Skin s) {
 						if (lbMappings.SelectedItem is ControllerMapping m) {
-							OnMappingSelected(new MappingSelectionArgs(g, tgt, s, m));
+							OnMappingSelected(new MappingSelectionArgs(c, tgt, s, m));
 						}
 					}
 				}
@@ -170,12 +170,12 @@ namespace MUNIA.Forms {
 	}
 
 	public class MappingSelectionArgs : EventArgs {
-		public GenericController Controller;
+		public IController Controller;
 		public ControllerType Target;
 		public Skin PreviewSkin;
 		public ControllerMapping Mapping;
 
-		public MappingSelectionArgs(GenericController controller, ControllerType target, Skin previewSkin, ControllerMapping mapping) {
+		public MappingSelectionArgs(IController controller, ControllerType target, Skin previewSkin, ControllerMapping mapping) {
 			Controller = controller;
 			Target = target;
 			PreviewSkin = previewSkin;

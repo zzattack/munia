@@ -10,7 +10,7 @@ using MUNIA.Util;
 
 namespace MUNIA.Forms {
 	public partial class ControllerMapperEditor : UserControl {
-		private GenericController _realController;
+		private IController _realController;
 		private MappedController _mappedController;
 		private Skin _skin;
 		private ControllerMapping _mapping;
@@ -22,7 +22,7 @@ namespace MUNIA.Forms {
 		}
 
 
-		public ControllerMapperEditor(GenericController realController, ControllerType target, Skin skin, ControllerMapping mapping) : this() {
+		public ControllerMapperEditor(IController realController, ControllerType target, Skin skin, ControllerMapping mapping) : this() {
 			System.Diagnostics.Debug.Assert(mapping.AppliesTo(realController));
 			System.Diagnostics.Debug.Assert(skin.Controllers.Contains(target));
 

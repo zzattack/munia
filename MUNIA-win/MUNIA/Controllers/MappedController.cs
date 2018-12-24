@@ -48,8 +48,8 @@ namespace MUNIA.Controllers {
 
 
 		public new static IEnumerable<MappedController> ListDevices() {
-			// first find the generic/raw input controllers
-			var controllers = GenericController.ListDevices().ToList();
+			// cache list because we'll be adding to it while enumerating
+			var controllers = ConfigManager.Controllers.ToList();
 			foreach (var mapping in ConfigManager.ControllerMappings) {
 				foreach (var controller in controllers.Where(mapping.AppliesTo)) {
 					yield return new MappedController(mapping, controller);
