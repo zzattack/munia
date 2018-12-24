@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO.Ports;
 using System.Linq;
 using MUNIA.Interop;
@@ -16,10 +17,12 @@ namespace MUNIA.Controllers {
 		protected List<bool> _buttons { get; } = new List<bool>();
 		protected List<Hat> _hats { get; } = new List<Hat>();
 
-		public bool IsAvailable { get; }
+		public bool IsAvailable => PortInfo?.IsConnected ?? false;
 		public string DevicePath => PortInfo.Name;
 
 		public string Name => "Arduino " + Type;
+		public override string ToString() => Name;
+
 		public abstract ControllerType Type { get; }
 		public bool RequiresPolling => false;
 
@@ -90,8 +93,8 @@ namespace MUNIA.Controllers {
 			var ret = new List<ArduinoController>();
 			var ports = SerialPortInfo.GetPorts();
 			foreach (var entry in ConfigManager.ArduinoMapping) {
-				var port = ports.FirstOrDefault(p => p.Name == entry.Key && p.IsConnected);
-				if (port != null) {
+				var port = ports.FirstOrDefault(p => p.Name == entry.Key);
+				if (port != null && entry.Value != ControllerType.None) {
 					ret.Add(CreateDevice(port, entry.Value));
 				}
 			}
@@ -106,6 +109,8 @@ namespace MUNIA.Controllers {
 				return new ArduinoN64(port);
 			case ControllerType.NGC:
 				return new ArduinoNgc(port);
+			default:
+				throw new ArgumentOutOfRangeException("type is not one of possible arduino devices");
 			}
 			return null;
 		}
