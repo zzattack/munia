@@ -59,7 +59,7 @@ namespace MUNIA.Skinning {
 
 					else if (xnode.Name == "rangebutton") {
 						var btn = new RangeButton();
-						btn.Id = mapping.ButtonMap[xnode.Attributes["name"].Value];
+						btn.Id = mapping.AxisMap[xnode.Attributes["name"].Value];
 						btn.ReadConfig(this, xnode);
 						btn.VisibleFrom = double.Parse(xnode.Attributes["from"].Value);
 						btn.VisibleTo = double.Parse(xnode.Attributes["to"].Value);
@@ -220,7 +220,7 @@ namespace MUNIA.Skinning {
 		}
 		private void RenderRangeButton(RangeButton btn) {
 			if (State == null || btn.Texture < 0 || State.Axes.Count <= btn.Id) return;
-			double val = State.Axes[btn.Id] * 128.0;
+			double val = State.Axes[btn.Id];
 			if (btn.VisibleFrom <= val && val <= btn.VisibleTo) {
 				GL.BindTexture(TextureTarget.Texture2D, btn.Texture);
 				TextureHelper.RenderTexture(Scale(btn.Location, btn.Size));
