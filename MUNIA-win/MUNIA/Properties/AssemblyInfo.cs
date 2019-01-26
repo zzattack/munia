@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("MUNIA.io")]
 [assembly: AssemblyProduct("MUNIA")]
-[assembly: AssemblyCopyright("Copyright © Frank Razenberg 2015-2018")]
+[assembly: AssemblyCopyright("Copyright © Frank Razenberg 2015-2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -21,4 +21,4 @@ using System.Runtime.InteropServices;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("278dcc56-806a-4749-a39e-8140bc80d341")]
 
-[assembly: System.Reflection.AssemblyVersion("1.2.358.11")]
+[assembly: System.Reflection.AssemblyVersion("1.2.6966.33")]
