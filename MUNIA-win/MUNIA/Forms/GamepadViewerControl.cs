@@ -87,7 +87,7 @@ namespace MUNIA.Forms {
 				gfx.DrawString("Axes", DefaultFont, Brushes.Black, x, 0);
 				for (int i = 0; i < _state.Axes.Count; i++) {
 					DrawAxis(gfx, i, _state.Axes[i], _controller != null && _controller.IsAxisTrigger(i), x, y);
-					x += 30;
+					x += 32;
 				}
 			}
 		}
@@ -143,28 +143,43 @@ namespace MUNIA.Forms {
 		}
 
 		private void DrawAxis(Graphics gfx, int axisNum, double axisValue, bool isTrigger, int x, int y) {
-			var rect = new Rectangle(x, y, 12, 72);
+			var rectBar = new Rectangle(x, y, 12, Math.Max(72, this.Height - 32));
 			RectangleF fill;
 			if (isTrigger) {
-				fill = RectangleF.FromLTRB(rect.Left, (float)(rect.Bottom - axisValue * rect.Height), rect.Right, rect.Bottom);
+				fill = RectangleF.FromLTRB(rectBar.Left, (float)(rectBar.Bottom - axisValue * rectBar.Height), rectBar.Right, rectBar.Bottom);
 			}
 			else {
-				float mid = rect.Top + rect.Height / 2.0f;
+				float mid = rectBar.Top + rectBar.Height / 2.0f;
 				if (axisValue < 0)
-					fill = RectangleF.FromLTRB(rect.Left, (float)(mid - rect.Height / 2.0f * -axisValue), rect.Right, mid);
+					fill = RectangleF.FromLTRB(rectBar.Left, (float)(mid - rectBar.Height / 2.0f * -axisValue), rectBar.Right, mid);
 				else
-					fill = RectangleF.FromLTRB(rect.Left, mid, rect.Right, (float)(mid + rect.Height / 2.0f * axisValue));
+					fill = RectangleF.FromLTRB(rectBar.Left, mid, rectBar.Right, (float)(mid + rectBar.Height / 2.0f * axisValue));
 			}
 
-			gfx.FillRectangle(Brushes.White, rect);
+			gfx.FillRectangle(Brushes.White, rectBar);
 			gfx.FillRectangle(Brushes.Red, fill);
 			using (var pen = new Pen(Color.Black, 1.0f))
-				gfx.DrawRectangle(pen, rect);
-			var r = new RectangleF(x, rect.Bottom + 3, rect.Width, 15);
+				gfx.DrawRectangle(pen, rectBar);
+			var rectAxisNum = new RectangleF(x, rectBar.Bottom + 3, rectBar.Width, 15);
 			var sf = new StringFormat();
 			sf.Alignment = StringAlignment.Center;
 			sf.LineAlignment = StringAlignment.Near;
-			gfx.DrawString(axisNum.ToString(), DefaultFont, Brushes.Black, r, sf);
+			gfx.DrawString(axisNum.ToString(), DefaultFont, Brushes.Black, rectAxisNum, sf);
+
+			// draw axis value vertically/90° rotated
+			sf.LineAlignment = StringAlignment.Center;
+			string txt = $"{axisValue:F2}     {axisValue * 256.0:F0}";
+			SizeF szTxt = gfx.MeasureString(txt, Font);
+			var rectAxisVal = new RectangleF(0, 0, szTxt.Width, szTxt.Height);
+			rectAxisVal.Offset(rectBar.Left, rectBar.Top + rectBar.Height / 2);
+
+			gfx.TranslateTransform(rectAxisVal.Left, rectAxisVal.Top - szTxt.Width / 2);
+			gfx.RotateTransform(90);
+			rectAxisVal.Offset(-rectAxisVal.Left, -rectAxisVal.Top);
+			using (var sb = new SolidBrush(Color.FromArgb(200, 150, 150, 150)))
+				gfx.FillRectangle(sb, rectAxisVal);
+			gfx.DrawString(txt, Font, Brushes.Black, rectAxisVal, sf);
+			gfx.ResetTransform();
 		}
 
 	}
