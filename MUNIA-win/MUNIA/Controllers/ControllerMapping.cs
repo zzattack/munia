@@ -5,8 +5,8 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Xml;
-using MUNIA.Annotations;
 using MUNIA.Interop;
+using MUNIA.Properties;
 using MUNIA.Util;
 
 namespace MUNIA.Controllers {
