@@ -46,7 +46,7 @@ namespace MUNIA.Skinning {
 			return null;
 		}
 
-		public abstract void GetNumberOfElements(out int numButtons, out int numAxes);
+		public abstract void GetMaxElementNumber(out int maxButtonNum, out int maxAxisNum);
 
 		public abstract bool GetElementsAtLocation(Point location, Size skinSize,
 			List<ControllerMapping.Button> buttons, List<ControllerMapping.Axis[]> axes);

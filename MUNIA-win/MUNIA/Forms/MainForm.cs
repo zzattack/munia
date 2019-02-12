@@ -231,9 +231,9 @@ namespace MUNIA.Forms {
 				}
 
 				ControllerState state = new ControllerState();
-				skin.GetNumberOfElements(out int numButtons, out int numAxes);
-				state.Buttons.EnsureSize(numButtons);
-				state.Axes.EnsureSize(numAxes);
+				skin.GetMaxElementNumber(out int maxButtonNum, out int maxAxisNum);
+				state.Buttons.EnsureSize(maxButtonNum);
+				state.Axes.EnsureSize(maxAxisNum);
 				_activeSkinPreview.RenderSkin(state);
 
 				_activeSkinPreview.Show();

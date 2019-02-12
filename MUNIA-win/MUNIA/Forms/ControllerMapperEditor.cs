@@ -40,7 +40,7 @@ namespace MUNIA.Forms {
 			var state = realController.GetState();
 			int numControllerButtons = state.Buttons.Count;
 			int numControllerAxes = state.Axes.Count;
-			skin.GetNumberOfElements(out int numSkinButtons, out int numSkinAxes);
+			skin.GetMaxElementNumber(out int numSkinButtons, out int numSkinAxes);
 
 			List<ControllerMapping.Button> sourceButtons = new List<ControllerMapping.Button>();
 			List<ControllerMapping.Axis> sourceAxes = new List<ControllerMapping.Axis>();
@@ -187,7 +187,7 @@ namespace MUNIA.Forms {
 			dgvButtons.Refresh();
 
 			// figure out how much to map
-			_skin.GetNumberOfElements(out int buttons, out int axes);
+			_skin.GetMaxElementNumber(out int buttons, out int axes);
 			_seqMapTargets = Enumerable.Range(0, buttons).Cast<ControllerMapping.Button>().ToList();
 
 			// ui preparation
@@ -292,7 +292,7 @@ namespace MUNIA.Forms {
 		private void tmrSequentialMapFlasher_Tick(object sender, EventArgs e) {
 			if (_seqMapPos >= 0) {
 				var state = new ControllerState();
-				_skin.GetNumberOfElements(out int buttons, out int axes);
+				_skin.GetMaxElementNumber(out int buttons, out int axes);
 				state.Buttons.EnsureSize(buttons);
 				state.Axes.EnsureSize(axes);
 
