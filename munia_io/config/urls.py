@@ -9,5 +9,5 @@ import tool.urls
 urlpatterns = [
 	re_path(r'^tool/', include(tool.urls)),
 	re_path(r'^', include(home.urls)),
-	re_path(r'admin/', admin.site.urls),
+	re_path(r'admin', admin.site.urls),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
