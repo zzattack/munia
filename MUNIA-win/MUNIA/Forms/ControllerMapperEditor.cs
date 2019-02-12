@@ -60,7 +60,7 @@ namespace MUNIA.Forms {
 					// default 1:1 map
 					_mapping.AxisMaps.Add(new ControllerMapping.AxisMap {
 						Source = (ControllerMapping.Axis)i,
-						Target = (ControllerMapping.Axis)i,
+						Target = i < maxSkinAxis ? (ControllerMapping.Axis)i : ControllerMapping.Axis.Unmapped,
 						IsTrigger = realController.IsAxisTrigger(i)
 					});
 				}
