@@ -67,8 +67,8 @@ namespace MUNIA.Forms {
 				sourceAxes.Add((ControllerMapping.Axis)i);
 			}
 			// remove invalid entries
-			_mapping.ButtonMaps.RemoveAll(b => (int)b.Source >= numControllerButtons || (int)b.Target >= numSkinButtons);
-			_mapping.AxisMaps.RemoveAll(a => (int)a.Source >= numControllerAxes || (int)a.Target >= numSkinAxes);
+			_mapping.ButtonMaps.RemoveAll(b => (int)b.Source > numControllerButtons || (int)b.Target >= numSkinButtons);
+			_mapping.AxisMaps.RemoveAll(a => (int)a.Source > numControllerAxes || (int)a.Target >= numSkinAxes);
 			// make sure they appear in logical order
 			_mapping.ButtonMaps.Sort((self, other) => self.Source.CompareTo(other.Source));
 			_mapping.AxisMaps.Sort((self, other) => self.Source.CompareTo(other.Source));
