@@ -37,58 +37,73 @@ namespace MUNIA.Forms {
 			}
 		}
 
+		private bool _paintQueued = false;
 		private void OnControllerStateUpdated(object sender, EventArgs e) {
 			_state = _controller.GetState();
-			if (InvokeRequired) BeginInvoke((Action)Invalidate);
-			else Invalidate();
+			// prevent queued up work
+			if (!_paintQueued) {
+				_paintQueued = true;
+				if (InvokeRequired) {
+					BeginInvoke((Action)Refresh);
+				}
+				else {
+					Refresh();
+				}
+			}
 		}
 
 		protected override void OnPaint(PaintEventArgs pe) {
-			var gfx = pe.Graphics;
-			gfx.SmoothingMode = SmoothingMode.AntiAlias;
+			try {
+				var gfx = pe.Graphics;
+				gfx.SmoothingMode = SmoothingMode.AntiAlias;
 
-			gfx.Clear(BackColor);
-			if (_state == null) {
-				gfx.DrawString("No controller state yet, press some buttons", 
-					new Font(DefaultFont.FontFamily, 20, FontStyle.Regular),
-					Brushes.Black, 5, 5);
+				gfx.Clear(BackColor);
+				if (_state == null) {
+					gfx.DrawString("No controller state yet, press some buttons",
+						new Font(DefaultFont.FontFamily, 20, FontStyle.Regular),
+						Brushes.Black, 5, 5);
+				}
+				else {
+					const int baseLineY = 4;
+
+					int x = 10;
+					int y = baseLineY + 20;
+					if (_state.Hats.Any()) {
+						gfx.DrawString("Hats", DefaultFont, Brushes.Black, 0, 0);
+						for (int i = 0; i < _state.Hats.Count; i++) {
+							var hat = _state.Hats[i];
+							DrawHat(gfx, i, hat, x, y);
+							x += 80;
+						}
+					}
+
+					int btnX = x;
+					int btnY = 20;
+					const int maxButtonsPerRow = 8;
+					gfx.DrawString("Buttons", DefaultFont, Brushes.Black, x, 0);
+					for (int i = 0; i < _state.Buttons.Count;) {
+						DrawButton(gfx, i, _state.Buttons[i], btnX, btnY);
+						btnX += 40;
+						++i;
+						if (i % maxButtonsPerRow == 0) {
+							btnX = x;
+							btnY += 35;
+						}
+					}
+
+					x += Math.Min(maxButtonsPerRow, _state.Buttons.Count) * 40;
+					x += 10; // spacing
+					y = 12;
+					gfx.DrawString("Axes", DefaultFont, Brushes.Black, x, 0);
+					for (int i = 0; i < _state.Axes.Count; i++) {
+						DrawAxis(gfx, i, _state.Axes[i], _controller != null && _controller.IsAxisTrigger(i), x, y);
+						x += 32;
+					}
+				}
+
 			}
-			else {
-				const int baseLineY = 4;
-
-				int x = 10;
-				int y = baseLineY + 20;
-				if (_state.Hats.Any()) {
-					gfx.DrawString("Hats", DefaultFont, Brushes.Black, 0, 0);
-					for (int i = 0; i < _state.Hats.Count; i++) {
-						var hat = _state.Hats[i];
-						DrawHat(gfx, i, hat, x, y);
-						x += 80;
-					}
-				}
-
-				int btnX = x;
-				int btnY = 20;
-				const int maxButtonsPerRow = 8;
-				gfx.DrawString("Buttons", DefaultFont, Brushes.Black, x, 0);
-				for (int i = 0; i < _state.Buttons.Count;) {
-					DrawButton(gfx, i, _state.Buttons[i], btnX, btnY);
-					btnX += 40;
-					++i;
-					if (i % maxButtonsPerRow == 0) {
-						btnX = x;
-						btnY += 35;
-					}
-				}
-
-				x += Math.Min(maxButtonsPerRow, _state.Buttons.Count) * 40;
-				x += 10; // spacing
-				y = 12;
-				gfx.DrawString("Axes", DefaultFont, Brushes.Black, x, 0);
-				for (int i = 0; i < _state.Axes.Count; i++) {
-					DrawAxis(gfx, i, _state.Axes[i], _controller != null && _controller.IsAxisTrigger(i), x, y);
-					x += 32;
-				}
+			finally {
+				_paintQueued = false;
 			}
 		}
 

@@ -186,6 +186,7 @@ namespace MUNIA.Controllers {
 			}
 
 			if (!IsAxisTrigger((int)(dataValue.Usages.First() - Usage.GenericDesktopX))) {
+				// scale from range [0.0-1.0] to range [-1.0;1.0]
 				val -= 0.5;
 				val *= 2.0;
 			}
@@ -213,7 +214,7 @@ namespace MUNIA.Controllers {
 		}
 
 		private bool IsTriggerAxisByDefault(Usage usage) {
-			return usage == Usage.GenericDesktopRz || usage == Usage.GenericDesktopZ;
+			return usage == Usage.GenericDesktopRx || usage == Usage.GenericDesktopRy;
 		}
 
 		public override bool IsAvailable {

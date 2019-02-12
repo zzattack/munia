@@ -70,7 +70,8 @@ namespace MUNIA.Controllers {
 			return (IsBuiltIn ? "[Built-in] " : "") + (dev != null ? dev.Name : "?") + " -> " + MappedType;
 		}
 
-		public ControllerState ApplyMap(ControllerState state) {
+		public ControllerState ApplyMap(IController sourceController) {
+			var state = sourceController.GetState();
 			var ret = new ControllerState();
 			foreach (var item in ButtonMaps) {
 				if (state.Buttons.Count > (int)item.Source) {
@@ -85,7 +86,16 @@ namespace MUNIA.Controllers {
 				if (state.Axes.Count > (int)item.Source) {
 					if (item.Target != Axis.Unmapped) {
 						ret.Axes.EnsureSize((int)(item.Target + 1));
-						ret.Axes[(int)item.Target] = state.Axes[(int)item.Source];
+						double axisVal = state.Axes[(int)item.Source];
+						if (sourceController.IsAxisTrigger((int)item.Source) && !item.IsTrigger) {
+							// scale from range [0.0-1.0] to range [-1.0;1.0]
+							axisVal = 2.0 * (axisVal - 0.5);
+						}
+						else if (!sourceController.IsAxisTrigger((int)item.Source) && item.IsTrigger) {
+							// scale from range [-1.0;1.0] to range [0.0-1.0]
+							axisVal = (axisVal + 1.0) / 2.0;
+						}
+						ret.Axes[(int)item.Target] = axisVal;
 					}
 				}
 			}

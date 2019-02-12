@@ -34,7 +34,7 @@ namespace MUNIA.Controllers {
 		}
 
 		public ControllerState GetState() {
-			return _mapping.ApplyMap(_controller.GetState());
+			return _mapping.ApplyMap(_controller);
 		}
 
 		public event EventHandler StateUpdated {
