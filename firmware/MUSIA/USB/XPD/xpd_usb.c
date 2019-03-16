@@ -1,7 +1,7 @@
 /**
   ******************************************************************************
- * @file    xpd_usb.c
- * @author  Benedek Kupper
+  * @file    xpd_usb.c
+  * @author  Benedek Kupper
   * @version 0.3
   * @date    2018-01-28
   * @brief   STM32 eXtensible Peripheral Drivers Universal Serial Bus Module
@@ -19,7 +19,7 @@
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
- */
+  */
 #include <xpd_usb.h>
 #include <xpd_rcc.h>
 #include <xpd_utils.h>
@@ -392,6 +392,19 @@ void USB_vSetAddress(USB_HandleType * pxUSB, uint8_t ucAddress)
 }
 
 /**
+ * @brief Sets endpoint buffers and opens the default control endpoint.
+ * @param pxUSB: pointer to the USB handle structure
+ */
+void USB_vCtrlEpOpen(USB_HandleType * pxUSB)
+{
+    /* Allocate packet memory for all used endpoints based on MPS */
+    USB_vAllocateEPs(pxUSB);
+
+    /* Open EP0 */
+    USB_prvCtrlEpOpen(pxUSB);
+}
+
+/**
  * @brief Opens an endpoint.
  * @param pxUSB: pointer to the USB handle structure
  * @param ucEpAddress: endpoint address
@@ -750,19 +763,15 @@ void USB_vIRQHandler(USB_HandleType * pxUSB)
     {
         USB_FLAG_CLEAR(pxUSB, RESET);
 
+        /* Clear any ongoing Remote Wakeup signaling */
+        CLEAR_BIT(USB->CNTR.w, USB_CNTR_RESUME);
         pxUSB->LinkState = USB_LINK_STATE_ACTIVE;
-
-        /* Allocate endpoint memory */
-        USB_vAllocateEPs(pxUSB);
-
-        /* Open EP0 */
-        USB_prvCtrlEpOpen(pxUSB);
-
-        /* Notify device handler */
-        USB_vResetCallback(pxUSB, USB_SPEED_FULL);
 
         /* Set default address (0) */
         USB_vSetAddress(pxUSB, 0);
+
+        /* Notify device handler */
+        USB_vResetCallback(pxUSB, USB_SPEED_FULL);
     }
 
     /* Handle wakeup signal */
@@ -784,10 +793,10 @@ void USB_vIRQHandler(USB_HandleType * pxUSB)
     /* Handle L1 suspend request */
     if ((usISTR & USB_ISTR_L1REQ) != 0)
     {
+        USB_FLAG_CLEAR(pxUSB, L1REQ);
+
         /* Force suspend and low-power mode before going to L1 state */
         SET_BIT(USB->CNTR.w, USB_CNTR_FSUSP | USB_CNTR_LPMODE);
-
-        USB_FLAG_CLEAR(pxUSB, L1REQ);
 
         /* Set the target Link State */
         pxUSB->LinkState = USB_LINK_STATE_SLEEP;
@@ -798,10 +807,10 @@ void USB_vIRQHandler(USB_HandleType * pxUSB)
     /* Handle suspend request */
     if ((usISTR & USB_ISTR_SUSP) != 0)
     {
-	    USB_FLAG_CLEAR(pxUSB, SUSP);
+        USB_FLAG_CLEAR(pxUSB, SUSP);
+
         /* Force low-power mode in the macrocell */
         SET_BIT(USB->CNTR.w, USB_CNTR_FSUSP | USB_CNTR_LPMODE);
-
 
         if (USB_FLAG_STATUS(pxUSB, WKUP) == 0)
         {
@@ -947,8 +956,14 @@ __weak void USB_vAllocateEPs(USB_HandleType * pxUSB)
         /* Reserve place for BTABLE */
         usPmaTail = ucRegId * sizeof(USB_BufferDescriptorType);
 
+        /* EP0 is half-duplex, IN and OUT can share the memory */
+        pxEP = &pxUSB->EP.IN[0];
+        USB_EP_BDT[pxEP->RegId].TX_ADDR = usPmaTail;
+        USB_EP_BDT[pxEP->RegId].RX_ADDR = usPmaTail;
+        usPmaTail += (pxEP->MaxPacketSize + 1) & (~1);
+
         /* Allocate packet memory for all endpoints (unused ones' MPS = 0) */
-        for (ulEpNum = 0; ulEpNum < USBD_MAX_EP_COUNT; ulEpNum++)
+        for (ulEpNum = 1; ulEpNum < USBD_MAX_EP_COUNT; ulEpNum++)
         {
             pxEP = &pxUSB->EP.IN[ulEpNum];
             if (pxEP->MaxPacketSize > 0)
@@ -994,7 +1009,9 @@ __weak void USB_vAllocateEPs(USB_HandleType * pxUSB)
 #else
         /* TODO: usPmaTail shall not exceed 512 */
 #endif
-        eResult = XPD_OK;
+        {
+            eResult = XPD_OK;
+        }
     }
     else
     {
