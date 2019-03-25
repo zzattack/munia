@@ -52,14 +52,18 @@ namespace MUNIA {
 			_activeController?.Deactivate();
 			_activeController = value;
 			if (_activeController != null) {
-				_activeController.Activate();
-				if (Delay != TimeSpan.Zero)
-					_bufferedActiveController = new BufferedController(value, Delay);
-			}
+                if (Delay != TimeSpan.Zero) {
+                    _bufferedActiveController = new BufferedController(value, Delay);
+                    _bufferedActiveController.Activate();
+                }
+                else {
+                    _activeController.Activate();
+                }
+            }
 		}
 
-		public static IController GetActiveController() {
-			return Delay == TimeSpan.Zero ? _activeController : _bufferedActiveController;
+		public static IController GetActiveController(bool ignoreBuffered = false) {
+			return Delay == TimeSpan.Zero || ignoreBuffered ? _activeController : _bufferedActiveController;
 		}
 
 		public static void LoadSkins() {
@@ -237,12 +241,12 @@ namespace MUNIA {
 						string devPath = devicePath.Substring(4 + guid.Length + 1);
 						var controller = Controllers.FirstOrDefault(c => c.DevicePath == devPath);
 						if (controller != null)
-							SetActiveController(new MappedController(mapping, controller));
+							_activeController = new MappedController(mapping, controller);
 					}
 				}
 			}
 			else {
-				SetActiveController(Controllers.FirstOrDefault(c => c.DevicePath == devicePath));
+				_activeController = Controllers.FirstOrDefault(c => c.DevicePath == devicePath);
 			}
 		}
 

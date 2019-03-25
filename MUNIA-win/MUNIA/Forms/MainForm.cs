@@ -31,7 +31,6 @@ namespace MUNIA.Forms {
 			glControl.Paint += (sender, args) => Render();
 			UsbNotification.DeviceArrival += OnDeviceArrival;
 			UsbNotification.DeviceRemovalComplete += OnDeviceRemoval;
-			//UsbNotification.SetFilter(G)
 			_skipUpdateCheck = skipUpdateCheck;
 		}
 
@@ -40,7 +39,7 @@ namespace MUNIA.Forms {
 
 			tsmiBackgroundTransparent.Checked = ConfigManager.BackgroundColor.A == 0;
 			BuildMenu();
-			ActivateConfig(ConfigManager.GetActiveController(), ConfigManager.ActiveSkin);
+			ActivateConfig(ConfigManager.GetActiveController(true), ConfigManager.ActiveSkin);
 
 			ConfigManager.ControllerMappings.ListChanged += (o, args) => ScheduleBuildMenu();
 
