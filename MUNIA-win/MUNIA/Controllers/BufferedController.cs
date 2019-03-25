@@ -45,7 +45,7 @@ namespace MUNIA.Controllers {
 		}
 
 		private void RealOnStateUpdated(object sender, EventArgs eventArgs) {
-			var newState = (sender as IController).GetState();
+			var newState = _real.GetState();
 			if (Method == DelayMethod.Task) {
 				Task.Delay(Delay).ContinueWith(t => {
 					_taskDelayedState = newState;
