@@ -23,8 +23,7 @@ void ps2_poller::init() {
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 	GPIO_InitStruct.Alternate = GPIO_AF0_SPI1;
-	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-	
+	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);	
 	
 	// console SPI lines + ATT are disconnected from corresponding joystick lines
 	HAL_GPIO_WritePin(SW_CONSOLE_DISCONNECT_GPIO_Port, SW_CONSOLE_DISCONNECT_Pin, GPIO_PIN_SET); // SET = console disconnected
@@ -53,8 +52,6 @@ void ps2_poller::init() {
 	hspi->Init.FirstBit = SPI_FIRSTBIT_LSB;
 	hspi->Init.TIMode = SPI_TIMODE_DISABLE;
 	hspi->Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-	hspi->Init.CRCPolynomial = 7;
-	hspi->Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
 	hspi->Init.NSSPMode = SPI_NSS_PULSE_DISABLE;
 	HAL_SPI_Init(hspi);
 	__HAL_SPI_ENABLE(hspi);
@@ -233,6 +230,10 @@ void ps2_poller::work() {
 				configFailCount++;
 				ps2_printf("\nsetupMotorMapping failed, return payload=");
 				printf_payload((char*)rcvBuff, sizeof(rcvBuff));
+				if (configFailCount > 1) {
+					// no big deal, probably a PS1 controller
+					nextConfigState();
+				}
 			}
 		}
 		
@@ -249,6 +250,10 @@ void ps2_poller::work() {
 				configFailCount++;
 				ps2_printf("\nenablePressureMappings failed, return payload=");
 				printf_payload((char*)rcvBuff, sizeof(rcvBuff));
+				if (configFailCount > 1) {
+					// no big deal, probably a PS1 controller
+					nextConfigState();
+				}
 			}
 		}
 		
@@ -257,7 +262,7 @@ void ps2_poller::work() {
 			uint8_t rcvBuff[sizeof(payload)];
 			spiExchange(payload, rcvBuff, sizeof(payload));
 			
-			if (rcvBuff[1] == 0xF3 && rcvBuff[2] == 0x5a && rcvBuff[8] == 0x5a) {
+			if (rcvBuff[1] & 0x73) {
 				nextConfigState();
 				ps2_printf("\nstate enablePressureMappings --> exitConfig\n");
 			 }

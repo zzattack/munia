@@ -33,7 +33,7 @@ hal_spi_interface spi_ee(&hspi2, EE_CS_GPIO_Port, EE_CS_Pin);
 m25xx080 m25xx080(&spi_ee); // eeprom for configuration retaining
 eeprom ee(&m25xx080);
 
-spi_sniffer sniffer(&hspi2, &hspi1, &hdma_spi2_rx, &hdma_spi1_rx); // sniff on both spi lines configured as slave inputs
+spi_sniffer sniffer(&hspi1, &hspi2, &hdma_spi1_rx, &hdma_spi2_rx); // sniff on both spi lines configured as slave inputs
 
 #ifndef WITHOUT_POLLER
 ps2_poller poller(&spi_ps2); // polls on spi1 when not in sniffer mode
@@ -59,8 +59,9 @@ void eepromDeselect(spi_interface* spi_if);
 volatile bool tick1Khz;
 
 EXTERNC int musia_main(void) {
+#ifndef DEBUG
 	HAL_IWDG_Refresh(&hiwdg);
-
+#endif
 	sysInit();
 	sys_printf("MUSIA started\n");
 	
@@ -70,7 +71,9 @@ EXTERNC int musia_main(void) {
 	applyConfig();
 
 	for (;;) {
+#ifndef DEBUG
 		HAL_IWDG_Refresh(&hiwdg);
+#endif
 
 		if (configUpdatePending) {
 			validateConfig();

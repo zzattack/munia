@@ -49,7 +49,7 @@ IWDG_HandleTypeDef hiwdg;
 /* IWDG init function */
 void MX_IWDG_Init(void)
 {
-
+#ifndef DEBUG
   hiwdg.Instance = IWDG;
   hiwdg.Init.Prescaler = IWDG_PRESCALER_32;
   hiwdg.Init.Window = 4095;
@@ -58,7 +58,7 @@ void MX_IWDG_Init(void)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
-
+#endif
 }
 
 /* USER CODE BEGIN 1 */

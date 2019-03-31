@@ -14,7 +14,7 @@ private:
 	
 	uint8_t buffData[64];
 	uint8_t buffCmd[64];
-	int dmaIdxCmd = 0, dmaIdxData = 0;
+	volatile int dmaIdxCmd = 0, dmaIdxData = 0;
 public:
 	spi_sniffer(SPI_HandleTypeDef* hspiCmd, SPI_HandleTypeDef* hspiData, DMA_HandleTypeDef* hdmaCmd, DMA_HandleTypeDef* hdmaData);
 	void init();

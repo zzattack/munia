@@ -171,27 +171,32 @@ void spi_sniffer::stop() {
 
 void spi_sniffer::work() {
 	if (captureAvailable) {
-		uint32_t pos = __HAL_DMA_GET_COUNTER(hspiCmd->hdmarx), i = 0;
-		// if too much data in buffer, discard
-		int tgtIdxCmd = sizeof(buffCmd) - pos;
-		int dataCount = dmaIdxCmd < tgtIdxCmd ? tgtIdxCmd - dmaIdxCmd : tgtIdxCmd + sizeof(buffCmd) - dmaIdxCmd;
-		if (dataCount > sizeof(pkt.cmd)) dmaIdxCmd = tgtIdxCmd;
+		uint32_t posCmd  = __HAL_DMA_GET_COUNTER(hspiCmd->hdmarx);
+		uint32_t posData = __HAL_DMA_GET_COUNTER(hspiData->hdmarx);
 
+		// if too much data in buffer, discard
+		int tgtIdxCmd = sizeof(buffCmd) - posCmd;
+		int dataCount = dmaIdxCmd < tgtIdxCmd ? tgtIdxCmd - dmaIdxCmd : tgtIdxCmd + sizeof(buffCmd) - dmaIdxCmd;
+		if (dataCount > sizeof(pkt.cmd)) 
+			dmaIdxCmd = tgtIdxCmd;
+		
+		uint i = 0;
 		while (dmaIdxCmd != tgtIdxCmd) {
-			pkt.data[i++] = buffCmd[dmaIdxCmd++];
+			pkt.cmd[i++] = buffCmd[dmaIdxCmd++];
 			if (dmaIdxCmd == sizeof(buffCmd)) dmaIdxCmd = 0;
 		}
 		pkt.pktLength = i;
-
+		// spi_printf("CMD:  pos=%d, tgt=%d, cnt=%d, pkt.pktLength=%d\n", pos, tgtIdxCmd, dataCount, i);
 				
-		pos = __HAL_DMA_GET_COUNTER(hspiData->hdmarx); i = 0;
 		// if too much data in buffer, discard
-		int tgtIdxData = sizeof(buffData) - pos;
+		i = 0;
+		int tgtIdxData = sizeof(buffData) - posData;
 		dataCount = dmaIdxData < tgtIdxData ? tgtIdxData - dmaIdxData : tgtIdxData + sizeof(buffData) - dmaIdxData;
-		if (dataCount > sizeof(pkt.data)) dmaIdxData = tgtIdxData;
+		if (dataCount > sizeof(pkt.data)) 
+			dmaIdxData = tgtIdxData;
 
 		while (dmaIdxData != tgtIdxData) {
-			pkt.cmd[i++] = buffData[dmaIdxData++];
+			pkt.data[i++] = buffData[dmaIdxData++];
 			if (dmaIdxData == sizeof(buffData)) dmaIdxData = 0;
 		}
 		// minimum packet length is 5 and both cmd and data should be of equal length
@@ -208,22 +213,20 @@ ps2_packet* spi_sniffer::getNewPacket() {
 }
 
 void spi_sniffer::captureStart() {
-	HAL_SPI_DMAResume(hspiCmd);
-	HAL_SPI_DMAResume(hspiData);
+	dmaIdxCmd = sizeof(buffCmd) - __HAL_DMA_GET_COUNTER(hspiCmd->hdmarx);
+	dmaIdxData = sizeof(buffData) - __HAL_DMA_GET_COUNTER(hspiData->hdmarx);
 	captureAvailable = false;
 }
 void spi_sniffer::captureEnd() {
-	HAL_SPI_DMAPause(hspiCmd);
-	HAL_SPI_DMAPause(hspiData);
 	captureAvailable = true;
 }
 
 #define WAIT_EDGE(PORT,PIN,TIMEOUT, EDGE) do { \
 	int to = TIMEOUT + HAL_GetTick(); \
-	while (HAL_GetTick() < to || HAL_GPIO_ReadPin(PORT, PIN) != EDGE); \
+	while (HAL_GetTick() < to && HAL_GPIO_ReadPin(PORT, PIN) != EDGE); \
 	} while (0); 
 
-#define WAIT_RISING_EDGE(PORT,PIN,TIMEOUT)  WAIT_EDGE(PORT,PIN,TIMEOUT,GPIO_PIN_SET)
+#define WAIT_RISING_EDGE(PORT,PIN,TIMEOUT)   WAIT_EDGE(PORT,PIN,TIMEOUT,GPIO_PIN_SET)
 #define WAIT_FALLING_EDGE(PORT,PIN,TIMEOUT)  WAIT_EDGE(PORT,PIN,TIMEOUT,GPIO_PIN_RESET)
 
 void spi_sniffer::resync(bool hard) {
@@ -257,15 +260,12 @@ void spi_sniffer::resync(bool hard) {
 	ps2_printf("resync attempted!\n");
 }
 
-
 EXTERNC void EXTI0_1_IRQHandler() {
 	// when ATT pin toggles, this indicates either start or end of packet
-	bool att = HAL_GPIO_ReadPin(JPS2_ATT_GPIO_Port, JPS2_ATT_Pin);	
-	static uint16_t idxDMA1 = 0;
-	static uint16_t idxDMA2 = 0;	
+	bool att = HAL_GPIO_ReadPin(JPS2_ATT_GPIO_Port, JPS2_ATT_Pin);
 	if (!att) {
 		// start DMA sampling
-		gSniffer->captureStart();
+ 		gSniffer->captureStart();
 	}
 	else {
 		// just completed
