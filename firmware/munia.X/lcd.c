@@ -24,18 +24,21 @@ void lcd_setup() {
 #define addByte(b) do { cbWrite(&lcd_cb, b); } while (0);
 
 void lcd_pulseE() {            
-    __delay_us(4); LCD_E = 1;
-    __delay_us(4); LCD_E = 0;
+    __delay_us(3); LCD_E = 1;
+    __delay_us(3); LCD_E = 0;
 }
 
 #define sendPortHigh(b) sendPortLow((b) >> 4)
 void sendPortLow(uint8_t b) {
     LATA &= 0xF0;
+#if !defined(LCD_SWAPPED)
     LATA |= b;
-    //LCD_D7 = b >> 3;
-    //LCD_D6 = b >> 2;
-    //LCD_D5 = b >> 1;
-    //LCD_D4 = b >> 0;
+#else
+    if (b & 1) LATAbits.LATA3 = 1;
+    if (b & 2) LATAbits.LATA2 = 1;
+    if (b & 4) LATAbits.LATA1 = 1;
+    if (b & 8) LATAbits.LATA0 = 1;
+#endif
     lcd_pulseE();
 }
 
