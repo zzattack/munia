@@ -81,7 +81,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|VisualGDB'">
     <ClCompile>
       <AdditionalIncludeDirectories>..;../EEPROM;../CubeMX/Inc;../USB;../USB/Device;../USB/Interfaces;../USB/Lib/Inc;../USB/XPD;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>RELEASE=1;WITHOUT_UART=1;DEBUG_DEFAULT_INTERRUPT_HANDLERS=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>RELEASE=1;DEBUG_DEFAULT_INTERRUPT_HANDLERS=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
       <ForcedIncludeFiles>..\retarget.h</ForcedIncludeFiles>
       <AdditionalOptions>
       </AdditionalOptions>
@@ -90,8 +90,6 @@
       <CPPLanguageStandard>
       </CPPLanguageStandard>
       <Optimization>Os</Optimization>
-      <InlineFunctions>true</InlineFunctions>
-      <LinkTimeOptimization>true</LinkTimeOptimization>
     </ClCompile>
     <Link>
       <AdditionalLinkerInputs>;%(Link.AdditionalLinkerInputs)</AdditionalLinkerInputs>
