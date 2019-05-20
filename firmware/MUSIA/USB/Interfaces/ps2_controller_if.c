@@ -53,7 +53,7 @@ __ALIGN_BEGIN static const uint8_t hid_rpt_ps2[] __ALIGN_END = {
 	0x15, 0x00,						//     LOGICAL MINIMUM (0)
 	0x26, 0xff, 0x00,				//     LOGICAL_MAXIMUM (255)
 	0x75, 0x08,						//     REPORT_SIZE (8)
-	0x95, 0x13,						//     REPORT_COUNT (19)
+	0x95, 0x0D,						//     REPORT_COUNT (13)
 	0x81, 0x02,						//     INPUT (Data,Var,Abs)
 	
 	0xC0,    //    End Collection (Application)

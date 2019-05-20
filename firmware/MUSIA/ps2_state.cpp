@@ -94,10 +94,6 @@ bool ps2_state::updatePoll(uint8_t* data, int len) {
 		pressures.circle		= data[idx++];
 		pressures.cross			= data[idx++];
 		pressures.square		= data[idx++];
-		pressures.rx			= data[idx++];
-		pressures.ry			= data[idx++];
-		pressures.lx			= data[idx++];
-		pressures.ly			= data[idx++];
 		pressures.l1			= data[idx++];
 		pressures.r1			= data[idx++];
 		pressures.l2			= data[idx++];

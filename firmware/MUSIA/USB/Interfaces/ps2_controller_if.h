@@ -38,6 +38,6 @@ typedef struct {
 
 	uint8_t pressures_available : 1;
 	uint8_t reserved : 7;
-	uint8_t pressures[18];
+	uint8_t pressures[12];
 
 } ps2_hid_packet;

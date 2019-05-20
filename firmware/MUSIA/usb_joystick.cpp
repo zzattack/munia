@@ -86,7 +86,7 @@ void usb_joystick::updateState(ps2_state* state) {
 
 	pkt.pressures_available = state->pressures.available;
 	if (pkt.pressures_available) {
-		memcpy(pkt.pressures, &state->pressures.dpad_right, 18);
+		memcpy(pkt.pressures, &state->pressures.dpad_right, 12);
 	}
 	
 	if (memcmp(&pkt, &last_pkt, sizeof(pkt))) {
