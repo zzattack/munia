@@ -31,7 +31,7 @@ private:
 	hal_spi_interface* spi;
 	
 	void poll();
-	void spiExchange(const uint8_t* w, uint8_t* r, uint16_t len);
+	void spiExchange(const uint8_t* w, uint8_t* r, uint16_t len, bool doPrint = false);
 	void nextConfigState();
 	
 public:	

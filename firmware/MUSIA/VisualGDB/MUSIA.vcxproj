@@ -159,6 +159,7 @@
     <ClCompile Include="..\lcd.c" />
     <ClCompile Include="..\menu.cpp" />
     <ClCompile Include="..\musia.cpp" />
+    <ClCompile Include="..\printf-stdarg.c" />
     <ClCompile Include="..\ps2_poller.cpp" />
     <ClCompile Include="..\ps2_state.cpp" />
     <ClCompile Include="..\retarget.c" />
@@ -184,6 +185,7 @@
     <ClInclude Include="..\EEPROM\spi_interface.h" />
     <ClInclude Include="..\lcd.h" />
     <ClInclude Include="..\menu.h" />
+    <ClInclude Include="..\printf-stdarg.h" />
     <ClInclude Include="..\ps2_packet.h" />
     <ClInclude Include="..\usbd_pid.h" />
     <ClInclude Include="..\USB\Lib\Inc\hid_usage.h" />

@@ -35,4 +35,9 @@ typedef struct {
 	uint8_t left_y;
 	uint8_t right_x;
 	uint8_t right_y;
+
+	uint8_t pressures_available : 1;
+	uint8_t reserved : 7;
+	uint8_t pressures[18];
+
 } ps2_hid_packet;

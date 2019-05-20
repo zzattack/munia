@@ -8,6 +8,7 @@
 #include <sys/time.h>
 #include <sys/times.h>
 #include <sys/stat.h>
+#include "printf-stdarg.h"
 
 UART_HandleTypeDef *gHuart;
 #define STDIN_FILENO  0
@@ -25,9 +26,7 @@ void RetargetInit(void* huart) {
 int sync_printf(const char* format, ...) {
 	va_list args;
 	va_start(args, format);
-	int v = 0;
-	v = vprintf(format, args);
-	
+	int v = print(0, format, args);
 	va_end(args);
 	return v;
 }
@@ -37,7 +36,7 @@ int sync_printf_pfx(const char* prefix, const char* format, ...) {
 	va_start(args, format);
 	int v = 0;
 	v = printf("[%s] ", prefix);
-	v += vprintf(format, args);
+	v += print(0, format, args);
 
 	va_end(args);
 	return v;
@@ -57,13 +56,25 @@ int _write(int fd, char* ptr, int len) {
 	HAL_StatusTypeDef hstatus;
 
 	if (fd == STDOUT_FILENO || fd == STDERR_FILENO) {
-		hstatus = HAL_UART_Transmit(gHuart, (uint8_t*)ptr, len, HAL_MAX_DELAY);
-		if (hstatus == HAL_OK)
-			return len;
+
+		int written = 0;
+		while (gHuart->Instance->CR1 && len--) {
+			// Wait to be ready, buffer empty
+			while (!__HAL_UART_GET_FLAG(gHuart, UART_FLAG_TXE));
+
+			// Send data */				
+			gHuart->Instance->TDR = *ptr++ & (uint8_t)0xFFU;
+			written++;
+
+			// Wait to be ready, buffer empty
+			while (!__HAL_UART_GET_FLAG(gHuart, UART_FLAG_TC));
+		}
+
+		return written;
 	}
 	errno = EBADF;
-	return -1;
 #endif
+	return -1;
 }
 
 int _close(int fd) {

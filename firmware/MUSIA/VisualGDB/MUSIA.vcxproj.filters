@@ -667,6 +667,9 @@
     <ClCompile Include="..\CubeMX\Src\usart.c">
       <Filter>CubeMX</Filter>
     </ClCompile>
+    <ClCompile Include="..\printf-stdarg.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\musia.h">
@@ -782,6 +785,9 @@
     </ClInclude>
     <ClInclude Include="..\USB\XPD\xpd_mco.h">
       <Filter>USB\XPD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\printf-stdarg.h">
+      <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
