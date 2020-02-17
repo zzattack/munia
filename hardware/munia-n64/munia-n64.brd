@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="8.2.2">
+<eagle version="9.1.0">
 <drawing>
 <settings>
-<setting alwaysvectorfont="no"/>
+<setting alwaysvectorfont="yes"/>
+<setting keepoldvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
 <grid distance="6" unitdist="mil" unit="mil" style="lines" multiple="1" display="yes" altdistance="2" altunitdist="mil" altunit="mil"/>
@@ -160,9 +161,9 @@
 </layers>
 <board>
 <plain>
-<text x="59.6728" y="33.028" size="1.6256" layer="25" font="vector" ratio="20" rot="SR270">MUNIA-N64 rev. 1
+<text x="59.6728" y="33.028" size="1.6256" layer="25" font="vector" ratio="20" rot="SR270">MUNIA-N64 rev. 2
 frank@zzattack.org
-2017-07</text>
+2018-12</text>
 <text x="11.4936" y="13.9192" size="0.86" layer="25" font="vector" ratio="20" rot="SR0" align="bottom-right">VPP
 
 VCC
@@ -1855,10 +1856,14 @@ einem neuen Namen ab.</description>
 <param name="slThermalsForVias" value="0"/>
 <param name="dpMaxLengthDifference" value="10mm"/>
 <param name="dpGapFactor" value="2.5"/>
-<param name="checkGrid" value="0"/>
 <param name="checkAngle" value="0"/>
 <param name="checkFont" value="1"/>
 <param name="checkRestrict" value="1"/>
+<param name="checkStop" value="0"/>
+<param name="checkValues" value="0"/>
+<param name="checkNames" value="1"/>
+<param name="checkWireStubs" value="1"/>
+<param name="checkPolygonWidth" value="0"/>
 <param name="useDiameter" value="13"/>
 <param name="maxErrors" value="50"/>
 </designrules>
@@ -1985,8 +1990,8 @@ einem neuen Namen ab.</description>
 <element name="CONN-USB" library="frank" package="USB-B-H" value="" x="45.9808" y="11.6" smashed="yes" rot="R90">
 <attribute name="NAME" x="48.9018" y="8.7352" size="0.8128" layer="25" font="vector" ratio="20" rot="R180"/>
 </element>
-<element name="D1" library="frank" package="SOD123" value="MBR120VLSFT1G" x="48.8416" y="18.8722" smashed="yes" rot="MR0">
-<attribute name="NAME" x="49.4258" y="20.1676" size="0.8128" layer="26" font="vector" ratio="20" rot="MR0"/>
+<element name="D1" library="frank" package="SOD123" value="MBR120VLSFT1G" x="48.6892" y="16.891" smashed="yes" rot="MR0">
+<attribute name="NAME" x="49.2734" y="18.1864" size="0.8128" layer="26" font="vector" ratio="20" rot="MR0"/>
 </element>
 <element name="U1" library="frank" package="SOT230P700X180-4N" value="TC1262-3.3VDB" x="48.6512" y="26.076" smashed="yes" rot="MR90">
 <attribute name="MPN" value="TC1262-3.3VDB" x="48.6512" y="26.076" size="1.778" layer="28" rot="MR90" display="off"/>
@@ -2007,6 +2012,7 @@ einem neuen Namen ab.</description>
 </element>
 <element name="PCB1" library="dp_pcb" package="DP7043_V1" value="PCB_DP_RECTANGLE-43X70" x="0" y="0" smashed="yes"/>
 <element name="U2" library="frank" package="SOT765" value="TS5A23166-VSSOP-8" x="42.0624" y="35.3568" smashed="yes" rot="MR0"/>
+<element name="D2" library="frank" package="SOD123" value="MBR120VLSFT1G" x="48.768" y="19.2024" rot="MR0"/>
 </elements>
 <signals>
 <signal name="GND">
@@ -2122,8 +2128,11 @@ einem neuen Namen ab.</description>
 <signal name="+5V">
 <contactref element="U1" pad="1"/>
 <contactref element="D1" pad="1"/>
-<wire x1="50.5416" y1="18.8722" x2="50.9626" y2="19.2932" width="0.4064" layer="16"/>
-<wire x1="50.9626" y1="19.2932" x2="50.9626" y2="22.8756" width="0.4064" layer="16"/>
+<contactref element="D2" pad="1"/>
+<wire x1="50.468" y1="19.2024" x2="50.468" y2="16.9698" width="0.508" layer="16"/>
+<wire x1="50.468" y1="16.9698" x2="50.3892" y2="16.891" width="0.508" layer="16"/>
+<wire x1="50.468" y1="19.2024" x2="50.9626" y2="19.697" width="0.508" layer="16"/>
+<wire x1="50.9626" y1="19.697" x2="50.9626" y2="22.8756" width="0.508" layer="16"/>
 </signal>
 <signal name="N$3">
 </signal>
@@ -2144,7 +2153,6 @@ einem neuen Namen ab.</description>
 <wire x1="20.934" y1="18.1908" x2="19.6884" y2="16.9452" width="0.3048" layer="16"/>
 </signal>
 <signal name="SWITCH1">
-<contactref element="PIC18LF24K50" pad="23"/>
 <via x="34.9504" y="38.3032" extent="1-16" drill="0.3"/>
 <wire x1="34.9504" y1="38.3032" x2="34.1376" y2="38.3032" width="0.3048" layer="1"/>
 <wire x1="34.1376" y1="38.3032" x2="33.528" y2="37.6936" width="0.3048" layer="1"/>
@@ -2152,7 +2160,6 @@ einem neuen Namen ab.</description>
 <wire x1="33.528" y1="29.1084" x2="27.2796" y2="22.86" width="0.3048" layer="1"/>
 <via x="27.2796" y="22.86" extent="1-16" drill="0.3"/>
 <wire x1="27.2796" y1="22.86" x2="27.2796" y2="20.4136" width="0.3048" layer="16"/>
-<wire x1="27.2796" y1="20.4136" x2="27.284" y2="20.4092" width="0.3048" layer="16"/>
 <contactref element="U2" pad="3"/>
 <contactref element="U2" pad="7"/>
 <wire x1="41.8124" y1="33.9818" x2="41.8124" y2="34.8996" width="0.3048" layer="16"/>
@@ -2165,15 +2172,16 @@ einem neuen Namen ab.</description>
 </signal>
 <signal name="C64-DAT">
 <contactref element="CONN-C64" pad="2"/>
-<wire x1="49.0728" y1="30.3784" x2="49.0728" y2="33.9852" width="0.3048" layer="1"/>
-<wire x1="27.441403125" y1="8.543803125" x2="49.0728" y2="30.3784" width="0.3048" layer="1"/>
-<wire x1="27.441403125" y1="8.543803125" x2="24.356603125" y2="8.543803125" width="0.3048" layer="1"/>
 <contactref element="U2" pad="1"/>
 <wire x1="42.8624" y1="33.9818" x2="42.8658" y2="33.9852" width="0.1524" layer="16"/>
-<wire x1="42.8658" y1="33.9852" x2="49.0728" y2="33.9852" width="0.3048" layer="16"/>
-<via x="49.0728" y="33.9852" extent="1-16" drill="0.3"/>
-<wire x1="24.356603125" y1="8.543803125" x2="24.153403125" y2="8.543803125" width="0.3048" layer="1"/>
-<wire x1="24.153403125" y1="8.543803125" x2="22.9112" y2="7.3016" width="0.3048" layer="1"/>
+<via x="43.2816" y="32.766" extent="1-16" drill="0.35"/>
+<wire x1="43.2816" y1="32.766" x2="42.8658" y2="33.1818" width="0.2032" layer="16"/>
+<wire x1="42.8658" y1="33.1818" x2="42.8658" y2="33.9852" width="0.2032" layer="16"/>
+<wire x1="20.2692" y1="8.9916" x2="20.2692" y2="10.8204" width="0.3048" layer="1"/>
+<wire x1="21.9592" y1="7.3016" x2="22.9112" y2="7.3016" width="0.3048" layer="1"/>
+<wire x1="20.2692" y1="8.9916" x2="21.9592" y2="7.3016" width="0.3048" layer="1"/>
+<wire x1="42.2148" y1="32.766" x2="43.2816" y2="32.766" width="0.3048" layer="1"/>
+<wire x1="20.2692" y1="10.8204" x2="42.2148" y2="32.766" width="0.3048" layer="1"/>
 </signal>
 <signal name="J64-DAT">
 <contactref element="CONN-J64" pad="2"/>
@@ -2201,8 +2209,8 @@ einem neuen Namen ab.</description>
 <signal name="VBUS">
 <contactref element="CONN-USB" pad="VBUS"/>
 <contactref element="D1" pad="2"/>
-<wire x1="47.2308" y1="13.5812" x2="47.2308" y2="18.783" width="0.4064" layer="16"/>
-<wire x1="47.2308" y1="18.783" x2="47.1416" y2="18.8722" width="0.4064" layer="16"/>
+<wire x1="47.2308" y1="13.5812" x2="47.2308" y2="16.6494" width="0.508" layer="16"/>
+<wire x1="47.2308" y1="16.6494" x2="46.9892" y2="16.891" width="0.508" layer="16"/>
 </signal>
 <signal name="N$1">
 <contactref element="R14" pad="1"/>
@@ -2211,7 +2219,27 @@ einem neuen Namen ab.</description>
 <wire x1="20.194" y1="36.0436" x2="20.194" y2="36.7284" width="0.254" layer="16"/>
 <wire x1="17.2064" y1="33.056" x2="20.194" y2="36.0436" width="0.254" layer="16"/>
 </signal>
+<signal name="C64-3V3">
+<contactref element="CONN-C64" pad="1"/>
+<contactref element="D2" pad="2"/>
+<wire x1="47.068" y1="19.2024" x2="45.4152" y2="19.2024" width="0.508" layer="16"/>
+<wire x1="45.4152" y1="19.2024" x2="42.672" y2="16.4592" width="0.508" layer="16"/>
+<via x="42.672" y="16.4592" extent="1-16" drill="0.35"/>
+<wire x1="42.672" y1="16.4592" x2="39.1668" y2="12.954" width="0.508" layer="1"/>
+<wire x1="25.1636" y1="12.954" x2="21.9112" y2="9.7016" width="0.508" layer="1"/>
+<wire x1="39.1668" y1="12.954" x2="25.1636" y2="12.954" width="0.508" layer="1"/>
+</signal>
+<signal name="SWITCH2">
+<contactref element="PIC18LF24K50" pad="23"/>
+</signal>
 </signals>
+<mfgpreviewcolors>
+<mfgpreviewcolor name="soldermaskcolor" color="0xC8008000"/>
+<mfgpreviewcolor name="silkscreencolor" color="0xFFFEFEFE"/>
+<mfgpreviewcolor name="backgroundcolor" color="0xFF282828"/>
+<mfgpreviewcolor name="coppercolor" color="0xFFFFBF00"/>
+<mfgpreviewcolor name="substratecolor" color="0xFF786E46"/>
+</mfgpreviewcolors>
 </board>
 </drawing>
 <compatibility>
@@ -2220,7 +2248,7 @@ Since Version 6.2.2 text objects can contain more than one line,
 which will not be processed correctly with this version.
 </note>
 <note version="8.2" severity="warning">
-Since Version 8.2, Eagle supports online libraries. The ids
+Since Version 8.2, EAGLE supports online libraries. The ids
 of those online libraries will not be understood (or retained)
 with this version.
 </note>

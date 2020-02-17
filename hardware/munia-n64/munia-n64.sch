@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="8.2.2">
+<eagle version="9.1.0">
 <drawing>
 <settings>
-<setting alwaysvectorfont="no"/>
+<setting alwaysvectorfont="yes"/>
+<setting keepoldvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
 <grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
@@ -8424,6 +8425,7 @@ Source: AVX .. aphvc.pdf</description>
 <part name="+3V8" library="supply1" deviceset="+3V3" device=""/>
 <part name="PCB1" library="dp_pcb" deviceset="PCB_DP_RECTANGLE" device="-43X70" value="PCB_DP_RECTANGLE-43X70"/>
 <part name="U2" library="frank" deviceset="TS5A23166" device="-VSSOP-8"/>
+<part name="D2" library="frank" deviceset="MBR120VLSFT1G" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -8497,13 +8499,6 @@ Source: AVX .. aphvc.pdf</description>
 <label x="63.5" y="73.66" size="1.016" layer="95" xref="yes"/>
 </segment>
 </net>
-<net name="SWITCH1" class="0">
-<segment>
-<pinref part="PIC18LF24K50" gate="G$1" pin="RB2/AN8/INT2/VMO"/>
-<wire x1="55.88" y1="60.96" x2="63.5" y2="60.96" width="0.1524" layer="91"/>
-<label x="63.5" y="60.96" size="1.016" layer="95" xref="yes"/>
-</segment>
-</net>
 <net name="+3V3" class="0">
 <segment>
 <pinref part="+3V1" gate="G$1" pin="+3V3"/>
@@ -8539,6 +8534,13 @@ Source: AVX .. aphvc.pdf</description>
 <pinref part="PIC18LF24K50" gate="G$1" pin="RA0/AN0"/>
 <wire x1="-20.32" y1="71.12" x2="-35.56" y2="71.12" width="0.1524" layer="91"/>
 <label x="-35.56" y="71.12" size="1.016" layer="95" rot="R180" xref="yes"/>
+</segment>
+</net>
+<net name="SWITCH2" class="0">
+<segment>
+<pinref part="PIC18LF24K50" gate="G$1" pin="RB2/AN8/INT2/VMO"/>
+<wire x1="55.88" y1="60.96" x2="63.5" y2="60.96" width="0.1524" layer="91"/>
+<label x="63.5" y="60.96" size="1.016" layer="95" xref="yes"/>
 </segment>
 </net>
 </nets>
@@ -8739,6 +8741,13 @@ Source: AVX .. aphvc.pdf</description>
 <wire x1="-68.58" y1="124.46" x2="-60.96" y2="124.46" width="0.1524" layer="91"/>
 </segment>
 </net>
+<net name="C64-3V3" class="0">
+<segment>
+<pinref part="CONN-C64" gate="G$1" pin="1"/>
+<wire x1="16.764" y1="132.08" x2="12.7" y2="132.08" width="0.1524" layer="91"/>
+<label x="12.7" y="132.08" size="1.016" layer="95" rot="R180" xref="yes"/>
+</segment>
+</net>
 </nets>
 </sheet>
 <sheet>
@@ -8755,6 +8764,7 @@ Source: AVX .. aphvc.pdf</description>
 <attribute name="NAME" x="45.72" y="58.42" size="1.778" layer="95"/>
 <attribute name="VALUE" x="31.242" y="69.596" size="1.778" layer="96"/>
 </instance>
+<instance part="D2" gate="G$1" x="20.32" y="60.96"/>
 </instances>
 <busses>
 </busses>
@@ -8791,6 +8801,9 @@ Source: AVX .. aphvc.pdf</description>
 <pinref part="D1" gate="G$1" pin="C"/>
 <wire x1="22.86" y1="66.04" x2="27.94" y2="66.04" width="0.1524" layer="91"/>
 <junction x="27.94" y="66.04"/>
+<pinref part="D2" gate="G$1" pin="C"/>
+<wire x1="22.86" y1="60.96" x2="27.94" y2="60.96" width="0.1524" layer="91"/>
+<wire x1="27.94" y1="60.96" x2="27.94" y2="66.04" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="VBUS" class="0">
@@ -8798,6 +8811,13 @@ Source: AVX .. aphvc.pdf</description>
 <pinref part="D1" gate="G$1" pin="A"/>
 <wire x1="17.78" y1="66.04" x2="12.7" y2="66.04" width="0.1524" layer="91"/>
 <label x="12.7" y="66.04" size="1.016" layer="95" rot="R180" xref="yes"/>
+</segment>
+</net>
+<net name="C64-3V3" class="0">
+<segment>
+<pinref part="D2" gate="G$1" pin="A"/>
+<wire x1="17.78" y1="60.96" x2="12.7" y2="60.96" width="0.1524" layer="91"/>
+<label x="12.7" y="60.96" size="1.016" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 </nets>
@@ -8810,7 +8830,7 @@ Source: AVX .. aphvc.pdf</description>
 </drawing>
 <compatibility>
 <note version="8.2" severity="warning">
-Since Version 8.2, Eagle supports online libraries. The ids
+Since Version 8.2, EAGLE supports online libraries. The ids
 of those online libraries will not be understood (or retained)
 with this version.
 </note>
