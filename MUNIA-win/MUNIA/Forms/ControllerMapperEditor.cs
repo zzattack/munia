@@ -40,7 +40,7 @@ namespace MUNIA.Forms {
 			var state = realController.GetState();
 			int numControllerButtons = state.Buttons.Count;
 			int numControllerAxes = state.Axes.Count;
-			skin.GetNumberOfElements(out int numSkinButtons, out int numSkinAxes);
+			skin.GetMaxElementNumber(out int maxSkinButton, out int maxSkinAxis);
 
 			List<ControllerMapping.Button> sourceButtons = new List<ControllerMapping.Button>();
 			List<ControllerMapping.Axis> sourceAxes = new List<ControllerMapping.Axis>();
@@ -60,15 +60,15 @@ namespace MUNIA.Forms {
 					// default 1:1 map
 					_mapping.AxisMaps.Add(new ControllerMapping.AxisMap {
 						Source = (ControllerMapping.Axis)i,
-						Target = (ControllerMapping.Axis)i,
+						Target = i < maxSkinAxis ? (ControllerMapping.Axis)i : ControllerMapping.Axis.Unmapped,
 						IsTrigger = realController.IsAxisTrigger(i)
 					});
 				}
 				sourceAxes.Add((ControllerMapping.Axis)i);
 			}
 			// remove invalid entries
-			_mapping.ButtonMaps.RemoveAll(b => (int)b.Source >= numControllerButtons || (int)b.Target >= numSkinButtons);
-			_mapping.AxisMaps.RemoveAll(a => (int)a.Source >= numControllerAxes || (int)a.Target >= numSkinAxes);
+			_mapping.ButtonMaps.RemoveAll(b => (int)b.Source > numControllerButtons || (int)b.Target >= maxSkinButton);
+			_mapping.AxisMaps.RemoveAll(a => (int)a.Source > numControllerAxes);
 			// make sure they appear in logical order
 			_mapping.ButtonMaps.Sort((self, other) => self.Source.CompareTo(other.Source));
 			_mapping.AxisMaps.Sort((self, other) => self.Source.CompareTo(other.Source));
@@ -82,17 +82,17 @@ namespace MUNIA.Forms {
 			cbButtonToAxisTarget.DataSource = sourceAxes;
 			
 			List<ControllerMapping.Button> targetButtons = new List<ControllerMapping.Button> { ControllerMapping.Button.Unmapped };
-			for (int i = 0; i < numSkinButtons; i++)
+			for (int i = 0; i < maxSkinButton; i++)
 				targetButtons.Add((ControllerMapping.Button)i);
 
 			List<ControllerMapping.Axis> targetAxes = new List<ControllerMapping.Axis> { ControllerMapping.Axis.Unmapped };
-			for (int i = 0; i < numSkinAxes; i++) 
+			for (int i = 0; i < maxSkinAxis; i++) 
 				targetAxes.Add((ControllerMapping.Axis)i);
 
 			
 
 			// enable dataGridViews only if there are actual elements in both controller and axis
-			if (numSkinButtons > 0 && numControllerButtons > 0) {
+			if (maxSkinButton > 0 && numControllerButtons > 0) {
 				dgvcTargetButton.DataSource = targetButtons;
 				bsButtons.DataSource = new BindingList<ControllerMapping.ButtonMap>(_mapping.ButtonMaps);
 				dgvButtons.DataSource = bsButtons;
@@ -107,7 +107,7 @@ namespace MUNIA.Forms {
 			bsAxesToButtons.DataSource = new BindingList<ControllerMapping.AxisToButtonMap>(_mapping.AxisToButtonMaps);
 			bsButtonsToAxes.DataSource = new BindingList<ControllerMapping.ButtonToAxisMap>(_mapping.ButtonToAxisMaps);
 
-			if (numSkinAxes > 0 && numControllerAxes > 0) {
+			if (maxSkinAxis > 0 && numControllerAxes > 0) {
 				dgvcTargetAxis.DataSource = targetAxes;
 				bsAxes.DataSource = new BindingList<ControllerMapping.AxisMap>(_mapping.AxisMaps);
 				dgvAxes.DataSource = bsAxes;
@@ -187,7 +187,7 @@ namespace MUNIA.Forms {
 			dgvButtons.Refresh();
 
 			// figure out how much to map
-			_skin.GetNumberOfElements(out int buttons, out int axes);
+			_skin.GetMaxElementNumber(out int buttons, out int axes);
 			_seqMapTargets = Enumerable.Range(0, buttons).Cast<ControllerMapping.Button>().ToList();
 
 			// ui preparation
@@ -292,7 +292,7 @@ namespace MUNIA.Forms {
 		private void tmrSequentialMapFlasher_Tick(object sender, EventArgs e) {
 			if (_seqMapPos >= 0) {
 				var state = new ControllerState();
-				_skin.GetNumberOfElements(out int buttons, out int axes);
+				_skin.GetMaxElementNumber(out int buttons, out int axes);
 				state.Buttons.EnsureSize(buttons);
 				state.Axes.EnsureSize(axes);
 

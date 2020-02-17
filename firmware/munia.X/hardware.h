@@ -40,10 +40,7 @@
 #define SWITCH1 LATBbits.LATB2 // for ngc
 #define SWITCH2 LATBbits.LATB1 // for n64
 #define SWITCH3 LATBbits.LATB0 // for snes
-#define LCD_D7 LATAbits.LATA0
-#define LCD_D6 LATAbits.LATA1
-#define LCD_D5 LATAbits.LATA2
-#define LCD_D4 LATAbits.LATA3
+//#define LCD_SWAPPED 1
 #endif
 
 

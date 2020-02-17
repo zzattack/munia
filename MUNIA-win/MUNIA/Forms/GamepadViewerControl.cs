@@ -11,6 +11,7 @@ namespace MUNIA.Forms {
 		private ControllerState _state;
 		public GamepadViewerControl() {
 			DoubleBuffered = true;
+			this.Font = new Font(DefaultFont.FontFamily, 8);
 		}
 
 		public bool StartTesting(IController controller) {
@@ -69,7 +70,7 @@ namespace MUNIA.Forms {
 					int x = 10;
 					int y = baseLineY + 20;
 					if (_state.Hats.Any()) {
-						gfx.DrawString("Hats", DefaultFont, Brushes.Black, 0, 0);
+						gfx.DrawString("Hats", Font, Brushes.Black, 0, 0);
 						for (int i = 0; i < _state.Hats.Count; i++) {
 							var hat = _state.Hats[i];
 							DrawHat(gfx, i, hat, x, y);
@@ -80,7 +81,7 @@ namespace MUNIA.Forms {
 					int btnX = x;
 					int btnY = 20;
 					const int maxButtonsPerRow = 8;
-					gfx.DrawString("Buttons", DefaultFont, Brushes.Black, x, 0);
+					gfx.DrawString("Buttons", Font, Brushes.Black, x, 0);
 					for (int i = 0; i < _state.Buttons.Count;) {
 						DrawButton(gfx, i, _state.Buttons[i], btnX, btnY);
 						btnX += 40;
@@ -94,7 +95,7 @@ namespace MUNIA.Forms {
 					x += Math.Min(maxButtonsPerRow, _state.Buttons.Count) * 40;
 					x += 10; // spacing
 					y = 12;
-					gfx.DrawString("Axes", DefaultFont, Brushes.Black, x, 0);
+					gfx.DrawString("Axes", Font, Brushes.Black, x-2, 0);
 					for (int i = 0; i < _state.Axes.Count; i++) {
 						DrawAxis(gfx, i, _state.Axes[i], _controller != null && _controller.IsAxisTrigger(i), x, y);
 						x += 32;
@@ -154,7 +155,7 @@ namespace MUNIA.Forms {
 			var sf = new StringFormat(StringFormatFlags.FitBlackBox);
 			sf.Alignment = StringAlignment.Center;
 			sf.LineAlignment = StringAlignment.Center;
-			gfx.DrawString($"{buttonNum}", DefaultFont, Brushes.White, rect, sf);
+			gfx.DrawString($"{buttonNum}", Font, Brushes.White, rect, sf);
 		}
 
 		private void DrawAxis(Graphics gfx, int axisNum, double axisValue, bool isTrigger, int x, int y) {
@@ -175,11 +176,11 @@ namespace MUNIA.Forms {
 			gfx.FillRectangle(Brushes.Red, fill);
 			using (var pen = new Pen(Color.Black, 1.0f))
 				gfx.DrawRectangle(pen, rectBar);
-			var rectAxisNum = new RectangleF(x, rectBar.Bottom + 3, rectBar.Width, 15);
+			var rectAxisNum = new RectangleF(x-3, rectBar.Bottom + 3, rectBar.Width+6, 15);
 			var sf = new StringFormat();
 			sf.Alignment = StringAlignment.Center;
 			sf.LineAlignment = StringAlignment.Near;
-			gfx.DrawString(axisNum.ToString(), DefaultFont, Brushes.Black, rectAxisNum, sf);
+			gfx.DrawString(axisNum.ToString(), Font, Brushes.Black, rectAxisNum, sf);
 
 			// draw axis value vertically/90° rotated
 			sf.LineAlignment = StringAlignment.Center;

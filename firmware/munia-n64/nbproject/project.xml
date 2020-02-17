@@ -13,6 +13,23 @@
             <make-dep-projects>
                 <make-dep-project>C:/microchip/mla/v2015_08_10/apps/usb/device/bootloaders/firmware/pic18_non_j/MPLAB.X</make-dep-project>
             </make-dep-projects>
+            <sourceRootList>
+                <sourceRootElem>.</sourceRootElem>
+                <sourceRootElem>C:\microchip\mla\v2015_08_10\apps\usb\device\bootloaders\firmware\pic18_non_j\src</sourceRootElem>
+            </sourceRootList>
+            <confList>
+                <confElem>
+                    <name>release</name>
+                    <type>2</type>
+                </confElem>
+                <confElem>
+                    <name>debug</name>
+                    <type>2</type>
+                </confElem>
+            </confList>
+            <formatting>
+                <project-formatting-style>false</project-formatting-style>
+            </formatting>
         </data>
     </configuration>
 </project>

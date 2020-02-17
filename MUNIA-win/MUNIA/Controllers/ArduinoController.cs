@@ -95,7 +95,12 @@ namespace MUNIA.Controllers {
 			foreach (var entry in ConfigManager.ArduinoMapping) {
 				var port = ports.FirstOrDefault(p => p.Name == entry.Key);
 				if (port != null && entry.Value != ControllerType.None) {
-					ret.Add(CreateDevice(port, entry.Value));
+					try {
+						var c = CreateDevice(port, entry.Value);
+						if (c != null) ret.Add(c);
+					}
+					catch 
+					{ }
 				}
 			}
 			return ret;
@@ -109,8 +114,6 @@ namespace MUNIA.Controllers {
 				return new ArduinoN64(port);
 			case ControllerType.NGC:
 				return new ArduinoNgc(port);
-			default:
-				throw new ArgumentOutOfRangeException("type is not one of possible arduino devices");
 			}
 			return null;
 		}

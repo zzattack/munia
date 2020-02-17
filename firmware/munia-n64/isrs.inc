@@ -13,7 +13,6 @@ PSECT ISR_jumps,local,class=CODE,delta=1,reloc=2,abs
     goto isr_low    
 #endif
     
-    
 PSECT ISR_routines,local,class=CODE,delta=1,reloc=2
 isr_low:
     retfie
@@ -27,10 +26,6 @@ isr_high:
     movff FSR0H, GMEM+1
     lfsr 0, pSMEM ; setup FSR0
 
-    xorlw 0x03 ; invert bits 0 and 1 for next test (but not 7)
-    andwf IOCC, w, c
-    
-    btfsc WREG, 1, c ; RC1 is n64
     call _n64_sample
     bra isr_cleanup
     

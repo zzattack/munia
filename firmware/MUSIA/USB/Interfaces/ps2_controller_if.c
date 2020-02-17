@@ -45,7 +45,16 @@ __ALIGN_BEGIN static const uint8_t hid_rpt_ps2[] __ALIGN_END = {
 	0x26, 0xff, 0x00,				//     LOGICAL_MAXIMUM (255)
 	0x75, 0x08,						//     REPORT_SIZE (8)
 	0x95, 0x04,						//     REPORT_COUNT (4)
-	0x81, 0x02,						//     INPUT (Data,Var,Abs)    
+	0x81, 0x02,						//     INPUT (Data,Var,Abs)
+
+	// 1 byte indicating pressure sensor presence + 18 bytes of pressure data
+	0x05, 0x01,						//   USAGE_PAGE (Generic Desktop)
+	0x09, 0x00,						//     USAGE (UNDEFINED)
+	0x15, 0x00,						//     LOGICAL MINIMUM (0)
+	0x26, 0xff, 0x00,				//     LOGICAL_MAXIMUM (255)
+	0x75, 0x08,						//     REPORT_SIZE (8)
+	0x95, 0x0D,						//     REPORT_COUNT (13)
+	0x81, 0x02,						//     INPUT (Data,Var,Abs)
 	
 	0xC0,    //    End Collection (Application)
 };

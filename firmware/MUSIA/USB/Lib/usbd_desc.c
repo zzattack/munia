@@ -197,8 +197,6 @@ USBD_ReturnType USBD_GetDescriptor(USBD_HandleType *dev)
     uint16_t len = 0;
     uint8_t *data = dev->CtrlData;
 
-	usb_printf("USBD_GetDescriptor(), sv=%x\n", dev->Setup.Value);
-
     /* High byte identifies descriptor type */
     switch (dev->Setup.Value >> 8)
     {

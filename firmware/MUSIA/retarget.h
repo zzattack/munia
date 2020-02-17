@@ -9,7 +9,6 @@
 EXTERNC int sync_printf_pfx(const char* prefix, const char* format, ...);
 EXTERNC int sync_printf(const char* format, ...);
 EXTERNC void RetargetInit(void* huart);
-EXTERNC void printf_payload(const char* x, int len);
 
 #ifndef FAST_SEMIHOSTING_PROFILER_DRIVER
 EXTERNC int _isatty(int fd);
@@ -25,7 +24,11 @@ EXTERNC int _read(int fd, char* ptr, int len);
 #define sys_printf(x, ...) // sync_printf_pfx("SYS", x, ##__VA_ARGS__)
 #define ps2_printf(x, ...) // sync_printf_pfx("PS2", x, ##__VA_ARGS__)
 #define usb_printf(x, ...) sync_printf_pfx("USB", x, ##__VA_ARGS__)
-#define printf_payload(x, len)  do { char* c = x; int i = len ; while (i--) { sync_printf("%02x ", *c++);  } } while (0);
+#define printf_payload(x, len)  do { char* __c = x; \
+                                     unsigned int __i = (unsigned int)len ; \
+                                     while (__i--) { sync_printf("%02x ", *__c++); } \
+                                     sync_printf("\n"); \
+                                } while (0);
 
 #else
 #define spi_printf(x, ...)

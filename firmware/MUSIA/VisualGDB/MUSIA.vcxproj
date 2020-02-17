@@ -18,7 +18,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{F9B71E82-BCCE-4DB0-9CDA-7DD3F353233A}</ProjectGuid>
     <BSP_ID>com.sysprogs.arm.stm32</BSP_ID>
-    <BSP_VERSION>2018.08</BSP_VERSION>
+    <BSP_VERSION>2018.12R2</BSP_VERSION>
     <InPlaceBSPSubdir />
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -81,7 +81,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|VisualGDB'">
     <ClCompile>
       <AdditionalIncludeDirectories>..;../EEPROM;../CubeMX/Inc;../USB;../USB/Device;../USB/Interfaces;../USB/Lib/Inc;../USB/XPD;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>RELEASE=1;WITHOUT_UART=1;DEBUG_DEFAULT_INTERRUPT_HANDLERS=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>RELEASE=1;DEBUG_DEFAULT_INTERRUPT_HANDLERS=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
       <ForcedIncludeFiles>..\retarget.h</ForcedIncludeFiles>
       <AdditionalOptions>
       </AdditionalOptions>
@@ -90,8 +90,6 @@
       <CPPLanguageStandard>
       </CPPLanguageStandard>
       <Optimization>Os</Optimization>
-      <InlineFunctions>true</InlineFunctions>
-      <LinkTimeOptimization>true</LinkTimeOptimization>
     </ClCompile>
     <Link>
       <AdditionalLinkerInputs>;%(Link.AdditionalLinkerInputs)</AdditionalLinkerInputs>
@@ -159,6 +157,7 @@
     <ClCompile Include="..\lcd.c" />
     <ClCompile Include="..\menu.cpp" />
     <ClCompile Include="..\musia.cpp" />
+    <ClCompile Include="..\printf-stdarg.c" />
     <ClCompile Include="..\ps2_poller.cpp" />
     <ClCompile Include="..\ps2_state.cpp" />
     <ClCompile Include="..\retarget.c" />
@@ -184,6 +183,7 @@
     <ClInclude Include="..\EEPROM\spi_interface.h" />
     <ClInclude Include="..\lcd.h" />
     <ClInclude Include="..\menu.h" />
+    <ClInclude Include="..\printf-stdarg.h" />
     <ClInclude Include="..\ps2_packet.h" />
     <ClInclude Include="..\usbd_pid.h" />
     <ClInclude Include="..\USB\Lib\Inc\hid_usage.h" />

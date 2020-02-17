@@ -118,9 +118,9 @@ namespace MUNIA.Skinning {
 			});
 		}
 
-		public override void GetNumberOfElements(out int numButtons, out int numAxes) {
-			numButtons = Buttons.Count;
-			numAxes = Triggers.Count(t => t.Axis >= 0) + Sticks.Sum(s => (s.HorizontalAxis != -1 ? 1 : 0)
+		public override void GetMaxElementNumber(out int maxButtonNum, out int maxAxisNum) {
+			maxButtonNum = Buttons.Count;
+			maxAxisNum = Triggers.Count(t => t.Axis >= 0) + Sticks.Sum(s => (s.HorizontalAxis != -1 ? 1 : 0)
 																		+ (s.VerticalAxis != -1 ? 1 : 0));
 		}
 

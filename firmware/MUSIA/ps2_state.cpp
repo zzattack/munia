@@ -2,14 +2,14 @@
 #include <cstdio>
 
 void ps2_state::print_packet(uint8_t* cmd, uint8_t* data, uint8_t pkt_len) {
-	/*sys_printf("PS2 packet capture, len: %d:\n", pkt_len);
+	sys_printf("PS2 packet capture, len: %d:\n", pkt_len);
 	printf("\t CMD:  ");
 	for (int i = 0; i < pkt_len; i++)
 		printf("%02X ", cmd[i]);
 	printf("\n\t DATA: ");
 	for (int i = 0; i < pkt_len; i++)
 		printf("%02X ", data[i]);
-	printf("\n");*/
+	printf("\n");
 }
 
 bool ps2_state::update(uint8_t* cmd, uint8_t* data, uint8_t pkt_len) {
@@ -27,7 +27,7 @@ bool ps2_state::update(uint8_t* cmd, uint8_t* data, uint8_t pkt_len) {
 	}
 	
 	uint8_t numWords = data[1] & 0x0F;
-	if (pkt_len != 3 + numWords * 2) {
+	if (pkt_len < 3 + numWords * 2) {
 		ps2_printf("Invalid packet length: len %d should be %d\n", pkt_len, 3 + numWords * 2);
 		return false; // verify pkt len
 	}
@@ -94,10 +94,6 @@ bool ps2_state::updatePoll(uint8_t* data, int len) {
 		pressures.circle		= data[idx++];
 		pressures.cross			= data[idx++];
 		pressures.square		= data[idx++];
-		pressures.rx			= data[idx++];
-		pressures.ry			= data[idx++];
-		pressures.lx			= data[idx++];
-		pressures.ly			= data[idx++];
 		pressures.l1			= data[idx++];
 		pressures.r1			= data[idx++];
 		pressures.l2			= data[idx++];

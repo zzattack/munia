@@ -12,19 +12,18 @@ ps2_poller::ps2_poller(hal_spi_interface* spi) {
 void ps2_poller::init() {
 	__HAL_RCC_SPI1_CLK_ENABLE();
 	
-    /**SPI1 GPIO Configuration    
-    PA5     ------> SPI1_SCK
-    PA6     ------> SPI1_MISO
-    PA7     ------> SPI1_MOSI 
-    */
+	/**SPI1 GPIO Configuration    
+	PA5     ------> SPI1_SCK
+	PA6     ------> SPI1_MISO
+	PA7     ------> SPI1_MOSI 
+	*/
 	GPIO_InitTypeDef GPIO_InitStruct;
 	GPIO_InitStruct.Pin = GPIO_PIN_5 | GPIO_PIN_6 | GPIO_PIN_7;
 	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 	GPIO_InitStruct.Alternate = GPIO_AF0_SPI1;
-	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-	
+	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);	
 	
 	// console SPI lines + ATT are disconnected from corresponding joystick lines
 	HAL_GPIO_WritePin(SW_CONSOLE_DISCONNECT_GPIO_Port, SW_CONSOLE_DISCONNECT_Pin, GPIO_PIN_SET); // SET = console disconnected
@@ -53,8 +52,6 @@ void ps2_poller::init() {
 	hspi->Init.FirstBit = SPI_FIRSTBIT_LSB;
 	hspi->Init.TIMode = SPI_TIMODE_DISABLE;
 	hspi->Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-	hspi->Init.CRCPolynomial = 7;
-	hspi->Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
 	hspi->Init.NSSPMode = SPI_NSS_PULSE_DISABLE;
 	HAL_SPI_Init(hspi);
 	__HAL_SPI_ENABLE(hspi);
@@ -126,13 +123,13 @@ void ps2_poller::stop() {
 			"SUB R0, #1\n\t"\
 			"CMP R0, #0\n\t"\
 			"BNE 1b \n\t" : : [loops] "r" (16*us) : "memory"\
-		      );\
+			  );\
 } while(0);
 
 
 #pragma GCC push_options
 #pragma GCC optimize ("O0")
-void ps2_poller::spiExchange(const uint8_t* w, uint8_t* r, uint16_t len) {
+void ps2_poller::spiExchange(const uint8_t* w, uint8_t* r, uint16_t len, bool doPrint) {
 	const uint8_t* payload = w;
 	const uint8_t* received = r;
 	uint16_t c = len;
@@ -167,12 +164,12 @@ void ps2_poller::spiExchange(const uint8_t* w, uint8_t* r, uint16_t len) {
 		while (counter--);	
 	}
 	spi->setCS();	
-	
-	
-	/*ps2_printf("spi_exchange exchange:\n");
-	printf("\t --> "); printf_payload((char*)payload, c);
-	printf("\n\t <-- "); printf_payload((char*)received, c);
-	printf("\n");*/
+		
+	if (doPrint) {
+		ps2_printf("spi_exchange exchange:\n");
+		printf("\t --> "); printf_payload((char*)payload, c);
+		printf("\t <-- "); printf_payload((char*)received, c);
+	}
 }
 #pragma GCC pop_options
 
@@ -199,7 +196,7 @@ void ps2_poller::work() {
 			}
 			else {
 				configFailCount++;
-				ps2_printf("\nenterConfigMode failed, return payload=");
+				ps2_printf("enterConfigMode failed, return payload=");
 				printf_payload((char*)rcvBuff, sizeof(rcvBuff));
 			}
 		}
@@ -211,11 +208,11 @@ void ps2_poller::work() {
 			
 			if (rcvBuff[2] == 0x5A) {
 				nextConfigState();
-				ps2_printf("\nstate enterConfigMode --> turnOnAnalog\n");
+				ps2_printf("state enterConfigMode --> turnOnAnalog\n");
 			}
 			else {
 				configFailCount++;
-				ps2_printf("\nturnOnAnalog failed, return payload=");
+				ps2_printf("turnOnAnalog failed, return payload=");
 				printf_payload((char*)rcvBuff, sizeof(rcvBuff));
 			}
 		}
@@ -227,12 +224,16 @@ void ps2_poller::work() {
 			
 			if (rcvBuff[1] == 0xF3 && rcvBuff[2] == 0x5A) {
 				nextConfigState();
-				ps2_printf("\nstate turnOnAnalog --> setupMotorMapping\n");
+				ps2_printf("state turnOnAnalog --> setupMotorMapping\n");
 			}
 			else {
 				configFailCount++;
-				ps2_printf("\nsetupMotorMapping failed, return payload=");
+				ps2_printf("setupMotorMapping failed, return payload=");
 				printf_payload((char*)rcvBuff, sizeof(rcvBuff));
+				if (configFailCount > 2) {
+					// no big deal, probably a PS1 controller
+					nextConfigState();
+				}
 			}
 		}
 		
@@ -243,27 +244,31 @@ void ps2_poller::work() {
 			
 			if (rcvBuff[1] == 0xF3 && rcvBuff[2] == 0x5a && rcvBuff[4] == 0x01) {
 				nextConfigState();
-				ps2_printf("\nstate setupMotorMapping --> enablePressureMappings\n");
+				ps2_printf("state setupMotorMapping --> enablePressureMappings\n");
 			}
 			else {
 				configFailCount++;
 				ps2_printf("\nenablePressureMappings failed, return payload=");
 				printf_payload((char*)rcvBuff, sizeof(rcvBuff));
+				if (configFailCount > 2) {
+					// no big deal, probably a PS1 controller
+					nextConfigState();
+				}
 			}
 		}
 		
 		else if (state == config_state::enablePressureMappings) {
 			uint8_t payload[9] = { 0x01, 0x4F, 0x00, 0xFF, 0xFF, 0x03, 0x00, 0x00, 0x00 };
 			uint8_t rcvBuff[sizeof(payload)];
-			spiExchange(payload, rcvBuff, sizeof(payload));
+			spiExchange(payload, rcvBuff, sizeof(payload), true);
 			
-			if (rcvBuff[1] == 0xF3 && rcvBuff[2] == 0x5a && rcvBuff[8] == 0x5a) {
+			if (rcvBuff[1] & 0x73) {
 				nextConfigState();
-				ps2_printf("\nstate enablePressureMappings --> exitConfig\n");
+				ps2_printf("state enablePressureMappings --> exitConfig\n");
 			 }
 			else {
 				configFailCount++;
-				ps2_printf("exitConfig failed, return payload=");
+				ps2_printf("enablePressureMappings failed, return payload=");
 				printf_payload((char*)rcvBuff, sizeof(rcvBuff));
 			}
 		}
@@ -276,7 +281,7 @@ void ps2_poller::work() {
 			if (rcvBuff[1] == 0xF3 && rcvBuff[2] == 0x5a) {
 				// show be completed now
 				nextConfigState();
-				ps2_printf("\nstate exitConfig --> fully initialized\n");
+				ps2_printf("state exitConfig --> fully initialized\n");
 			}
 			else configFailCount++;
 		}

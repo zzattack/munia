@@ -25,7 +25,8 @@
 #define __USBD_PD_IF_H_
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 #include <xpd_common.h>
@@ -43,6 +44,7 @@ extern "C" {
 #define USBD_PD_SetRemoteWakeup         USB_vSetRemoteWakeup
 #define USBD_PD_ClearRemoteWakeup       USB_vClearRemoteWakeup
 #define USBD_PD_SetAddress              USB_vSetAddress
+#define USBD_PD_CtrlEpOpen              USB_vCtrlEpOpen
 #define USBD_PD_EpOpen                  USB_vEpOpen
 #define USBD_PD_EpClose                 USB_vEpClose
 #define USBD_PD_EpSend                  USB_vEpSend
@@ -66,6 +68,7 @@ extern "C" {
 #define USBD_PD_SetRemoteWakeup         USB_vSetRemoteWakeup
 #define USBD_PD_ClearRemoteWakeup       USB_vClearRemoteWakeup
 #define USBD_PD_SetAddress              USB_vSetAddress
+#define USBD_PD_CtrlEpOpen              USB_vCtrlEpOpen
 #define USBD_PD_EpOpen                  USB_vEpOpen
 #define USBD_PD_EpClose                 USB_vEpClose
 #define USBD_PD_EpSend                  USB_vEpSend
@@ -73,6 +76,13 @@ extern "C" {
 #define USBD_PD_EpSetStall              USB_vEpSetStall
 #define USBD_PD_EpClearStall            USB_vEpClearStall
 #define USBD_PD_EpFlush                 USB_vEpFlush
+
+#ifndef __htonl
+#define __htonl(_x)                     ((uint32_t)__REV(_x))
+#endif
+#ifndef __htons
+#define __htons(_x)                     ((uint16_t)__REVSH(_x))
+#endif
 
 /** @} */
 

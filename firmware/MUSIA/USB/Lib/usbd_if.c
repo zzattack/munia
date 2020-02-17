@@ -115,8 +115,8 @@ USBD_ReturnType USBD_IfRequest(USBD_HandleType *dev)
             /* Current alternate setting of the IF */
             case USB_REQ_GET_INTERFACE:
             {
-                retval = USBD_CtrlSendData(dev, &itf->AltSelector,
-                        sizeof(itf->AltSelector));
+                retval = USBD_CtrlSendData(dev,
+                        &itf->AltSelector, sizeof(itf->AltSelector));
                 break;
             }
 
@@ -140,30 +140,7 @@ USBD_ReturnType USBD_IfRequest(USBD_HandleType *dev)
                 }
                 break;
             }
-#if 0
-            case USB_REQ_GET_DESCRIPTOR:
-            {
-                uint8_t *data = dev->CtrlData;
-                uint16_t i, len = USBD_IfClass_GetDesc(itf, ifNum, data);
 
-                /* Try to find desc in default descriptor */
-                for (i = 0; i < len; i += data[i])
-                {
-                    if (data[i + 1] == (dev->Setup.Value >> 8))
-                    {
-                        retval = USBD_CtrlSendData(dev, &data[i], data[i]);
-                        break;
-                    }
-                }
-
-                if (i == len)
-                {
-                    /* forward the request to the IF */
-                    retval = USBD_IfClass_SetupStage(itf);
-                }
-                break;
-            }
-#endif
             default:
             {
                 /* forward the request to the IF */
