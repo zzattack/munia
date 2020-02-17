@@ -1,4 +1,4 @@
 Django
 gunicorn
-MySQL-python
+mysqlclient
 django-analytical
