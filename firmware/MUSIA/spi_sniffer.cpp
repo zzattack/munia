@@ -180,7 +180,7 @@ void spi_sniffer::work() {
 		if (dataCount > sizeof(pkt.cmd)) 
 			dmaIdxCmd = tgtIdxCmd;
 		
-		uint i = 0;
+		uint32_t i = 0;
 		while (dmaIdxCmd != tgtIdxCmd) {
 			pkt.cmd[i++] = buffCmd[dmaIdxCmd++];
 			if (dmaIdxCmd == sizeof(buffCmd)) dmaIdxCmd = 0;

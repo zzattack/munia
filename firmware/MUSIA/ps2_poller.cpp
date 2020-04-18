@@ -167,8 +167,8 @@ void ps2_poller::spiExchange(const uint8_t* w, uint8_t* r, uint16_t len, bool do
 		
 	if (doPrint) {
 		ps2_printf("spi_exchange exchange:\n");
-		printf("\t --> "); printf_payload((char*)payload, c);
-		printf("\t <-- "); printf_payload((char*)received, c);
+		sync_printf("\t --> "); printf_payload((char*)payload, c);
+		sync_printf("\t <-- "); printf_payload((char*)received, c);
 	}
 }
 #pragma GCC pop_options
