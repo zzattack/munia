@@ -2,12 +2,12 @@
 <EmbeddedProfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <ToolchainID>com.visualgdb.arm-eabi</ToolchainID>
   <ToolchainVersion>
-    <GCC>7.2.0</GCC>
-    <GDB>8.0.1</GDB>
-    <Revision>3</Revision>
+    <GCC>9.2.1</GCC>
+    <GDB>8.3.0</GDB>
+    <Revision>1</Revision>
   </ToolchainVersion>
   <BspID>com.sysprogs.arm.stm32</BspID>
-  <BspVersion>2018.12R2</BspVersion>
+  <BspVersion>2020.01</BspVersion>
   <McuID>STM32F042C6</McuID>
   <MCUDefinitionFile>STM32F0xxxx/DeviceDefinitions/stm32f042x6.xml</MCUDefinitionFile>
   <MCUProperties>
@@ -21,6 +21,10 @@
         <Value>--specs=nano.specs</Value>
       </KeyValue>
       <KeyValue>
+        <Key>com.sysprogs.toolchainoptions.arm.syscallspecs</Key>
+        <Value>--specs=nosys.specs</Value>
+      </KeyValue>
+      <KeyValue>
         <Key>com.sysprogs.toolchainoptions.arm.libnosys</Key>
         <Value>--specs=nosys.specs</Value>
       </KeyValue>
@@ -30,6 +34,7 @@
   <MCUMakFile>stm32.mak</MCUMakFile>
   <ReferencedFrameworks>
     <string>com.sysprogs.arm.stm32.hal</string>
+    <string>com.sysprogs.arm.stm32.STM32F0_ll</string>
   </ReferencedFrameworks>
   <FrameworkProperties>
     <Entries>
@@ -44,6 +49,14 @@
       <KeyValue>
         <Key>com.sysprogs.bspoptions.stm32.usb.speed</Key>
         <Value>FS</Value>
+      </KeyValue>
+      <KeyValue>
+        <Key>com.sysprogs.stm32.legacy_hal_src</Key>
+        <Value />
+      </KeyValue>
+      <KeyValue>
+        <Key>com.sysprogs.bspoptions.stm32.ll_driver</Key>
+        <Value />
       </KeyValue>
     </Entries>
   </FrameworkProperties>
