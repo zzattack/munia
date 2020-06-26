@@ -12,6 +12,7 @@
 	<link rel="apple-touch-icon-precomposed" href="{% static "img/favicon.ico" %}"/>
 	<link rel="icon" href="{% static "img/favicon.ico" %}"/>
 	<link rel="shortcut icon" href="{% static "img/favicon.ico" %}"/>
+    {% block extrascripts %} {% endblock %}
 
 	{% block stylesheets %}
 	<link rel='stylesheet' type='text/css' href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700'>
@@ -30,7 +31,6 @@
 	<script src="{% static "js/jquery.min.js" %}"></script>
 	<script src="{% static "js/main.js" %}"></script>
 {% endblock %}
-{% block extrascripts %} {% endblock %}
 {% analytical_body_bottom %}
 </body>
 </html>

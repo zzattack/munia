@@ -3,7 +3,6 @@ from datetime import datetime
 from django.core.mail import EmailMessage
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
 
 from .models import *

@@ -1,5 +1,11 @@
 {% extends 'base.html' %}
 
+{% load recaptcha3 %}
+{% block extrascripts %}
+	{% recaptcha_init %}
+	{% recaptcha_ready action_name='contact' %}
+{% endblock %}
+
 {% block content %}
 	<main>
 		<section class="bg-image-hero center-tablet dark overlay-shape-03 full-screen">
@@ -7,22 +13,10 @@
 
 				<div class="col-one-half middle padding">
 					<div class="max-width-m bg-gradient-consoles padding rounded">
-						<h5>MUNIA.io contact form!</h5>
-
+						<h5>MUNIA.io contact form</h5>
 						<form action="contact.html" method="post" target="_top">
-                            {% csrf_token %}
-							<div class="form-group">
-								<label for="name">Name:</label>
-								<input id="name" type="text" name="name" value="Anonymous"/>
-							</div>
-							<div class="form-group">
-								<label for="email">Email:</label>
-								<input id="email" type="email" name="email" required>
-							</div>
-							<div class="form-group">
-								<label for="password">Message:</label>
-								<textarea name="message" required="" placeholder="I have a question regarding the MUNIA product"></textarea>
-							</div>
+							{% csrf_token %}
+							{{ form }}
 							<button class="button button-primary full-width space-top" role="button" name="submit">Submit</button>
 						</form>
 					</div>

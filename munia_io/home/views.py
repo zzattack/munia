@@ -3,7 +3,7 @@ from datetime import datetime
 from django.core.mail import EmailMessage
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_protect
-
+from .forms import ContactForm
 
 def index(request):
 	return render(request, 'home/index.html', {})
@@ -29,46 +29,49 @@ def validate_mail_address(email):
 @csrf_protect
 def contact(request):
 	if request.method == "GET":
-		return render(request, 'home/contact.html', {})
+		form = ContactForm()
+		return render(request, 'home/contact.html', {'form': form})
 
 	success = False
 	try:
-		if 'HTTP_X_FORWARDED_FOR' in request.META:
-			ip = request.META['HTTP_X_FORWARDED_FOR'].split(',')[0]
-		elif 'HTTP_X_REAL_IP' in request.META:
-			ip = request.META['HTTP_X_REAL_IP']
-		else:
-			ip = request.META['REMOTE_ADDR']
-		subj = '[MUNIA] Contact form notification from ip %s' % (ip)
+		form = ContactForm(request.POST)
 
-		message = 'MUNIA Contact form notification\r\n'
-		message += '\r\n'
-		message += 'Contact form was filled out at ' + str(datetime.now().replace(microsecond=0))
-		message += '\r\n'
+		if form.is_valid():
+			if 'HTTP_X_FORWARDED_FOR' in request.META:
+				ip = request.META['HTTP_X_FORWARDED_FOR'].split(',')[0]
+			elif 'HTTP_X_REAL_IP' in request.META:
+				ip = request.META['HTTP_X_REAL_IP']
+			else:
+				ip = request.META['REMOTE_ADDR']
+			subj = '[MUNIA] Contact form notification from ip %s' % (ip)
 
-		message += 'Submitter: ' + request.POST['name'] + '\r\n'
-		message += 'Email: ' + request.POST['email'] + '\r\n'
-		message += 'Message: \r\n----------------------------------------\r\n' + request.POST[
-			'message'] + '\r\n----------------------------------------\r\n'
+			message = 'MUNIA Contact form notification\r\n'
+			message += '\r\n'
+			message += 'Contact form was filled out at ' + str(datetime.now().replace(microsecond=0))
+			message += '\r\n'
 
-		message += '\r\n'
-		message += '\r\nThis mail was sent automatically by the portal @ MUNIA.io'
+			message += 'Submitter: ' + form.cleaned_data['name'] + '\r\n'
+			message += 'Email: ' + form.cleaned_data['email'] + '\r\n'
+			message += 'Message: \r\n----------------------------------------\r\n' + form.cleaned_data[
+				'message'] + '\r\n----------------------------------------\r\n'
 
-		reply_to = []
-		cc = []
-		if 'email' in request.POST:
-			submitter = request.POST['email']
+			message += '\r\n'
+			message += '\r\nThis mail was sent automatically by the portal @ MUNIA.io'
+
+			reply_to = []
+			cc = []
+			submitter = form.cleaned_data['email']
 			if validate_mail_address(submitter):
 				cc.append(submitter)
 				reply_to.append(submitter)
 			else:
 				reply_to.append('noreply@munia.io')
 
-		email = EmailMessage(subject=subj, body=message, from_email='info@munia.io', to=['frank@munia.io', 'will@munia.io'], cc=cc,
-			reply_to=reply_to)
+			email = EmailMessage(subject=subj, body=message, from_email='info@munia.io', to=['frank@munia.io', 'will@munia.io'], cc=cc,
+				reply_to=reply_to)
 
-		email.send(fail_silently=False)
-		success = True
+			email.send(fail_silently=False)
+			success = True
 
 	except: pass
 
