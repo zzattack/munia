@@ -20,7 +20,7 @@ extern void applyConfig();
 const char* menu_sub_items[][7] = {
 	{ "PS2 ", "PC ", NULL },							 // MENU_PAGE::OUTPUT,
 	{ "120", "100", " 60", " 50", " 30", " 25", NULL },  // MENU_PAGE::POLL_FREQ,
-	{ "A:Ok ", " B:Cancel", NULL },						 // MENU_PAGE::CONFIRM,
+	{ "X:Ok ", " O:Cancel", NULL },						 // MENU_PAGE::CONFIRM,
 };
 uint8_t pollFreqs[] = { 120, 100, 60, 50, 30, 25 };
 
