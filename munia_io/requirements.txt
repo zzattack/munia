@@ -2,3 +2,4 @@ Django
 gunicorn
 mysqlclient
 django-analytical
+django-recaptcha3

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
 	'analytical',
+	'snowpenguin.django.recaptcha3',
 
 	'home',
 	'tool',
@@ -115,3 +116,8 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT = './media/'
 MEDIA_URL = '/media/'
+
+RECAPTCHA_PRIVATE_KEY = '6LeFr6kZAAAAABgYKESUzkK6GWa-0Zij08Wt2niK'
+RECAPTCHA_PUBLIC_KEY = '6LeFr6kZAAAAAOgp2-VFBG09ajUPeA1_4pI31R2T'
+RECAPTCHA_DEFAULT_ACTION = 'generic'
+RECAPTCHA_SCORE_THRESHOLD = 0.5
