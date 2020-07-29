@@ -73,14 +73,6 @@ namespace MUNIA.Forms {
 			_mapping.ButtonMaps.Sort((self, other) => self.Source.CompareTo(other.Source));
 			_mapping.AxisMaps.Sort((self, other) => self.Source.CompareTo(other.Source));
 
-			dgvcSourceButton.DataSource = sourceButtons;
-			cbButtonToAxisSource.DataSource = sourceButtons;
-			cbAxisToButtonTarget.DataSource = sourceButtons;
-
-			dgvcSourceAxis.DataSource = sourceAxes;
-			cbAxisToButtonSource.DataSource = sourceAxes;
-			cbButtonToAxisTarget.DataSource = sourceAxes;
-			
 			List<ControllerMapping.Button> targetButtons = new List<ControllerMapping.Button> { ControllerMapping.Button.Unmapped };
 			for (int i = 0; i < maxSkinButton; i++)
 				targetButtons.Add((ControllerMapping.Button)i);
@@ -89,7 +81,13 @@ namespace MUNIA.Forms {
 			for (int i = 0; i < maxSkinAxis; i++) 
 				targetAxes.Add((ControllerMapping.Axis)i);
 
-			
+			dgvcSourceButton.DataSource = sourceButtons;
+			cbButtonToAxisSource.DataSource = sourceButtons;
+			cbAxisToButtonTarget.DataSource = targetButtons;
+
+			dgvcSourceAxis.DataSource = sourceAxes;
+			cbAxisToButtonSource.DataSource = sourceAxes;
+			cbButtonToAxisTarget.DataSource = targetAxes;
 
 			// enable dataGridViews only if there are actual elements in both controller and axis
 			if (maxSkinButton > 0 && numControllerButtons > 0) {
@@ -337,7 +335,7 @@ namespace MUNIA.Forms {
 
 		#region Button to axis
 		private void btnAddButtonToAxis_Click(object sender, EventArgs e) {
-			bsButtonsToAxes.AddNew();
+			bsButtonsToAxes.Add(new ControllerMapping.ButtonToAxisMap((ControllerMapping.Button)cbButtonToAxisSource.SelectedItem, (ControllerMapping.Axis)cbButtonToAxisTarget.SelectedItem, tkbAxisOffset.Value / 100.0));
 		}
 
 		private void btnRemoveButtonToAxis_Click(object sender, EventArgs e) {
@@ -357,7 +355,8 @@ namespace MUNIA.Forms {
 		private void LoadButtonToAxisMap(ControllerMapping.ButtonToAxisMap map) {
 			cbButtonToAxisSource.SelectedItem = map.Source;
 			cbButtonToAxisTarget.SelectedItem = map.Target;
-			tkbAxisOffset.Value = (int)(map.AxisValue * 100);
+			tkbAxisOffset.Value = (int)Math.Round(map.AxisValue * 100);
+			lblAxisOffset.Text = "Value: " + tkbAxisOffset.Value;
 		}
 
 		private void cbButtonToAxisSource_SelectedIndexChanged(object sender, EventArgs e) {
@@ -384,7 +383,7 @@ namespace MUNIA.Forms {
 
 		#region Axis to Button
 		private void btnAddAxisToButtonMapping_Click(object sender, EventArgs e) {
-			bsAxesToButtons.AddNew();
+			bsAxesToButtons.Add(new ControllerMapping.AxisToButtonMap((ControllerMapping.Axis)cbAxisToButtonSource.SelectedItem, (ControllerMapping.Button)cbAxisToButtonTarget.SelectedItem, tkbButtonThreshold.Value));
 		}
 		private void btnRemoveAxisToButtonMapping_Click(object sender, EventArgs e) {
 			if (bsAxesToButtons.Current != null) bsAxesToButtons.RemoveCurrent();
@@ -398,9 +397,10 @@ namespace MUNIA.Forms {
 		private void LoadAxisToButtonMap(ControllerMapping.AxisToButtonMap map) {
 			cbAxisToButtonSource.SelectedItem = map.Source;
 			cbAxisToButtonTarget.SelectedItem = map.Target;
-			tkbButtonThreshold.Value = (int)(map.Threshold * 100);
+			tkbButtonThreshold.Value = Math.Min(tkbButtonThreshold.Maximum, Math.Max(tkbButtonThreshold.Minimum, (int)Math.Round(map.Threshold * 100)));
+			lblThresholdValue.Text = "Value: " + tkbButtonThreshold.Value;
 		}
-		
+
 		private void cbAxisToButtonSource_SelectedIndexChanged(object sender, EventArgs e) {
 			if (lbAxesToButtons.SelectedItem is ControllerMapping.AxisToButtonMap map &&
 				cbAxisToButtonSource.SelectedItem is ControllerMapping.Axis axis)

@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Xml;
+using MUNIA.Forms;
 using MUNIA.Interop;
 using MUNIA.Properties;
 using MUNIA.Util;
@@ -277,19 +278,15 @@ namespace MUNIA.Controllers {
 
 		public class AxisToButtonMap : INotifyPropertyChanged {
 			public AxisToButtonMap() { }
-			public AxisToButtonMap(Axis source, Button target, int threshold, AxisToButtonMapMode mode) {
+			public AxisToButtonMap(int source, int target, double threshold) : this((Axis)source, (Button)target, threshold) { }
+			public AxisToButtonMap(Axis source, Button target, double threshold) : this(source, target, threshold, threshold > 0.0 ? AxisToButtonMapMode.WhenAboveThreshold : AxisToButtonMapMode.WhenBelowThreshold) { }
+			public AxisToButtonMap(Axis source, Button target, double threshold, AxisToButtonMapMode mode) {
 				Source = source;
 				Target = target;
 				Threshold = threshold;
 				Mode = mode;
 			}
-			public AxisToButtonMap(int source, int target, double threshold) {
-				Source = (Axis)source;
-				Target = (Button)target;
-				Threshold = threshold;
-				Mode = threshold > 0.0 ? AxisToButtonMapMode.WhenAboveThreshold : AxisToButtonMapMode.WhenBelowThreshold;
-			}
-
+			
 			private Axis _source;
 
 			public Axis Source {
