@@ -52,14 +52,14 @@ namespace MUNIA {
 			_activeController?.Deactivate();
 			_activeController = value;
 			if (_activeController != null) {
-                if (Delay != TimeSpan.Zero) {
-                    _bufferedActiveController = new BufferedController(value, Delay);
-                    _bufferedActiveController.Activate();
-                }
-                else {
-                    _activeController.Activate();
-                }
-            }
+				if (Delay != TimeSpan.Zero) {
+					_bufferedActiveController = new BufferedController(value, Delay);
+					_bufferedActiveController.Activate();
+				}
+				else {
+					_activeController.Activate();
+				}
+			}
 		}
 
 		public static IController GetActiveController(bool ignoreBuffered = false) {
@@ -158,6 +158,7 @@ namespace MUNIA {
 			}
 			catch (XmlException) { }
 			catch (FormatException) { }
+			catch (DirectoryNotFoundException) { }
 
 			if (!SkinFolders.Any()) {
 				// setup skin folders to default svg only
