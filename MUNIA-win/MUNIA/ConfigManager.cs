@@ -121,7 +121,7 @@ namespace MUNIA {
 			foreach (var dev in XInputController.ListDevices()) {
 				Controllers.Add(dev);
 			}
-			foreach (var dev in GenericController.ListDevices()) {
+			foreach (var dev in RawInputController.ListDevices()) {
 				Controllers.Add(dev);
 			}
 			foreach (var dev in MappedController.ListDevices()) {
